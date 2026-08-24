@@ -1358,7 +1358,10 @@
     text-decoration: none; box-sizing: border-box;
     cursor: pointer;
   }
+  .admin-nav-item { transition: background 0.15s, color 0.15s; }
+  .admin-nav-item:hover { background: rgba(255,255,255,0.08); color: #FFFFFF; }
   .admin-nav-item.active { background: rgba(255,255,255,0.14); color: #FFFFFF; }
+  .admin-nav-item.active:hover { background: rgba(255,255,255,0.18); }
   .admin-nav-ico { font-size: 0.95rem; }
   .admin-nav-item.home-item { justify-content: center; text-align: center; }
   .admin-nav-divider { height: 1px; background: rgba(255,255,255,0.14); margin: 6px 4px; }
@@ -1405,7 +1408,23 @@
   .admin-callout b { color: var(--ink); }
   .admin-callout a { color: var(--green-deep); font-weight: 700; text-decoration: underline; }
 
-  .admin-home-wrap { text-align: center; max-width: 980px; margin: 22px auto 0 auto; }
+  .admin-link-cards { display: flex; flex-direction: column; gap: 12px; max-width: 480px; }
+  .admin-link-card {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px 18px; text-decoration: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .admin-link-card:hover { border-color: var(--green); box-shadow: 0 4px 14px rgba(23,24,26,0.06); }
+  .admin-link-card-ico {
+    flex: none; width: 40px; height: 40px; border-radius: 10px;
+    background: var(--green-soft); color: var(--green-deep);
+    display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+  }
+  .admin-link-card-title { font-size: 0.92rem; font-weight: 800; color: var(--ink); }
+  .admin-link-card-url { font-size: 0.76rem; color: var(--ink-soft); margin-top: 2px; }
+
+  .admin-home-wrap { text-align: center; max-width: 1240px; margin: 22px auto 0 auto; }
   .admin-home-band {
     margin: -64px -34px 0 -34px;
     padding: 20px 24px 16px 24px;
@@ -1440,29 +1459,30 @@
   @media (max-width: 900px) {
     .admin-home-cols { grid-template-columns: 1fr; }
   }
-  .admin-home-guide-title { font-size: 0.98rem; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 10px; }
+  .admin-home-guide-title { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 14px; }
   .admin-home-guide-box {
-    text-align: left; font-size: 0.8rem; color: var(--ink-soft); line-height: 1.55;
+    text-align: left; font-size: 0.9rem; color: var(--ink-soft); line-height: 1.75;
     background: var(--paper);
     border: 1px solid var(--line);
     border-radius: 14px;
-    padding: 16px 22px;
+    padding: 28px 32px;
     height: 100%; box-sizing: border-box;
+    min-height: 380px;
   }
-  .admin-home-guide-box ol { padding-left: 20px; }
-  .admin-home-guide-box li { margin-bottom: 5px; }
+  .admin-home-guide-box ol { padding-left: 22px; }
+  .admin-home-guide-box li { margin-bottom: 10px; }
   .admin-home-guide-note { display: inline-block; margin-top: 2px; font-size: 0.75rem; color: var(--ink-soft); opacity: 0.8; }
   .admin-home-guide-box li:last-child { margin-bottom: 0; }
 
   .admin-notice-box { display: flex; flex-direction: column; }
-  .admin-notice-label { font-size: 0.78rem; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
-  .admin-notice-divider { height: 1px; background: var(--line); margin: 14px 0; }
-  .admin-notice-list { display: flex; flex-direction: column; gap: 2px; }
+  .admin-notice-label { font-size: 0.86rem; font-weight: 800; color: var(--ink); margin-bottom: 10px; }
+  .admin-notice-divider { height: 1px; background: var(--line); margin: 22px 0; }
+  .admin-notice-list { display: flex; flex-direction: column; gap: 4px; }
   .admin-notice-item { display: flex; align-items: center; gap: 8px; }
   .admin-notice-dot { flex: none; width: 5px; height: 5px; border-radius: 50%; background: var(--ink-soft); }
   .admin-notice-input {
     flex: 1; min-width: 0; border: none; background: none; font-family: inherit;
-    font-size: 0.85rem; color: var(--ink); padding: 6px 2px;
+    font-size: 0.92rem; color: var(--ink); padding: 8px 2px;
     border-bottom: 1px solid transparent;
   }
   .admin-notice-input:hover, .admin-notice-input:focus { border-bottom: 1px solid var(--line); outline: none; }
@@ -2974,9 +2994,9 @@
           <div class="admin-nav-group">
             <div class="admin-nav-group-title">AI HOLO</div>
             <div class="admin-nav-group-items">
-              <a class="admin-nav-item" href="https://studyaddict26-afk.github.io/" target="_blank" rel="noopener">
+              <button class="admin-nav-item" type="button" onclick="showAdminPanel('links', this)">
                 <span class="admin-nav-ico">🔗</span> 관련된 사이트 링크
-              </a>
+              </button>
               <button class="admin-nav-item" type="button" onclick="showAdminPanel('students', this)">
                 <span class="admin-nav-ico">🔑</span> 학생 계정 관리
               </button>
@@ -3050,6 +3070,40 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div class="admin-panel" id="adminPanelLinks" style="display:none;">
+          <div class="admin-page-head">
+            <span class="admin-page-ico">🔗</span>
+            <div>
+              <h2>관련된 사이트 링크</h2>
+              <div class="split"></div>
+              <p class="admin-page-sub">AI 홀로 관련 사이트로 바로 이동할 수 있습니다.</p>
+            </div>
+          </div>
+          <div class="admin-link-cards">
+            <a class="admin-link-card" href="https://studyaddict26-afk.github.io/" target="_blank" rel="noopener">
+              <span class="admin-link-card-ico">🏠</span>
+              <div>
+                <div class="admin-link-card-title">AI Holo 사이트</div>
+                <div class="admin-link-card-url">studyaddict26-afk.github.io</div>
+              </div>
+            </a>
+            <a class="admin-link-card" href="https://studyaddict26-afk.github.io/#admin" target="_blank" rel="noopener">
+              <span class="admin-link-card-ico">🔑</span>
+              <div>
+                <div class="admin-link-card-title">관리자 사이트</div>
+                <div class="admin-link-card-url">studyaddict26-afk.github.io/#admin</div>
+              </div>
+            </a>
+            <a class="admin-link-card" href="https://studyaddict26-afk.github.io/#form" target="_blank" rel="noopener">
+              <span class="admin-link-card-ico">📝</span>
+              <div>
+                <div class="admin-link-card-title">학습 상담 신청서</div>
+                <div class="admin-link-card-url">studyaddict26-afk.github.io/#form</div>
+              </div>
+            </a>
           </div>
         </div>
 
@@ -4191,6 +4245,7 @@
     document.getElementById("adminPanelSchedule").style.display = name === "schedule" ? "block" : "none";
     document.getElementById("adminPanelForms").style.display = name === "forms" ? "block" : "none";
     document.getElementById("adminPanelStudents").style.display = name === "students" ? "block" : "none";
+    document.getElementById("adminPanelLinks").style.display = name === "links" ? "block" : "none";
     if (name === "schedule") renderAdminSchedule();
     if (name === "availability") renderAvailability();
     if (name === "forms") renderForms();
