@@ -3045,7 +3045,7 @@
                       <li><span class="ef-hl">'학습 상담 예약 현황'</span>에서 예약 상태가 대기인 학생들의 상담 일정을 픽스해야 함</li>
                       <li><span class="ef-hl">'상담 선생님 일정'</span>을 확인한 후, 데스크 또는 카카오톡에서 상담 일정을 학생과 조율</li>
                       <li><span class="ef-hl">'확정된 상담 현황'</span>을 참고하여, 상담 시간은 가능하면 연속해서 이어지도록 조율</li>
-                      <li>상담 일정이 확정되면, <span class="ef-hl">'공부중독 학습 상담 신청서'</span> 링크를 학생에게 전달 후 제출 요청하기</li>
+                      <li>상담 일정이 확정되면, <span class="ef-hl">'공부중독 학습 상담 신청서'</span> 링크 전달 후 제출 요청하기</li>
                       <li>그 후, <span class="ef-hl">'학습 상담 일정 현황'</span>에 있는 계좌번호 학생에게 전달한 후 입금 요청하기</li>
                       <li>입금 확인되면, 상담 확정된 것이며 환불 불가능함을 공지하기</li>
                       <li>늦어도 학습 상담 하루 전까지 신청서 제출해야 한다고 학생에게 말해주기</li>
@@ -4087,8 +4087,13 @@
     });
   }
   function deleteStudent(id) {
-    if (!confirm("이 학생 계정을 삭제할까요? 삭제하면 그 학생은 즉시 로그인할 수 없게 됩니다.")) return;
+    if (!confirm("이 학생 계정을 삭제할까요? 삭제하면 그 학생은 즉시 로그인할 수 없게 되고, 나눴던 대화 기록도 함께 삭제됩니다.")) return;
     db.collection("students").doc(id).delete().catch(err => console.error(err));
+    fetch(CHAT_API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "delete_history", studentId: id }),
+    }).catch(err => console.error(err));
   }
 
   // ── 홈 화면 — 전달 사항 ──
