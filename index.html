@@ -6,7 +6,8 @@
 <title>홀로 | ROADMAP × STUDY ADDICT</title>
 <script>
   if (location.hash === "#admin") document.documentElement.setAttribute("data-boot", "admin");
-  if (location.hash === "#form") document.documentElement.setAttribute("data-boot", "form");
+  else if (location.hash === "#form") document.documentElement.setAttribute("data-boot", "form");
+  else if (!localStorage.getItem("holoStudentId")) document.documentElement.setAttribute("data-boot", "login");
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
@@ -144,8 +145,15 @@
   .sb-item:hover .ico { background: var(--ink-soft); }
   .sb-item.active .ico { background: var(--green); }
 
-  .sb-foot {
+  .sb-logout {
     margin-top: auto;
+    background: none; border: none; cursor: pointer;
+    font-family: inherit; font-size: 0.78rem; font-weight: 700;
+    color: var(--ink-soft); text-align: left;
+    padding: 10px 4px; border-top: 1px solid var(--line);
+  }
+  .sb-logout:hover { color: var(--ink); }
+  .sb-foot {
     font-size: 0.7rem; color: #A6A69E; text-align: center;
     padding-top: 24px;
     line-height: 1.6;
@@ -190,7 +198,29 @@
   html[data-boot="admin"] .topbar,
   html[data-boot="form"] .sidebar,
   html[data-boot="form"] .overlay,
-  html[data-boot="form"] .topbar { display: none; }
+  html[data-boot="form"] .topbar,
+  html[data-boot="login"] .sidebar,
+  html[data-boot="login"] .overlay,
+  html[data-boot="login"] .topbar { display: none; }
+  html[data-boot="login"] .view.on { display: none; }
+  #studentLoginGate { display: none; }
+  html[data-boot="login"] #studentLoginGate { display: flex; }
+  #studentLoginGate {
+    position: fixed; inset: 0; z-index: 500;
+    align-items: center; justify-content: center;
+    background: var(--cream);
+  }
+  .student-login-box {
+    max-width: 380px; width: calc(100% - 40px);
+    background: var(--paper); border: 1px solid var(--line);
+    border-radius: 12px; padding: 40px 36px;
+    text-align: center;
+  }
+  .student-login-box .sl-wordmark { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.01em; }
+  .student-login-box .sl-wordmark .holo { color: var(--green); }
+  .student-login-box .sl-caption { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.14em; color: var(--ink-soft); margin-top: 4px; }
+  .student-login-box h2 { font-size: 1.05rem; font-weight: 700; margin: 20px 0 20px 0; color: var(--ink-soft); }
+  .student-login-box .apply-field { text-align: left; }
 
   /* ═══════════ 홈 화면 ═══════════ */
   #view-home { overflow-y: auto; scrollbar-gutter: stable; }
@@ -1646,6 +1676,27 @@
 </head>
 <body>
 
+<!-- ═══ 학생 로그인 게이트 ═══ -->
+<div id="studentLoginGate">
+  <div class="student-login-box">
+    <div class="sl-wordmark">공부 AI <span class="holo">홀로</span></div>
+    <div class="sl-caption">ROADMAP × STUDY ADDICT</div>
+    <h2>등록된 아이디로 로그인해주세요</h2>
+    <form id="studentLoginForm" onsubmit="studentLogin(event)">
+      <div class="apply-field">
+        <label for="sl-id">아이디</label>
+        <input type="text" id="sl-id" autocomplete="username" required>
+      </div>
+      <div class="apply-field">
+        <label for="sl-pw">비밀번호</label>
+        <input type="password" id="sl-pw" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="apply-submit-btn" id="studentLoginBtn" style="width:100%;">로그인</button>
+      <div class="apply-status-msg" id="studentLoginMsg"></div>
+    </form>
+  </div>
+</div>
+
 <!-- ═══ 사이드바 ═══ -->
 <nav class="sidebar closed" id="sidebar">
   <button class="sb-brand" onclick="go('home')" aria-label="홈으로">
@@ -1694,6 +1745,7 @@
     <span class="ico"></span>나만의 내신, 수능 꿀팁 알려줄게
   </button>
 
+  <button type="button" class="sb-logout" onclick="studentLogout()">로그아웃</button>
   <div class="sb-foot">© ROADMAP × STUDY ADDICT</div>
 </nav>
 <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
@@ -2882,6 +2934,9 @@
           <button class="admin-nav-item" type="button" onclick="showAdminPanel('forms', this)">
             <span class="admin-nav-ico">📝</span> 상담 신청서 관리
           </button>
+          <button class="admin-nav-item" type="button" onclick="showAdminPanel('students', this)">
+            <span class="admin-nav-ico">🔑</span> 학생 계정 관리
+          </button>
         </nav>
         <div class="admin-sidebar-bottom">
           <button type="button" class="admin-side-logout" onclick="adminLogout()">로그아웃</button>
@@ -3035,6 +3090,49 @@
           <div id="adminFormsList" class="admin-forms-list"></div>
           <div class="admin-empty" id="adminFormsEmptyMsg" style="display:none;">아직 제출된 신청서가 없습니다.</div>
         </div>
+
+        <div class="admin-panel" id="adminPanelStudents" style="display:none;">
+          <div class="admin-page-head">
+            <span class="admin-page-ico">🔑</span>
+            <div>
+              <h2>학생 계정 관리</h2>
+              <div class="split"></div>
+              <p class="admin-page-sub">'AI 홀로' 사이트에 로그인할 수 있는 학생 계정을 관리합니다. 계정을 삭제하면 그 즉시 로그인이 막힙니다.</p>
+            </div>
+          </div>
+          <div class="admin-toolbar">
+            <form id="studentAddForm" onsubmit="submitStudentAdd(event)" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; width:100%;">
+              <div class="apply-field" style="flex:1; min-width:120px; margin-bottom:0;">
+                <label for="stu-id">아이디</label>
+                <input type="text" id="stu-id" required>
+              </div>
+              <div class="apply-field" style="flex:1; min-width:120px; margin-bottom:0;">
+                <label for="stu-pw">비밀번호</label>
+                <input type="text" id="stu-pw" required>
+              </div>
+              <div class="apply-field" style="flex:1; min-width:120px; margin-bottom:0;">
+                <label for="stu-name">학생 이름</label>
+                <input type="text" id="stu-name" required>
+              </div>
+              <button type="submit" class="apply-submit-btn" style="flex:none;">+ 계정 추가</button>
+            </form>
+          </div>
+          <div class="apply-status-msg" id="studentAddMsg" style="margin-bottom:10px;"></div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>아이디</th>
+                  <th>이름</th>
+                  <th>등록일</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="adminStudentsBody"></tbody>
+            </table>
+            <div class="admin-empty" id="adminStudentsEmptyMsg" style="display:none;">등록된 학생 계정이 없습니다.</div>
+          </div>
+        </div>
       </main>
     </div>
   </section>
@@ -3171,6 +3269,7 @@
     document.getElementById("viewTitle").textContent = titles[view];
     document.body.classList.toggle("is-admin", view === "admin" || view === "form");
     if (window.innerWidth <= 760) closeSidebar();
+    loadChatHistory(view);
   }
 
   // ── 학습 상담 후기 캐러셀 + 확대 보기 ──
@@ -3362,6 +3461,31 @@
   const CHAT_API_URL = "https://studyaddict26afk--be1575be9f7e11f190ff1607ee4eb77e.web.val.run";
   const AI_SUBJECTS = ["math", "kor"];
   const chatHistory = {};
+  const historyLoaded = {};
+
+  function loadChatHistory(subject) {
+    if (!AI_SUBJECTS.includes(subject) || historyLoaded[subject]) return;
+    historyLoaded[subject] = true;
+    const studentId = localStorage.getItem("holoStudentId");
+    if (!studentId) return;
+    fetch(CHAT_API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "history", subject: subject, studentId: studentId }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (!data.messages || !data.messages.length) return;
+        chatHistory[subject] = data.messages.map(m => ({ role: m.role, content: m.content }));
+        const chat = document.getElementById("chat-" + subject);
+        chat.innerHTML = "";
+        data.messages.forEach(m => {
+          addMsg(subject, m.role === "assistant" ? "bot" : "user", m.role === "assistant" ? formatAiAnswer(m.content) : escapeHtml(m.content));
+        });
+        chat.scrollTop = 1e9;
+      })
+      .catch(err => console.error(err));
+  }
 
   function escapeHtml(s) {
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -3387,7 +3511,11 @@
       fetch(CHAT_API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subject: subject, messages: chatHistory[subject] }),
+        body: JSON.stringify({
+          subject: subject,
+          messages: chatHistory[subject],
+          studentId: localStorage.getItem("holoStudentId") || null,
+        }),
       })
         .then(res => res.json())
         .then(data => {
@@ -3747,6 +3875,70 @@
     document.getElementById("formDetailModalOverlay").classList.remove("on");
   }
 
+  // ── 학생 계정 관리 ──
+  let unsubscribeStudents = null;
+  let adminAllStudents = [];
+  function loadStudents() {
+    if (unsubscribeStudents) return;
+    unsubscribeStudents = db.collection("students").orderBy("createdAt", "desc")
+      .onSnapshot(snap => {
+        adminAllStudents = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderStudents();
+      }, err => console.error(err));
+  }
+  function renderStudents() {
+    const body = document.getElementById("adminStudentsBody");
+    const empty = document.getElementById("adminStudentsEmptyMsg");
+    if (!body) return;
+    if (!adminAllStudents.length) {
+      body.innerHTML = "";
+      empty.style.display = "block";
+      return;
+    }
+    empty.style.display = "none";
+    body.innerHTML = adminAllStudents.map(s => {
+      const created = s.createdAt && s.createdAt.toDate ? s.createdAt.toDate().toISOString().slice(0, 10) : "-";
+      return "<tr>"
+        + "<td>" + escapeHtml(s.id) + "</td>"
+        + "<td>" + escapeHtml(s.name || "-") + "</td>"
+        + "<td>" + created + "</td>"
+        + "<td><button type=\"button\" class=\"admin-delete-btn\" onclick=\"deleteStudent('" + s.id + "')\">삭제</button></td>"
+        + "</tr>";
+    }).join("");
+  }
+  function submitStudentAdd(e) {
+    e.preventDefault();
+    const msg = document.getElementById("studentAddMsg");
+    msg.textContent = "";
+    msg.className = "apply-status-msg";
+    const id = document.getElementById("stu-id").value.trim();
+    const pw = document.getElementById("stu-pw").value.trim();
+    const name = document.getElementById("stu-name").value.trim();
+    if (!id || !pw || !name) return;
+    db.collection("students").doc(id).get().then(doc => {
+      if (doc.exists) {
+        msg.textContent = "이미 존재하는 아이디입니다.";
+        msg.className = "apply-status-msg error";
+        return;
+      }
+      return db.collection("students").doc(id).set({
+        password: pw, name: name, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(() => {
+        document.getElementById("studentAddForm").reset();
+        msg.textContent = "계정이 추가됐습니다.";
+        msg.className = "apply-status-msg success";
+      });
+    }).catch(err => {
+      console.error(err);
+      msg.textContent = "저장 중 오류가 발생했어요.";
+      msg.className = "apply-status-msg error";
+    });
+  }
+  function deleteStudent(id) {
+    if (!confirm("이 학생 계정을 삭제할까요? 삭제하면 그 학생은 즉시 로그인할 수 없게 됩니다.")) return;
+    db.collection("students").doc(id).delete().catch(err => console.error(err));
+  }
+
   let unsubscribeAvailability = null;
   let adminAllAvailability = [];
   function loadAvailability() {
@@ -3859,9 +4051,11 @@
     document.getElementById("adminPanelReservations").style.display = name === "reservations" ? "block" : "none";
     document.getElementById("adminPanelSchedule").style.display = name === "schedule" ? "block" : "none";
     document.getElementById("adminPanelForms").style.display = name === "forms" ? "block" : "none";
+    document.getElementById("adminPanelStudents").style.display = name === "students" ? "block" : "none";
     if (name === "schedule") renderAdminSchedule();
     if (name === "availability") renderAvailability();
     if (name === "forms") renderForms();
+    if (name === "students") renderStudents();
   }
   function renderAdminTable() {
     const body = document.getElementById("adminTableBody");
@@ -3942,16 +4136,88 @@
       loadReservations();
       loadAvailability();
       loadForms();
+      loadStudents();
     } else {
       loginBox.style.display = "block";
       dash.style.display = "none";
     }
   });
 
+  // ── 학생 로그인 게이트 ──
+  function showStudentGate() {
+    document.documentElement.setAttribute("data-boot", "login");
+  }
+  function hideStudentGate() {
+    if (document.documentElement.getAttribute("data-boot") === "login") {
+      document.documentElement.removeAttribute("data-boot");
+    }
+  }
+  function studentLogin(e) {
+    e.preventDefault();
+    const id = document.getElementById("sl-id").value.trim();
+    const pw = document.getElementById("sl-pw").value;
+    const btn = document.getElementById("studentLoginBtn");
+    const msg = document.getElementById("studentLoginMsg");
+    msg.textContent = "";
+    msg.className = "apply-status-msg";
+    if (!id || !pw) return;
+    btn.disabled = true;
+    btn.textContent = "확인 중...";
+    db.collection("students").doc(id).get().then(doc => {
+      btn.disabled = false;
+      btn.textContent = "로그인";
+      if (!doc.exists || doc.data().password !== pw) {
+        msg.textContent = "아이디 또는 비밀번호가 올바르지 않습니다.";
+        msg.className = "apply-status-msg error";
+        return;
+      }
+      localStorage.setItem("holoStudentId", id);
+      localStorage.setItem("holoStudentPw", pw);
+      hideStudentGate();
+      go("home");
+    }).catch(err => {
+      console.error(err);
+      btn.disabled = false;
+      btn.textContent = "로그인";
+      msg.textContent = "로그인 중 오류가 발생했어요. 다시 시도해주세요.";
+      msg.className = "apply-status-msg error";
+    });
+  }
+  function studentLogout() {
+    localStorage.removeItem("holoStudentId");
+    localStorage.removeItem("holoStudentPw");
+    location.hash = "";
+    location.reload();
+  }
+  function checkStudentSession() {
+    const id = localStorage.getItem("holoStudentId");
+    const pw = localStorage.getItem("holoStudentPw");
+    if (!id || !pw) { showStudentGate(); return; }
+    db.collection("students").doc(id).get().then(doc => {
+      if (!doc.exists || doc.data().password !== pw) {
+        localStorage.removeItem("holoStudentId");
+        localStorage.removeItem("holoStudentPw");
+        showStudentGate();
+      } else {
+        hideStudentGate();
+      }
+    }).catch(err => {
+      console.error(err);
+      // 네트워크 오류 시에는 일단 통과시켜서 오프라인 상황에 막히지 않게 함
+      hideStudentGate();
+    });
+  }
+
   function routeFromHash() {
-    if (location.hash === "#admin") go("admin");
-    else if (location.hash === "#form") go("form");
-    document.documentElement.removeAttribute("data-boot");
+    if (location.hash === "#admin") {
+      go("admin");
+      document.documentElement.removeAttribute("data-boot");
+    } else if (location.hash === "#form") {
+      go("form");
+      document.documentElement.removeAttribute("data-boot");
+    } else {
+      checkStudentSession();
+    }
   }
   routeFromHash();
   window.addEventListener("hashchange", routeFromHash);
