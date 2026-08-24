@@ -147,9 +147,10 @@
 
   .sb-logout {
     margin-top: auto;
+    display: block; width: 100%;
     background: none; border: none; cursor: pointer;
     font-family: inherit; font-size: 0.78rem; font-weight: 700;
-    color: var(--ink-soft); text-align: left;
+    color: var(--ink-soft); text-align: center;
     padding: 10px 4px; border-top: 1px solid var(--line);
   }
   .sb-logout:hover { color: var(--ink); }
@@ -1354,10 +1355,25 @@
     padding: 11px 12px;
     font-family: inherit; font-size: 0.86rem; font-weight: 700;
     color: rgba(255,255,255,0.75);
+    text-decoration: none; box-sizing: border-box;
     cursor: pointer;
   }
   .admin-nav-item.active { background: rgba(255,255,255,0.14); color: #FFFFFF; }
   .admin-nav-ico { font-size: 0.95rem; }
+  .admin-nav-item.home-item { justify-content: center; text-align: center; }
+  .admin-nav-divider { height: 1px; background: rgba(255,255,255,0.14); margin: 6px 4px; }
+  .admin-nav-group { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+  .admin-nav-group-title {
+    font-size: 0.72rem; font-weight: 800; letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.5);
+    padding: 4px 12px; margin-bottom: 2px;
+  }
+  .admin-nav-group-items {
+    display: flex; flex-direction: column; gap: 2px;
+    margin-left: 15px; padding-left: 12px;
+    border-left: 1px solid rgba(255,255,255,0.16);
+  }
+  .admin-nav-group-items .admin-nav-item { font-size: 0.82rem; padding: 9px 10px; }
   .admin-sidebar-bottom { display: flex; flex-direction: column; gap: 10px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.14); }
   .admin-side-logout {
     background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); border-radius: 8px;
@@ -1389,7 +1405,7 @@
   .admin-callout b { color: var(--ink); }
   .admin-callout a { color: var(--green-deep); font-weight: 700; text-decoration: underline; }
 
-  .admin-home-wrap { text-align: center; max-width: 640px; margin: 22px auto 0 auto; }
+  .admin-home-wrap { text-align: center; max-width: 980px; margin: 22px auto 0 auto; }
   .admin-home-band {
     margin: -64px -34px 0 -34px;
     padding: 20px 24px 16px 24px;
@@ -1418,7 +1434,12 @@
   @media (max-width: 1080px) {
     .admin-home-band { margin: -22px -18px 0 -18px; }
   }
-  .admin-home-guide { margin-top: 16px; text-align: center; }
+  .admin-home-guide { margin-top: 16px; }
+  .admin-home-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+  .admin-home-col { text-align: center; min-width: 0; }
+  @media (max-width: 900px) {
+    .admin-home-cols { grid-template-columns: 1fr; }
+  }
   .admin-home-guide-title { font-size: 0.98rem; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 10px; }
   .admin-home-guide-box {
     text-align: left; font-size: 0.8rem; color: var(--ink-soft); line-height: 1.55;
@@ -1426,11 +1447,38 @@
     border: 1px solid var(--line);
     border-radius: 14px;
     padding: 16px 22px;
+    height: 100%; box-sizing: border-box;
   }
   .admin-home-guide-box ol { padding-left: 20px; }
   .admin-home-guide-box li { margin-bottom: 5px; }
   .admin-home-guide-note { display: inline-block; margin-top: 2px; font-size: 0.75rem; color: var(--ink-soft); opacity: 0.8; }
   .admin-home-guide-box li:last-child { margin-bottom: 0; }
+
+  .admin-notice-box { display: flex; flex-direction: column; }
+  .admin-notice-label { font-size: 0.78rem; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
+  .admin-notice-divider { height: 1px; background: var(--line); margin: 14px 0; }
+  .admin-notice-list { display: flex; flex-direction: column; gap: 2px; }
+  .admin-notice-item { display: flex; align-items: center; gap: 8px; }
+  .admin-notice-dot { flex: none; width: 5px; height: 5px; border-radius: 50%; background: var(--ink-soft); }
+  .admin-notice-input {
+    flex: 1; min-width: 0; border: none; background: none; font-family: inherit;
+    font-size: 0.85rem; color: var(--ink); padding: 6px 2px;
+    border-bottom: 1px solid transparent;
+  }
+  .admin-notice-input:hover, .admin-notice-input:focus { border-bottom: 1px solid var(--line); outline: none; }
+  .admin-notice-input::placeholder { color: var(--ink-soft); opacity: 0.6; }
+  .admin-notice-del {
+    flex: none; background: none; border: none; cursor: pointer;
+    color: var(--ink-soft); font-size: 0.9rem; padding: 2px 4px; opacity: 0.5;
+  }
+  .admin-notice-del:hover { opacity: 1; color: #B3261E; }
+  .admin-notice-add {
+    align-self: flex-start; margin-top: 6px;
+    background: none; border: none; cursor: pointer;
+    font-family: inherit; font-size: 0.78rem; font-weight: 700;
+    color: var(--green-deep); padding: 4px 2px;
+  }
+  .admin-notice-add:hover { text-decoration: underline; }
 
   .admin-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
   .admin-filter-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -2919,24 +2967,39 @@
           <div class="admin-logo">STUDY ADDICT<br>학습 상담 관리자</div>
         </div>
         <nav class="admin-nav">
-          <button class="admin-nav-item active" type="button" onclick="showAdminPanel('home', this)">
+          <button class="admin-nav-item home-item active" type="button" onclick="showAdminPanel('home', this)">
             <span class="admin-nav-ico">🏠</span> 홈
           </button>
-          <button class="admin-nav-item" type="button" onclick="showAdminPanel('availability', this)">
-            <span class="admin-nav-ico">🕒</span> 상담 선생님 일정
-          </button>
-          <button class="admin-nav-item" type="button" onclick="showAdminPanel('reservations', this)">
-            <span class="admin-nav-ico">📋</span> 학습 상담 예약 현황
-          </button>
-          <button class="admin-nav-item" type="button" onclick="showAdminPanel('schedule', this)">
-            <span class="admin-nav-ico">🗓️</span> 학습 상담 일정 현황
-          </button>
-          <button class="admin-nav-item" type="button" onclick="showAdminPanel('forms', this)">
-            <span class="admin-nav-ico">📝</span> 상담 신청서 관리
-          </button>
-          <button class="admin-nav-item" type="button" onclick="showAdminPanel('students', this)">
-            <span class="admin-nav-ico">🔑</span> 학생 계정 관리
-          </button>
+
+          <div class="admin-nav-group">
+            <div class="admin-nav-group-title">AI HOLO</div>
+            <div class="admin-nav-group-items">
+              <a class="admin-nav-item" href="https://studyaddict26-afk.github.io/" target="_blank" rel="noopener">
+                <span class="admin-nav-ico">🔗</span> 관련된 사이트 링크
+              </a>
+              <button class="admin-nav-item" type="button" onclick="showAdminPanel('students', this)">
+                <span class="admin-nav-ico">🔑</span> 학생 계정 관리
+              </button>
+            </div>
+          </div>
+
+          <div class="admin-nav-group">
+            <div class="admin-nav-group-title">학습 상담</div>
+            <div class="admin-nav-group-items">
+              <button class="admin-nav-item" type="button" onclick="showAdminPanel('reservations', this)">
+                <span class="admin-nav-ico">📋</span> 학습 상담 예약 현황
+              </button>
+              <button class="admin-nav-item" type="button" onclick="showAdminPanel('availability', this)">
+                <span class="admin-nav-ico">🕒</span> 상담 선생님 일정
+              </button>
+              <button class="admin-nav-item" type="button" onclick="showAdminPanel('schedule', this)">
+                <span class="admin-nav-ico">🗓️</span> 확정된 상담 현황
+              </button>
+              <button class="admin-nav-item" type="button" onclick="showAdminPanel('forms', this)">
+                <span class="admin-nav-ico">📝</span> 상담 신청서 관리
+              </button>
+            </div>
+          </div>
         </nav>
         <div class="admin-sidebar-bottom">
           <button type="button" class="admin-side-logout" onclick="adminLogout()">로그아웃</button>
@@ -2953,18 +3016,38 @@
           </div>
           <div class="admin-home-wrap">
             <div class="admin-home-guide" id="adminHomeGuide">
-              <h3 class="admin-home-guide-title">사용 방법</h3>
-              <div class="admin-home-guide-box">
-                <ol>
-                  <li>학생이 AI Holo에서 학습 상담을 예약<br><span class="admin-home-guide-note">(카운터로 문의하면 Holo 들어가서 관리 선생님이 학생 대신 예약해주세요!)</span></li>
-                  <li><span class="ef-hl">'학습 상담 예약 현황'</span>에서 예약 상태가 대기인 학생들의 상담 일정을 픽스해야 함</li>
-                  <li><span class="ef-hl">'상담 선생님 일정'</span>을 확인한 후, 카운터에서 이야기 하거나 카카오톡으로 상담 일정을 조율</li>
-                  <li>상담 시간은 가능하면 연속해서 이어지도록 유도</li>
-                  <li>상담 일정이 확정되면, <span class="ef-hl">'공부중독 학습 상담 신청서'</span> 링크를 학생에게 전달하기</li>
-                  <li>그 후, <span class="ef-hl">'학습 상담 일정 현황'</span>에 있는 계좌번호 학생에게 전달한 후 입금 요청하기</li>
-                  <li>입금 확인되면, 상담 확정된 것이며 환불 불가능함을 공지하기</li>
-                  <li>늦어도 학습 상담 하루 전까지 신청서 제출해야 한다고 학생에게 말해주기</li>
-                </ol>
+              <div class="admin-home-cols">
+                <div class="admin-home-col">
+                  <h3 class="admin-home-guide-title">사용 방법</h3>
+                  <div class="admin-home-guide-box">
+                    <ol>
+                      <li>학생이 AI Holo에서 학습 상담을 예약<br><span class="admin-home-guide-note">(카운터로 문의하면 Holo 들어가서 관리 선생님이 학생 대신 예약해주세요!)</span></li>
+                      <li><span class="ef-hl">'학습 상담 예약 현황'</span>에서 예약 상태가 대기인 학생들의 상담 일정을 픽스해야 함</li>
+                      <li><span class="ef-hl">'상담 선생님 일정'</span>을 확인한 후, 카운터에서 이야기 하거나 카카오톡으로 상담 일정을 조율</li>
+                      <li>상담 시간은 가능하면 연속해서 이어지도록 유도</li>
+                      <li>상담 일정이 확정되면, <span class="ef-hl">'공부중독 학습 상담 신청서'</span> 링크를 학생에게 전달하기</li>
+                      <li>그 후, <span class="ef-hl">'학습 상담 일정 현황'</span>에 있는 계좌번호 학생에게 전달한 후 입금 요청하기</li>
+                      <li>입금 확인되면, 상담 확정된 것이며 환불 불가능함을 공지하기</li>
+                      <li>늦어도 학습 상담 하루 전까지 신청서 제출해야 한다고 학생에게 말해주기</li>
+                    </ol>
+                  </div>
+                </div>
+                <div class="admin-home-col">
+                  <h3 class="admin-home-guide-title">전달 사항</h3>
+                  <div class="admin-home-guide-box admin-notice-box">
+                    <div class="admin-notice-section">
+                      <div class="admin-notice-label">상담 선생님의 전달 사항</div>
+                      <div class="admin-notice-list" id="noticeListCounselor"></div>
+                      <button type="button" class="admin-notice-add" onclick="addNoticeItem('counselor')">+ 항목 추가</button>
+                    </div>
+                    <div class="admin-notice-divider"></div>
+                    <div class="admin-notice-section">
+                      <div class="admin-notice-label">관리 선생님의 전달 사항</div>
+                      <div class="admin-notice-list" id="noticeListAdmin"></div>
+                      <button type="button" class="admin-notice-add" onclick="addNoticeItem('admin')">+ 항목 추가</button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -3046,7 +3129,7 @@
           <div class="admin-page-head">
             <span class="admin-page-ico">🗓️</span>
             <div>
-              <h2>학습 상담 일정 현황</h2>
+              <h2>확정된 상담 현황</h2>
               <div class="split"></div>
               <p class="admin-page-sub">확정된 상담 일정을 날짜·시간이 빠른 순으로 한눈에 모아봅니다.</p>
             </div>
@@ -3102,17 +3185,25 @@
           </div>
           <div class="admin-toolbar">
             <form id="studentAddForm" onsubmit="submitStudentAdd(event)" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; width:100%;">
-              <div class="apply-field" style="flex:1; min-width:120px; margin-bottom:0;">
+              <div class="apply-field" style="flex:1; min-width:110px; margin-bottom:0;">
                 <label for="stu-id">아이디</label>
                 <input type="text" id="stu-id" required>
               </div>
-              <div class="apply-field" style="flex:1; min-width:120px; margin-bottom:0;">
+              <div class="apply-field" style="flex:1; min-width:110px; margin-bottom:0;">
                 <label for="stu-pw">비밀번호</label>
                 <input type="text" id="stu-pw" required>
               </div>
-              <div class="apply-field" style="flex:1; min-width:120px; margin-bottom:0;">
+              <div class="apply-field" style="flex:1; min-width:130px; margin-bottom:0;">
+                <label for="stu-school">학교 (성인은 N수)</label>
+                <input type="text" id="stu-school" required>
+              </div>
+              <div class="apply-field" style="flex:1; min-width:110px; margin-bottom:0;">
                 <label for="stu-name">학생 이름</label>
                 <input type="text" id="stu-name" required>
+              </div>
+              <div class="apply-field" style="flex:1; min-width:130px; margin-bottom:0;">
+                <label for="stu-birth">생년월일</label>
+                <input type="text" id="stu-birth" placeholder="예: 2008-05-14" required>
               </div>
               <button type="submit" class="apply-submit-btn" style="flex:none;">+ 계정 추가</button>
             </form>
@@ -3123,7 +3214,9 @@
               <thead>
                 <tr>
                   <th>아이디</th>
+                  <th>학교</th>
                   <th>이름</th>
+                  <th>생년월일</th>
                   <th>등록일</th>
                   <th></th>
                 </tr>
@@ -3900,7 +3993,9 @@
       const created = s.createdAt && s.createdAt.toDate ? s.createdAt.toDate().toISOString().slice(0, 10) : "-";
       return "<tr>"
         + "<td>" + escapeHtml(s.id) + "</td>"
+        + "<td>" + escapeHtml(s.school || "-") + "</td>"
         + "<td>" + escapeHtml(s.name || "-") + "</td>"
+        + "<td>" + escapeHtml(s.birth || "-") + "</td>"
         + "<td>" + created + "</td>"
         + "<td><button type=\"button\" class=\"admin-delete-btn\" onclick=\"deleteStudent('" + s.id + "')\">삭제</button></td>"
         + "</tr>";
@@ -3913,16 +4008,19 @@
     msg.className = "apply-status-msg";
     const id = document.getElementById("stu-id").value.trim();
     const pw = document.getElementById("stu-pw").value.trim();
+    const school = document.getElementById("stu-school").value.trim();
     const name = document.getElementById("stu-name").value.trim();
-    if (!id || !pw || !name) return;
+    const birth = document.getElementById("stu-birth").value.trim();
+    if (!id || !pw || !school || !name || !birth) return;
     db.collection("students").doc(id).get().then(doc => {
       if (doc.exists) {
-        msg.textContent = "이미 존재하는 아이디입니다.";
+        msg.textContent = "이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.";
         msg.className = "apply-status-msg error";
         return;
       }
       return db.collection("students").doc(id).set({
-        password: pw, name: name, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        password: pw, school: school, name: name, birth: birth,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
       }).then(() => {
         document.getElementById("studentAddForm").reset();
         msg.textContent = "계정이 추가됐습니다.";
@@ -3937,6 +4035,47 @@
   function deleteStudent(id) {
     if (!confirm("이 학생 계정을 삭제할까요? 삭제하면 그 학생은 즉시 로그인할 수 없게 됩니다.")) return;
     db.collection("students").doc(id).delete().catch(err => console.error(err));
+  }
+
+  // ── 홈 화면 — 전달 사항 ──
+  let unsubscribeNotices = {};
+  let adminNotices = { counselor: [], admin: [] };
+  function loadNotices() {
+    ["counselor", "admin"].forEach(key => {
+      if (unsubscribeNotices[key]) return;
+      unsubscribeNotices[key] = db.collection("adminNotices").doc(key).onSnapshot(doc => {
+        const data = doc.exists ? doc.data() : null;
+        adminNotices[key] = (data && Array.isArray(data.items)) ? data.items : ["", ""];
+        renderNoticeList(key);
+      }, err => console.error(err));
+    });
+  }
+  function renderNoticeList(key) {
+    const container = document.getElementById(key === "counselor" ? "noticeListCounselor" : "noticeListAdmin");
+    if (!container) return;
+    const items = adminNotices[key];
+    container.innerHTML = items.map((text, i) =>
+      "<div class=\"admin-notice-item\">"
+      + "<span class=\"admin-notice-dot\"></span>"
+      + "<input type=\"text\" class=\"admin-notice-input\" value=\"" + escapeHtml(text) + "\" placeholder=\"내용을 입력하세요\" "
+      + "onchange=\"saveNoticeItem('" + key + "', " + i + ", this.value)\">"
+      + "<button type=\"button\" class=\"admin-notice-del\" onclick=\"deleteNoticeItem('" + key + "', " + i + ")\">×</button>"
+      + "</div>"
+    ).join("");
+  }
+  function addNoticeItem(key) {
+    const items = adminNotices[key].concat([""]);
+    db.collection("adminNotices").doc(key).set({ items: items }, { merge: true }).catch(err => console.error(err));
+  }
+  function saveNoticeItem(key, index, value) {
+    const items = adminNotices[key].slice();
+    items[index] = value;
+    db.collection("adminNotices").doc(key).set({ items: items }, { merge: true }).catch(err => console.error(err));
+  }
+  function deleteNoticeItem(key, index) {
+    const items = adminNotices[key].slice();
+    items.splice(index, 1);
+    db.collection("adminNotices").doc(key).set({ items: items }, { merge: true }).catch(err => console.error(err));
   }
 
   let unsubscribeAvailability = null;
@@ -4137,6 +4276,7 @@
       loadAvailability();
       loadForms();
       loadStudents();
+      loadNotices();
     } else {
       loginBox.style.display = "block";
       dash.style.display = "none";
