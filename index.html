@@ -1628,15 +1628,16 @@
   }
 
   .chat-wrap {
-    flex: 1; width: 100%; max-width: 760px; margin: 0 auto;
-    padding: 22px 20px 8px 20px;
-    display: flex; flex-direction: column; gap: 14px;
+    flex: 1; width: 100%; max-width: 800px; margin: 0 auto;
+    padding: 28px 20px 8px 20px;
+    display: flex; flex-direction: column; gap: 26px;
     overflow-y: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
   .chat-wrap::-webkit-scrollbar { display: none; }
   .msg { display: flex; gap: 12px; max-width: 92%; }
+  .msg.bot { max-width: 100%; }
   .msg .avatar {
     flex: none; width: 34px; height: 34px; border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
@@ -1651,8 +1652,7 @@
   .msg.bot .avatar[data-brand="rm"] { background: var(--green-soft); padding: 4px; }
   .msg.bot .avatar[data-brand="rm"] img { object-fit: contain; }
   .msg.bot .bubble {
-    background: var(--paper); border: 1px solid var(--line);
-    border-top-left-radius: 4px;
+    background: none; border: none; padding: 4px 0;
   }
   .msg.user { margin-left: auto; flex-direction: row-reverse; }
   .msg.user .avatar { background: var(--green); }
@@ -1661,6 +1661,13 @@
     border-top-right-radius: 4px;
   }
   .bubble b { font-weight: 700; }
+  .ans-p { margin: 0 0 14px 0; }
+  .ans-p:last-child { margin-bottom: 0; }
+  .ans-heading { font-size: 1.02rem; font-weight: 800; margin: 18px 0 8px 0; }
+  .ans-heading:first-child { margin-top: 0; }
+  .ans-list { margin: 0 0 14px 0; padding-left: 22px; }
+  .ans-list li { margin-bottom: 6px; }
+  .ans-list li:last-child { margin-bottom: 0; }
   .bubble .src { display: block; margin-top: 8px; font-size: 0.75rem; color: var(--ink-soft); }
 
   .chips {
@@ -3638,10 +3645,41 @@
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
   function formatAiAnswer(text) {
-    let out = escapeHtml(text);
-    out = out.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-    out = out.replace(/\n/g, "<br>");
-    return out;
+    function inline(s) {
+      s = escapeHtml(s);
+      s = s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+      return s;
+    }
+    const lines = String(text).split("\n");
+    let html = "";
+    let listType = null;
+    function closeList() {
+      if (listType) { html += "</" + listType + ">"; listType = null; }
+    }
+    lines.forEach(line => {
+      const t = line.trim();
+      if (!t) { closeList(); return; }
+      let m;
+      if ((m = t.match(/^#{1,4}\s+(.*)$/))) {
+        closeList();
+        html += "<div class=\"ans-heading\">" + inline(m[1]) + "</div>";
+        return;
+      }
+      if ((m = t.match(/^[-•]\s+(.*)$/))) {
+        if (listType !== "ul") { closeList(); html += "<ul class=\"ans-list\">"; listType = "ul"; }
+        html += "<li>" + inline(m[1]) + "</li>";
+        return;
+      }
+      if ((m = t.match(/^\d+[.)]\s+(.*)$/))) {
+        if (listType !== "ol") { closeList(); html += "<ol class=\"ans-list\">"; listType = "ol"; }
+        html += "<li>" + inline(m[1]) + "</li>";
+        return;
+      }
+      closeList();
+      html += "<p class=\"ans-p\">" + inline(t) + "</p>";
+    });
+    closeList();
+    return html;
   }
 
   function send(subject, text) {
