@@ -868,7 +868,7 @@
   }
 
   /* ═══════════ 상담 안내 ═══════════ */
-  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3, #view-consult-5, #view-consult-6, #view-consult-7 { overflow-y: auto; scrollbar-gutter: stable; }
+  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3, #view-consult-5, #view-consult-6, #view-consult-7, #view-consult-8 { overflow-y: auto; scrollbar-gutter: stable; }
   .consult-page {
     max-width: 1040px; width: 100%; margin: 0 auto;
     padding: 32px 24px 56px 24px;
@@ -962,11 +962,11 @@
   }
   .grade-tab-row .tt-arw { color: var(--green); font-weight: 700; }
   .grade-tabs-cols {
-    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;
   }
   .grade-tab-col {
-    display: flex; align-items: center; justify-content: center;
-    text-align: center; font-family: inherit; word-break: keep-all;
+    display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 7px;
+    text-align: center; font-family: inherit; word-break: keep-all; white-space: nowrap;
     background: none; border: none; border-right: 1px solid var(--line); cursor: pointer;
     padding: 18px 14px;
     font-size: 0.86rem; font-weight: 700; color: var(--ink);
@@ -974,6 +974,11 @@
   }
   .grade-tab-col:last-child { border-right: none; }
   .grade-tab-col:hover { background: var(--cream); }
+  .grade-tab-col-arrow {
+    font-size: 1.05rem; font-weight: 800; color: var(--green);
+    transition: transform 0.18s;
+  }
+  .grade-tab-col:hover .grade-tab-col-arrow { transform: translateX(3px); }
   @media (max-width: 760px) {
     .grade-tabs-cols { grid-template-columns: 1fr; }
     .grade-tab-col { border-right: none; border-bottom: 1px solid var(--line); }
@@ -2176,13 +2181,20 @@
         <div class="grade-tabs-card-title">학습 상담 프로그램 및 비용</div>
         <div class="grade-tabs-cols">
           <button type="button" class="grade-tab-col" onclick="go('consult-5')">
-            <span><span class="ef-hl">고1 & 예비 고1</span> 구체적으로 알아보기</span>
+            <span class="ef-hl">고1 & 예비 고1</span>
+            <span class="grade-tab-col-arrow">›</span>
           </button>
           <button type="button" class="grade-tab-col" onclick="go('consult-6')">
-            <span><span class="ef-hl">고2 & 예비 고2</span> 구체적으로 알아보기</span>
+            <span class="ef-hl">고2 & 예비 고2</span>
+            <span class="grade-tab-col-arrow">›</span>
           </button>
           <button type="button" class="grade-tab-col" onclick="go('consult-7')">
-            <span><span class="ef-hl">고3 & 예비 고3</span> 구체적으로 알아보기</span>
+            <span class="ef-hl">고3 & 예비 고3</span>
+            <span class="grade-tab-col-arrow">›</span>
+          </button>
+          <button type="button" class="grade-tab-col" onclick="go('consult-8')">
+            <span class="ef-hl">N수생</span>
+            <span class="grade-tab-col-arrow">›</span>
           </button>
         </div>
       </div>
@@ -2783,6 +2795,37 @@
           <span class="tt-sub">구체적으로 알아보기 <span class="tt-arw">›</span></span>
         </button>
         <button class="ct-tab" id="ct-3-g3" onclick="go('consult-3')">
+          <span class="tt-name">유형 3. 국어 과외</span>
+          <span class="tt-sub">구체적으로 알아보기 <span class="tt-arw">›</span></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 상담 상세: N수생 ─── -->
+  <section class="view" id="view-consult-8">
+    <div class="consult-page">
+      <a class="cd-back-link" href="#" onclick="go('consult');return false;">← 이전으로</a>
+      <div class="cd-page-head">
+        <div>
+          <span class="eyebrow">RETAKE</span>
+          <h2>'N수생'을 위한 학습 상담 프로그램 및 비용</h2>
+        </div>
+        <button type="button" class="cd-apply-btn" onclick="openApplyModal()">
+          상담 신청하기 <span class="cd-apply-arw">→</span>
+        </button>
+      </div>
+      <div class="split"></div>
+      <div class="consult-tabs">
+        <button class="ct-tab" id="ct-1-g4" onclick="go('consult-1')">
+          <span class="tt-name">유형 1. 전반적인 학습 컨설팅</span>
+          <span class="tt-sub">구체적으로 알아보기 <span class="tt-arw">›</span></span>
+        </button>
+        <button class="ct-tab" id="ct-2-g4" onclick="go('consult-2')">
+          <span class="tt-name">유형 2. 수학 과외</span>
+          <span class="tt-sub">구체적으로 알아보기 <span class="tt-arw">›</span></span>
+        </button>
+        <button class="ct-tab" id="ct-3-g4" onclick="go('consult-3')">
           <span class="tt-name">유형 3. 국어 과외</span>
           <span class="tt-sub">구체적으로 알아보기 <span class="tt-arw">›</span></span>
         </button>
@@ -3553,7 +3596,7 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 & 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 & 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 & 예비 고3'을 위한 학습 상담 프로그램 및 비용", math: "수학 질문하기", kor: "국어 질문하기", diary: "공부 일기 작성하기", korw: "국어 고민 기록하기", mathw: "수학 고민 기록하기", engw: "영어 고민 기록하기", rm1: "나는 로드맵에서 이렇게 공부했어", rm2: "현강, 인강 강사 추천해줄게", rm3: "대학 입시 제도 알고 있어?", rm4: "나만의 내신, 수능 꿀팁 알려줄게", rm5: "공부가 안 될 땐 이렇게 해봐", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 & 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 & 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 & 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", math: "수학 질문하기", kor: "국어 질문하기", diary: "공부 일기 작성하기", korw: "국어 고민 기록하기", mathw: "수학 고민 기록하기", engw: "영어 고민 기록하기", rm1: "나는 로드맵에서 이렇게 공부했어", rm2: "현강, 인강 강사 추천해줄게", rm3: "대학 입시 제도 알고 있어?", rm4: "나만의 내신, 수능 꿀팁 알려줄게", rm5: "공부가 안 될 땐 이렇게 해봐", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { math: "qna", kor: "qna", diary: "worry", korw: "worry", mathw: "worry", engw: "worry", rm1: "rm", rm2: "rm", rm3: "rm", rm4: "rm", rm5: "rm" };
   function toggleGroup(name) {
     const group = document.getElementById("sbg-group-" + name);
