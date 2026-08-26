@@ -868,7 +868,7 @@
   }
 
   /* ═══════════ 상담 안내 ═══════════ */
-  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3 { overflow-y: auto; scrollbar-gutter: stable; }
+  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3, #view-consult-5, #view-consult-6, #view-consult-7 { overflow-y: auto; scrollbar-gutter: stable; }
   .consult-page {
     max-width: 1040px; width: 100%; margin: 0 auto;
     padding: 32px 24px 56px 24px;
@@ -934,6 +934,67 @@
     display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
     margin-bottom: 14px;
   }
+  .consult-tabs-more {
+    display: grid; grid-template-columns: 1fr; gap: 10px;
+    margin-bottom: 14px;
+  }
+  .grade-tabs-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .grade-tab-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+    width: 100%; text-align: left; font-family: inherit;
+    background: none; border: none; border-bottom: 1px solid var(--line); cursor: pointer;
+    padding: 18px 22px;
+    font-size: 0.95rem; font-weight: 700; color: var(--ink);
+    transition: background 0.15s;
+  }
+  .grade-tab-row:last-child { border-bottom: none; }
+  .grade-tab-row:hover { background: var(--cream); }
+  .grade-tabs-card-title {
+    padding: 16px 22px; font-size: 0.86rem; font-weight: 800; color: var(--ink-soft);
+    letter-spacing: 0.01em; text-align: center;
+    border-bottom: 1px solid var(--line);
+  }
+  .grade-tab-row .tt-arw { color: var(--green); font-weight: 700; }
+  .grade-tabs-cols {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+  }
+  .grade-tab-col {
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; font-family: inherit; word-break: keep-all;
+    background: none; border: none; border-right: 1px solid var(--line); cursor: pointer;
+    padding: 18px 14px;
+    font-size: 0.86rem; font-weight: 700; color: var(--ink);
+    transition: background 0.15s;
+  }
+  .grade-tab-col:last-child { border-right: none; }
+  .grade-tab-col:hover { background: var(--cream); }
+  @media (max-width: 760px) {
+    .grade-tabs-cols { grid-template-columns: 1fr; }
+    .grade-tab-col { border-right: none; border-bottom: 1px solid var(--line); }
+    .grade-tab-col:last-child { border-bottom: none; }
+  }
+  @media (max-width: 640px) {
+    .grade-tab-row { padding: 16px 18px; font-size: 0.88rem; }
+  }
+  .grade-inline-row {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;
+    padding: 20px 22px;
+  }
+  .grade-inline-label { font-size: 1rem; font-weight: 800; color: var(--ink); }
+  .grade-inline-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .grade-inline-btn {
+    font-family: inherit; font-size: 0.78rem; font-weight: 700; color: var(--green);
+    background: var(--green-soft); border: 1px solid #CFDED4; border-radius: 999px;
+    padding: 8px 14px; cursor: pointer; white-space: nowrap;
+    transition: background 0.18s, color 0.18s, border-color 0.18s;
+  }
+  .grade-inline-btn:hover { background: var(--green); color: #FFFFFF; border-color: var(--green); }
   .ct-tab {
     position: relative;
     background: var(--paper);
@@ -2107,33 +2168,32 @@
       <span class="eyebrow">CONSULTING</span>
       <h2>학습 상담 안내</h2>
       <div class="split"></div>
-      <p class="lede">로드맵 독서실에서는 공부중독 송의준 선생님과 함께하는 세 가지 상담을 준비했습니다. 나에게 필요한 상담을 골라보세요.</p>
+      <p class="lede">로드맵 독서실에서는 공부중독 송의준 선생님과 함께하는 학습 상담을 준비했습니다.</p>
 
-      <p class="consult-motto"><span class="ef-hl">"변화하지 않으면 달라지는 건 없습니다. 최대한 돕겠습니다"</span></p>
+      <p class="consult-motto"><span class="ef-hl">"방법이 변화하지 않으면 달라지는 건 없습니다. 최대한 돕겠습니다"</span></p>
 
-      <div class="consult-tabs">
-        <button class="ct-tab" id="ct-1" onclick="go('consult-1')">
-          <span class="tt-name">전반적인 학습 컨설팅</span>
-          <span class="tt-sub">구체적으로 알아보기 <span class="tt-arw">›</span></span>
-        </button>
-        <button class="ct-tab" id="ct-2" onclick="go('consult-2')">
-          <span class="tt-name">수학 과외</span>
-          <span class="tt-sub">구체적으로 알아보기 <span class="tt-arw">›</span></span>
-        </button>
-        <button class="ct-tab" id="ct-3" onclick="go('consult-3')">
-          <span class="tt-name">국어 과외</span>
-          <span class="tt-sub">구체적으로 알아보기 <span class="tt-arw">›</span></span>
-        </button>
+      <div class="grade-tabs-card">
+        <div class="grade-tabs-card-title">학습 상담 프로그램 및 비용</div>
+        <div class="grade-tabs-cols">
+          <button type="button" class="grade-tab-col" onclick="go('consult-5')">
+            <span><span class="ef-hl">고1 & 예비 고1</span> 구체적으로 알아보기</span>
+          </button>
+          <button type="button" class="grade-tab-col" onclick="go('consult-6')">
+            <span><span class="ef-hl">고2 & 예비 고2</span> 구체적으로 알아보기</span>
+          </button>
+          <button type="button" class="grade-tab-col" onclick="go('consult-7')">
+            <span><span class="ef-hl">고3 & 예비 고3</span> 구체적으로 알아보기</span>
+          </button>
+        </div>
       </div>
 
       <div class="consult-extra">
-        <div class="cx-block cx-block-card">
+        <div class="cx-block">
           <div class="cx-title">로드맵 독서실 학습 컨설턴트, 송의준 선생님을 소개합니다</div>
 
                   <div class="spec-box">
             <div class="spec-header">
               <div class="spec-header-text">
-                <div class="spec-title">송의준 선생님 특이사항</div>
                 <div class="spec-now">
                   現 인스타그램 &lt;공부중독&gt; 채널 운영자
                   <span class="sep">·</span>
@@ -2255,7 +2315,7 @@
   <!-- ─── 상담 상세: 전반적인 학습 컨설팅 ─── -->
   <section class="view" id="view-consult-1">
     <div class="consult-page">
-      <a class="cd-back-link" href="#" onclick="go('consult');return false;">← 상담 목록으로</a>
+      <a class="cd-back-link" href="#" onclick="go('consult');return false;">← 이전으로</a>
       <div class="cd-page-head">
         <div>
           <span class="eyebrow">GENERAL</span>
@@ -2310,32 +2370,13 @@
 
       </div>
 
-      <div class="consult-panel on">
-        <div class="cd-section">
-          <div class="cd-heading">상담 시간 및 비용</div>
-          <div class="cd-price">
-            <p class="cd-price-note"><span class="ef-hl">학습 컨설팅 결과 안내서</span>와 함께 <span class="ef-hl">공부중독의 노하우가 담긴 공부법 PDF(약 100p)</span>를 <span class="ef-hl">무료로 제공</span>합니다</p>
-            <div class="cd-price-chips">
-              <div class="cd-price-chip">
-                <span class="cd-price-chip-label">상담 시간</span>
-                <span class="cd-price-chip-value">1시간 또는 2시간</span>
-              </div>
-              <div class="cd-price-chip">
-                <span class="cd-price-chip-label">상담 비용</span>
-                <span class="cd-price-chip-value">시간 당 3만원</span>
-              </div>
-              <span class="cd-price-fill">로드맵 독서실과 공부중독의 협업을 통해 가장 합리적인 비용으로 상담을 제공합니다.</span>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 
   <!-- ─── 상담 상세: 수학 과외 ─── -->
   <section class="view" id="view-consult-2">
     <div class="consult-page">
-      <a class="cd-back-link" href="#" onclick="go('consult');return false;">← 상담 목록으로</a>
+      <a class="cd-back-link" href="#" onclick="go('consult');return false;">← 이전으로</a>
       <div class="cd-page-head">
         <div>
           <span class="eyebrow">MATH</span>
@@ -2441,32 +2482,13 @@
 
       </div>
 
-      <div class="consult-panel on">
-        <div class="cd-section">
-          <div class="cd-heading">상담 시간 및 비용</div>
-          <div class="cd-price">
-            <p class="cd-price-note"><span class="ef-hl">공부중독의 노하우가 담긴 공부법 PDF(약 100p)</span>를 <span class="ef-hl">무료로 제공</span>합니다</p>
-            <div class="cd-price-chips">
-              <div class="cd-price-chip">
-                <span class="cd-price-chip-label">상담 시간</span>
-                <span class="cd-price-chip-value">1시간 또는 2시간</span>
-              </div>
-              <div class="cd-price-chip">
-                <span class="cd-price-chip-label">상담 비용</span>
-                <span class="cd-price-chip-value">시간 당 3만원</span>
-              </div>
-              <span class="cd-price-fill">로드맵 독서실과 공부중독의 협업을 통해 가장 합리적인 비용으로 상담을 제공합니다.</span>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 
   <!-- ─── 상담 상세: 국어 과외 ─── -->
   <section class="view" id="view-consult-3">
     <div class="consult-page">
-      <a class="cd-back-link" href="#" onclick="go('consult');return false;">← 상담 목록으로</a>
+      <a class="cd-back-link" href="#" onclick="go('consult');return false;">← 이전으로</a>
       <div class="cd-page-head">
         <div>
           <span class="eyebrow">KOREAN</span>
@@ -2588,25 +2610,6 @@
 
       </div>
 
-      <div class="consult-panel on">
-        <div class="cd-section">
-          <div class="cd-heading">상담 시간 및 비용</div>
-          <div class="cd-price">
-            <p class="cd-price-note"><span class="ef-hl">공부중독의 노하우가 담긴 공부법 PDF(약 100p)</span>를 <span class="ef-hl">무료로 제공</span>합니다</p>
-            <div class="cd-price-chips">
-              <div class="cd-price-chip">
-                <span class="cd-price-chip-label">상담 시간</span>
-                <span class="cd-price-chip-value">1시간 또는 2시간</span>
-              </div>
-              <div class="cd-price-chip">
-                <span class="cd-price-chip-label">상담 비용</span>
-                <span class="cd-price-chip-value">시간 당 3만원</span>
-              </div>
-              <span class="cd-price-fill">로드맵 독서실과 공부중독의 협업을 통해 가장 합리적인 비용으로 상담을 제공합니다.</span>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -2691,6 +2694,99 @@
         <button onclick="send('engw')">보내기</button>
       </div>
       <div class="input-note">※ AI 답변은 참고용이며 실수가 있을 수 있어요.</div>
+    </div>
+  </section>
+
+  <!-- ─── 상담 상세: 고1 & 예비 고1 ─── -->
+  <section class="view" id="view-consult-5">
+    <div class="consult-page">
+      <a class="cd-back-link" href="#" onclick="go('consult');return false;">← 이전으로</a>
+      <div class="cd-page-head">
+        <div>
+          <span class="eyebrow">GRADE 1</span>
+          <h2>'고1 & 예비 고1'을 위한 학습 상담 프로그램 및 비용</h2>
+        </div>
+        <button type="button" class="cd-apply-btn" onclick="openApplyModal()">
+          상담 신청하기 <span class="cd-apply-arw">→</span>
+        </button>
+      </div>
+      <div class="split"></div>
+      <div class="consult-tabs">
+        <button class="ct-tab" id="ct-1-g1" onclick="go('consult-1')">
+          <span class="tt-name">유형 1. 전반적인 학습 컨설팅</span>
+          <span class="tt-sub">구체적으로 알아보기 <span class="tt-arw">›</span></span>
+        </button>
+        <button class="ct-tab" id="ct-2-g1" onclick="go('consult-2')">
+          <span class="tt-name">유형 2. 수학 과외</span>
+          <span class="tt-sub">구체적으로 알아보기 <span class="tt-arw">›</span></span>
+        </button>
+        <button class="ct-tab" id="ct-3-g1" onclick="go('consult-3')">
+          <span class="tt-name">유형 3. 국어 과외</span>
+          <span class="tt-sub">구체적으로 알아보기 <span class="tt-arw">›</span></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 상담 상세: 고2 & 예비 고2 ─── -->
+  <section class="view" id="view-consult-6">
+    <div class="consult-page">
+      <a class="cd-back-link" href="#" onclick="go('consult');return false;">← 이전으로</a>
+      <div class="cd-page-head">
+        <div>
+          <span class="eyebrow">GRADE 2</span>
+          <h2>'고2 & 예비 고2'을 위한 학습 상담 프로그램 및 비용</h2>
+        </div>
+        <button type="button" class="cd-apply-btn" onclick="openApplyModal()">
+          상담 신청하기 <span class="cd-apply-arw">→</span>
+        </button>
+      </div>
+      <div class="split"></div>
+      <div class="consult-tabs">
+        <button class="ct-tab" id="ct-1-g2" onclick="go('consult-1')">
+          <span class="tt-name">유형 1. 전반적인 학습 컨설팅</span>
+          <span class="tt-sub">구체적으로 알아보기 <span class="tt-arw">›</span></span>
+        </button>
+        <button class="ct-tab" id="ct-2-g2" onclick="go('consult-2')">
+          <span class="tt-name">유형 2. 수학 과외</span>
+          <span class="tt-sub">구체적으로 알아보기 <span class="tt-arw">›</span></span>
+        </button>
+        <button class="ct-tab" id="ct-3-g2" onclick="go('consult-3')">
+          <span class="tt-name">유형 3. 국어 과외</span>
+          <span class="tt-sub">구체적으로 알아보기 <span class="tt-arw">›</span></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 상담 상세: 고3 & 예비 고3 ─── -->
+  <section class="view" id="view-consult-7">
+    <div class="consult-page">
+      <a class="cd-back-link" href="#" onclick="go('consult');return false;">← 이전으로</a>
+      <div class="cd-page-head">
+        <div>
+          <span class="eyebrow">GRADE 3</span>
+          <h2>'고3 & 예비 고3'을 위한 학습 상담 프로그램 및 비용</h2>
+        </div>
+        <button type="button" class="cd-apply-btn" onclick="openApplyModal()">
+          상담 신청하기 <span class="cd-apply-arw">→</span>
+        </button>
+      </div>
+      <div class="split"></div>
+      <div class="consult-tabs">
+        <button class="ct-tab" id="ct-1-g3" onclick="go('consult-1')">
+          <span class="tt-name">유형 1. 전반적인 학습 컨설팅</span>
+          <span class="tt-sub">구체적으로 알아보기 <span class="tt-arw">›</span></span>
+        </button>
+        <button class="ct-tab" id="ct-2-g3" onclick="go('consult-2')">
+          <span class="tt-name">유형 2. 수학 과외</span>
+          <span class="tt-sub">구체적으로 알아보기 <span class="tt-arw">›</span></span>
+        </button>
+        <button class="ct-tab" id="ct-3-g3" onclick="go('consult-3')">
+          <span class="tt-name">유형 3. 국어 과외</span>
+          <span class="tt-sub">구체적으로 알아보기 <span class="tt-arw">›</span></span>
+        </button>
+      </div>
     </div>
   </section>
 
@@ -3457,7 +3553,7 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-2": "수학 과외", "consult-3": "국어 과외", math: "수학 질문하기", kor: "국어 질문하기", diary: "공부 일기 작성하기", korw: "국어 고민 기록하기", mathw: "수학 고민 기록하기", engw: "영어 고민 기록하기", rm1: "나는 로드맵에서 이렇게 공부했어", rm2: "현강, 인강 강사 추천해줄게", rm3: "대학 입시 제도 알고 있어?", rm4: "나만의 내신, 수능 꿀팁 알려줄게", rm5: "공부가 안 될 땐 이렇게 해봐", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 & 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 & 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 & 예비 고3'을 위한 학습 상담 프로그램 및 비용", math: "수학 질문하기", kor: "국어 질문하기", diary: "공부 일기 작성하기", korw: "국어 고민 기록하기", mathw: "수학 고민 기록하기", engw: "영어 고민 기록하기", rm1: "나는 로드맵에서 이렇게 공부했어", rm2: "현강, 인강 강사 추천해줄게", rm3: "대학 입시 제도 알고 있어?", rm4: "나만의 내신, 수능 꿀팁 알려줄게", rm5: "공부가 안 될 땐 이렇게 해봐", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { math: "qna", kor: "qna", diary: "worry", korw: "worry", mathw: "worry", engw: "worry", rm1: "rm", rm2: "rm", rm3: "rm", rm4: "rm", rm5: "rm" };
   function toggleGroup(name) {
     const group = document.getElementById("sbg-group-" + name);
