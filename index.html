@@ -422,7 +422,7 @@
 
   .home-promo-slot {
     max-width: 980px; width: 100%; margin: 18px auto 48px auto; padding: 0 24px;
-    display: flex; align-items: stretch; gap: 12px;
+    display: flex; align-items: flex-start; gap: 12px;
   }
   /* 위 4개 버튼 행(gap 12px, flex:1 1 0 넷)과 정확히 같은 격자에 맞춘다:
      버튼 1개 폭 = (100% - 36px) / 4 — 이 값을 그대로 재사용해서
@@ -3106,11 +3106,11 @@
           <div class="rh-tile-avg rh-tile-avg-2col">
             <div class="rh-tile-avg-col">
               <span class="rh-tile-avg-label">현재까지 누적</span>
-              <span class="rh-score-num s2">"<span id="rhTotalDays">34</span>일"</span>
+              <span class="rh-score-num s2">"<span id="rhTotalDays">…</span>일"</span>
             </div>
             <div class="rh-tile-avg-col">
               <span class="rh-tile-avg-label"><span id="rhCumWeekLabel">9월 1주차</span> 누적 점수</span>
-              <span class="rh-score-num s2" id="rhCumScore">평균 2.3점</span>
+              <span class="rh-score-num s2" id="rhCumScore">확인 중…</span>
             </div>
           </div>
         </button>
