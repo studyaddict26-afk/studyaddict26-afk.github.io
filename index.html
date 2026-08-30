@@ -459,7 +459,8 @@
   .home-schedule-head { display: flex; align-items: center; justify-content: center; }
   .home-schedule-inner {
     background: var(--cream); border-radius: 8px;
-    padding: 10px 12px; margin-top: 10px;
+    padding: 10px 12px; margin-top: 10px; min-height: 140px;
+    box-sizing: border-box; display: flex; flex-direction: column; justify-content: center;
   }
   .home-schedule-date { font-size: 0.74rem; font-weight: 700; color: var(--ink); margin: 0 0 10px; }
   .home-schedule-log { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
@@ -4832,6 +4833,14 @@
   }
   updateRecordDate();
   setInterval(updateRecordDate, 60 * 1000);
+
+  // 홈 화면은 처음 로드될 때 이미 정적으로 "on" 상태라 go('home')이 따로 호출되지 않는다
+  // (로그인 직후나 사이드바로 다시 들어올 때만 go('home')이 실행됨) — 그래서 이미 로그인된 채로
+  // 새로고침했을 때도 실제 데이터가 뜨도록, 스크립트 로드 시점에 한 번 직접 호출해준다.
+  if (localStorage.getItem("holoStudentId")) {
+    loadHomeStatusCards();
+    loadHomeScheduleToday();
+  }
 
   function initTodayRecord() {
     loadChatHistory("chat");
