@@ -2369,10 +2369,17 @@
   }
   .plan-gate-overlay.on { display: flex; }
   .plan-gate-modal {
+    position: relative;
     background: var(--paper); border-radius: 14px;
     max-width: 640px; width: 100%; max-height: 90vh; overflow-y: auto;
     padding: 28px 26px; box-shadow: 0 20px 60px rgba(0,0,0,0.25);
   }
+  .plan-gate-home-link {
+    position: absolute; top: 22px; right: 24px;
+    font-size: 0.78rem; font-weight: 600; color: var(--ink-soft); text-decoration: none;
+    cursor: pointer; transition: color 0.15s;
+  }
+  .plan-gate-home-link:hover { color: var(--ink); }
   .plan-gate-modal h2 { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 8px; }
   .plan-gate-hint { font-size: 0.8rem; color: var(--ink-soft); line-height: 1.6; margin-bottom: 18px; }
   .plan-gate-error { font-size: 0.78rem; color: #B23B3B; margin: 10px 0 0 0; }
@@ -3834,7 +3841,6 @@
 
             <div class="planner-col planner-col-edit">
               <div class="planner-col-head planner-col-head-edit">
-                <span>계획 수정하면서 공부하기</span>
                 <span class="planner-progress-label" id="plannerProgLabel">0/0 완료</span>
               </div>
               <div class="planner-col-body">
@@ -3916,9 +3922,10 @@
 
       <div class="plan-gate-overlay" id="planGateOverlay">
         <div class="plan-gate-modal">
+          <a class="plan-gate-home-link" href="#" onclick="closePlanGateToHome();return false;">← 뒤로가기</a>
           <h2>최초 계획 세우기</h2>
-          <div class="record-date" id="planGateDate"></div>
           <p class="plan-gate-hint">오늘 하루 계획을 오전/오후/저녁으로 나눠 먼저 세워주세요. 세운 뒤에는 언제든 추가하거나 고칠 수 있어요.</p>
+          <div class="record-date" id="planGateDate"></div>
           <div id="planGateBody"></div>
           <div class="plan-gate-error" id="planGateError" style="display:none"></div>
           <button type="button" class="plan-gate-submit-btn" onclick="submitInitialPlan()">제출하기</button>
@@ -4816,7 +4823,8 @@
   function updateRecordDate() {
     const d = new Date();
     const pad = n => String(n).padStart(2, "0");
-    const text = String(d.getFullYear()).slice(-2) + "년 " + pad(d.getMonth() + 1) + "월 " + pad(d.getDate()) + "일";
+    const WEEKDAY_KO = ["일", "월", "화", "수", "목", "금", "토"];
+    const text = String(d.getFullYear()).slice(-2) + "년 " + pad(d.getMonth() + 1) + "월 " + pad(d.getDate()) + "일 " + WEEKDAY_KO[d.getDay()] + "요일";
     const el = document.getElementById("recordDate");
     if (el) el.textContent = text;
     const gateEl = document.getElementById("planGateDate");
@@ -5172,6 +5180,10 @@
     gateBody.appendChild(plannerBody);
     document.getElementById("planGateError").style.display = "none";
     document.getElementById("planGateOverlay").classList.add("on");
+  }
+  function closePlanGateToHome() {
+    document.getElementById("planGateOverlay").classList.remove("on");
+    go("home");
   }
 
   function submitInitialPlan() {
