@@ -543,11 +543,12 @@
   .sched-chat-col .input-zone { background: transparent; padding-top: 16px; padding-bottom: 16px; }
   .sched-chat-quick-row { display: flex; gap: 8px; padding: 0 20px; flex-wrap: wrap; }
   .sched-chat-quick-btn {
-    font-family: inherit; font-size: 0.74rem; font-weight: 700; color: var(--green-deep);
-    background: var(--cream); border: 1px solid var(--line); border-radius: 20px; padding: 7px 14px; cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: inherit; font-size: 0.76rem; font-weight: 700; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--line-dark); border-radius: 8px; padding: 8px 14px; cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
   }
-  .sched-chat-quick-btn:hover { border-color: var(--green); background: var(--green-soft); }
+  .sched-chat-quick-btn:hover { border-color: var(--green); color: var(--green-deep); background: var(--green-soft); }
   @media (max-width: 760px) {
     .sched-manage-layout { flex-direction: column; }
     .sched-sidebar { flex: none; }
@@ -3255,8 +3256,8 @@
           </div>
           <div class="chat-wrap" id="chat-schedule"></div>
           <div class="sched-chat-quick-row">
-            <button type="button" class="sched-chat-quick-btn" onclick="schedQuickPrompt('fixed')">고정 스케줄 변경하기</button>
-            <button type="button" class="sched-chat-quick-btn" onclick="schedQuickPrompt('adhoc')">돌발 스케줄 변경하기</button>
+            <button type="button" class="sched-chat-quick-btn" onclick="schedQuickPrompt('fixed')">📌 고정 스케줄 변경하기</button>
+            <button type="button" class="sched-chat-quick-btn" onclick="schedQuickPrompt('adhoc')">🚪 돌발 스케줄 변경하기</button>
           </div>
           <div class="input-zone">
             <div class="input-box">
