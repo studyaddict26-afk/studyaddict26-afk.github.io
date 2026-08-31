@@ -308,33 +308,32 @@
     letter-spacing: -0.005em; margin-bottom: 12px;
   }
   .hero-right .hero-desc-box {
-    background: linear-gradient(180deg, #ffffff 0%, var(--cream) 100%);
+    background: var(--cream);
     border: 1px solid var(--line);
     border-radius: 14px;
-    padding: 20px 24px;
-    box-shadow: 0 4px 18px rgba(31,46,33,0.06);
+    padding: 18px 24px;
   }
   .hero-steps { display: flex; flex-direction: column; gap: 14px; }
-  .hero-step { display: flex; align-items: flex-start; gap: 12px; position: relative; }
+  .hero-step { display: flex; align-items: flex-start; gap: 10px; position: relative; }
   .hero-step:not(:last-child)::after {
     content: '';
     position: absolute;
-    top: 24px; bottom: -14px; left: 12px;
+    top: 18px; bottom: -14px; left: 9px;
     width: 1px;
     background: var(--line);
   }
   .hero-step-num {
     position: relative; z-index: 1; flex-shrink: 0;
-    width: 24px; height: 24px; border-radius: 50%;
+    width: 18px; height: 18px; border-radius: 50%;
     background: var(--green); color: #fff;
-    font-size: 0.72rem; font-weight: 800;
+    font-size: 0.62rem; font-weight: 800;
     display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 2px 6px rgba(58,122,68,0.35);
   }
-  .hero-step-text { margin: 0; padding-top: 3px; color: var(--ink-soft); font-size: 0.83rem; font-weight: 500; line-height: 1.6; letter-spacing: -0.006em; }
+  .hero-step-text { margin: 0; padding-top: 1px; color: var(--ink-soft); font-size: 0.83rem; font-weight: 500; line-height: 1.6; letter-spacing: -0.006em; white-space: nowrap; }
   @media (max-width: 860px) {
     .howto-hero { flex-direction: column; align-items: flex-start; gap: 24px; padding: 30px 20px; }
     .hero-right { border-left: none; padding-left: 0; border-top: 1px solid var(--line); padding-top: 24px; max-width: none; }
+    .hero-step-text { white-space: normal; }
   }
 
   /* ── 홈 화면 히어로 (원래 3단 디자인) ── */
@@ -5092,7 +5091,7 @@
   function renderScheduleEventList(el, events) {
     if (!el) return;
     if (!events || !events.length) {
-      el.innerHTML = '<li class="sched-empty-msg">등록된 스케줄이 없어서 아직 계산할 수 없어요.</li>';
+      el.innerHTML = '<li class="sched-empty-msg">아직 등록된 스케줄이 없어요.</li>';
       return;
     }
     el.innerHTML = events.map(e =>
