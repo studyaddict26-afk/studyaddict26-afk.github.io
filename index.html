@@ -505,10 +505,11 @@
   .hps-divider { height: 1px; background: var(--line); margin: 8px 0; }
 
   /* ── 내 스케줄 관리하기 (전용 페이지) ── */
-  #view-scheduleManage .consult-page { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+  #view-scheduleManage .consult-page { display: flex; flex-direction: column; align-items: flex-start; flex: 1; min-height: 0; }
+  #view-scheduleManage .sched-manage-layout { align-self: stretch; }
   .sched-manage-layout { display: flex; gap: 20px; align-items: stretch; flex: 1; min-height: 480px; }
   .sched-sidebar {
-    flex: 0 0 190px; min-width: 0;
+    flex: 0 0 190px; min-width: 0; align-self: flex-start;
     background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
     padding: 16px 14px 18px; display: flex; flex-direction: column;
   }
@@ -3257,6 +3258,7 @@
           </div>
           <div class="chat-wrap" id="chat-schedule"></div>
           <div class="sched-chat-quick-row">
+            <button type="button" class="sched-chat-quick-btn" onclick="send('schedule', '고정 스케줄 - 돌발 스케줄 차이점이 뭔가요?')">❓ 고정 스케줄 - 돌발 스케줄 차이점이 뭔가요?</button>
             <button type="button" class="sched-chat-quick-btn" onclick="schedQuickPrompt('fixed')">📌 고정 스케줄 변경하기</button>
             <button type="button" class="sched-chat-quick-btn" onclick="schedQuickPrompt('adhoc')">🚪 돌발 스케줄 변경하기</button>
           </div>
