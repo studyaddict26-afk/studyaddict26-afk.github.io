@@ -522,9 +522,10 @@
   .sched-timetable-title { font-size: 0.8rem; font-weight: 800; color: var(--ink); text-align: center; margin-bottom: 10px; }
   .sched-timetable-carousel { flex: 1; min-height: 0; display: flex; flex-direction: column; margin-top: 0; }
   .sched-timetable-carousel .wc-track { flex: 1; min-height: 100px; }
-  .sched-timetable-carousel .wc-slide img {
-    width: 100%; height: 100%; object-fit: contain; display: block; background: #fff;
-  }
+  /* .sl-timetable는 클론되어 확대(lightbox) 쪽으로도 옮겨가므로, 캐러셀 안이라는 조상 조건 없이
+     클래스 자체로 크기가 정해지게 한다 (그래야 확대했을 때도 사진이 제대로 보임). */
+  .sl-timetable { width: 100%; height: 100%; }
+  .sl-timetable img { width: 100%; height: 100%; object-fit: contain; display: block; background: #fff; }
   .sched-sidebar-inner {
     background: var(--cream); border-radius: 8px; padding: 12px 12px 14px;
     margin-bottom: 14px; flex: 1; display: flex; flex-direction: column;
@@ -593,7 +594,7 @@
     display: none;
     position: relative;
     background: var(--paper); border-radius: 14px;
-    max-width: 560px; width: 100%; min-height: 520px; max-height: 85vh; overflow-y: auto;
+    max-width: 560px; width: 100%; max-height: 85vh; overflow-y: auto;
     padding: 26px 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.25);
   }
   .sched-modal.on { display: block; }
@@ -3231,9 +3232,9 @@
             <div class="sched-timetable-title">로드맵 독서실 시간표</div>
             <div class="who-carousel sched-timetable-carousel" id="scheduleCarousel">
               <div class="wc-track">
-                <div class="wc-slide on"><img src="시간표-하이엔드관.png" alt="하이엔드관 시간표"></div>
-                <div class="wc-slide"><img src="시간표-여름겨울캠프.png" alt="여름·겨울 캠프 시간표"></div>
-                <div class="wc-slide"><img src="시간표-N수관.png" alt="N수관 시간표"></div>
+                <div class="wc-slide on"><div class="sl-timetable"><img src="시간표-하이엔드관.png" alt="하이엔드관 시간표"></div></div>
+                <div class="wc-slide"><div class="sl-timetable"><img src="시간표-여름겨울캠프.png" alt="여름·겨울 캠프 시간표"></div></div>
+                <div class="wc-slide"><div class="sl-timetable"><img src="시간표-N수관.png" alt="N수관 시간표"></div></div>
               </div>
               <div class="wc-dots">
                 <button class="wc-dot on" onclick="wcGo3(0)" aria-label="1번 슬라이드"></button>
