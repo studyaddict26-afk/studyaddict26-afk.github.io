@@ -584,9 +584,12 @@
 
   .sched-fixed-view-hint { font-size: 0.76rem; color: var(--ink-soft); margin: -8px 0 16px; }
   .sched-fixed-view { display: flex; flex-direction: column; gap: 10px; }
-  .sched-fixed-view-day { border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; }
-  .sched-fixed-view-day-label { font-size: 0.82rem; font-weight: 800; color: var(--green-deep); margin-bottom: 8px; }
-  .sched-fixed-view-events { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .sched-fixed-view-day {
+    display: flex; align-items: flex-start; gap: 14px;
+    border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+  }
+  .sched-fixed-view-day-label { flex: none; width: 20px; padding-top: 2px; font-size: 0.82rem; font-weight: 800; color: var(--green-deep); }
+  .sched-fixed-view-events { flex: 1; min-width: 0; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
   .sched-fixed-view-events li { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 
   .sched-modal-overlay {
@@ -3244,7 +3247,7 @@
       <div class="sched-modal" id="sched-panel-fixed" onclick="event.stopPropagation()">
         <button type="button" class="sched-modal-close" onclick="closeSchedPanel()" aria-label="닫기">×</button>
         <h3>고정 스케줄</h3>
-        <p class="sched-fixed-view-hint">챗봇에서 "고정 스케줄 변경하기"로 말하면 여기 반영돼요.</p>
+        <p class="sched-fixed-view-hint">챗봇에서 "고정 스케줄 변경하기" 버튼을 누르면, 수정이 가능해요.</p>
         <div class="sched-fixed-view" id="schedFixedView"></div>
       </div>
       <div class="sched-modal" id="sched-panel-adhoc" onclick="event.stopPropagation()">
