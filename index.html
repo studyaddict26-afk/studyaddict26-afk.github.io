@@ -478,11 +478,15 @@
     box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-start;
   }
   .home-schedule-date { font-size: 0.74rem; font-weight: 700; color: var(--ink); margin: 0 0 10px; text-align: center; }
-  .home-schedule-log { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; flex: 1; justify-content: center; }
-  .home-schedule-log li { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-  .home-schedule-log li.sched-empty-msg { justify-content: center; text-align: center; }
-  .hsl-label { font-size: 0.74rem; color: var(--ink-soft); }
-  .hsl-time { font-size: 0.74rem; color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .home-schedule-log {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: auto auto; column-gap: 5px; row-gap: 6px;
+    flex: 1; align-content: center; justify-content: center;
+  }
+  .home-schedule-log li { display: contents; }
+  .home-schedule-log li.sched-empty-msg { display: block; grid-column: 1 / -1; text-align: center; }
+  .hsl-label { font-size: 0.74rem; color: var(--ink-soft); white-space: nowrap; }
+  .hsl-time { font-size: 0.74rem; color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .home-schedule-title {
     display: inline-flex; align-items: center; gap: 4px; flex: none;
     font-size: 0.88rem; font-weight: 600; color: var(--ink); text-decoration: none;
@@ -507,13 +511,17 @@
     background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
     padding: 16px 14px 18px; display: flex; flex-direction: column;
   }
+  .sched-sidebar-inner {
+    background: var(--cream); border-radius: 8px; padding: 12px 12px 14px;
+    margin-bottom: 14px; flex: 1; display: flex; flex-direction: column;
+  }
   .sched-sidebar-date {
     font-size: 0.74rem; font-weight: 700; color: var(--ink-soft); white-space: nowrap;
     text-align: center; margin-bottom: 14px;
   }
   .sched-sidebar-events {
     display: grid; grid-template-columns: auto auto; column-gap: 5px; row-gap: 9px;
-    list-style: none; margin: 0 0 18px; padding: 0; flex: 1; align-content: start;
+    list-style: none; margin: 0; padding: 0; flex: 1; align-content: center;
     justify-content: center;
   }
   .sched-sidebar-events li { display: contents; }
@@ -3197,13 +3205,15 @@
 
       <div class="sched-manage-layout">
         <aside class="sched-sidebar">
-          <div class="sched-sidebar-date" id="schedSidebarDate">2026년 08월 31일 (월)</div>
-          <ul class="sched-sidebar-events" id="schedSidebarEvents">
-            <li><span class="sched-grid-label">입실</span><span class="sched-grid-value">__시 __분</span></li>
-            <li><span class="sched-grid-label">외출</span><span class="sched-grid-value">__시 __분</span></li>
-            <li><span class="sched-grid-label">재입실</span><span class="sched-grid-value">__시 __분</span></li>
-            <li><span class="sched-grid-label">퇴실</span><span class="sched-grid-value">__시 __분</span></li>
-          </ul>
+          <div class="sched-sidebar-inner">
+            <div class="sched-sidebar-date" id="schedSidebarDate">2026년 08월 31일 (월)</div>
+            <ul class="sched-sidebar-events" id="schedSidebarEvents">
+              <li><span class="sched-grid-label">입실</span><span class="sched-grid-value">__시 __분</span></li>
+              <li><span class="sched-grid-label">외출</span><span class="sched-grid-value">__시 __분</span></li>
+              <li><span class="sched-grid-label">재입실</span><span class="sched-grid-value">__시 __분</span></li>
+              <li><span class="sched-grid-label">퇴실</span><span class="sched-grid-value">__시 __분</span></li>
+            </ul>
+          </div>
           <div class="sched-sidebar-links">
             <button type="button" class="sched-sidebar-link-btn" onclick="openSchedPanel('fixed')">고정 스케줄 확인하기 →</button>
             <button type="button" class="sched-sidebar-link-btn" onclick="openSchedPanel('adhoc')">돌발 스케줄 확인하기 →</button>
