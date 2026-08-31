@@ -541,6 +541,13 @@
   }
   .sched-chat-col .chat-wrap, .sched-chat-col .input-zone { max-width: none; }
   .sched-chat-col .input-zone { background: transparent; padding-top: 16px; padding-bottom: 16px; }
+  .sched-chat-quick-row { display: flex; gap: 8px; padding: 0 20px; flex-wrap: wrap; }
+  .sched-chat-quick-btn {
+    font-family: inherit; font-size: 0.74rem; font-weight: 700; color: var(--green-deep);
+    background: var(--cream); border: 1px solid var(--line); border-radius: 20px; padding: 7px 14px; cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .sched-chat-quick-btn:hover { border-color: var(--green); background: var(--green-soft); }
   @media (max-width: 760px) {
     .sched-manage-layout { flex-direction: column; }
     .sched-sidebar { flex: none; }
@@ -602,6 +609,28 @@
   }
   .sched-fixed-reason:focus { outline: none; border-color: var(--green); }
   .sched-fixed-reason::placeholder { color: var(--ink-soft); opacity: 0.7; }
+
+  .sched-modal-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(23,24,26,0.55);
+    display: none; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .sched-modal-overlay.on { display: flex; }
+  .sched-modal {
+    display: none;
+    position: relative;
+    background: var(--paper); border-radius: 14px;
+    max-width: 560px; width: 100%; max-height: 85vh; overflow-y: auto;
+    padding: 26px 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  }
+  .sched-modal.on { display: block; }
+  .sched-modal-close {
+    position: absolute; top: 14px; right: 16px;
+    background: none; border: none; font-size: 1.15rem; color: var(--ink-soft); cursor: pointer; padding: 2px 6px; line-height: 1;
+  }
+  .sched-modal-close:hover { color: var(--ink); }
+  .sched-modal h3 { font-size: 0.94rem; font-weight: 800; margin: 0 0 16px 0; padding-right: 24px; }
 
   .home-status-box {
     flex: 2 1 0; min-width: 0;
@@ -3225,6 +3254,10 @@
             <h3 class="record-pane-title">🗓️ 내 스케줄 조정하기</h3>
           </div>
           <div class="chat-wrap" id="chat-schedule"></div>
+          <div class="sched-chat-quick-row">
+            <button type="button" class="sched-chat-quick-btn" onclick="schedQuickPrompt('fixed')">고정 스케줄 변경하기</button>
+            <button type="button" class="sched-chat-quick-btn" onclick="schedQuickPrompt('adhoc')">돌발 스케줄 변경하기</button>
+          </div>
           <div class="input-zone">
             <div class="input-box">
               <input id="q-schedule" type="text" placeholder="예: 월요일은 6시부터 10시까지 공부해요" autocomplete="off">
@@ -3235,34 +3268,31 @@
       </div>
     </div>
 
-    <div class="photo-panel-backdrop" id="sched-panel-backdrop" onclick="closeSchedPanel()"></div>
-    <aside class="photo-panel" id="sched-panel-fixed">
-      <div class="photo-panel-head">
+    <div class="sched-modal-overlay" id="sched-panel-backdrop" onclick="closeSchedPanel()">
+      <div class="sched-modal" id="sched-panel-fixed" onclick="event.stopPropagation()">
+        <button type="button" class="sched-modal-close" onclick="closeSchedPanel()" aria-label="닫기">×</button>
         <h3>고정 스케줄</h3>
-        <button type="button" class="photo-panel-close" onclick="closeSchedPanel()" aria-label="닫기">×</button>
+        <div class="sched-page-head">
+          <span class="sched-fixed-status" id="fixedScheduleStatus">미제출</span>
+          <button type="button" class="sched-fixed-submit-btn" id="fixedScheduleSubmitBtn" onclick="submitFixedSchedule()">제출하기 →</button>
+        </div>
+        <div class="sched-fixed-days" id="schedFixedDays"></div>
       </div>
-      <div class="sched-page-head">
-        <span class="sched-fixed-status" id="fixedScheduleStatus">미제출</span>
-        <button type="button" class="sched-fixed-submit-btn" id="fixedScheduleSubmitBtn" onclick="submitFixedSchedule()">제출하기 →</button>
-      </div>
-      <div class="sched-fixed-days" id="schedFixedDays"></div>
-    </aside>
-    <aside class="photo-panel" id="sched-panel-adhoc">
-      <div class="photo-panel-head">
+      <div class="sched-modal" id="sched-panel-adhoc" onclick="event.stopPropagation()">
+        <button type="button" class="sched-modal-close" onclick="closeSchedPanel()" aria-label="닫기">×</button>
         <h3>돌발 스케줄</h3>
-        <button type="button" class="photo-panel-close" onclick="closeSchedPanel()" aria-label="닫기">×</button>
+        <ul class="sched-page-list" id="schedAdhocList">
+          <li class="sched-empty-msg">등록된 돌발 스케줄이 없어요.</li>
+        </ul>
+        <div class="sched-add-row">
+          <input type="date" id="schedAdhocDate" class="sched-date-input">
+          <input type="time" id="schedAdhocStart" class="sched-time-input" value="18:00">
+          <span class="sched-add-sep">~</span>
+          <input type="time" id="schedAdhocEnd" class="sched-time-input" value="22:00">
+          <button type="button" class="sched-add-btn" onclick="addAdhocSchedule()">추가</button>
+        </div>
       </div>
-      <ul class="sched-page-list" id="schedAdhocList">
-        <li class="sched-empty-msg">등록된 돌발 스케줄이 없어요.</li>
-      </ul>
-      <div class="sched-add-row">
-        <input type="date" id="schedAdhocDate" class="sched-date-input">
-        <input type="time" id="schedAdhocStart" class="sched-time-input" value="18:00">
-        <span class="sched-add-sep">~</span>
-        <input type="time" id="schedAdhocEnd" class="sched-time-input" value="22:00">
-        <button type="button" class="sched-add-btn" onclick="addAdhocSchedule()">추가</button>
-      </div>
-    </aside>
+    </div>
   </section>
 
   <!-- ─── 우리 동네 내신 기출 공부하기 (허브) ─── -->
@@ -5191,6 +5221,17 @@
       addMsg("schedule", "bot", "안녕하세요, 'AI 홀로'예요. 스케줄 조정을 도와드릴게요.");
     }
     loadChatHistory("schedule");
+  }
+  const SCHED_QUICK_PROMPTS = {
+    fixed: "고정 스케줄 변경을 도와드릴게요~~ ~~하고 ~~해주세요",
+    adhoc: "돌발 스케줄 변경을 도와드릴게요~~ ~~하고 ~~해주세요",
+  };
+  function schedQuickPrompt(which) {
+    const text = SCHED_QUICK_PROMPTS[which];
+    if (!text) return;
+    addMsg("schedule", "bot", escapeHtml(text));
+    if (!chatHistory["schedule"]) chatHistory["schedule"] = [];
+    chatHistory["schedule"].push({ role: "assistant", content: text });
   }
   function openSchedPanel(which) {
     document.getElementById("sched-panel-" + which).classList.add("on");
