@@ -508,10 +508,22 @@
   #view-scheduleManage .consult-page { display: flex; flex-direction: column; align-items: flex-start; flex: 1; min-height: 0; }
   #view-scheduleManage .sched-manage-layout { align-self: stretch; }
   .sched-manage-layout { display: flex; gap: 20px; align-items: stretch; flex: 1; min-height: 480px; }
+  .sched-left-col { flex: 0 0 190px; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
   .sched-sidebar {
-    flex: 0 0 190px; min-width: 0; align-self: flex-start;
+    flex: none; min-width: 0;
     background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
     padding: 16px 14px 18px; display: flex; flex-direction: column;
+  }
+  .sched-timetable-box {
+    flex: 1; min-height: 0; display: flex; flex-direction: column;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px;
+  }
+  .sched-timetable-title { font-size: 0.8rem; font-weight: 800; color: var(--ink); text-align: center; margin-bottom: 10px; }
+  .sched-timetable-carousel { flex: 1; min-height: 0; display: flex; flex-direction: column; margin-top: 0; }
+  .sched-timetable-carousel .wc-track { flex: 1; min-height: 100px; }
+  .sched-timetable-carousel .wc-slide img {
+    width: 100%; height: 100%; object-fit: contain; display: block; background: #fff;
   }
   .sched-sidebar-inner {
     background: var(--cream); border-radius: 8px; padding: 12px 12px 14px;
@@ -553,7 +565,7 @@
   .sched-chat-quick-btn:hover { border-color: var(--green); color: var(--green-deep); background: var(--green-soft); }
   @media (max-width: 760px) {
     .sched-manage-layout { flex-direction: column; }
-    .sched-sidebar { flex: none; }
+    .sched-left-col { flex: none; }
   }
 
   .sched-empty-msg { color: var(--ink-soft); font-size: 0.8rem; }
@@ -2792,6 +2804,15 @@
     <button class="wc-dot" onclick="wclGo2(event,2)" aria-label="3번 슬라이드"></button>
   </div>
 </div>
+<div class="wcl" id="wcLightbox3" onclick="wclClose3(event)">
+  <button class="wcl-close" onclick="wclClose3(event)" aria-label="닫기">&times;</button>
+  <div class="wcl-stage" id="wclStage3"></div>
+  <div class="wcl-dots" id="wclDots3">
+    <button class="wc-dot on" onclick="wclGo3(event,0)" aria-label="1번 슬라이드"></button>
+    <button class="wc-dot" onclick="wclGo3(event,1)" aria-label="2번 슬라이드"></button>
+    <button class="wc-dot" onclick="wclGo3(event,2)" aria-label="3번 슬라이드"></button>
+  </div>
+</div>
 
 <!-- ═══ 학습 상담 후기 확대 보기 ═══ -->
 <div class="rv-lightbox" id="rvLightbox" onclick="closeReviewLightbox()">
@@ -3189,21 +3210,39 @@
       <div class="split"></div>
 
       <div class="sched-manage-layout">
-        <aside class="sched-sidebar">
-          <div class="sched-sidebar-inner">
-            <div class="sched-sidebar-date" id="schedSidebarDate">2026년 08월 31일 (월)</div>
-            <ul class="sched-sidebar-events" id="schedSidebarEvents">
-              <li><span class="sched-grid-label">입실</span><span class="sched-grid-value">__시 __분</span></li>
-              <li><span class="sched-grid-label">외출</span><span class="sched-grid-value">__시 __분</span></li>
-              <li><span class="sched-grid-label">재입실</span><span class="sched-grid-value">__시 __분</span></li>
-              <li><span class="sched-grid-label">퇴실</span><span class="sched-grid-value">__시 __분</span></li>
-            </ul>
+        <div class="sched-left-col">
+          <aside class="sched-sidebar">
+            <div class="sched-sidebar-inner">
+              <div class="sched-sidebar-date" id="schedSidebarDate">2026년 08월 31일 (월)</div>
+              <ul class="sched-sidebar-events" id="schedSidebarEvents">
+                <li><span class="sched-grid-label">입실</span><span class="sched-grid-value">__시 __분</span></li>
+                <li><span class="sched-grid-label">외출</span><span class="sched-grid-value">__시 __분</span></li>
+                <li><span class="sched-grid-label">재입실</span><span class="sched-grid-value">__시 __분</span></li>
+                <li><span class="sched-grid-label">퇴실</span><span class="sched-grid-value">__시 __분</span></li>
+              </ul>
+            </div>
+            <div class="sched-sidebar-links">
+              <button type="button" class="sched-sidebar-link-btn" onclick="openSchedPanel('fixed')">고정 스케줄 확인하기 →</button>
+              <button type="button" class="sched-sidebar-link-btn" onclick="openSchedPanel('adhoc')">돌발 스케줄 확인하기 →</button>
+            </div>
+          </aside>
+
+          <div class="sched-timetable-box">
+            <div class="sched-timetable-title">로드맵 독서실 시간표</div>
+            <div class="who-carousel sched-timetable-carousel" id="scheduleCarousel">
+              <div class="wc-track">
+                <div class="wc-slide on"><img src="시간표-하이엔드관.png" alt="하이엔드관 시간표"></div>
+                <div class="wc-slide"><img src="시간표-여름겨울캠프.png" alt="여름·겨울 캠프 시간표"></div>
+                <div class="wc-slide"><img src="시간표-N수관.png" alt="N수관 시간표"></div>
+              </div>
+              <div class="wc-dots">
+                <button class="wc-dot on" onclick="wcGo3(0)" aria-label="1번 슬라이드"></button>
+                <button class="wc-dot" onclick="wcGo3(1)" aria-label="2번 슬라이드"></button>
+                <button class="wc-dot" onclick="wcGo3(2)" aria-label="3번 슬라이드"></button>
+              </div>
+            </div>
           </div>
-          <div class="sched-sidebar-links">
-            <button type="button" class="sched-sidebar-link-btn" onclick="openSchedPanel('fixed')">고정 스케줄 확인하기 →</button>
-            <button type="button" class="sched-sidebar-link-btn" onclick="openSchedPanel('adhoc')">돌발 스케줄 확인하기 →</button>
-          </div>
-        </aside>
+        </div>
 
         <div class="sched-chat-col">
           <div class="chat-pane-title-row">
@@ -5532,6 +5571,7 @@
   }
   makeWhoCarousel("whoCarousel", "wcLightbox", "wclStage", "wclDots", "wclClose", "wcGo", "wclGo");
   makeWhoCarousel("whoCarousel2", "wcLightbox2", "wclStage2", "wclDots2", "wclClose2", "wcGo2", "wclGo2");
+  makeWhoCarousel("scheduleCarousel", "wcLightbox3", "wclStage3", "wclDots3", "wclClose3", "wcGo3", "wclGo3");
 
   // ── 사이드바 ──
   const sidebar = document.getElementById("sidebar");
