@@ -475,11 +475,12 @@
   .home-schedule-inner {
     background: var(--cream); border-radius: 8px;
     padding: 10px 12px; margin-top: 10px; flex: 1;
-    box-sizing: border-box; display: flex; flex-direction: column; justify-content: center;
+    box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-start;
   }
-  .home-schedule-date { font-size: 0.74rem; font-weight: 700; color: var(--ink); margin: 0 0 10px; }
-  .home-schedule-log { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .home-schedule-date { font-size: 0.74rem; font-weight: 700; color: var(--ink); margin: 0 0 10px; text-align: center; }
+  .home-schedule-log { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; flex: 1; justify-content: center; }
   .home-schedule-log li { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .home-schedule-log li.sched-empty-msg { justify-content: center; text-align: center; }
   .hsl-label { font-size: 0.74rem; color: var(--ink-soft); }
   .hsl-time { font-size: 0.74rem; color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
   .home-schedule-title {
@@ -500,13 +501,43 @@
   .hps-divider { height: 1px; background: var(--line); margin: 8px 0; }
 
   /* ── 내 스케줄 관리하기 (전용 페이지) ── */
-  .sched-page-hint { font-size: 0.8rem; color: var(--ink-soft); margin-bottom: 18px; }
-  .sched-page-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 28px; }
-  .sched-page-block {
+  .sched-manage-layout { display: flex; gap: 20px; align-items: stretch; }
+  .sched-sidebar {
+    flex: 0 0 190px; min-width: 0;
     background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
-    padding: 18px 20px;
+    padding: 16px 14px 18px; display: flex; flex-direction: column;
   }
-  .sched-page-title { font-size: 0.82rem; font-weight: 800; color: var(--green-deep); margin-bottom: 12px; }
+  .sched-sidebar-date {
+    font-size: 0.74rem; font-weight: 700; color: var(--ink-soft); white-space: nowrap;
+    text-align: center; margin-bottom: 14px;
+  }
+  .sched-sidebar-events {
+    display: grid; grid-template-columns: auto auto; column-gap: 5px; row-gap: 9px;
+    list-style: none; margin: 0 0 18px; padding: 0; flex: 1; align-content: start;
+    justify-content: center;
+  }
+  .sched-sidebar-events li { display: contents; }
+  .sched-grid-label { font-size: 0.74rem; color: var(--ink-soft); font-weight: 600; white-space: nowrap; }
+  .sched-grid-value { font-size: 0.74rem; color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .sched-sidebar-links { display: flex; flex-direction: column; gap: 8px; }
+  .sched-sidebar-link-btn {
+    text-align: center; font-family: inherit; font-size: 0.78rem; font-weight: 700; color: var(--green-deep);
+    background: var(--cream); border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .sched-sidebar-link-btn:hover { border-color: var(--green); background: var(--green-soft); }
+  .sched-chat-col {
+    flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
+    overflow: hidden;
+  }
+  .sched-chat-col .chat-wrap, .sched-chat-col .input-zone { max-width: none; }
+  .sched-chat-col .input-zone { background: transparent; padding-top: 16px; padding-bottom: 16px; }
+  @media (max-width: 760px) {
+    .sched-manage-layout { flex-direction: column; }
+    .sched-sidebar { flex: none; }
+  }
+
   .sched-page-list { list-style: none; margin: 0 0 4px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
   .sched-page-list li {
     display: flex; align-items: center; justify-content: space-between; gap: 10px;
@@ -534,7 +565,6 @@
   .sched-add-btn:hover { background: var(--green-deep); }
 
   .sched-page-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-  .sched-page-head .sched-page-title { margin-bottom: 0; }
   .sched-fixed-status {
     font-size: 0.72rem; font-weight: 700; color: var(--ink-soft);
     background: var(--cream); border-radius: 20px; padding: 3px 10px;
@@ -564,10 +594,6 @@
   }
   .sched-fixed-reason:focus { outline: none; border-color: var(--green); }
   .sched-fixed-reason::placeholder { color: var(--ink-soft); opacity: 0.7; }
-
-  @media (max-width: 640px) {
-    .sched-page-grid { grid-template-columns: 1fr; }
-  }
 
   .home-status-box {
     flex: 2 1 0; min-width: 0;
@@ -2349,20 +2375,6 @@
   .planner-add-btn:hover { background: var(--green-deep); }
   .planner-progress-label { font-size: 0.66rem; font-weight: 700; color: var(--ink); white-space: nowrap; }
 
-  .planner-ai-toggle-row { display: flex; }
-  .plan-compare-ai-btn {
-    background: none; border: 1px solid var(--line-dark); border-radius: 8px;
-    padding: 6px 12px; font-size: 0.72rem; font-weight: 700; color: var(--ink-soft);
-    font-family: inherit; cursor: pointer; transition: border-color 0.15s, color 0.15s;
-  }
-  .plan-compare-ai-btn:hover { border-color: var(--green); color: var(--green-deep); }
-  .plan-compare-ai {
-    background: var(--green-soft); border: 1px solid #D8E6DC; border-radius: 10px;
-    padding: 12px 14px;
-  }
-  .plan-compare-ai-label { display: block; font-size: 0.76rem; font-weight: 800; color: var(--green); margin-bottom: 6px; }
-  .plan-compare-ai-body { font-size: 0.84rem; color: var(--ink); line-height: 1.7; }
-
   .planner-dual { display: flex; gap: 20px; flex: 1; min-height: 0; }
   .planner-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
   .planner-col-head {
@@ -2385,8 +2397,6 @@
   .planner-block-orig { display: flex; flex-direction: column; gap: 4px; }
   .planner-tasks-orig { display: flex; flex-direction: column; gap: 3px; }
   .planner-orig-row { font-size: 0.74rem; line-height: 1.5; color: var(--ink-soft); padding: 5px 2px; }
-  .planner-orig-row.deleted { text-decoration: line-through; opacity: 0.7; }
-  .planner-orig-deleted-tag { font-size: 0.64rem; font-weight: 700; color: #B23B3B; text-decoration: none; }
   .planner-orig-empty { font-size: 0.72rem; color: var(--ink-soft); opacity: 0.7; padding: 5px 2px; }
   .planner-task-subject {
     font-size: 0.66rem; font-weight: 800; color: var(--green-deep); margin-right: 2px;
@@ -2429,8 +2439,6 @@
   }
   .plan-gate-submit-btn:hover { background: var(--green-deep); }
   #plannerBody.plan-gate-mode .planner-progress-label,
-  #plannerBody.plan-gate-mode .planner-ai-toggle-row,
-  #plannerBody.plan-gate-mode .plan-compare-ai,
   #plannerBody.plan-gate-mode .planner-col-original { display: none; }
   #plannerBody.plan-gate-mode .planner-col-edit { flex: 1 1 100%; }
 
@@ -3187,30 +3195,64 @@
       <h2>내 스케줄 관리하기</h2>
       <div class="split"></div>
 
-      <div class="sched-page-grid">
-        <div class="sched-page-block">
-          <div class="sched-page-head">
-            <span class="sched-page-title">고정 스케줄</span>
-            <span class="sched-fixed-status" id="fixedScheduleStatus">미제출</span>
-            <button type="button" class="sched-fixed-submit-btn" id="fixedScheduleSubmitBtn" onclick="submitFixedSchedule()">제출하기 →</button>
-          </div>
-          <div class="sched-fixed-days" id="schedFixedDays"></div>
-        </div>
-        <div class="sched-page-block">
-          <div class="sched-page-title">돌발 스케줄</div>
-          <ul class="sched-page-list" id="schedAdhocList">
-            <li class="sched-empty-msg">등록된 돌발 스케줄이 없어요.</li>
+      <div class="sched-manage-layout">
+        <aside class="sched-sidebar">
+          <div class="sched-sidebar-date" id="schedSidebarDate">2026년 08월 31일 (월)</div>
+          <ul class="sched-sidebar-events" id="schedSidebarEvents">
+            <li><span class="sched-grid-label">입실</span><span class="sched-grid-value">__시 __분</span></li>
+            <li><span class="sched-grid-label">외출</span><span class="sched-grid-value">__시 __분</span></li>
+            <li><span class="sched-grid-label">재입실</span><span class="sched-grid-value">__시 __분</span></li>
+            <li><span class="sched-grid-label">퇴실</span><span class="sched-grid-value">__시 __분</span></li>
           </ul>
-          <div class="sched-add-row">
-            <input type="date" id="schedAdhocDate" class="sched-date-input">
-            <input type="time" id="schedAdhocStart" class="sched-time-input" value="18:00">
-            <span class="sched-add-sep">~</span>
-            <input type="time" id="schedAdhocEnd" class="sched-time-input" value="22:00">
-            <button type="button" class="sched-add-btn" onclick="addAdhocSchedule()">추가</button>
+          <div class="sched-sidebar-links">
+            <button type="button" class="sched-sidebar-link-btn" onclick="openSchedPanel('fixed')">고정 스케줄 확인하기 →</button>
+            <button type="button" class="sched-sidebar-link-btn" onclick="openSchedPanel('adhoc')">돌발 스케줄 확인하기 →</button>
+          </div>
+        </aside>
+
+        <div class="sched-chat-col">
+          <div class="chat-pane-title-row">
+            <h3 class="record-pane-title">🗓️ 내 스케줄 조정하기</h3>
+          </div>
+          <div class="chat-wrap" id="chat-schedule"></div>
+          <div class="input-zone">
+            <div class="input-box">
+              <input id="q-schedule" type="text" placeholder="예: 월요일은 6시부터 10시까지 공부해요" autocomplete="off">
+              <button onclick="send('schedule')">보내기</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="photo-panel-backdrop" id="sched-panel-backdrop" onclick="closeSchedPanel()"></div>
+    <aside class="photo-panel" id="sched-panel-fixed">
+      <div class="photo-panel-head">
+        <h3>고정 스케줄</h3>
+        <button type="button" class="photo-panel-close" onclick="closeSchedPanel()" aria-label="닫기">×</button>
+      </div>
+      <div class="sched-page-head">
+        <span class="sched-fixed-status" id="fixedScheduleStatus">미제출</span>
+        <button type="button" class="sched-fixed-submit-btn" id="fixedScheduleSubmitBtn" onclick="submitFixedSchedule()">제출하기 →</button>
+      </div>
+      <div class="sched-fixed-days" id="schedFixedDays"></div>
+    </aside>
+    <aside class="photo-panel" id="sched-panel-adhoc">
+      <div class="photo-panel-head">
+        <h3>돌발 스케줄</h3>
+        <button type="button" class="photo-panel-close" onclick="closeSchedPanel()" aria-label="닫기">×</button>
+      </div>
+      <ul class="sched-page-list" id="schedAdhocList">
+        <li class="sched-empty-msg">등록된 돌발 스케줄이 없어요.</li>
+      </ul>
+      <div class="sched-add-row">
+        <input type="date" id="schedAdhocDate" class="sched-date-input">
+        <input type="time" id="schedAdhocStart" class="sched-time-input" value="18:00">
+        <span class="sched-add-sep">~</span>
+        <input type="time" id="schedAdhocEnd" class="sched-time-input" value="22:00">
+        <button type="button" class="sched-add-btn" onclick="addAdhocSchedule()">추가</button>
+      </div>
+    </aside>
   </section>
 
   <!-- ─── 우리 동네 내신 기출 공부하기 (허브) ─── -->
@@ -3834,14 +3876,6 @@
         <div class="record-date" id="recordDate"></div>
         <div id="plannerHome"></div>
         <div class="planner-body" id="plannerBody">
-          <div class="planner-ai-toggle-row" id="plannerAiToggleRow" style="display:none">
-            <button type="button" class="plan-compare-ai-btn" onclick="togglePlanAi()">🤖 AI 코멘트 보기</button>
-          </div>
-          <div class="plan-compare-ai" id="planCompareAi" style="display:none">
-            <span class="plan-compare-ai-label">🤖 AI 홀로의 코멘트</span>
-            <div class="plan-compare-ai-body" id="planCompareAiBody"></div>
-          </div>
-
           <div class="planner-dual">
             <div class="planner-col planner-col-original">
               <div class="planner-col-head">최초 계획</div>
@@ -5088,10 +5122,26 @@
     const now = new Date();
     return now.getFullYear() + "년 " + (now.getMonth() + 1) + "월 " + now.getDate() + "일 (" + WEEKDAY_LABELS[now.getDay()] + ")";
   }
+  const SCHED_BLANK_TEMPLATE = ["입실", "외출", "재입실", "퇴실"].map(label =>
+    '<li><span class="hsl-label sched-log-label">' + label + '</span><span class="hsl-time sched-log-time">__시 __분</span></li>'
+  ).join("");
+  const SCHED_SIDEBAR_BLANK_TEMPLATE = ["입실", "외출", "재입실", "퇴실"].map(label =>
+    '<li><span class="sched-grid-label">' + label + '</span><span class="sched-grid-value">__시 __분</span></li>'
+  ).join("");
+  function renderSchedSidebarEvents(el, events) {
+    if (!el) return;
+    if (!events || !events.length) {
+      el.innerHTML = SCHED_SIDEBAR_BLANK_TEMPLATE;
+      return;
+    }
+    el.innerHTML = events.map(e =>
+      '<li><span class="sched-grid-label">' + escapeHtml(e.label) + '</span><span class="sched-grid-value">' + formatTimeLabel(e.time) + '</span></li>'
+    ).join("");
+  }
   function renderScheduleEventList(el, events) {
     if (!el) return;
     if (!events || !events.length) {
-      el.innerHTML = '<li class="sched-empty-msg">아직 등록된 스케줄이 없어요.</li>';
+      el.innerHTML = SCHED_BLANK_TEMPLATE;
       return;
     }
     el.innerHTML = events.map(e =>
@@ -5118,6 +5168,28 @@
     loadAdhocScheduleList();
     const adhocDateInput = document.getElementById("schedAdhocDate");
     if (adhocDateInput && !adhocDateInput.value) adhocDateInput.value = getLocalDateKey();
+    const dateEl = document.getElementById("schedSidebarDate");
+    if (dateEl) dateEl.textContent = formatTodayDateLabel();
+    const sidebarEl = document.getElementById("schedSidebarEvents");
+    if (sidebarEl) {
+      planApi({ action: "schedule_today", date: getLocalDateKey(), weekday: getTodayWeekday() })
+        .then(data => renderSchedSidebarEvents(sidebarEl, data.events))
+        .catch(() => { sidebarEl.innerHTML = SCHED_SIDEBAR_BLANK_TEMPLATE; });
+    }
+    const chatEl = document.getElementById("chat-schedule");
+    if (chatEl && !chatEl.querySelector(".msg")) {
+      addMsg("schedule", "bot", "안녕하세요, 'AI 홀로'예요. 스케줄 조정을 도와드릴게요.");
+    }
+    loadChatHistory("schedule");
+  }
+  function openSchedPanel(which) {
+    document.getElementById("sched-panel-" + which).classList.add("on");
+    document.getElementById("sched-panel-backdrop").classList.add("on");
+  }
+  function closeSchedPanel() {
+    document.getElementById("sched-panel-fixed").classList.remove("on");
+    document.getElementById("sched-panel-adhoc").classList.remove("on");
+    document.getElementById("sched-panel-backdrop").classList.remove("on");
   }
   function buildFixedScheduleRows() {
     const wrap = document.getElementById("schedFixedDays");
@@ -5291,11 +5363,6 @@
     const done = activeItems.filter(it => it.done).length;
     document.getElementById("plannerProgLabel").textContent = done + "/" + total + " 완료";
 
-    const anyChange = planItems.some(it => it.text !== it.original_text || !it.active);
-    const toggleRow = document.getElementById("plannerAiToggleRow");
-    if (toggleRow) toggleRow.style.display = anyChange ? "flex" : "none";
-    if (!anyChange) document.getElementById("planCompareAi").style.display = "none";
-
     renderPlannerOriginal();
     alignSpecialNoteWithFreeField();
   }
@@ -5325,10 +5392,9 @@
       const items = planItems.filter(it => it.block === block);
       wrap.innerHTML = items.length
         ? items.map(it =>
-            '<div class="planner-orig-row' + (it.active ? '' : ' deleted') + '">' +
+            '<div class="planner-orig-row">' +
               (it.subject ? '<span class="planner-task-subject">[' + escapeHtml(it.subject) + ']</span> ' : '') +
               escapeHtml(it.original_text) +
-              (it.active ? '' : ' <span class="planner-orig-deleted-tag">삭제됨</span>') +
             '</div>'
           ).join("")
         : '<div class="planner-orig-empty">아직 없어요</div>';
@@ -5366,7 +5432,6 @@
     const item = planItems.find(it => it.id === id);
     if (!item) return;
     item.active = 0;
-    planAiLoaded = false;
     renderPlanner();
     planApi({ action: "plan_delete", itemId: id }).catch(err => console.error(err));
   }
@@ -5392,32 +5457,12 @@
       if (newText && newText !== item.text) {
         item.text = newText;
         item.edited_at = new Date().toISOString();
-        planAiLoaded = false;
         planApi({ action: "plan_edit", itemId: id, text: newText }).catch(err => console.error(err));
       }
       renderPlanner();
     }
     input.addEventListener("blur", commit);
     input.addEventListener("keydown", e => { if (e.key === "Enter") input.blur(); });
-  }
-
-  // 최초 계획(수정 불가) 대비 현재 수정 상태를 보고 AI 코멘트를 열람/닫기
-  let planAiLoaded = false;
-  function togglePlanAi() {
-    const aiBox = document.getElementById("planCompareAi");
-    const aiBody = document.getElementById("planCompareAiBody");
-    const showing = aiBox.style.display === "block";
-    if (showing) {
-      aiBox.style.display = "none";
-      return;
-    }
-    aiBox.style.display = "block";
-    if (planAiLoaded) return;
-    planAiLoaded = true;
-    aiBody.textContent = "분석 중...";
-    planApi({ action: "plan_compare_ai", date: getLocalDateKey() })
-      .then(data => { aiBody.textContent = data.comment || "코멘트를 가져오지 못했어요."; })
-      .catch(err => { console.error(err); aiBody.textContent = "코멘트를 가져오지 못했어요."; });
   }
 
   // ── 학습 상담 후기 캐러셀 + 확대 보기 ──
@@ -5604,7 +5649,7 @@
   // Cloudflare Worker 배포 후 이 주소를 실제 Worker 주소로 바꿔주세요.
   // (예: https://studyaddict-chat.내계정이름.workers.dev)
   const CHAT_API_URL = "https://studyaddict26afk--be1575be9f7e11f190ff1607ee4eb77e.web.val.run";
-  const AI_SUBJECTS = ["chat", "diary", "mathexam", "engexam"];
+  const AI_SUBJECTS = ["chat", "diary", "mathexam", "engexam", "schedule"];
   const chatHistory = {};
   const historyLoaded = {};
 
@@ -6094,8 +6139,10 @@
     }
   }
 
-  ["chat", "diary", "mathexam", "engexam"].forEach(s => {
-    document.getElementById("q-" + s).addEventListener("keydown", e => {
+  ["chat", "diary", "mathexam", "engexam", "schedule"].forEach(s => {
+    const qEl = document.getElementById("q-" + s);
+    if (!qEl) return; // "diary"처럼 자유 채팅 입력창이 없는 과목도 있음
+    qEl.addEventListener("keydown", e => {
       if (e.key === "Enter") send(s);
     });
   });
