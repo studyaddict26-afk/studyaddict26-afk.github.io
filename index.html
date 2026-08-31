@@ -505,7 +505,8 @@
   .hps-divider { height: 1px; background: var(--line); margin: 8px 0; }
 
   /* ── 내 스케줄 관리하기 (전용 페이지) ── */
-  .sched-manage-layout { display: flex; gap: 20px; align-items: stretch; }
+  #view-scheduleManage .consult-page { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+  .sched-manage-layout { display: flex; gap: 20px; align-items: stretch; flex: 1; min-height: 480px; }
   .sched-sidebar {
     flex: 0 0 190px; min-width: 0;
     background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
