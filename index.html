@@ -543,11 +543,11 @@
   }
   .sched-chat-col .chat-wrap, .sched-chat-col .input-zone { max-width: none; }
   .sched-chat-col .input-zone { background: transparent; padding-top: 16px; padding-bottom: 16px; }
-  .sched-chat-quick-row { display: flex; gap: 8px; padding: 0 20px; flex-wrap: wrap; }
+  .sched-chat-quick-row { display: flex; gap: 6px; padding: 0 20px; flex-wrap: wrap; justify-content: center; }
   .sched-chat-quick-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-family: inherit; font-size: 0.76rem; font-weight: 700; color: var(--ink);
-    background: var(--paper); border: 1px solid var(--line-dark); border-radius: 8px; padding: 8px 14px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: inherit; font-size: 0.68rem; font-weight: 700; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--line-dark); border-radius: 999px; padding: 5px 11px; cursor: pointer;
     transition: border-color 0.15s, background 0.15s, color 0.15s;
   }
   .sched-chat-quick-btn:hover { border-color: var(--green); color: var(--green-deep); background: var(--green-soft); }
@@ -582,36 +582,12 @@
   }
   .sched-add-btn:hover { background: var(--green-deep); }
 
-  .sched-page-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-  .sched-fixed-status {
-    font-size: 0.72rem; font-weight: 700; color: var(--ink-soft);
-    background: var(--cream); border-radius: 20px; padding: 3px 10px;
-  }
-  .sched-fixed-status.done { color: var(--green-deep); background: rgba(58,122,68,0.13); }
-  .sched-fixed-submit-btn {
-    margin-left: auto; flex: none; font-family: inherit; font-size: 0.74rem; font-weight: 700; color: #fff;
-    background: var(--ink); border: none; border-radius: 20px; padding: 7px 14px; cursor: pointer;
-    transition: background 0.15s;
-  }
-  .sched-fixed-submit-btn:hover { background: var(--green-deep); }
-
-  .sched-fixed-days { display: flex; flex-direction: column; gap: 10px; }
-  .sched-fixed-day-row { display: flex; gap: 12px; border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
-  .sched-fixed-day-label { flex: none; width: 18px; padding-top: 4px; font-size: 0.85rem; font-weight: 800; color: var(--ink); }
-  .sched-fixed-day-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
-  .sched-fixed-times { display: flex; gap: 8px; flex-wrap: wrap; }
-  .sched-fixed-time-field { display: flex; flex-direction: column; gap: 3px; font-size: 0.66rem; font-weight: 600; color: var(--ink-soft); }
-  .sched-fixed-time {
-    width: 64px; box-sizing: border-box; border: 1px solid var(--line-dark); border-radius: 6px; padding: 5px 6px;
-    font-size: 0.76rem; font-family: inherit; color: var(--ink); background: var(--paper);
-  }
-  .sched-fixed-time:focus { outline: none; border-color: var(--green); }
-  .sched-fixed-reason {
-    width: 100%; box-sizing: border-box; border: 1px solid var(--line-dark); border-radius: 6px;
-    padding: 6px 9px; font-size: 0.76rem; font-family: inherit; color: var(--ink); background: var(--paper);
-  }
-  .sched-fixed-reason:focus { outline: none; border-color: var(--green); }
-  .sched-fixed-reason::placeholder { color: var(--ink-soft); opacity: 0.7; }
+  .sched-fixed-view-hint { font-size: 0.76rem; color: var(--ink-soft); margin: -8px 0 16px; }
+  .sched-fixed-view { display: flex; flex-direction: column; gap: 10px; }
+  .sched-fixed-view-day { border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; }
+  .sched-fixed-view-day-label { font-size: 0.82rem; font-weight: 800; color: var(--green-deep); margin-bottom: 8px; }
+  .sched-fixed-view-events { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .sched-fixed-view-events li { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 
   .sched-modal-overlay {
     position: fixed; inset: 0; z-index: 1000;
@@ -2402,17 +2378,14 @@
     padding: 0 2px; line-height: 1; opacity: 0; transition: opacity 0.12s;
   }
   .planner-task-row:hover .planner-task-del { opacity: 1; }
-  .planner-add-row { display: flex; gap: 5px; margin-top: 2px; }
-  .planner-add-input {
-    flex: 1; min-width: 0; border: 1px solid var(--line-dark); border-radius: 6px; padding: 2px 7px;
-    font-size: 0.7rem; font-family: inherit; color: var(--ink); background: var(--paper);
+  .planner-task-check-ghost {
+    flex: none; width: 14px; height: 14px; border-radius: 4px; border: 1.4px dashed var(--line-dark);
   }
-  .planner-add-input:focus { outline: none; border-color: var(--green); }
-  .planner-add-btn {
-    flex: none; width: 20px; height: 20px; border-radius: 6px; border: none;
-    background: var(--ink); color: #fff; font-size: 0.85rem; line-height: 1; cursor: pointer;
+  .planner-new-task-input {
+    flex: 1; min-width: 0; border: none; background: none; outline: none;
+    font-size: 0.74rem; font-family: inherit; color: var(--ink); padding: 0;
   }
-  .planner-add-btn:hover { background: var(--green-deep); }
+  .planner-new-task-input::placeholder { color: var(--ink-soft); opacity: 0.75; }
   .planner-progress-label { font-size: 0.66rem; font-weight: 700; color: var(--ink); white-space: nowrap; }
 
   .planner-dual { display: flex; gap: 20px; flex: 1; min-height: 0; }
@@ -2441,11 +2414,6 @@
   .planner-task-subject {
     font-size: 0.66rem; font-weight: 800; color: var(--green-deep); margin-right: 2px;
   }
-  .planner-subject-input {
-    flex: 0 0 52px; min-width: 0; border: 1px solid var(--line-dark); border-radius: 6px; padding: 2px 6px;
-    font-size: 0.68rem; font-family: inherit; color: var(--ink); background: var(--paper);
-  }
-  .planner-subject-input:focus { outline: none; border-color: var(--green); }
   @media (max-width: 700px) {
     .planner-dual { flex-direction: column; }
   }
@@ -3264,7 +3232,7 @@
           </div>
           <div class="input-zone">
             <div class="input-box">
-              <input id="q-schedule" type="text" placeholder="예: 월요일은 6시부터 10시까지 공부해요" autocomplete="off">
+              <input id="q-schedule" type="text" placeholder="예: 월요일에 국어 학원이 생겼어요" autocomplete="off">
               <button onclick="send('schedule')">보내기</button>
             </div>
           </div>
@@ -3276,11 +3244,8 @@
       <div class="sched-modal" id="sched-panel-fixed" onclick="event.stopPropagation()">
         <button type="button" class="sched-modal-close" onclick="closeSchedPanel()" aria-label="닫기">×</button>
         <h3>고정 스케줄</h3>
-        <div class="sched-page-head">
-          <span class="sched-fixed-status" id="fixedScheduleStatus">미제출</span>
-          <button type="button" class="sched-fixed-submit-btn" id="fixedScheduleSubmitBtn" onclick="submitFixedSchedule()">제출하기 →</button>
-        </div>
-        <div class="sched-fixed-days" id="schedFixedDays"></div>
+        <p class="sched-fixed-view-hint">챗봇에서 "고정 스케줄 변경하기"로 말하면 여기 반영돼요.</p>
+        <div class="sched-fixed-view" id="schedFixedView"></div>
       </div>
       <div class="sched-modal" id="sched-panel-adhoc" onclick="event.stopPropagation()">
         <button type="button" class="sched-modal-close" onclick="closeSchedPanel()" aria-label="닫기">×</button>
@@ -3941,35 +3906,20 @@
 
             <div class="planner-col planner-col-edit">
               <div class="planner-col-head planner-col-head-edit">
-                <span class="planner-progress-label" id="plannerProgLabel">0/0 완료</span>
+                <span class="planner-progress-label" id="plannerProgLabel">계획 수정하면서 공부하기</span>
               </div>
               <div class="planner-col-body">
                 <div class="planner-block" data-block="오전">
                   <div class="planner-block-head">오전</div>
                   <div class="planner-tasks" id="plannerTasks-오전"></div>
-                  <div class="planner-add-row">
-                    <input type="text" class="planner-subject-input" id="plannerSubject-오전" placeholder="과목">
-                    <input type="text" class="planner-add-input" id="plannerInput-오전" placeholder="할 일 추가" onkeydown="if(event.key==='Enter')addPlanItem('오전')">
-                    <button type="button" class="planner-add-btn" onclick="addPlanItem('오전')">+</button>
-                  </div>
                 </div>
                 <div class="planner-block" data-block="오후">
                   <div class="planner-block-head">오후</div>
                   <div class="planner-tasks" id="plannerTasks-오후"></div>
-                  <div class="planner-add-row">
-                    <input type="text" class="planner-subject-input" id="plannerSubject-오후" placeholder="과목">
-                    <input type="text" class="planner-add-input" id="plannerInput-오후" placeholder="할 일 추가" onkeydown="if(event.key==='Enter')addPlanItem('오후')">
-                    <button type="button" class="planner-add-btn" onclick="addPlanItem('오후')">+</button>
-                  </div>
                 </div>
                 <div class="planner-block" data-block="저녁">
                   <div class="planner-block-head">저녁</div>
                   <div class="planner-tasks" id="plannerTasks-저녁"></div>
-                  <div class="planner-add-row">
-                    <input type="text" class="planner-subject-input" id="plannerSubject-저녁" placeholder="과목">
-                    <input type="text" class="planner-add-input" id="plannerInput-저녁" placeholder="할 일 추가" onkeydown="if(event.key==='Enter')addPlanItem('저녁')">
-                    <button type="button" class="planner-add-btn" onclick="addPlanItem('저녁')">+</button>
-                  </div>
                 </div>
               </div>
             </div>
@@ -5207,8 +5157,6 @@
   // '내 스케줄 관리하기' 페이지
   const SCHED_FIXED_WEEKDAYS = [1, 2, 3, 4, 5, 6]; // 월~토 고정 스케줄 입력 대상
   function loadScheduleManage() {
-    buildFixedScheduleRows();
-    loadFixedScheduleGrid();
     loadAdhocScheduleList();
     const adhocDateInput = document.getElementById("schedAdhocDate");
     if (adhocDateInput && !adhocDateInput.value) adhocDateInput.value = getLocalDateKey();
@@ -5240,85 +5188,47 @@
   function openSchedPanel(which) {
     document.getElementById("sched-panel-" + which).classList.add("on");
     document.getElementById("sched-panel-backdrop").classList.add("on");
+    if (which === "fixed") loadFixedScheduleView();
   }
   function closeSchedPanel() {
     document.getElementById("sched-panel-fixed").classList.remove("on");
     document.getElementById("sched-panel-adhoc").classList.remove("on");
     document.getElementById("sched-panel-backdrop").classList.remove("on");
   }
-  function buildFixedScheduleRows() {
-    const wrap = document.getElementById("schedFixedDays");
-    if (!wrap || wrap.children.length) return; // 이미 만들어져 있으면 다시 만들지 않음
-    wrap.innerHTML = SCHED_FIXED_WEEKDAYS.map(wd => (
-      '<div class="sched-fixed-day-row" data-weekday="' + wd + '">' +
-        '<span class="sched-fixed-day-label">' + WEEKDAY_LABELS[wd] + '</span>' +
-        '<div class="sched-fixed-day-body">' +
-          '<div class="sched-fixed-times">' +
-            '<label class="sched-fixed-time-field">입실<input type="text" class="sched-fixed-time" data-field="entry" placeholder="18:00" maxlength="5"></label>' +
-            '<label class="sched-fixed-time-field">외출<input type="text" class="sched-fixed-time" data-field="outing" placeholder="18:00" maxlength="5"></label>' +
-            '<label class="sched-fixed-time-field">재입실<input type="text" class="sched-fixed-time" data-field="reentry" placeholder="18:00" maxlength="5"></label>' +
-            '<label class="sched-fixed-time-field">퇴실<input type="text" class="sched-fixed-time" data-field="exit" placeholder="18:00" maxlength="5"></label>' +
-          '</div>' +
-          '<input type="text" class="sched-fixed-reason" data-field="reason" placeholder="외출 사유 (예: 국어 과외, 가족 일정)" maxlength="60">' +
-        '</div>' +
-      '</div>'
-    )).join("");
-  }
-  function loadFixedScheduleGrid() {
-    const wrap = document.getElementById("schedFixedDays");
-    const statusEl = document.getElementById("fixedScheduleStatus");
+  // "고정 스케줄 확인하기" 팝업: 월~토 요일별로 실제 입실/외출/재입실/.../퇴실을 읽기 전용으로 보여준다.
+  // 수정은 챗봇의 "고정 스케줄 변경하기"에서만 한다.
+  function loadFixedScheduleView() {
+    const wrap = document.getElementById("schedFixedView");
     if (!wrap) return;
+    wrap.innerHTML = SCHED_FIXED_WEEKDAYS.map(wd =>
+      '<div class="sched-fixed-view-day">' +
+        '<div class="sched-fixed-view-day-label">' + WEEKDAY_LABELS[wd] + '</div>' +
+        '<ul class="sched-fixed-view-events" id="schedFixedViewEvents-' + wd + '">' +
+          '<li class="sched-empty-msg">확인 중…</li>' +
+        '</ul>' +
+      '</div>'
+    ).join("");
     planApi({ action: "schedule_fixed_get" })
       .then(data => {
         const days = data.days || {};
-        let anySaved = false;
-        wrap.querySelectorAll(".sched-fixed-day-row").forEach(row => {
-          const wd = row.getAttribute("data-weekday");
-          const d = days[wd];
-          if (!d) return;
-          anySaved = true;
-          row.querySelector('[data-field="entry"]').value = d.entry_time || "";
-          row.querySelector('[data-field="outing"]').value = d.outing_time || "";
-          row.querySelector('[data-field="reentry"]').value = d.reentry_time || "";
-          row.querySelector('[data-field="exit"]').value = d.exit_time || "";
-          row.querySelector('[data-field="reason"]').value = d.reason || "";
+        SCHED_FIXED_WEEKDAYS.forEach(wd => {
+          const el = document.getElementById("schedFixedViewEvents-" + wd);
+          if (!el) return;
+          const d = days[String(wd)];
+          if (!d || !d.events || !d.events.length) {
+            el.innerHTML = '<li class="sched-empty-msg">등록된 스케줄이 없어요.</li>';
+            return;
+          }
+          el.innerHTML = d.events.map(e =>
+            '<li><span class="hsl-label">' + escapeHtml(e.label) + '</span><span class="hsl-time">' + formatTimeLabel(e.time) + '</span></li>'
+          ).join("");
         });
-        if (statusEl) {
-          statusEl.textContent = anySaved ? "제출 완료" : "미제출";
-          statusEl.classList.toggle("done", anySaved);
-        }
       })
-      .catch(err => console.error(err));
-  }
-  function isValidTimeStr(s) {
-    return !s || /^([01]\d|2[0-3]):[0-5]\d$/.test(s);
-  }
-  function submitFixedSchedule() {
-    const wrap = document.getElementById("schedFixedDays");
-    if (!wrap) return;
-    const days = [];
-    let invalid = false;
-    let badFormat = false;
-    wrap.querySelectorAll(".sched-fixed-day-row").forEach(row => {
-      const weekday = Number(row.getAttribute("data-weekday"));
-      const entry = row.querySelector('[data-field="entry"]').value.trim();
-      const outing = row.querySelector('[data-field="outing"]').value.trim();
-      const reentry = row.querySelector('[data-field="reentry"]').value.trim();
-      const exit = row.querySelector('[data-field="exit"]').value.trim();
-      const reason = row.querySelector('[data-field="reason"]').value.trim();
-      if (!entry && !exit && !outing && !reentry) return; // 완전히 빈 요일은 건너뜀
-      if (![entry, outing, reentry, exit].every(isValidTimeStr)) badFormat = true;
-      if ((outing && !reentry) || (!outing && reentry)) invalid = true;
-      days.push({ weekday, entry, outing, reentry, exit, reason });
-    });
-    if (badFormat) { showToast("시간은 18:00 처럼 시:분 형식으로 입력해주세요."); return; }
-    if (invalid) { showToast("외출을 입력했으면 재입실도 함께 입력해주세요."); return; }
-    planApi({ action: "schedule_fixed_save_all", days: days })
-      .then(() => {
-        showToast("고정 스케줄이 저장되었습니다.");
-        loadFixedScheduleGrid();
-      })
-      .catch(err => { console.error(err); showToast("저장에 실패했어요. 다시 시도해주세요."); });
+      .catch(() => {
+        wrap.querySelectorAll(".sched-fixed-view-events").forEach(el => {
+          el.innerHTML = '<li class="sched-empty-msg">불러오지 못했어요.</li>';
+        });
+      });
   }
   function loadAdhocScheduleList() {
     const listEl = document.getElementById("schedAdhocList");
@@ -5411,12 +5321,21 @@
           '</span>' +
           '<button type="button" class="planner-task-del" onclick="deletePlanItem(' + it.id + ')" aria-label="삭제">×</button>' +
         '</div>'
-      ).join("");
+      ).join("") +
+        // 노션 할 일 목록처럼, 목록 맨 아래에 항상 "새 항목 입력줄"을 붙여둔다 —
+        // 여기에 입력하고 Enter를 누르면 바로 항목이 되고, 다시 빈 입력줄이 아래에 생겨서
+        // 계속 이어서 입력할 수 있다.
+        '<div class="planner-task-row planner-task-new">' +
+          '<div class="planner-task-check-ghost"></div>' +
+          '<input type="text" class="planner-new-task-input" id="plannerNewInput-' + block + '" placeholder="할 일 추가" ' +
+            'onkeydown="if(event.key===\'Enter\'){addPlanItemInline(this,\'' + block + '\',true);event.preventDefault();}" ' +
+            'onblur="if(this.value.trim())addPlanItemInline(this,\'' + block + '\',false);">' +
+        '</div>';
     });
     const activeItems = planItems.filter(it => it.active);
     const total = activeItems.length;
     const done = activeItems.filter(it => it.done).length;
-    document.getElementById("plannerProgLabel").textContent = done + "/" + total + " 완료";
+    document.getElementById("plannerProgLabel").textContent = "계획 수정하면서 공부하기";
 
     renderPlannerOriginal();
     alignSpecialNoteWithFreeField();
@@ -5456,21 +5375,24 @@
     });
   }
 
-  function addPlanItem(block) {
-    const input = document.getElementById("plannerInput-" + block);
-    const subjectInput = document.getElementById("plannerSubject-" + block);
-    const text = input.value.trim();
+  // 노션 할 일 목록처럼: 새 항목 입력줄에서 Enter를 누르면(refocus=true) 바로 등록되고
+  // 다시 생기는 빈 입력줄에 자동으로 포커스가 가서 계속 이어서 입력할 수 있다.
+  // 입력하다가 다른 곳을 클릭해서 포커스를 벗어나도(refocus=false) 입력한 내용은 그냥 버리지 않고 저장한다.
+  function addPlanItemInline(el, block, refocus) {
+    const text = el.value.trim();
     if (!text) return;
-    const subject = subjectInput ? subjectInput.value.trim() : "";
     const studentId = localStorage.getItem("holoStudentId");
     if (!studentId) return;
-    input.value = "";
-    if (subjectInput) subjectInput.value = "";
-    planApi({ action: "plan_add", date: getLocalDateKey(), block: block, text: text, subject: subject || null })
+    el.value = ""; // renderPlanner()가 이 입력창을 새로 그리면서 blur가 나도 중복 저장되지 않도록 미리 비움
+    planApi({ action: "plan_add", date: getLocalDateKey(), block: block, text: text, subject: null })
       .then(data => {
         if (!data.ok) return;
-        planItems.push({ id: data.id, block: block, subject: subject || null, text: text, original_text: text, done: 0, active: 1, edited_at: null });
+        planItems.push({ id: data.id, block: block, subject: null, text: text, original_text: text, done: 0, active: 1, edited_at: null });
         renderPlanner();
+        if (refocus) {
+          const newInput = document.getElementById("plannerNewInput-" + block);
+          if (newInput) newInput.focus();
+        }
       })
       .catch(err => console.error(err));
   }
