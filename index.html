@@ -307,11 +307,13 @@
     font-size: 0.92rem; font-weight: 700; color: var(--ink);
     letter-spacing: -0.005em; margin-bottom: 12px;
   }
-  .hero-right .hero-desc-box {
+  .hero-desc-box {
     background: var(--cream);
     border: 1px solid var(--line);
     border-radius: 14px;
-    padding: 18px 24px;
+    padding: 18px 24px 18px 16px;
+    width: fit-content; max-width: 100%;
+    margin-bottom: 20px;
   }
   .hero-steps { display: flex; flex-direction: column; gap: 14px; }
   .hero-step { display: flex; align-items: flex-start; gap: 10px; position: relative; }
@@ -757,6 +759,11 @@
     font-size: 0.97rem; font-weight: 700; color: var(--ink);
     letter-spacing: -0.01em;
   }
+  .vs-category-label {
+    font-size: 0.82rem; font-weight: 800; color: var(--ink);
+    margin: 20px 0 10px 0;
+  }
+  .vs-category-label:first-of-type { margin-top: 0; }
   /* ── 비교 그리드 ── */
   .vs-grid {
     display: grid; grid-template-columns: 1fr 1fr;
@@ -2974,35 +2981,19 @@
       <div class="hero-right">
         <h2 class="hero-slogan">계획부터 분석까지,<br>학습의 흐름을 <span class="holo">홀로</span>가 관리합니다</h2>
         <p class="hero-slogan-sub">메타인지, 더 이상 혼자 고민하지 않아도 됩니다.</p>
-        <div class="hero-desc-box">
-          <div class="hero-steps">
-            <div class="hero-step">
-              <span class="hero-step-num">1</span>
-              <p class="hero-step-text">오늘의 계획을 세우고, 공부하다 궁금한 건 언제든 물어보고, 하루를 공부 일기로 마무리하면</p>
-            </div>
-            <div class="hero-step">
-              <span class="hero-step-num">2</span>
-              <p class="hero-step-text">그 모든 기록을 모아 학습 패턴과 약점을 분석한 후, 해결책을 제시합니다</p>
-            </div>
-            <div class="hero-step">
-              <span class="hero-step-num">3</span>
-              <p class="hero-step-text">더 깊은 고민은 학습 상담으로, 선생님과 직접 연결해드립니다</p>
-            </div>
-          </div>
-        </div>
       </div>
       </div>
     </div>
     <div class="home-guide">
       <div class="faq-btns">
         <button class="faq-btn" id="btn-what" onclick="toggleFaq('what')">
-          <span class="label">'홀로 HOLO'는 무엇인가요?</span> <span class="arrow">›</span>
+          <span class="label">로드맵 입시 관리형 독서실의 차별점</span> <span class="arrow">›</span>
         </button>
         <button class="faq-btn" id="btn-gpt" onclick="toggleFaq('gpt')">
-          <span class="label">다른 독서실과의 차별점 & 기대효과</span> <span class="arrow">›</span>
+          <span class="label">'홀로 HOLO'는 무엇을 해주나요?</span> <span class="arrow">›</span>
         </button>
         <button class="faq-btn" id="btn-usage" onclick="toggleFaq('usage')">
-          <span class="label">구체적인 사용 방법</span> <span class="arrow">›</span>
+          <span class="label">'홀로 HOLO'의 구체적인 사용 방법</span> <span class="arrow">›</span>
         </button>
       </div>
 
@@ -3040,59 +3031,90 @@
       <div class="faq-answer" id="ans-what">
         <div class="faq-answer-inner">
         <div class="faq-answer-body gpt-body">
-        <span class="tag">AI HOLO</span>
+        <span class="tag">DIFFERENCE</span>
 
         <div class="gpt-lead">
-          '홀로'는 로드맵 관리형 독서실과 공부중독이 함께 만든 <span class="ef-hl">공부법 멘토 AI</span>입니다.
+          로드맵 입시 관리형 독서실은 <span class="ef-hl">생활 관리 시스템</span>과 <span class="ef-hl">학습 관리 시스템</span>을 모두 갖춘 곳입니다.
         </div>
 
-        <p class="gpt-p">
-          혼자 공부하는 시간이 많은 로드맵 학생들에게 조금이라도 도움을 주는 것을 목적으로하며<br>
-          이름 <span class="gpt-quote">'홀로'에는 혼자 공부하는 시간에도 곁에서 방향을 잡아주는 멘토가 되겠다는 의미</span>를 담았습니다.
-        </p>
-
-        <div class="gpt-close">
-          로드맵 독서실에서 AI 홀로와 함께 더욱 성장하는 로드맵 학생이 되길 진심으로 응원합니다.
+        <div class="vs-category-label">(1) 생활 관리 시스템</div>
+        <div class="vs-grid">
+          <div class="vs-col">
+            <div class="vs-head">일반적인 관리형 독서실</div>
+            <ul class="vs-list">
+              <li>20~30분마다 순찰</li>
+              <li>졸음만 체크</li>
+              <li>플래너 작성 여부만 확인</li>
+            </ul>
+          </div>
+          <div class="vs-col holo">
+            <div class="vs-head">로드맵 입시 관리형 독서실</div>
+            <ul class="vs-list">
+              <li>3명의 감독관이 교대하며 상시 순찰</li>
+              <li>졸음, 집중도, 학습 태도, 소음 체크</li>
+              <li>플래너 작성 여부 및 이행도 확인</li>
+            </ul>
+          </div>
         </div>
+
+        <div class="vs-category-label">(2) 학습 관리 시스템</div>
+        <div class="vs-grid">
+          <div class="vs-col">
+            <div class="vs-head">일반적인 관리형 독서실</div>
+            <ul class="vs-list">
+              <li>가끔 원장 선생님과의 상담</li>
+              <li>학습 관리 프로그램 없음</li>
+            </ul>
+          </div>
+          <div class="vs-col holo">
+            <div class="vs-head">로드맵 입시 관리형 독서실</div>
+            <ul class="vs-list">
+              <li>전문 학습 컨설턴트와의 심층 상담</li>
+              <li>학습 관리 프로그램 '홀로' 사용</li>
+            </ul>
+          </div>
+        </div>
+
         </div>
         </div>
       </div>
       <div class="faq-answer" id="ans-gpt">
         <div class="faq-answer-inner">
         <div class="faq-answer-body gpt-body">
-        <span class="tag">DIFFERENCE</span>
+        <span class="tag">AI HOLO</span>
 
         <div class="gpt-lead">
-          AI 홀로는 질문에 답하는 AI가 아니라, <span class="ef-hl">로드맵의 학습 상담 시스템과 연결된 '상시 학습 코치'</span>입니다.
+          홀로는 <span class="ef-hl">매일의 계획·질의응답·공부일기를 데이터로 쌓아, 학생만의 학습 패턴과 약점을 분석</span>해줍니다.
+        </div>
+
+        <div class="hero-desc-box">
+          <div class="hero-steps">
+            <div class="hero-step">
+              <span class="hero-step-num">1</span>
+              <p class="hero-step-text">오늘의 계획을 세우고, 공부하다 궁금한 건 언제든 물어보고, 하루를 공부 일기로 마무리하면</p>
+            </div>
+            <div class="hero-step">
+              <span class="hero-step-num">2</span>
+              <p class="hero-step-text">그 모든 기록을 모아 학습 패턴과 약점을 분석한 후, 해결책을 제시합니다</p>
+            </div>
+            <div class="hero-step">
+              <span class="hero-step-num">3</span>
+              <p class="hero-step-text">더 깊은 고민은 학습 상담으로, 전문 학습 컨설턴트와 직접 연결해드립니다</p>
+            </div>
+          </div>
         </div>
 
         <p class="gpt-p gpt-intro">
-          3년간 학습 컨설팅을 진행하며 가장 많았던 후기는
-          <span class="gpt-quote">"진작 학습 상담을 받아볼 걸 그랬어요"</span>였습니다.<br>
-          <span class="gpt-quote">상담의 만족도는 높았지만, 신청하는 시기가 아쉬운 경우</span>가 많았습니다.<br>
-          공부 방법을 바꾸기엔 늦은 시점에 신청하거나,
-          반대로 스스로 공부해본 경험이 부족한 상태에서 받는 경우도 있었습니다.
+          로드맵은 감독관 3명이 교대로 상시 순찰하며
+          <span class="gpt-quote">졸음, 집중도, 학습 태도, 소음까지 실시간으로 체크</span>합니다.<br>
+          업계에서 관리가 가장 빡세기로 손꼽히는 이유입니다.<br>
+          하지만 아무리 철저하게 지켜봐도, 감독관이 절대 알 수 없는 게 있습니다 —
+          그 학생이 오늘 <span class="gpt-quote">무엇을 공부했고, 그 과정에서 무엇을 얻었고, 어떤 문제에 부딪혔는지</span>입니다.
         </p>
 
         <div class="gpt-turn">
-          로드맵과 공부중독은 이 한계를 보완하기 위해 AI 홀로를 만들었습니다.
-        </div>
-
-        <div class="vs-grid">
-          <div class="vs-col">
-            <div class="vs-head">일반적인 AI</div>
-            <ul class="vs-list">
-              <li>질문마다 보편적인 답변을 제공</li>
-              <li>답변할 때마다 기준이 달라짐</li>
-            </ul>
-          </div>
-          <div class="vs-col holo">
-            <div class="vs-head">AI 홀로</div>
-            <ul class="vs-list">
-              <li>공부중독이 축적한 <b>학습 원칙과 판단 기준</b>으로 답변</li>
-              <li>실제 학습 상담과 <b>같은 기준</b>으로 일관되게 답변</li>
-            </ul>
-          </div>
+          똑같이 10시간을 앉아있어도, 그 시간을 스스로 돌아보고 고쳐나갈 줄 아는 학생만 성적이 오릅니다.
+          로드맵은 이 빈틈을 채우기 위해 학습 관리 시스템 '홀로'를 만들었습니다.
         </div>
 
         <div class="effect-box">
@@ -3101,20 +3123,25 @@
             <div class="ef-item">
               <span class="ef-num">1</span>
               <p>
-                덕분에 학생은 문제가 커질 때까지 기다리지 않고,<br>
-                작은 의문과 잘못된 습관을 <span class="ef-hl">그때그때 점검</span>할 수 있습니다.
+                학생은 매일 스스로의 공부를 되짚어보는 습관이 생기고,<br>
+                이는 <span class="ef-hl">메타인지 향상 → 성적 향상</span>으로 이어집니다.
               </p>
             </div>
             <div class="ef-item">
               <span class="ef-num">2</span>
               <p>
-                <span class="ef-hl">평소 접한 학습 원칙이 실제 상담에서 자신의 상황에 맞게 구체화</span>되기 때문에,<br>
-                상담 내용이 <span class="ef-hl">실제 행동 변화</span>로 이어질 가능성도 높아집니다.
+                학부모는 <span class="ef-hl">"앉아있었는지"를 넘어 "무엇을 공부했는지"</span>까지 확인할 수 있습니다.
+              </p>
+            </div>
+            <div class="ef-item">
+              <span class="ef-num">3</span>
+              <p>
+                선생님은 표면적인 관찰이 아니라,
+                <span class="ef-hl">쌓인 데이터를 근거로 정확한 진단과 상담</span>을 할 수 있습니다.
               </p>
             </div>
           </div>
         </div>
-
         </div>
         </div>
       </div>
