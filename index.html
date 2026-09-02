@@ -4952,7 +4952,10 @@
     const todayKey = getLocalDateKey();
 
     planApi({ action: "plan_list", date: todayKey })
-      .then(data => setHomeStatus("plan", (data.items || []).length > 0))
+      // plan_list는 "최초 계획" 비교용으로 삭제된(비활성) 항목까지 다 돌려주기 때문에,
+      // 개수만 세면 다 지운 뒤에도 "제출완료"로 잘못 나온다 — 실제 남아있는(active) 항목
+      // 기준으로 판단해야 한다 (today_status·플래너 화면과 동일한 기준).
+      .then(data => setHomeStatus("plan", (data.items || []).some(it => it.active)))
       .catch(err => console.error(err));
 
     planApi({ action: "diary_get", date: todayKey })
