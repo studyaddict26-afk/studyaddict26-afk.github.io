@@ -5578,9 +5578,8 @@
     if (el) el.focus();
   }
   // 과목/내용 둘 다 입력해야 등록된다 — 하나라도 비어있으면 토스트로 알리고 그대로 둔다(포커스도 유지).
-  // 등록되면 입력줄을 계속 열어둔 채 과목 칸에 다시 포커스해서, 노션처럼 이어서 입력할 수 있다.
-  // silent=true면(다른 곳 클릭해서 벗어나며 자동 저장하는 경우) 경고 토스트도 안 띄우고,
-  // 저장 후에도 다시 포커스를 뺏어오지 않는다 — 이미 다른 곳을 누르려던 참이었을 수 있으니까.
+  // 등록되면 입력줄은 닫히고, 다시 추가하려면 "+ 추가하기"를 또 눌러야 한다.
+  // silent=true면(다른 곳 클릭해서 벗어나며 자동 저장하는 경우) 경고 토스트만 안 띄운다.
   function submitNewPlanRow(block, silent) {
     const subjInput = document.getElementById("plannerNewSubject-" + block);
     const contInput = document.getElementById("plannerNewContent-" + block);
@@ -5598,11 +5597,8 @@
       .then(data => {
         if (!data.ok) return;
         planItems.push({ id: Number(data.id), block: block, subject: subject, text: content, original_text: content, done: 0, active: 1, edited_at: null, is_initial: initialPlanLocked ? 0 : 1 });
+        plannerAddRowOpen[block] = false;
         renderPlanner();
-        if (!silent) {
-          const newSubj = document.getElementById("plannerNewSubject-" + block);
-          if (newSubj) newSubj.focus();
-        }
       })
       .catch(err => console.error(err));
   }
