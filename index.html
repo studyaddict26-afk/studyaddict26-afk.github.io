@@ -2251,22 +2251,21 @@
     transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s;
   }
   .input-box .input-plus-btn:hover { background: var(--cream); border-color: var(--green); color: var(--ink); }
-  .input-plus-btn.open { transform: rotate(45deg); }
   .input-plus-menu {
     display: none; position: absolute; bottom: calc(100% + 8px); left: 0;
-    background: #201F1D; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
-    box-shadow: 0 14px 32px rgba(0,0,0,0.4);
+    background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
+    box-shadow: 0 14px 32px rgba(0,0,0,0.16);
     min-width: 240px; padding: 5px; z-index: 50;
   }
   .input-plus-menu.on { display: block; }
   .input-plus-item {
     display: flex; align-items: center; gap: 10px; width: 100%; box-sizing: border-box;
-    text-align: left; font-family: inherit; font-size: 0.8rem; color: #EDEDEA;
+    text-align: left; font-family: inherit; font-size: 0.8rem; color: var(--ink);
     background: none; border: none; border-radius: 7px; padding: 9px 10px; cursor: pointer;
     transition: background 0.1s;
   }
-  .input-plus-item:hover { background: rgba(255,255,255,0.09); }
-  .input-plus-item .ico { flex: none; width: 15px; height: 15px; color: #A8A7A2; }
+  .input-plus-item:hover { background: var(--cream); }
+  .input-plus-item .ico { flex: none; width: 15px; height: 15px; color: var(--ink-soft); }
   .input-plus-item .ico svg { display: block; width: 100%; height: 100%; }
   .faq-question-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
   .faq-question-item {
@@ -5425,7 +5424,13 @@
   // 제출 후(나중에 "+ 추가하기"로 넣는 것)는 "계획 수정하기"에만 반영되고 최초 계획에는 안 남는다.
   let initialPlanLocked = false;
   function loadPlan() {
-    if (planLoaded) return;
+    if (planLoaded) {
+      // 이미 한 번 불러온 뒤라면 다시 서버에서 받아오지 않고, 아직 최초 계획을
+      // 제출하지 않은 상태(initialPlanLocked === false)일 때만 게이트를 다시 띄운다
+      // — "뒤로가기"로 팝업만 닫고 제출은 안 한 채 다시 들어왔을 때 대응.
+      if (!initialPlanLocked) openPlanGate();
+      return;
+    }
     planLoaded = true;
     const studentId = localStorage.getItem("holoStudentId");
     if (!studentId) return;
@@ -5434,7 +5439,7 @@
         planItems = data.items || [];
         initialPlanLocked = planItems.length > 0; // 이미 항목이 있으면 최초 계획은 이미 예전에 확정된 것
         renderPlanner();
-        if (!planItems.length) openPlanGate();
+        if (!initialPlanLocked) openPlanGate();
       })
       .catch(err => console.error(err));
   }
@@ -5450,8 +5455,20 @@
     document.getElementById("planGateError").style.display = "none";
     document.getElementById("planGateOverlay").classList.add("on");
   }
-  function closePlanGateToHome() {
+  // 게이트 팝업 안으로 옮겨둔 plannerBody를 원래 자리로 되돌리고, 뼈대·오버레이를 끈다.
+  // (제출했을 때도, "뒤로가기"로 제출 없이 나갈 때도 공통으로 필요한 원상복구 로직)
+  function restorePlannerBodyHome() {
+    const plannerHome = document.getElementById("plannerHome");
+    const plannerBody = document.getElementById("plannerBody");
+    plannerBody.classList.remove("plan-gate-mode");
+    plannerHome.after(plannerBody);
+    document.getElementById("plannerBodyGhost").classList.remove("on");
     document.getElementById("planGateOverlay").classList.remove("on");
+  }
+  function closePlanGateToHome() {
+    // 제출은 안 했으므로 initialPlanLocked는 그대로 false로 둔다 — 이 페이지에 다시
+    // 들어오면 loadPlan()이 게이트를 다시 띄운다.
+    restorePlannerBodyHome();
     go("home");
   }
 
@@ -5465,12 +5482,7 @@
     }
     errEl.style.display = "none";
     initialPlanLocked = true; // 이 시점부터 넣는 항목은 "최초 계획"이 아니라 "나중에 추가한 것"
-    const plannerHome = document.getElementById("plannerHome");
-    const plannerBody = document.getElementById("plannerBody");
-    plannerBody.classList.remove("plan-gate-mode");
-    plannerHome.after(plannerBody);
-    document.getElementById("plannerBodyGhost").classList.remove("on");
-    document.getElementById("planGateOverlay").classList.remove("on");
+    restorePlannerBodyHome();
   }
 
   // 블록(오전/오후/저녁)별로 "새 항목 입력줄"이 지금 열려있는지 기억한다 — 기본은 닫혀있고,
