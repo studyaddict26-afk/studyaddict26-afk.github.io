@@ -769,8 +769,11 @@
     margin: 28px 0 16px 0; padding-bottom: 10px; border-bottom: 1px solid var(--line-dark);
   }
   .info-section-title:first-child { margin-top: 0; }
-  .info-num-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 8px; }
-  .info-num-item { display: flex; gap: 12px; }
+  .info-num-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 8px; }
+  .info-num-item {
+    display: flex; gap: 12px;
+    background: var(--cream); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px;
+  }
   .info-num-badge {
     flex: none; width: 22px; height: 22px; margin-top: 1px; border-radius: 50%;
     background: var(--green); color: #fff; font-size: 0.75rem; font-weight: 800;
@@ -778,12 +781,18 @@
   }
   .info-num-body { flex: 1; min-width: 0; }
   .info-num-title { font-size: 0.88rem; font-weight: 800; color: var(--ink); margin-bottom: 6px; }
+  .info-num-desc { font-size: 0.83rem; color: var(--ink-soft); line-height: 1.6; margin: 0; }
   .info-num-bullets { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 5px; }
   .info-num-bullets li {
     font-size: 0.84rem; color: var(--ink-soft); line-height: 1.65;
     padding-left: 13px; position: relative; word-break: keep-all;
   }
   .info-num-bullets li::before { content: '·'; position: absolute; left: 2px; color: var(--ink-soft); }
+  .info-sub-list {
+    display: flex; flex-direction: column; gap: 12px;
+    margin-top: 12px; padding-left: 14px; border-left: 2px solid var(--line-dark);
+  }
+  .info-sub-title { font-size: 0.84rem; font-weight: 800; color: var(--ink); margin-bottom: 5px; }
   /* ── 비교 그리드 ── */
   .vs-grid {
     display: grid; grid-template-columns: 1fr 1fr;
@@ -3043,41 +3052,44 @@
           <div class="info-num-item">
             <span class="info-num-badge">1</span>
             <div class="info-num-body">
-              <div class="info-num-title">학습 플래너 &amp; 공부 일기 (필수)</div>
-              <ul class="info-num-bullets">
-                <li>최초 계획과 실제 이행한 계획을 비교함으로써, 본인에게 맞는 계획을 세우는 능력을 기를 수 있습니다.</li>
-                <li>공부 일기를 통해, 본인의 하루 학습을 돌아보며 장점과 단점을 파악하여 메타인지 능력을 기를 수 있습니다.</li>
-              </ul>
+              <div class="info-num-title">오늘의 학습 기록</div>
+              <p class="info-num-desc">여기서 남긴 모든 기록은 자동으로 <span class="ef-hl">누적된 학습 기록과 분석지</span>에 반영됩니다.</p>
+              <div class="info-sub-list">
+                <div class="info-sub-item">
+                  <div class="info-sub-title">(1) 학습 플래너 &amp; 공부 일기 (필수)</div>
+                  <ul class="info-num-bullets">
+                    <li>최초 계획과 실제 이행한 계획을 비교함으로써, 본인에게 알맞은 계획을 세우는 능력을 기를 수 있습니다.</li>
+                    <li>공부 일기를 통해, 본인의 하루 학습을 돌아보며 잘한 점과 문제점을 파악하여 <span class="ef-hl">메타인지 능력을 기를 수 있습니다.</span></li>
+                  </ul>
+                </div>
+                <div class="info-sub-item">
+                  <div class="info-sub-title">(2) 홀로 AI 질의응답</div>
+                  <ul class="info-num-bullets">
+                    <li>일반적인 AI의 능력은 물론, <span class="ef-hl">'의치한약수 SKY' 재학생들의 노하우</span>를 바탕으로 고품질 답변을 제시합니다.</li>
+                    <li><span class="ef-hl">다른 AI와의 대화 내용</span> 또는 <span class="ef-hl">인강 Q&amp;A 내용</span>을 가져와서 입력해둘 수 있습니다.</li>
+                    <li>홀로 AI 챗봇과의 대화 내용과 추가적으로 입력된 내용을 모두 합쳐, 분석지의 데이터베이스로 활용합니다.</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
           <div class="info-num-item">
             <span class="info-num-badge">2</span>
             <div class="info-num-body">
-              <div class="info-num-title">홀로 AI 질의응답</div>
+              <div class="info-num-title">누적된 학습 기록</div>
               <ul class="info-num-bullets">
-                <li>일반적인 AI의 능력은 물론, '의치한약수 SKY' 재학생들의 노하우를 바탕으로 고품질 답변을 제시합니다.</li>
-                <li>다른 AI와의 대화 내용 또는 인강 Q&amp;A 내용을 가져와서 입력해둘 수 있습니다.</li>
-                <li>홀로 AI 챗봇과의 대화 내용과 추가적으로 입력된 내용을 모두 합쳐, 분석지의 데이터베이스로 활용합니다.</li>
+                <li>하루 동안의, 학습 플래너 - 공부 일기 - 홀로 AI 내용을 모두 통합하여 '학습 기록'을 제공합니다.</li>
+                <li>학습 기록을 누적하여 기록함으로써, <span class="ef-hl">학생이 본인의 변화된 모습을 스스로 체감할 수 있습니다.</span></li>
               </ul>
             </div>
           </div>
           <div class="info-num-item">
             <span class="info-num-badge">3</span>
             <div class="info-num-body">
-              <div class="info-num-title">누적된 학습 기록</div>
-              <ul class="info-num-bullets">
-                <li>하루 동안의, 학습 플래너 - 공부 일기 - 홀로 AI 내용을 모두 통합하여 '학습 기록'을 제공합니다.</li>
-                <li>학습 기록을 누적하여 기록함으로써, 학생이 본인의 변화된 모습을 스스로 체감할 수 있습니다.</li>
-              </ul>
-            </div>
-          </div>
-          <div class="info-num-item">
-            <span class="info-num-badge">4</span>
-            <div class="info-num-body">
               <div class="info-num-title">내 분석지</div>
               <ul class="info-num-bullets">
-                <li>월요일부터 토요일까지의 누적된 학습 기록을 바탕으로, 일요일에 6일 분석지를 제공합니다.</li>
-                <li>긍정적인 학습 패턴, 반복되는 문제 상황, 문제 해결 방법 등을 제시합니다.</li>
+                <li>월요일부터 토요일까지의 누적된 학습 기록을 바탕으로, <span class="ef-hl">일요일에 6일 분석지</span>를 제공합니다.</li>
+                <li><span class="ef-hl">긍정적인 학습 패턴, 반복되는 문제 상황, 문제 해결 방법, 추천 학습 상담 종류 등을 제시</span>합니다.</li>
               </ul>
             </div>
           </div>
@@ -3088,7 +3100,7 @@
           <div class="vs-col">
             <div class="vs-head">일반적인 관리형 독서실의 학습 상담</div>
             <ul class="vs-list">
-              <li>약 30분 동안의 간단한 질의 응답</li>
+              <li>들쑥날쑥한 상담 퀄리티</li>
               <li>학생들의 학습 패턴, 반복되는 고민 상황을 "객관적으로" 파악 불가능</li>
               <li>큰 방향성 위주의 추상적인 상담</li>
             </ul>
@@ -3096,22 +3108,13 @@
           <div class="vs-col holo">
             <div class="vs-head">'홀로'가 제공하는 학습 상담</div>
             <ul class="vs-list">
-              <li>최소 1시간부터 시작하여, 원하는 만큼 상담 가능</li>
-              <li>표면적인 관찰이 아니라, 지금껏 쌓인 분석지 데이터를 근거로 정확한 진단과 상담 가능</li>
+              <li>AI 홀로를 통해 해결되지 않는 깊은 고민은 학습 상담을 신청하면 전문 학습컨설턴트 선생님이 직접 상담</li>
+              <li>표면적인 관찰이 아니라, 지금껏 쌓인 분석지 데이터를 근거로 정확한 문제 진단</li>
               <li>학습 컨설팅부터 수학, 국어 과외까지 디테일한 코칭</li>
             </ul>
           </div>
         </div>
 
-        <ol class="use-steps">
-          <li>왼쪽 상단의 버튼을 눌러 사이드바를 열 수 있습니다.</li>
-          <li>사이드바의 <span class="ef-hl">'내 학습 기록 살펴보기'</span>에서 오늘의 학습 기록 / 누적된 학습 기록 / 내 분석지, 세 메뉴로 이동할 수 있습니다.</li>
-          <li><span class="ef-hl">'오늘의 학습 기록'</span>에서는 오늘 하루의 계획을 세우고 실시간으로 수정하며, 공부일기를 쓰고, 과목 상관없이 AI에게 바로 질문할 수 있습니다(필수 작성). 여기서 남긴 모든 기록은 자동으로 분석지에 반영됩니다.</li>
-          <li><span class="ef-hl">'누적된 학습 기록'</span>에서는 지난 날짜들을 하루하루 모아볼 수 있고, 날짜를 누르면 그날 있었던 일을 AI가 평가 없이 있는 그대로 정리해서 보여줍니다.</li>
-          <li><span class="ef-hl">'내 분석지'</span>에서는 여러 날에 걸쳐 쌓인 기록을 AI가 한 번에 모아 분석해, 반복되는 패턴과 추천 학습 상담까지 담은 진단 리포트를 확인할 수 있습니다.</li>
-          <li><span class="ef-hl">'우리 동네 내신 기출 공부하기'</span>에서는 우리 동네 학교의 수학·영어 내신 기출 경향에 대해 질문할 수 있습니다.</li>
-          <li>AI 홀로를 통해 해결되지 않는 깊은 고민은 <span class="ef-hl">학습 상담을 신청하여 공부중독 선생님과 직접 상담할 수 있습니다.</span></li>
-        </ol>
         </div>
         </div>
       </div>
