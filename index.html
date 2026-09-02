@@ -2179,6 +2179,12 @@
     font-size: 0.64rem; font-weight: 800; letter-spacing: 0.2em;
     padding: 5px 11px; border-radius: 999px; margin-bottom: 10px;
   }
+  .chat-head-icon {
+    width: 34px; height: 34px; border-radius: 10px; background: var(--green-soft);
+    display: flex; align-items: center; justify-content: center; color: var(--green-deep);
+    margin-bottom: 10px;
+  }
+  .chat-head-icon svg { width: 17px; height: 17px; }
   .chat-head h2 { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.01em; }
   .chat-head .split {
     height: 3px; width: 100px; border-radius: 2px; margin: 12px 0 0 0;
@@ -2680,24 +2686,15 @@
   .report-body { padding: 20px 22px; }
 
   /* ── 누적된 학습 기록 (날짜별 목록) ── */
+  /* "학습 상담 프로그램 및 비용" 카드(.grade-tabs-card 등)를 그대로 재사용 — 연도별 카드를
+     옆으로 나란히 두고(새 연도가 되면 오른쪽에 카드가 하나 더 생기고, 자리가 없으면 아래 줄로
+     넘어감), 월은 그 안에서 세로 구분선으로 나뉜 링크로 보여준다. */
   .ym-picker {
     max-width: 760px; width: 100%; margin: 0 auto 18px auto; padding: 0 20px; box-sizing: border-box;
-    display: flex; flex-direction: column; gap: 14px;
+    display: flex; flex-wrap: wrap; gap: 14px;
   }
-  .ym-year-block {
-    background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
-    padding: 14px 16px;
-  }
-  .ym-year-label { font-size: 0.8rem; font-weight: 800; color: var(--ink-soft); margin-bottom: 10px; }
-  .ym-month-row { display: flex; flex-wrap: wrap; gap: 8px; }
-  .ym-month-btn {
-    font-family: inherit; font-size: 0.78rem; font-weight: 600; color: var(--ink-soft);
-    background: var(--cream); border: 1px solid var(--line); border-radius: 999px;
-    padding: 6px 13px; cursor: pointer; transition: border-color 0.15s, color 0.15s, background 0.15s;
-  }
-  .ym-month-btn:hover { border-color: var(--line-dark); color: var(--ink); }
-  .ym-month-btn.has-data { color: var(--green-deep); background: var(--green-soft); border-color: #CFE3D6; }
-  .ym-month-btn.active { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .ym-picker .grade-tabs-card { flex: 1 1 240px; min-width: 200px; margin-bottom: 0; }
+  .ym-picker .grade-tab-col.active { background: var(--cream); }
   .day-list {
     max-width: 760px; width: 100%; margin: 0 auto; padding: 0 20px 40px 20px; box-sizing: border-box;
     display: flex; flex-direction: column; gap: 10px;
@@ -4267,10 +4264,13 @@
   <!-- ─── 누적된 학습 기록 ─── -->
   <section class="view" id="view-cumulative">
     <div class="chat-head">
+      <span class="chat-head-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="12" height="12" rx="1.5"/><rect x="8" y="8" width="12" height="12" rx="1.5"/></svg>
+      </span>
       <h2>누적된 학습 기록</h2>
       <div class="split"></div>
     </div>
-    <p class="reports-intro">🗓️ 하루하루 쌓인 학습 기록을 월별로 모아볼 수 있어요. 날짜를 누르면 그날의 계획·일기·질문을 한눈에 확인할 수 있습니다.</p>
+    <p class="reports-intro">하루하루 쌓인 학습 기록을 월별로 모아볼 수 있어요. 날짜를 누르면 그날의 계획·일기·질문을 한눈에 확인할 수 있습니다.</p>
     <div class="ym-picker" id="ymPicker"></div>
     <div class="day-list" id="day-list-wrap">
       <div class="reports-empty">불러오는 중...</div>
@@ -4280,7 +4280,9 @@
   <!-- ─── 내 분석지 ─── -->
   <section class="view" id="view-reports">
     <div class="chat-head">
-      <span class="eyebrow">MY REPORTS</span>
+      <span class="chat-head-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 19V6M12 19V3M19 19v-9"/></svg>
+      </span>
       <h2>내 분석지</h2>
       <div class="split"></div>
     </div>
@@ -5078,6 +5080,27 @@
     loadNotes();
     loadSpecialNote();
     loadDiaryEntry();
+    syncTodaySubmitBadges();
+  }
+
+  // "미제출/제출완료" 배지는 원래 quickSubmit()을 눌러야만 바뀌는 화면 표시용 상태라,
+  // 실제로는 계속 자동저장되고 있는 플래너·일기 내용과 따로 놀아서 페이지에 새로 들어올 때마다
+  // "미제출"로 초기화돼 보였다(내 학습 기록 살펴보기 타일은 실제 데이터를 조회해서 맞게 나오는데,
+  // 이 페이지 안 배지만 안 맞는 버그). 실제 데이터 유무(today_status, 타일과 동일한 기준)로
+  // 페이지에 들어올 때마다 다시 맞춰준다.
+  function syncTodaySubmitBadges() {
+    planApi({ action: "today_status", date: getLocalDateKey() })
+      .then(data => {
+        setSubmitStatusBadge("planSubmitStatus", !!data.hasPlan);
+        setSubmitStatusBadge("diarySubmitStatus", !!data.hasDiary);
+      })
+      .catch(err => console.error(err));
+  }
+  function setSubmitStatusBadge(id, done) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = done ? "제출완료" : "미제출";
+    el.classList.toggle("done", done);
   }
 
   // 플래너/일기 둘 다 이미 계속 자동저장되고 있어서, 이 버튼은 저장 용도가 아니라
@@ -6155,18 +6178,24 @@
       });
   }
 
-  // 학생이 기록을 남긴 가장 이른 연-월부터, 이번 달 기준 내년 12월까지를 년도별 박스로 만든다
-  // (지난 기록은 안 가려지고, 미래 달도 미리 눌러볼 수 있게).
+  // 학생마다 "가입한 달"부터 시작한다 — 가입일 이전 달은 아예 만들지 않는다(학생마다 나오는
+  // 연/월이 다름). 가입일 정보를 못 구한 경우에만, 예전처럼 기록을 남긴 가장 이른 연-월부터로
+  // 대체한다. 끝은 항상 이번 달까지 — 미래 달은 안 만들고, 다음 달이 되면(new Date() 기준으로
+  // 이 함수가 다시 계산되므로) 그 달 칸이 자동으로 생긴다.
   function buildYearMonthRange() {
     const now = new Date();
     let minYear = now.getFullYear(), minMonth = now.getMonth() + 1;
-    allDaysData.forEach(d => {
-      const parts = d.date.split("-");
-      const y = Number(parts[0]), m = Number(parts[1]);
-      if (y < minYear || (y === minYear && m < minMonth)) { minYear = y; minMonth = m; }
-    });
-    // 미래 달은 만들지 않는다 — 오늘이 속한 달까지만 보여주고, 다음 달이 되면(new Date() 기준으로
-    // 이 함수가 다시 계산되므로) 그 달 칸이 자동으로 생긴다.
+    const joinYm = localStorage.getItem("holoStudentJoinYm");
+    if (joinYm && /^\d{4}-\d{2}$/.test(joinYm)) {
+      const [jy, jm] = joinYm.split("-").map(Number);
+      minYear = jy; minMonth = jm;
+    } else {
+      allDaysData.forEach(d => {
+        const parts = d.date.split("-");
+        const y = Number(parts[0]), m = Number(parts[1]);
+        if (y < minYear || (y === minYear && m < minMonth)) { minYear = y; minMonth = m; }
+      });
+    }
     const maxYear = now.getFullYear();
     const maxMonth = now.getMonth() + 1;
     const range = [];
@@ -6186,14 +6215,15 @@
     const range = buildYearMonthRange();
     const now = new Date();
     const defaultYm = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0");
+    // "학습 상담 프로그램 및 비용" 카드와 같은 모양(.grade-tabs-card) — 연도가 카드 제목,
+    // 월은 그 안에서 세로 구분선으로 나뉜 링크로 나온다.
     el.innerHTML = range.map(r =>
-      '<div class="ym-year-block">' +
-        '<div class="ym-year-label">' + r.year + '년</div>' +
-        '<div class="ym-month-row">' +
+      '<div class="grade-tabs-card">' +
+        '<div class="grade-tabs-card-title">' + r.year + '년</div>' +
+        '<div class="grade-tabs-cols" style="grid-template-columns: repeat(' + r.months.length + ', 1fr);">' +
           r.months.map(m => {
             const ym = r.year + "-" + String(m).padStart(2, "0");
-            const hasData = allDaysData.some(d => d.date.indexOf(ym) === 0);
-            return '<button type="button" class="ym-month-btn' + (hasData ? " has-data" : "") + '" data-ym="' + ym + '" onclick="selectYearMonth(\'' + ym + '\')">' + String(m).padStart(2, "0") + '월</button>';
+            return '<button type="button" class="grade-tab-col ym-month-col" data-ym="' + ym + '" onclick="selectYearMonth(\'' + ym + '\')"><span class="ef-hl">' + String(m).padStart(2, "0") + '월</span></button>';
           }).join("") +
         '</div>' +
       '</div>'
@@ -6201,7 +6231,7 @@
     selectYearMonth(defaultYm);
   }
   function selectYearMonth(ym) {
-    document.querySelectorAll(".ym-month-btn").forEach(b => b.classList.toggle("active", b.dataset.ym === ym));
+    document.querySelectorAll(".ym-month-col").forEach(b => b.classList.toggle("active", b.dataset.ym === ym));
     const wrap = document.getElementById("day-list-wrap");
     if (!wrap) return;
     const days = allDaysData.filter(d => d.date.indexOf(ym) === 0);
@@ -7074,6 +7104,7 @@
       }
       localStorage.setItem("holoStudentId", id);
       localStorage.setItem("holoStudentPw", pw);
+      storeStudentJoinYm(doc.data());
       hideStudentGate();
       go("home");
     }).catch(err => {
@@ -7087,8 +7118,22 @@
   function studentLogout() {
     localStorage.removeItem("holoStudentId");
     localStorage.removeItem("holoStudentPw");
+    localStorage.removeItem("holoStudentJoinYm");
     location.hash = "";
     location.reload();
+  }
+  // "누적된 학습 기록"의 연/월 선택기가 학생마다 가입한 달부터만 보이도록, 계정의
+  // Firestore 가입일(createdAt)을 "YYYY-MM"으로 저장해둔다. serverTimestamp()가 아직 반영되기
+  // 전(가입 직후 오프라인 캐시 등)이라 createdAt이 없을 수도 있는데, 그때는 그냥 건너뛴다 —
+  // buildYearMonthRange()가 이 값이 없으면 예전처럼 기록 기준으로 알아서 대체한다.
+  function storeStudentJoinYm(data) {
+    try {
+      const ts = data && data.createdAt;
+      if (ts && typeof ts.toDate === "function") {
+        const d = ts.toDate();
+        localStorage.setItem("holoStudentJoinYm", d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"));
+      }
+    } catch (e) { /* 무시 */ }
   }
   function checkStudentSession() {
     const id = localStorage.getItem("holoStudentId");
@@ -7098,8 +7143,10 @@
       if (!doc.exists || doc.data().password !== pw) {
         localStorage.removeItem("holoStudentId");
         localStorage.removeItem("holoStudentPw");
+        localStorage.removeItem("holoStudentJoinYm");
         showStudentGate();
       } else {
+        storeStudentJoinYm(doc.data());
         hideStudentGate();
       }
     }).catch(err => {
