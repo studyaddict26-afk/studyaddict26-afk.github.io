@@ -2208,24 +2208,32 @@
   .chip:hover { border-color: var(--line-dark); color: var(--ink); }
 
   .input-zone { background: var(--cream); padding: 10px 20px 22px 20px; flex: none; position: relative; }
-  .import-side-btn {
-    position: absolute; left: 55px; top: 50%; transform: translateY(-50%);
-    height: 26px; box-sizing: border-box; line-height: 1; border-radius: 999px; border: none;
-    background: var(--ink); color: #fff; font-size: 0.64rem; font-weight: 700; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 4px;
-    padding: 0 10px; white-space: nowrap; font-family: inherit;
-    transition: background 0.15s;
+  .input-plus-wrap { position: relative; flex: none; }
+  .input-plus-btn {
+    flex: none; width: 30px; height: 30px; padding: 0;
+    background: var(--ink); color: #FFFFFF;
+    border: none; border-radius: 999px;
+    font-size: 1.15rem; font-weight: 400; line-height: 1; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.18s, transform 0.15s;
   }
-  .import-side-btn:hover { background: var(--green-deep); }
-  .faq-side-btn {
-    position: absolute; right: 90px; top: 50%; transform: translateY(-50%);
-    height: 26px; box-sizing: border-box; line-height: 1; border-radius: 999px; border: none;
-    background: var(--ink); color: #fff; font-size: 0.64rem; font-weight: 700; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 4px;
-    padding: 0 10px; white-space: nowrap; font-family: inherit;
-    transition: background 0.15s;
+  .input-plus-btn:hover { background: var(--green-deep); }
+  .input-plus-btn.open { transform: rotate(45deg); }
+  .input-plus-menu {
+    display: none; position: absolute; bottom: calc(100% + 8px); left: 0;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
+    box-shadow: 0 10px 28px rgba(20,20,16,0.16);
+    min-width: 230px; padding: 6px; z-index: 50;
   }
-  .faq-side-btn:hover { background: var(--green-deep); }
+  .input-plus-menu.on { display: block; }
+  .input-plus-item {
+    display: flex; align-items: center; gap: 9px; width: 100%; box-sizing: border-box;
+    text-align: left; font-family: inherit; font-size: 0.8rem; color: var(--ink);
+    background: none; border: none; border-radius: 8px; padding: 9px 10px; cursor: pointer;
+    transition: background 0.12s;
+  }
+  .input-plus-item:hover { background: var(--cream); }
+  .input-plus-item .ico { flex: none; font-size: 0.9rem; }
   .faq-question-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
   .faq-question-item {
     text-align: left; font-family: inherit; cursor: pointer;
@@ -2262,16 +2270,6 @@
     font-size: 0.7rem; color: #A6A69E; text-align: center;
   }
 
-  /* ── 사진 첨부 (질문하기 챗봇) ── */
-  .input-box .attach-btn {
-    flex: none; width: 30px; height: 30px; padding: 0;
-    background: var(--ink); color: #FFFFFF;
-    border: none; border-radius: 999px;
-    font-size: 0.82rem; line-height: 1; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: background 0.18s;
-  }
-  .input-box .attach-btn:hover { background: var(--green-deep); }
   .msg-img { display: block; max-width: 260px; width: 100%; border-radius: 10px; margin-bottom: 8px; border: 1px solid var(--line); }
   .msg-img-caption { font-size: 0.94rem; line-height: 1.6; white-space: pre-line; }
 
@@ -2366,6 +2364,12 @@
   .planner-body { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }
   .planner-block { display: flex; flex-direction: column; gap: 4px; }
   .planner-block-head { font-size: 0.68rem; font-weight: 800; color: var(--ink); letter-spacing: 0.04em; }
+  .planner-block-head-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .planner-block-add-btn {
+    font-family: inherit; font-size: 0.66rem; font-weight: 700; color: var(--green-deep);
+    background: none; border: none; padding: 0; cursor: pointer;
+  }
+  .planner-block-add-btn:hover { text-decoration: underline; }
   .planner-tasks { display: flex; flex-direction: column; }
   .planner-task-row { display: flex; align-items: center; gap: 6px; padding: 5px 2px; }
   .planner-task-check {
@@ -2389,11 +2393,14 @@
   .planner-task-check-ghost {
     flex: none; width: 14px; height: 14px; border-radius: 4px; border: 1.4px dashed var(--line-dark);
   }
-  .planner-new-task-input {
-    flex: 1; min-width: 0; border: none; background: none; outline: none;
-    font-size: 0.74rem; font-family: inherit; color: var(--ink); padding: 0;
+  .planner-new-subject-input, .planner-new-content-input {
+    border: none; border-bottom: 1px solid var(--line-dark); background: none; outline: none;
+    font-size: 0.74rem; font-family: inherit; color: var(--ink); padding: 0 0 2px 0;
   }
-  .planner-new-task-input::placeholder { color: var(--ink-soft); opacity: 0.75; }
+  .planner-new-subject-input { flex: 0 0 56px; min-width: 0; }
+  .planner-new-content-input { flex: 1; min-width: 0; }
+  .planner-new-subject-input:focus, .planner-new-content-input:focus { border-bottom-color: var(--green); }
+  .planner-new-subject-input::placeholder, .planner-new-content-input::placeholder { color: var(--ink-soft); opacity: 0.75; }
   .planner-progress-label { font-size: 0.66rem; font-weight: 700; color: var(--ink); white-space: nowrap; }
   .planner-count-badge {
     font-size: 0.68rem; font-weight: 800; color: var(--green-deep); white-space: nowrap;
@@ -2497,8 +2504,8 @@
     background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
     padding: 18px; overflow-y: auto;
   }
-  .record-plan-diary-row { display: flex; gap: 18px; min-height: 0; flex: 1; align-items: flex-start; }
-  .record-plan-diary-row .record-planner-pane { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+  .record-plan-diary-row { display: flex; gap: 18px; min-height: 0; flex: 1; align-items: stretch; }
+  .record-plan-diary-row .record-planner-pane { flex: 1 1 0; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
   .record-diary-col {
     flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 14px; min-height: 0;
     border-left: 1px solid var(--line); padding-left: 18px;
@@ -3958,15 +3965,24 @@
               </div>
               <div class="planner-col-body">
                 <div class="planner-block" data-block="오전">
-                  <div class="planner-block-head">오전</div>
+                  <div class="planner-block-head-row">
+                    <span class="planner-block-head">오전</span>
+                    <button type="button" class="planner-block-add-btn" onclick="showAddRow('오전')">+ 추가하기</button>
+                  </div>
                   <div class="planner-tasks" id="plannerTasks-오전"></div>
                 </div>
                 <div class="planner-block" data-block="오후">
-                  <div class="planner-block-head">오후</div>
+                  <div class="planner-block-head-row">
+                    <span class="planner-block-head">오후</span>
+                    <button type="button" class="planner-block-add-btn" onclick="showAddRow('오후')">+ 추가하기</button>
+                  </div>
                   <div class="planner-tasks" id="plannerTasks-오후"></div>
                 </div>
                 <div class="planner-block" data-block="저녁">
-                  <div class="planner-block-head">저녁</div>
+                  <div class="planner-block-head-row">
+                    <span class="planner-block-head">저녁</span>
+                    <button type="button" class="planner-block-add-btn" onclick="showAddRow('저녁')">+ 추가하기</button>
+                  </div>
                   <div class="planner-tasks" id="plannerTasks-저녁"></div>
                 </div>
               </div>
@@ -4042,13 +4058,19 @@
       </div>
     </div>
     <div class="input-zone">
-      <button type="button" class="import-side-btn" onclick="openImportPanel('chat')" aria-label="다른 AI와의 대화 내용 가져오기">🔄 다른 AI와의 대화 내용 가져오기</button>
       <div class="input-box">
-        <button type="button" class="attach-btn" onclick="openPhotoPanel('chat')" aria-label="사진 첨부하기" title="사진 첨부하기">📎</button>
+        <div class="input-plus-wrap">
+          <button type="button" class="input-plus-btn" id="inputPlusBtn-chat" onclick="toggleInputPlusMenu('chat')" aria-label="더보기">+</button>
+          <div class="input-plus-menu" id="inputPlusMenu-chat">
+            <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('chat');openImportPanel('chat')"><span class="ico">🔄</span> 다른 AI와의 대화 내용 가져오기</button>
+            <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('chat');openLectureImportPanel('chat')"><span class="ico">🎥</span> 인강 Q&amp;A 내용 가져오기</button>
+            <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('chat');openPhotoPanel('chat')"><span class="ico">📎</span> 사진 첨부하기</button>
+            <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('chat');openFaqPanel('chat')"><span class="ico">💬</span> 자주 하는 질문</button>
+          </div>
+        </div>
         <input id="q-chat" type="text" placeholder="궁금한 것을 무엇이든 물어보세요" autocomplete="off">
         <button onclick="send('chat')">보내기</button>
       </div>
-      <button type="button" class="faq-side-btn" onclick="openFaqPanel('chat')" aria-label="자주 하는 질문">💬 자주 하는 질문</button>
     </div>
       </div>
     </div>
@@ -4105,6 +4127,26 @@
       <div class="photo-panel-actions">
         <button type="button" class="apply-cancel-btn" onclick="closeImportPanel('chat')">취소</button>
         <button type="button" class="apply-submit-btn" onclick="submitImportedContent('chat')">가져오기</button>
+      </div>
+    </aside>
+
+    <div class="photo-panel-backdrop" id="import-lecture-panel-backdrop" onclick="closeLectureImportPanel('chat')"></div>
+    <aside class="photo-panel" id="import-lecture-panel-chat">
+      <div class="photo-panel-head">
+        <h3>🎥 인강 Q&amp;A에서 가져오기</h3>
+        <button type="button" class="photo-panel-close" onclick="closeLectureImportPanel('chat')" aria-label="닫기">×</button>
+      </div>
+      <p class="photo-panel-hint">인강 사이트의 Q&amp;A 게시판에서 본 질문·답변 내용을 알려주세요. 분석해서 '일주일 분석지'에 반영합니다.</p>
+
+      <div class="photo-panel-section">
+        <div class="photo-panel-field">
+          <textarea id="import-lecture-paste-chat" placeholder="인강 Q&A의 질문과 답변 내용을 그대로 붙여넣으세요"></textarea>
+        </div>
+      </div>
+
+      <div class="photo-panel-actions">
+        <button type="button" class="apply-cancel-btn" onclick="closeLectureImportPanel('chat')">취소</button>
+        <button type="button" class="apply-submit-btn" onclick="submitImportedLectureContent('chat')">가져오기</button>
       </div>
     </aside>
 
@@ -4950,9 +4992,6 @@
     loadNotes();
     loadSpecialNote();
     loadDiaryEntry();
-    requestAnimationFrame(() => requestAnimationFrame(alignSpecialNoteWithFreeField));
-    setTimeout(alignSpecialNoteWithFreeField, 200);
-    setTimeout(alignSpecialNoteWithFreeField, 600);
   }
 
   // 플래너/일기 둘 다 이미 계속 자동저장되고 있어서, 이 버튼은 저장 용도가 아니라
@@ -5343,6 +5382,9 @@
     document.getElementById("planGateOverlay").classList.remove("on");
   }
 
+  // 블록(오전/오후/저녁)별로 "새 항목 입력줄"이 지금 열려있는지 기억한다 — 기본은 닫혀있고,
+  // "+ 추가하기"를 눌렀을 때만 나타난다 (항상 떠 있으면 자리를 너무 많이 차지해서).
+  const plannerAddRowOpen = {};
   function renderPlanner() {
     PLAN_BLOCKS.forEach(block => {
       const wrap = document.getElementById("plannerTasks-" + block);
@@ -5357,15 +5399,17 @@
           '<button type="button" class="planner-task-del" onclick="deletePlanItem(' + it.id + ')" aria-label="삭제">×</button>' +
         '</div>'
       ).join("") +
-        // 노션 할 일 목록처럼, 목록 맨 아래에 항상 "새 항목 입력줄"을 붙여둔다 —
-        // 여기에 입력하고 Enter를 누르면 바로 항목이 되고, 다시 빈 입력줄이 아래에 생겨서
-        // 계속 이어서 입력할 수 있다.
-        '<div class="planner-task-row planner-task-new">' +
-          '<div class="planner-task-check-ghost"></div>' +
-          '<input type="text" class="planner-new-task-input" id="plannerNewInput-' + block + '" placeholder="할 일을 입력하고, Enter를 눌러주세요" ' +
-            'onkeydown="if(event.key===\'Enter\'){addPlanItemInline(this,\'' + block + '\',true);event.preventDefault();}" ' +
-            'onblur="if(this.value.trim())addPlanItemInline(this,\'' + block + '\',false);">' +
-        '</div>';
+        (plannerAddRowOpen[block]
+          ? '<div class="planner-task-row planner-task-new">' +
+              '<div class="planner-task-check-ghost"></div>' +
+              '<input type="text" class="planner-new-subject-input" id="plannerNewSubject-' + block + '" placeholder="과목" ' +
+                'onkeydown="if(event.key===\'Enter\'){submitNewPlanRow(\'' + block + '\');event.preventDefault();}" ' +
+                'onblur="handleNewRowBlur(\'' + block + '\')">' +
+              '<input type="text" class="planner-new-content-input" id="plannerNewContent-' + block + '" placeholder="내용" ' +
+                'onkeydown="if(event.key===\'Enter\'){submitNewPlanRow(\'' + block + '\');event.preventDefault();}" ' +
+                'onblur="handleNewRowBlur(\'' + block + '\')">' +
+            '</div>'
+          : '');
     });
     const activeItems = planItems.filter(it => it.active);
     const total = activeItems.length;
@@ -5374,26 +5418,7 @@
     document.getElementById("plannerCountBadge").textContent = done + "/" + total;
 
     renderPlannerOriginal();
-    alignSpecialNoteWithFreeField();
   }
-
-  // 계획 항목 개수에 따라 왼쪽 칸의 실제 세로 길이가 계속 바뀌기 때문에, 고정된 margin으로는
-  // '특이사항 메모'와 '자유롭게 기록...'의 높이를 절대 맞출 수 없다 — 그때그때 실제 위치를 재서 맞춘다.
-  function alignSpecialNoteWithFreeField() {
-    const specialNote = document.querySelector(".planner-special-note");
-    const freeField = document.getElementById("diary-free");
-    if (!specialNote || !freeField) return;
-    const freeFieldWrap = freeField.closest(".diary-q-field");
-    if (!freeFieldWrap) return;
-    specialNote.style.marginTop = "4px";
-    const specialTop = specialNote.getBoundingClientRect().top;
-    const freeTop = freeFieldWrap.getBoundingClientRect().top;
-    const diff = freeTop - specialTop;
-    specialNote.style.marginTop = (4 + diff) + "px";
-  }
-  window.addEventListener("resize", () => {
-    if (document.getElementById("view-todayrecord").classList.contains("on")) alignSpecialNoteWithFreeField();
-  });
 
   function renderPlannerOriginal() {
     PLAN_BLOCKS.forEach(block => {
@@ -5411,26 +5436,51 @@
     });
   }
 
-  // 노션 할 일 목록처럼: 새 항목 입력줄에서 Enter를 누르면(refocus=true) 바로 등록되고
-  // 다시 생기는 빈 입력줄에 자동으로 포커스가 가서 계속 이어서 입력할 수 있다.
-  // 입력하다가 다른 곳을 클릭해서 포커스를 벗어나도(refocus=false) 입력한 내용은 그냥 버리지 않고 저장한다.
-  function addPlanItemInline(el, block, refocus) {
-    const text = el.value.trim();
-    if (!text) return;
+  // 블록 헤더의 "+ 추가하기"를 누르면 (과목/내용) 입력줄이 나타나고, 과목 칸에 바로 포커스된다.
+  function showAddRow(block) {
+    plannerAddRowOpen[block] = true;
+    renderPlanner();
+    const el = document.getElementById("plannerNewSubject-" + block);
+    if (el) el.focus();
+  }
+  // 과목/내용 둘 다 입력해야 등록된다 — 하나라도 비어있으면 토스트로 알리고 그대로 둔다(포커스도 유지).
+  // 등록되면 입력줄을 계속 열어둔 채 과목 칸에 다시 포커스해서, 노션처럼 이어서 입력할 수 있다.
+  function submitNewPlanRow(block) {
+    const subjInput = document.getElementById("plannerNewSubject-" + block);
+    const contInput = document.getElementById("plannerNewContent-" + block);
+    if (!subjInput || !contInput) return;
+    const subject = subjInput.value.trim();
+    const content = contInput.value.trim();
+    if (!subject || !content) {
+      showToast("과목과 내용을 모두 입력해주세요.");
+      return;
+    }
     const studentId = localStorage.getItem("holoStudentId");
     if (!studentId) return;
-    el.value = ""; // renderPlanner()가 이 입력창을 새로 그리면서 blur가 나도 중복 저장되지 않도록 미리 비움
-    planApi({ action: "plan_add", date: getLocalDateKey(), block: block, text: text, subject: null })
+    subjInput.value = ""; contInput.value = "";
+    planApi({ action: "plan_add", date: getLocalDateKey(), block: block, text: content, subject: subject })
       .then(data => {
         if (!data.ok) return;
-        planItems.push({ id: data.id, block: block, subject: null, text: text, original_text: text, done: 0, active: 1, edited_at: null });
+        planItems.push({ id: data.id, block: block, subject: subject, text: content, original_text: content, done: 0, active: 1, edited_at: null });
         renderPlanner();
-        if (refocus) {
-          const newInput = document.getElementById("plannerNewInput-" + block);
-          if (newInput) newInput.focus();
-        }
+        const newSubj = document.getElementById("plannerNewSubject-" + block);
+        if (newSubj) newSubj.focus();
       })
       .catch(err => console.error(err));
+  }
+  // 과목/내용 입력줄에서 포커스가 완전히 벗어났을 때(같은 줄의 다른 칸으로 옮긴 게 아니라 진짜로 벗어났을
+  // 때) 둘 다 비어있으면 입력줄을 닫는다. 하나라도 입력해뒀으면 그대로 열어둔 채 둔다(내용을 잃지 않게).
+  function handleNewRowBlur(block) {
+    setTimeout(() => {
+      const subjInput = document.getElementById("plannerNewSubject-" + block);
+      const contInput = document.getElementById("plannerNewContent-" + block);
+      if (!subjInput || !contInput) return;
+      if (document.activeElement === subjInput || document.activeElement === contInput) return;
+      if (!subjInput.value.trim() && !contInput.value.trim()) {
+        plannerAddRowOpen[block] = false;
+        renderPlanner();
+      }
+    }, 0);
   }
 
   function togglePlanItem(id) {
@@ -5760,6 +5810,50 @@
     document.getElementById("import-panel-" + subject).classList.remove("on");
     document.getElementById("import-panel-backdrop").classList.remove("on");
   }
+
+  // ── 인강 Q&A에서 가져오기: '다른 AI에서 가져오기'와 같은 구조, 붙여넣기 한 단계만 있음 ──
+  function openLectureImportPanel(subject) {
+    document.getElementById("import-lecture-panel-" + subject).classList.add("on");
+    document.getElementById("import-lecture-panel-backdrop").classList.add("on");
+  }
+  function closeLectureImportPanel(subject) {
+    document.getElementById("import-lecture-panel-" + subject).classList.remove("on");
+    document.getElementById("import-lecture-panel-backdrop").classList.remove("on");
+  }
+  function submitImportedLectureContent(subject) {
+    const input = document.getElementById("import-lecture-paste-" + subject);
+    const text = input.value.trim();
+    if (!text) return;
+    closeLectureImportPanel(subject);
+    send(subject, "[인강 Q&A에서 가져온 내용]\n" + text);
+    input.value = "";
+  }
+
+  // ── 입력창 "+" 메뉴: 다른 AI 대화 가져오기 / 인강 Q&A 가져오기 / 사진 첨부 / 자주 하는 질문 ──
+  function toggleInputPlusMenu(subject) {
+    const menu = document.getElementById("inputPlusMenu-" + subject);
+    const btn = document.getElementById("inputPlusBtn-" + subject);
+    if (!menu || !btn) return;
+    const willOpen = !menu.classList.contains("on");
+    document.querySelectorAll(".input-plus-menu.on").forEach(m => m.classList.remove("on"));
+    document.querySelectorAll(".input-plus-btn.open").forEach(b => b.classList.remove("open"));
+    if (willOpen) { menu.classList.add("on"); btn.classList.add("open"); }
+  }
+  function closeInputPlusMenu(subject) {
+    const menu = document.getElementById("inputPlusMenu-" + subject);
+    const btn = document.getElementById("inputPlusBtn-" + subject);
+    if (menu) menu.classList.remove("on");
+    if (btn) btn.classList.remove("open");
+  }
+  document.addEventListener("click", (e) => {
+    document.querySelectorAll(".input-plus-wrap").forEach(wrap => {
+      if (wrap.contains(e.target)) return;
+      const menu = wrap.querySelector(".input-plus-menu");
+      const btn = wrap.querySelector(".input-plus-btn");
+      if (menu) menu.classList.remove("on");
+      if (btn) btn.classList.remove("open");
+    });
+  });
 
   // ── 자주 하는 질문: 옆에서 슬라이드로 열어서 목록 중 하나를 고르면 바로 질문으로 전송 ──
   function openFaqPanel(subject) {
