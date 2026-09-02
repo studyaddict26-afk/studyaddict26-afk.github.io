@@ -4231,7 +4231,12 @@
 
       <div class="photo-panel-section">
         <div class="photo-panel-field">
-          <textarea id="import-lecture-paste-chat" placeholder="인강 Q&A의 질문과 답변 내용을 그대로 붙여넣으세요"></textarea>
+          <label for="import-lecture-question-chat">내가 보낸 질문</label>
+          <textarea id="import-lecture-question-chat" placeholder="인강 Q&A 게시판에 올린 질문 내용을 그대로 붙여넣으세요"></textarea>
+        </div>
+        <div class="photo-panel-field">
+          <label for="import-lecture-answer-chat">받은 답변</label>
+          <textarea id="import-lecture-answer-chat" placeholder="강사님(또는 조교)에게 받은 답변 내용을 그대로 붙여넣으세요"></textarea>
         </div>
       </div>
 
@@ -5974,12 +5979,18 @@
     document.getElementById("import-lecture-panel-backdrop").classList.remove("on");
   }
   function submitImportedLectureContent(subject) {
-    const input = document.getElementById("import-lecture-paste-" + subject);
-    const text = input.value.trim();
-    if (!text) return;
+    const qInput = document.getElementById("import-lecture-question-" + subject);
+    const aInput = document.getElementById("import-lecture-answer-" + subject);
+    const question = qInput.value.trim();
+    const answer = aInput.value.trim();
+    if (!question && !answer) return;
     closeLectureImportPanel(subject);
-    send(subject, "[인강 Q&A에서 가져온 내용]\n" + text);
-    input.value = "";
+    let text = "[인강 Q&A에서 가져온 내용]";
+    if (question) text += "\n[내가 보낸 질문]\n" + question;
+    if (answer) text += "\n[받은 답변]\n" + answer;
+    send(subject, text);
+    qInput.value = "";
+    aInput.value = "";
   }
 
   // ── 입력창 "+" 메뉴: 다른 AI 대화 가져오기 / 인강 Q&A 가져오기 / 사진 첨부 / 자주 하는 질문 ──
