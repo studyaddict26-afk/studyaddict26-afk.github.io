@@ -5239,7 +5239,7 @@
     planApi({ action: "note_add", date: getLocalDateKey(), text: text })
       .then(data => {
         if (!data.ok) return;
-        noteItems.push({ id: data.id, text: text, created_at: new Date().toISOString() });
+        noteItems.push({ id: Number(data.id), text: text, created_at: new Date().toISOString() });
         renderNotes();
       })
       .catch(err => console.error(err));
@@ -5568,7 +5568,7 @@
     planApi({ action: "plan_add", date: getLocalDateKey(), block: block, text: content, subject: subject, isInitial: !initialPlanLocked })
       .then(data => {
         if (!data.ok) return;
-        planItems.push({ id: data.id, block: block, subject: subject, text: content, original_text: content, done: 0, active: 1, edited_at: null, is_initial: initialPlanLocked ? 0 : 1 });
+        planItems.push({ id: Number(data.id), block: block, subject: subject, text: content, original_text: content, done: 0, active: 1, edited_at: null, is_initial: initialPlanLocked ? 0 : 1 });
         renderPlanner();
         if (!silent) {
           const newSubj = document.getElementById("plannerNewSubject-" + block);
