@@ -6193,8 +6193,9 @@
 
   // 학생마다 "가입한 달"부터 시작한다 — 가입일 이전 달은 아예 만들지 않는다(학생마다 나오는
   // 연/월이 다름). 가입일 정보를 못 구한 경우에만, 예전처럼 기록을 남긴 가장 이른 연-월부터로
-  // 대체한다. 끝은 항상 이번 달까지 — 미래 달은 안 만들고, 다음 달이 되면(new Date() 기준으로
-  // 이 함수가 다시 계산되므로) 그 달 칸이 자동으로 생긴다.
+  // 대체한다. 끝은 올해 12월까지 항상 다 만들어둔다(아직 안 지난 달을 눌러도 selectYearMonth가
+  // "누적된 학습 기록이 없습니다"를 보여준다) — 내년이 되면(new Date() 기준으로 이 함수가 다시
+  // 계산되므로) 그 해 카드가 자동으로 옆에 생긴다.
   function buildYearMonthRange() {
     const now = new Date();
     let minYear = now.getFullYear(), minMonth = now.getMonth() + 1;
@@ -6210,7 +6211,7 @@
       });
     }
     const maxYear = now.getFullYear();
-    const maxMonth = now.getMonth() + 1;
+    const maxMonth = 12;
     const range = [];
     let y = minYear, m = minMonth;
     while (y < maxYear || (y === maxYear && m <= maxMonth)) {
@@ -6253,8 +6254,7 @@
       return;
     }
     if (!days.length) {
-      const [y, m] = ym.split("-");
-      wrap.innerHTML = '<div class="reports-empty">' + y + '년 ' + m + '월에는 기록이 없어요.</div>';
+      wrap.innerHTML = '<div class="reports-empty">누적된 학습 기록이 없습니다.</div>';
       return;
     }
     wrap.innerHTML = days.map(d =>
