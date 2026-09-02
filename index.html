@@ -5081,6 +5081,10 @@
   }, 0);
 
   function initTodayRecord() {
+    // 탭 상태(.tab-plan/.tab-chat)는 페이지 DOM에 그대로 남아있어서, 챗봇 탭을 보다가
+    // 다른 곳(홈 화면 카드 등)에서 다시 들어와도 챗봇 탭이 계속 떠 있었다 — 들어올 때마다
+    // 항상 "학습 플래너 및 공부일기" 탭부터 보여준다.
+    switchRecordTab("plan");
     loadChatHistory("chat");
     loadPlan();
     loadNotes();
