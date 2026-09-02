@@ -2427,10 +2427,6 @@
   .planner-task-row.done .planner-task-check::after { content: "\2713"; }
   .planner-task-text { flex: 1; min-width: 0; font-size: 0.74rem; line-height: 1.4; color: var(--ink); cursor: text; word-break: break-word; }
   .planner-task-row.done .planner-task-text { color: var(--ink-soft); text-decoration: line-through; }
-  .planner-task-edit-input {
-    flex: 1; min-width: 0; font-size: 0.74rem; font-family: inherit; border: 1px solid var(--green); border-radius: 5px;
-    padding: 2px 5px; color: var(--ink); background: var(--paper);
-  }
   .planner-task-del {
     flex: none; background: none; border: none; color: var(--ink-soft); font-size: 0.8rem; cursor: pointer;
     padding: 0 2px; line-height: 1; opacity: 0; transition: opacity 0.12s;
@@ -5638,33 +5634,51 @@
     planApi({ action: "plan_delete", itemId: id }).catch(err => console.error(err));
   }
 
+  // 수정할 때도 처음 추가할 때와 똑같은 과목/내용 두 칸(밑줄 스타일) 입력줄로 보여준다
+  // (예전엔 내용 한 칸짜리 테두리 박스라 디자인이 따로 놀았음).
   function editPlanItem(id) {
     const item = planItems.find(it => it.id === id);
     if (!item) return;
     const row = document.querySelector('.planner-task-row[data-id="' + id + '"]');
     if (!row || row.querySelector("input")) return;
     const span = row.querySelector(".planner-task-text");
-    const input = document.createElement("input");
-    input.type = "text";
-    input.className = "planner-task-edit-input";
-    input.value = item.text;
-    span.replaceWith(input);
-    input.focus();
-    input.select();
+    const subjInput = document.createElement("input");
+    subjInput.type = "text";
+    subjInput.className = "planner-new-subject-input";
+    subjInput.placeholder = "과목";
+    subjInput.value = item.subject || "";
+    const contInput = document.createElement("input");
+    contInput.type = "text";
+    contInput.className = "planner-new-content-input";
+    contInput.placeholder = "내용";
+    contInput.value = item.text;
+    span.replaceWith(subjInput, contInput);
+    contInput.focus();
+    contInput.select();
     let committed = false;
     function commit() {
       if (committed) return;
       committed = true;
-      const newText = input.value.trim();
-      if (newText && newText !== item.text) {
+      const newSubject = subjInput.value.trim();
+      const newText = contInput.value.trim();
+      if (!newText) { renderPlanner(); return; }
+      if (newSubject !== (item.subject || "") || newText !== item.text) {
+        item.subject = newSubject;
         item.text = newText;
         item.edited_at = new Date().toISOString();
-        planApi({ action: "plan_edit", itemId: id, text: newText }).catch(err => console.error(err));
+        planApi({ action: "plan_edit", itemId: id, text: newText, subject: newSubject }).catch(err => console.error(err));
       }
       renderPlanner();
     }
-    input.addEventListener("blur", commit);
-    input.addEventListener("keydown", e => { if (e.key === "Enter") input.blur(); });
+    // "새 항목 추가" 입력줄과 같은 방식 — 같은 줄의 다른 칸으로 포커스가 옮겨간 것뿐이면
+    // 그냥 두고, 진짜로 벗어났을 때만 커밋한다.
+    function handleBlur(other) {
+      setTimeout(() => { if (document.activeElement !== other) commit(); }, 0);
+    }
+    subjInput.addEventListener("blur", () => handleBlur(contInput));
+    contInput.addEventListener("blur", () => handleBlur(subjInput));
+    subjInput.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); contInput.focus(); contInput.select(); } });
+    contInput.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); contInput.blur(); } });
   }
 
   // ── 학습 상담 후기 캐러셀 + 확대 보기 ──
