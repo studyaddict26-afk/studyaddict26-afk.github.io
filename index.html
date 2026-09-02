@@ -2221,19 +2221,20 @@
   .input-plus-btn.open { transform: rotate(45deg); }
   .input-plus-menu {
     display: none; position: absolute; bottom: calc(100% + 8px); left: 0;
-    background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
-    box-shadow: 0 10px 28px rgba(20,20,16,0.16);
-    min-width: 230px; padding: 6px; z-index: 50;
+    background: #201F1D; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
+    box-shadow: 0 14px 32px rgba(0,0,0,0.4);
+    min-width: 240px; padding: 5px; z-index: 50;
   }
   .input-plus-menu.on { display: block; }
   .input-plus-item {
-    display: flex; align-items: center; gap: 9px; width: 100%; box-sizing: border-box;
-    text-align: left; font-family: inherit; font-size: 0.8rem; color: var(--ink);
-    background: none; border: none; border-radius: 8px; padding: 9px 10px; cursor: pointer;
-    transition: background 0.12s;
+    display: flex; align-items: center; gap: 10px; width: 100%; box-sizing: border-box;
+    text-align: left; font-family: inherit; font-size: 0.8rem; color: #EDEDEA;
+    background: none; border: none; border-radius: 7px; padding: 9px 10px; cursor: pointer;
+    transition: background 0.1s;
   }
-  .input-plus-item:hover { background: var(--cream); }
-  .input-plus-item .ico { flex: none; font-size: 0.9rem; }
+  .input-plus-item:hover { background: rgba(255,255,255,0.09); }
+  .input-plus-item .ico { flex: none; width: 15px; height: 15px; color: #A8A7A2; }
+  .input-plus-item .ico svg { display: block; width: 100%; height: 100%; }
   .faq-question-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
   .faq-question-item {
     text-align: left; font-family: inherit; cursor: pointer;
@@ -4062,10 +4063,22 @@
         <div class="input-plus-wrap">
           <button type="button" class="input-plus-btn" id="inputPlusBtn-chat" onclick="toggleInputPlusMenu('chat')" aria-label="더보기">+</button>
           <div class="input-plus-menu" id="inputPlusMenu-chat">
-            <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('chat');openImportPanel('chat')"><span class="ico">🔄</span> 다른 AI와의 대화 내용 가져오기</button>
-            <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('chat');openLectureImportPanel('chat')"><span class="ico">🎥</span> 인강 Q&amp;A 내용 가져오기</button>
-            <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('chat');openPhotoPanel('chat')"><span class="ico">📎</span> 사진 첨부하기</button>
-            <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('chat');openFaqPanel('chat')"><span class="ico">💬</span> 자주 하는 질문</button>
+            <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('chat');openImportPanel('chat')">
+              <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+              다른 AI와의 대화 내용 가져오기
+            </button>
+            <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('chat');openLectureImportPanel('chat')">
+              <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></span>
+              인강 Q&amp;A 내용 가져오기
+            </button>
+            <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('chat');openPhotoPanel('chat')">
+              <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a5 5 0 0 1-7.07-7.07l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95l-9.19 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span>
+              사진 첨부하기
+            </button>
+            <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('chat');openFaqPanel('chat')">
+              <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
+              자주 하는 질문
+            </button>
           </div>
         </div>
         <input id="q-chat" type="text" placeholder="궁금한 것을 무엇이든 물어보세요" autocomplete="off">
@@ -5337,6 +5350,9 @@
       .catch(() => { listEl.innerHTML = '<li class="sched-empty-msg">불러오지 못했어요.</li>'; });
   }
 
+  // 오늘 "최초 계획 세우기"를 이미 제출했는지 — 제출 전이면 지금 넣는 항목이 "최초 계획"이 되고,
+  // 제출 후(나중에 "+ 추가하기"로 넣는 것)는 "계획 수정하기"에만 반영되고 최초 계획에는 안 남는다.
+  let initialPlanLocked = false;
   function loadPlan() {
     if (planLoaded) return;
     planLoaded = true;
@@ -5345,6 +5361,7 @@
     planApi({ action: "plan_list", date: getLocalDateKey() })
       .then(data => {
         planItems = data.items || [];
+        initialPlanLocked = planItems.length > 0; // 이미 항목이 있으면 최초 계획은 이미 예전에 확정된 것
         renderPlanner();
         if (!planItems.length) openPlanGate();
       })
@@ -5375,6 +5392,7 @@
       return;
     }
     errEl.style.display = "none";
+    initialPlanLocked = true; // 이 시점부터 넣는 항목은 "최초 계획"이 아니라 "나중에 추가한 것"
     const plannerHome = document.getElementById("plannerHome");
     const plannerBody = document.getElementById("plannerBody");
     plannerBody.classList.remove("plan-gate-mode");
@@ -5424,7 +5442,9 @@
     PLAN_BLOCKS.forEach(block => {
       const wrap = document.getElementById("plannerOrigTasks-" + block);
       if (!wrap) return;
-      const items = planItems.filter(it => it.block === block);
+      // "최초 계획"은 하루 시작할 때 처음 세운 항목만 보여준다 — 나중에 "+ 추가하기"로 넣은 항목은
+      // is_initial이 0이라 여기 안 나오고 "계획 수정하기" 쪽에만 나온다.
+      const items = planItems.filter(it => it.block === block && Number(it.is_initial) !== 0);
       wrap.innerHTML = items.length
         ? items.map(it =>
             '<div class="planner-orig-row">' +
@@ -5458,10 +5478,10 @@
     const studentId = localStorage.getItem("holoStudentId");
     if (!studentId) return;
     subjInput.value = ""; contInput.value = "";
-    planApi({ action: "plan_add", date: getLocalDateKey(), block: block, text: content, subject: subject })
+    planApi({ action: "plan_add", date: getLocalDateKey(), block: block, text: content, subject: subject, isInitial: !initialPlanLocked })
       .then(data => {
         if (!data.ok) return;
-        planItems.push({ id: data.id, block: block, subject: subject, text: content, original_text: content, done: 0, active: 1, edited_at: null });
+        planItems.push({ id: data.id, block: block, subject: subject, text: content, original_text: content, done: 0, active: 1, edited_at: null, is_initial: initialPlanLocked ? 0 : 1 });
         renderPlanner();
         const newSubj = document.getElementById("plannerNewSubject-" + block);
         if (newSubj) newSubj.focus();
