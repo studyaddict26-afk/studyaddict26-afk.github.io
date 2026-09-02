@@ -2396,6 +2396,10 @@
   .record-mini-submit-btn:disabled { opacity: 0.7; cursor: default; border-color: var(--green); color: var(--green-deep); }
   .record-date { display: block; font-size: 0.66rem; font-weight: 700; color: var(--ink-soft); margin-top: 2px; }
   .planner-body { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }
+  /* 최초 계획 세우기 전에는 #plannerBody가 통째로 팝업 안으로 옮겨가서, 뒤쪽 자리가 비어
+     보인다 — 팝업이 떠 있는 동안만 자리를 지키는 흐릿한 뼈대(비활성)를 대신 보여준다. */
+  .planner-body-ghost { display: none; opacity: 0.4; pointer-events: none; }
+  .planner-body-ghost.on { display: flex; }
   .planner-block { display: flex; flex-direction: column; gap: 4px; }
   .planner-block-head { font-size: 0.68rem; font-weight: 800; color: var(--ink); letter-spacing: 0.04em; }
   .planner-block-head-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -3998,6 +4002,26 @@
         </div>
         <div class="record-date" id="recordDate"></div>
         <div id="plannerHome"></div>
+        <div class="planner-body planner-body-ghost" id="plannerBodyGhost" aria-hidden="true">
+          <div class="planner-dual">
+            <div class="planner-col planner-col-edit" style="flex: 1 1 100%;">
+              <div class="planner-col-body">
+                <div class="planner-block" data-block="오전">
+                  <div class="planner-block-head-row"><span class="planner-block-head">오전</span></div>
+                  <div class="planner-tasks"></div>
+                </div>
+                <div class="planner-block" data-block="오후">
+                  <div class="planner-block-head-row"><span class="planner-block-head">오후</span></div>
+                  <div class="planner-tasks"></div>
+                </div>
+                <div class="planner-block" data-block="저녁">
+                  <div class="planner-block-head-row"><span class="planner-block-head">저녁</span></div>
+                  <div class="planner-tasks"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="planner-body" id="plannerBody">
           <div class="planner-dual">
             <div class="planner-col planner-col-original">
@@ -4247,16 +4271,7 @@
     <p class="reports-intro">🗓️ 하루하루 쌓인 학습 기록을 월별로 모아볼 수 있어요. 날짜를 누르면 그날의 계획·일기·질문을 한눈에 확인할 수 있습니다.</p>
     <div class="ym-picker" id="ymPicker"></div>
     <div class="day-list" id="day-list-wrap">
-      <div class="day-row">
-        <button type="button" class="day-row-main" onclick="toggleDayDetail('2026-08-27')">
-          <span class="day-row-date">2026-08-27</span>
-          <span class="day-row-flag yes">플래너 O</span>
-          <span class="day-row-flag no">일기 X</span>
-          <span class="day-row-summary">계획 3개 · 일기 미작성 · 질문 4개</span>
-          <span class="day-row-arrow" id="day-arrow-2026-08-27">›</span>
-        </button>
-        <div class="day-row-detail" id="day-detail-2026-08-27" style="display:none"></div>
-      </div>
+      <div class="reports-empty">불러오는 중...</div>
     </div>
   </section>
 
@@ -5431,6 +5446,7 @@
     const plannerBody = document.getElementById("plannerBody");
     plannerBody.classList.add("plan-gate-mode");
     gateBody.appendChild(plannerBody);
+    document.getElementById("plannerBodyGhost").classList.add("on");
     document.getElementById("planGateError").style.display = "none";
     document.getElementById("planGateOverlay").classList.add("on");
   }
@@ -5453,6 +5469,7 @@
     const plannerBody = document.getElementById("plannerBody");
     plannerBody.classList.remove("plan-gate-mode");
     plannerHome.after(plannerBody);
+    document.getElementById("plannerBodyGhost").classList.remove("on");
     document.getElementById("planGateOverlay").classList.remove("on");
   }
 
