@@ -2711,9 +2711,8 @@
   }
   .day-row-flag.yes { color: var(--green-deep); background: var(--green-soft); border-color: #CFE3D6; }
   .day-row-flag.no { color: #A32D2D; background: #FBEAEA; border-color: #F0CFCF; }
-  .day-row-summary {
-    flex: 1; min-width: 0; font-size: 0.8rem; color: var(--ink-soft);
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  .day-row-score {
+    flex: 1; min-width: 0; font-size: 0.84rem; font-weight: 800; color: var(--green-deep); text-align: right;
   }
   .day-row-arrow { flex: none; color: var(--ink-soft); font-size: 1.05rem; transition: transform 0.18s; }
   .day-row-arrow.open { transform: rotate(90deg); }
@@ -2723,7 +2722,7 @@
   .day-detail-loading { font-size: 0.82rem; color: var(--ink-soft); }
   @media (max-width: 640px) {
     .day-row-main { flex-wrap: wrap; }
-    .day-row-summary { flex: 1 1 100%; order: 5; white-space: normal; }
+    .day-row-score { flex: 1 1 100%; order: 5; text-align: left; }
   }
 
   #print-area { display: none; }
@@ -6281,7 +6280,8 @@
           '<span class="day-row-date">' + escapeHtml(d.date) + '</span>' +
           '<span class="day-row-flag ' + (d.hasPlan ? "yes" : "no") + '">플래너 ' + (d.hasPlan ? "O" : "X") + '</span>' +
           '<span class="day-row-flag ' + (d.hasDiary ? "yes" : "no") + '">일기 ' + (d.hasDiary ? "O" : "X") + '</span>' +
-          '<span class="day-row-summary">' + escapeHtml(d.summary || "") + '</span>' +
+          '<span class="day-row-flag ' + (d.hasChat ? "yes" : "no") + '">질의응답 ' + (d.hasChat ? "O" : "X") + '</span>' +
+          '<span class="day-row-score">' + (Number(d.score) || 0) + '점</span>' +
           '<span class="day-row-arrow" id="day-arrow-' + d.date + '">›</span>' +
         '</button>' +
         '<div class="day-row-detail" id="day-detail-' + d.date + '" style="display:none"></div>' +
