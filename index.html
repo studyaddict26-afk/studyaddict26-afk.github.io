@@ -1400,6 +1400,8 @@
 
   /* ── 내 학습 기록 살펴보기 (허브): 아이콘 카드 ── */
   .rh-tile-grid { display: grid; grid-template-columns: repeat(3, 1fr); align-items: stretch; gap: 14px; }
+  .rh-tile-col { display: flex; flex-direction: column; gap: 14px; }
+  .rh-tile-col .rh-tile { flex: 1 1 0; height: auto; }
   .rh-tile {
     background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
     padding: 20px 18px 18px; text-align: left; cursor: pointer; font-family: inherit;
@@ -3288,21 +3290,30 @@
             </div>
           </div>
         </button>
-        <button type="button" class="rh-tile" onclick="go('reports')">
-          <span class="rh-tile-head">
-            <span class="rh-tile-head-left">
-              <span class="rh-tile-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 19V6M12 19V3M19 19v-9"/></svg>
+        <div class="rh-tile-col">
+          <button type="button" class="rh-tile" onclick="go('reports')">
+            <span class="rh-tile-head">
+              <span class="rh-tile-head-left">
+                <span class="rh-tile-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 19V6M12 19V3M19 19v-9"/></svg>
+                </span>
+                <span class="rh-tile-title">내 분석지</span>
               </span>
-              <span class="rh-tile-title">내 분석지</span>
+              <span class="rh-tile-head-right"><span class="rh-tile-arrow">›</span></span>
             </span>
-            <span class="rh-tile-head-right"><span class="rh-tile-arrow">›</span></span>
-          </span>
-          <div class="rh-tile-avg">
-            <span class="rh-tile-avg-label">최근 분석지</span>
-            <span class="rh-score-num rh-date-num" id="rhReportDate">확인 중…</span>
-          </div>
-        </button>
+          </button>
+          <button type="button" class="rh-tile" onclick="go('todayrecord')">
+            <span class="rh-tile-head">
+              <span class="rh-tile-head-left">
+                <span class="rh-tile-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+                </span>
+                <span class="rh-tile-title">플래너 작성하기</span>
+              </span>
+              <span class="rh-tile-head-right"><span class="rh-tile-arrow">›</span></span>
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   </section>
