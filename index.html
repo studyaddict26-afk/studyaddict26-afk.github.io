@@ -562,12 +562,13 @@
   .pp-layout.sched-manage-layout { --pp-left-w: 230px; }
   .pp-layout .sched-left-col { flex: 0 0 var(--pp-left-w); }
   .pp-plan-inner { gap: 10px; }
-  .pp-plan-blocks { display: flex; flex-direction: column; gap: 12px; flex: 1; overflow-y: auto; }
+  /* 계획 항목이 많아져도 박스 세로 길이는 고정 — 그 안에서만 스크롤된다. */
+  .pp-plan-blocks { display: flex; flex-direction: column; gap: 12px; max-height: 220px; overflow-y: auto; }
   .pp-plan-blocks .planner-block-head { font-size: 0.72rem; }
   .pp-plan-blocks .planner-task-text { font-size: 0.72rem; }
   .pp-plan-blocks .planner-orig-empty { font-size: 0.72rem; color: var(--ink-soft); padding: 2px 0; }
   .pp-note-box { flex: none; }
-  .pp-note-box .planner-special-note-input { min-height: 70px; }
+  .pp-note-box .planner-special-note-input { min-height: 40px; }
   .pp-calendar { flex: 1; min-height: 0; display: flex; flex-direction: column; }
   .pp-cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
   .pp-cal-nav {
@@ -3445,7 +3446,6 @@
               <div class="pp-plan-blocks" id="ppPlanBlocks"></div>
             </div>
             <div class="pp-note-box">
-              <div class="planner-special-note-label">&lt;특이사항 메모&gt;</div>
               <textarea id="ppSpecialNoteInput" class="planner-special-note-input" placeholder="예: 오늘 가족 일정이 있어서 공부를 많이 못할 예정이에요" oninput="schedulePpSpecialNoteSave()"></textarea>
             </div>
           </aside>
@@ -5332,13 +5332,18 @@
   }
 
   // ── "플래너 작성하기" 페이지 (내 스케줄 관리하기와 같은 레이아웃) ──
-  // 왼쪽 위: 선택한 날짜의 계획(오늘이면 편집 가능, 지난 날이면 읽기 전용) / 왼쪽 아래: 특이사항 메모 /
-  // 왼쪽 하단 박스: 날짜를 고를 수 있는 달력 / 오른쪽: 계획을 어떻게 세우면 좋을지 상담하는 AI 챗봇.
+  // 왼쪽 위: 선택한 날짜의 계획(오늘·미래 날짜는 미리 써둘 수 있게 편집 가능, 지난 날이면 읽기 전용) /
+  // 왼쪽 아래: 특이사항 메모 / 왼쪽 하단 박스: 날짜를 고를 수 있는 달력(미리 계획을 써두는 게 이
+  // 페이지의 핵심이라, 미래 날짜도 자유롭게 눌러서 미리 쓸 수 있다) / 오른쪽: 계획 상담 AI 챗봇.
   let ppInited = false;
   let ppSelectedDate = null;
   let ppPlanItems = [];
   const ppAddRowOpen = {};
   let ppCalYear = null, ppCalMonth = null;
+  // 선택한 날짜가 이 화면을 열었을 때 이미 항목이 있었는지 — 있었으면(이미 최초 계획을 세운 뒤라면)
+  // 이번에 새로 추가하는 항목은 "수정한 계획"(is_initial=0)으로, 없었으면(처음 계획을 쓰는 거라면)
+  // 이번 방문에서 넣는 항목들은 전부 "최초 계획"(is_initial=1)으로 저장한다.
+  let ppDateHadItemsOnLoad = false;
 
   function initPlannerPage() {
     loadChatHistory("plan");
@@ -5365,15 +5370,13 @@
     const wrap = document.getElementById("ppPlanBlocks");
     if (!wrap) return;
     const today = getLocalDateKey();
-    if (dateStr > today) {
-      wrap.innerHTML = '<div class="planner-orig-empty">아직 오지 않은 날짜예요.</div>';
-      return;
-    }
-    if (dateStr === today) {
+    if (dateStr >= today) {
+      // 오늘이거나 미래 날짜 — 미리 계획을 써둘 수 있게 편집 가능한 형태로 보여준다.
       wrap.innerHTML = '<div class="planner-orig-empty">불러오는 중...</div>';
       planApi({ action: "plan_list", date: dateStr })
         .then(data => {
           ppPlanItems = data.items || [];
+          ppDateHadItemsOnLoad = ppPlanItems.some(it => it.active);
           renderPpPlanBlocks();
         })
         .catch(err => console.error(err));
@@ -5445,10 +5448,11 @@
     const studentId = localStorage.getItem("holoStudentId");
     if (!studentId) return;
     subjInput.value = ""; contInput.value = "";
-    planApi({ action: "plan_add", date: ppSelectedDate, block: block, text: content, subject: subject, isInitial: !initialPlanLocked })
+    const isInitial = !ppDateHadItemsOnLoad;
+    planApi({ action: "plan_add", date: ppSelectedDate, block: block, text: content, subject: subject, isInitial: isInitial })
       .then(data => {
         if (!data.ok) return;
-        ppPlanItems.push({ id: Number(data.id), block: block, subject: subject, text: content, original_text: content, done: 0, active: 1 });
+        ppPlanItems.push({ id: Number(data.id), block: block, subject: subject, text: content, original_text: content, done: 0, active: 1, is_initial: isInitial ? 1 : 0 });
         ppAddRowOpen[block] = false;
         renderPpPlanBlocks();
         // 같은 데이터를 쓰는 "오늘의 학습 기록" 플래너도 다음에 그 페이지에 들어가면 새로 불러오도록,
@@ -5508,8 +5512,8 @@
     planApi({ action: "special_note_save", date: getLocalDateKey(), text: input.value }).catch(err => console.error(err));
   }
 
-  // 날짜 선택용 달력 — 자유롭게 앞뒤 달로 넘길 수 있고, 오늘 이후(미래) 날짜는 아직 계획이 없으니
-  // 눌러도 반응하지 않는다.
+  // 날짜 선택용 달력 — 자유롭게 앞뒤 달로 넘길 수 있고, 미래 날짜도 눌러서 미리 계획을 써둘 수
+  // 있다(이 페이지를 만든 핵심 목적 — 지난 날짜만 읽기 전용으로 바뀐다).
   function renderPpCalendar() {
     const el = document.getElementById("ppCalendar");
     if (!el) return;
@@ -5521,13 +5525,10 @@
     for (let i = 0; i < startWeekday; i++) cells += '<span class="pp-cal-cell empty"></span>';
     for (let d = 1; d <= daysInMonth; d++) {
       const dateStr = ppCalYear + "-" + String(ppCalMonth).padStart(2, "0") + "-" + String(d).padStart(2, "0");
-      const isFuture = dateStr > today;
       const isToday = dateStr === today;
       const isSelected = dateStr === ppSelectedDate;
-      const cls = "pp-cal-cell" + (isFuture ? " disabled" : "") + (isToday ? " today" : "") + (isSelected ? " selected" : "");
-      cells += isFuture
-        ? '<span class="' + cls + '">' + d + '</span>'
-        : '<button type="button" class="' + cls + '" data-ymd="' + dateStr + '" onclick="loadPpDate(\'' + dateStr + '\')">' + d + '</button>';
+      const cls = "pp-cal-cell" + (isToday ? " today" : "") + (isSelected ? " selected" : "");
+      cells += '<button type="button" class="' + cls + '" data-ymd="' + dateStr + '" onclick="loadPpDate(\'' + dateStr + '\')">' + d + '</button>';
     }
     el.innerHTML =
       '<div class="pp-cal-head">' +
