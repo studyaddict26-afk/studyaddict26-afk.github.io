@@ -3997,7 +3997,7 @@
             하루의 시작, 플래너 작성하기
           </h3>
           <span class="record-submit-status" id="planSubmitStatus">미제출</span>
-          <button type="button" class="record-mini-submit-btn" onclick="quickSubmit(this, 'planSubmitStatus')">제출하기</button>
+          <button type="button" class="record-mini-submit-btn" id="planSubmitBtn" onclick="quickSubmit(this, 'planSubmitStatus')">제출하기</button>
         </div>
         <div class="record-date" id="recordDate"></div>
         <div id="plannerHome"></div>
@@ -4087,7 +4087,7 @@
               하루의 마무리, 공부일기 작성하기
             </h3>
             <span class="record-submit-status" id="diarySubmitStatus">미제출</span>
-            <button type="button" class="record-mini-submit-btn" onclick="quickSubmit(this, 'diarySubmitStatus')">제출하기</button>
+            <button type="button" class="record-mini-submit-btn" id="diarySubmitBtn" onclick="quickSubmit(this, 'diarySubmitStatus')">제출하기</button>
           </div>
           <div class="diary-gate-warning">⚠️ 공부하면서 틈틈이 작성해주세요. 작성하면 자동으로 저장됩니다.</div>
 
@@ -5124,9 +5124,14 @@
   }
   function setSubmitStatusBadge(id, done) {
     const el = document.getElementById(id);
-    if (!el) return;
-    el.textContent = done ? "제출완료" : "미제출";
-    el.classList.toggle("done", done);
+    if (el) {
+      el.textContent = done ? "제출완료" : "미제출";
+      el.classList.toggle("done", done);
+    }
+    // 배지가 "제출완료"인데 버튼은 그대로 "제출하기"라 서로 안 맞아 보이던 것 — 버튼 문구도
+    // 실제 제출 여부에 맞춰 "제출하기"/"다시 제출하기"로 같이 맞춰준다.
+    const btn = document.getElementById(id.replace("Status", "Btn"));
+    if (btn && !btn.disabled) btn.textContent = done ? "다시 제출하기" : "제출하기";
   }
 
   // 플래너/일기 둘 다 이미 계속 자동저장되고 있어서, 이 버튼은 저장 용도가 아니라
