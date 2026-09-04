@@ -4119,7 +4119,7 @@
         <div class="plan-gate-modal">
           <a class="plan-gate-home-link" href="#" onclick="closePlanGateToHome();return false;">← 뒤로가기</a>
           <h2>최초 계획 세우기</h2>
-          <p class="plan-gate-hint">오늘 하루 계획을 오전/오후/저녁으로 나눠 먼저 세워주세요. 세운 뒤에는 언제든 추가하거나 고칠 수 있어요.</p>
+          <p class="plan-gate-hint">오늘 하루 계획을 세워주세요. 언제든 추가하거나 고칠 수 있어요.</p>
           <div class="record-date" id="planGateDate"></div>
           <div id="planGateBody"></div>
           <div class="plan-gate-error" id="planGateError" style="display:none"></div>
@@ -7135,6 +7135,7 @@
       }
       localStorage.setItem("holoStudentId", id);
       localStorage.setItem("holoStudentPw", pw);
+      localStorage.setItem("holoStudentLoginDate", getLocalDateKey());
       storeStudentJoinYm(doc.data());
       hideStudentGate();
       go("home");
@@ -7150,6 +7151,7 @@
     localStorage.removeItem("holoStudentId");
     localStorage.removeItem("holoStudentPw");
     localStorage.removeItem("holoStudentJoinYm");
+    localStorage.removeItem("holoStudentLoginDate");
     location.hash = "";
     location.reload();
   }
@@ -7166,15 +7168,29 @@
       }
     } catch (e) { /* 무시 */ }
   }
+  // 공용 PC 등에서 로그아웃을 안 누르고 자리를 떠도 다음 사람이 이전 학생 계정으로 계속
+  // 남아있지 않도록, 로그인한 "날짜"가 오늘이 아니면(자정이 지나면) 자동 로그아웃시킨다.
+  function isStudentSessionExpired() {
+    const loginDate = localStorage.getItem("holoStudentLoginDate");
+    return loginDate !== getLocalDateKey();
+  }
   function checkStudentSession() {
     const id = localStorage.getItem("holoStudentId");
     const pw = localStorage.getItem("holoStudentPw");
-    if (!id || !pw) { showStudentGate(); return; }
+    if (!id || !pw || isStudentSessionExpired()) {
+      localStorage.removeItem("holoStudentId");
+      localStorage.removeItem("holoStudentPw");
+      localStorage.removeItem("holoStudentJoinYm");
+      localStorage.removeItem("holoStudentLoginDate");
+      showStudentGate();
+      return;
+    }
     db.collection("students").doc(id).get().then(doc => {
       if (!doc.exists || doc.data().password !== pw) {
         localStorage.removeItem("holoStudentId");
         localStorage.removeItem("holoStudentPw");
         localStorage.removeItem("holoStudentJoinYm");
+        localStorage.removeItem("holoStudentLoginDate");
         showStudentGate();
       } else {
         storeStudentJoinYm(doc.data());
