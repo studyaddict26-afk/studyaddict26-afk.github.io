@@ -4978,7 +4978,7 @@
     const studentId = localStorage.getItem("holoStudentId");
     const el = document.getElementById("rhCumScore");
     if (!studentId || !el) return;
-    planApi({ action: "week_score", date: getLocalDateKey() })
+    planApi({ action: "week_score", date: getLocalDateKey(), joinDate: localStorage.getItem("holoStudentJoinDate") || null })
       .then(data => {
         const avg = typeof data.avgScore === "number" ? data.avgScore : 0;
         el.textContent = "평균 " + avg + "점";
@@ -7151,6 +7151,7 @@
     localStorage.removeItem("holoStudentId");
     localStorage.removeItem("holoStudentPw");
     localStorage.removeItem("holoStudentJoinYm");
+    localStorage.removeItem("holoStudentJoinDate");
     localStorage.removeItem("holoStudentLoginDate");
     location.hash = "";
     location.reload();
@@ -7165,6 +7166,9 @@
       if (ts && typeof ts.toDate === "function") {
         const d = ts.toDate();
         localStorage.setItem("holoStudentJoinYm", d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"));
+        // 주간 누적 점수 평균이 가입 전(활동이 있을 수 없는) 날짜까지 0점으로 세서 평균을
+        // 깎아먹지 않도록, week_score 계산에 넘겨줄 정확한 가입 "날짜"도 함께 저장해둔다.
+        localStorage.setItem("holoStudentJoinDate", d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"));
       }
     } catch (e) { /* 무시 */ }
   }
@@ -7181,6 +7185,7 @@
       localStorage.removeItem("holoStudentId");
       localStorage.removeItem("holoStudentPw");
       localStorage.removeItem("holoStudentJoinYm");
+      localStorage.removeItem("holoStudentJoinDate");
       localStorage.removeItem("holoStudentLoginDate");
       showStudentGate();
       return;
@@ -7190,6 +7195,7 @@
         localStorage.removeItem("holoStudentId");
         localStorage.removeItem("holoStudentPw");
         localStorage.removeItem("holoStudentJoinYm");
+        localStorage.removeItem("holoStudentJoinDate");
         localStorage.removeItem("holoStudentLoginDate");
         showStudentGate();
       } else {
