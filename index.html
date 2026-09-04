@@ -6349,12 +6349,11 @@
             '<div class="day-detail-label">' + label + '</div>' +
             '<div class="day-detail-body">' + escapeHtml(body || "(기록 없음)") + '</div>' +
           '</div>';
-        let html = section("✏️ 그날의 정리", data.summary || data.error || "불러오지 못했어요.");
-        if (data.plan || data.diary || data.chat) {
-          html += section("📋 그날의 계획", data.plan) +
+        const html = data.error && !data.plan && !data.diary && !data.chat
+          ? '<div class="day-detail-section"><div class="day-detail-body">' + escapeHtml(data.error) + '</div></div>'
+          : section("📋 그날의 계획", data.plan) +
             section("📝 그날의 일기", data.diary) +
             section("💬 그날의 질의응답", data.chat);
-        }
         dayDetailCache[date] = html;
         bodyEl.innerHTML = html;
       })
