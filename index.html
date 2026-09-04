@@ -2714,16 +2714,19 @@
   .day-row-score {
     flex: 1; min-width: 0; font-size: 0.84rem; font-weight: 800; color: var(--green-deep); text-align: right;
   }
-  .day-row-arrow { flex: none; color: var(--ink-soft); font-size: 1.05rem; transition: transform 0.18s; }
-  .day-row-arrow.open { transform: rotate(90deg); }
-  .day-row-detail { border-top: 1px solid var(--line); background: var(--cream); padding: 14px 18px; }
-  .day-detail-label { font-size: 0.76rem; font-weight: 800; color: var(--green-deep); margin-bottom: 6px; }
-  .day-detail-body { font-size: 0.85rem; color: var(--ink); line-height: 1.7; white-space: pre-line; }
-  .day-detail-loading { font-size: 0.82rem; color: var(--ink-soft); }
+  .day-row-arrow { flex: none; color: var(--ink-soft); font-size: 1.05rem; }
   @media (max-width: 640px) {
     .day-row-main { flex-wrap: wrap; }
     .day-row-score { flex: 1 1 100%; order: 5; text-align: left; }
   }
+  /* "그날의 학습 기록" 상세 페이지 (누적된 학습 기록에서 날짜를 누르면 이동) */
+  .day-detail-page {
+    max-width: 760px; width: 100%; margin: 0 auto; padding: 0 20px 40px 20px; box-sizing: border-box;
+  }
+  .day-detail-section { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin-bottom: 14px; }
+  .day-detail-label { font-size: 0.78rem; font-weight: 800; color: var(--green-deep); margin-bottom: 8px; }
+  .day-detail-body { font-size: 0.85rem; color: var(--ink); line-height: 1.7; white-space: pre-line; }
+  .day-detail-loading { font-size: 0.82rem; color: var(--ink-soft); padding: 4px 20px; }
 
   #print-area { display: none; }
   @media print {
@@ -4279,6 +4282,20 @@
     </div>
   </section>
 
+  <!-- ─── 그날의 학습 기록 (누적된 학습 기록에서 날짜를 누르면 이동) ─── -->
+  <section class="view" id="view-dayDetail">
+    <div class="chat-head">
+      <span class="chat-head-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="12" height="12" rx="1.5"/><rect x="8" y="8" width="12" height="12" rx="1.5"/></svg>
+      </span>
+      <h2 id="dayDetailDate">-</h2>
+      <div class="split"></div>
+    </div>
+    <div class="day-detail-page" id="dayDetailBody">
+      <div class="day-detail-loading">불러오는 중...</div>
+    </div>
+  </section>
+
   <!-- ─── 내 분석지 ─── -->
   <section class="view" id="view-reports">
     <div class="chat-head">
@@ -4899,13 +4916,13 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 & 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 & 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 & 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", cumulative: "누적된 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "우리 동네 내신 기출 공부하기", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 & 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 & 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 & 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "우리 동네 내신 기출 공부하기", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { mathexam: "exam", engexam: "exam" };
   // "← 이전으로"가 상단 흰색 바(topbar)의 제목 오른쪽에 뜨는 페이지들과, 각각이 돌아갈 곳.
   const BACK_TARGET = {
     "consult-1": "consult", "consult-2": "consult", "consult-3": "consult",
     "consult-5": "consult", "consult-6": "consult", "consult-7": "consult", "consult-8": "consult",
-    todayrecord: "recordhub", cumulative: "recordhub", reports: "recordhub",
+    todayrecord: "recordhub", cumulative: "recordhub", reports: "recordhub", dayDetail: "cumulative",
   };
   function goBack() {
     const target = BACK_TARGET[currentView];
@@ -6276,38 +6293,33 @@
     }
     wrap.innerHTML = days.map(d =>
       '<div class="day-row">' +
-        '<button type="button" class="day-row-main" onclick="toggleDayDetail(\'' + d.date + '\')">' +
+        '<button type="button" class="day-row-main" onclick="openDayDetailPage(\'' + d.date + '\')">' +
           '<span class="day-row-date">' + escapeHtml(d.date) + '</span>' +
           '<span class="day-row-flag ' + (d.hasPlan ? "yes" : "no") + '">플래너 ' + (d.hasPlan ? "O" : "X") + '</span>' +
           '<span class="day-row-flag ' + (d.hasDiary ? "yes" : "no") + '">일기 ' + (d.hasDiary ? "O" : "X") + '</span>' +
           '<span class="day-row-flag ' + (d.hasChat ? "yes" : "no") + '">질의응답 ' + (d.hasChat ? "O" : "X") + '</span>' +
           '<span class="day-row-score">' + (Number(d.score) || 0) + '점</span>' +
-          '<span class="day-row-arrow" id="day-arrow-' + d.date + '">›</span>' +
+          '<span class="day-row-arrow">›</span>' +
         '</button>' +
-        '<div class="day-row-detail" id="day-detail-' + d.date + '" style="display:none"></div>' +
       '</div>'
     ).join("");
   }
 
-  // 날짜 화살표를 누르면, 그날 기록을 AI가 "정리"만 해서 보여준다 (6일치를 모아 방향을 짚는 분석지와는 다름).
+  // 날짜를 누르면, 인라인으로 펼치지 않고 "그날의 학습 기록" 전용 페이지로 이동해서
+  // 계획·일기·질의응답 원문과 AI의 정리를 각각 구체적으로 보여준다
+  // (6일치를 모아 방향을 짚는 분석지와는 다름 — 여긴 그날 기록 그대로 보여주기만 함).
   const dayDetailCache = {};
-  function toggleDayDetail(date) {
-    const detailEl = document.getElementById("day-detail-" + date);
-    const arrowEl = document.getElementById("day-arrow-" + date);
-    if (!detailEl) return;
-    const showing = detailEl.style.display === "block";
-    if (showing) {
-      detailEl.style.display = "none";
-      if (arrowEl) arrowEl.classList.remove("open");
-      return;
-    }
-    detailEl.style.display = "block";
-    if (arrowEl) arrowEl.classList.add("open");
+  function openDayDetailPage(date) {
+    const dateEl = document.getElementById("dayDetailDate");
+    if (dateEl) dateEl.textContent = date;
+    go("dayDetail");
+    const bodyEl = document.getElementById("dayDetailBody");
+    if (!bodyEl) return;
     if (dayDetailCache[date]) {
-      detailEl.innerHTML = dayDetailCache[date];
+      bodyEl.innerHTML = dayDetailCache[date];
       return;
     }
-    detailEl.innerHTML = '<div class="day-detail-loading">정리 중...</div>';
+    bodyEl.innerHTML = '<div class="day-detail-loading">불러오는 중...</div>';
     const studentId = localStorage.getItem("holoStudentId");
     fetch(CHAT_API_URL, {
       method: "POST",
@@ -6316,14 +6328,23 @@
     })
       .then(res => res.json())
       .then(data => {
-        const html = '<div class="day-detail-label">✏️ 그날의 정리</div>' +
-          '<div class="day-detail-body">' + escapeHtml(data.summary || data.error || "불러오지 못했어요.") + '</div>';
+        const section = (label, body) =>
+          '<div class="day-detail-section">' +
+            '<div class="day-detail-label">' + label + '</div>' +
+            '<div class="day-detail-body">' + escapeHtml(body || "(기록 없음)") + '</div>' +
+          '</div>';
+        let html = section("✏️ 그날의 정리", data.summary || data.error || "불러오지 못했어요.");
+        if (data.plan || data.diary || data.chat) {
+          html += section("📋 그날의 계획", data.plan) +
+            section("📝 그날의 일기", data.diary) +
+            section("💬 그날의 질의응답", data.chat);
+        }
         dayDetailCache[date] = html;
-        detailEl.innerHTML = html;
+        bodyEl.innerHTML = html;
       })
       .catch(err => {
         console.error(err);
-        detailEl.innerHTML = '<div class="day-detail-body">불러오지 못했어요. 잠시 후 다시 시도해주세요.</div>';
+        bodyEl.innerHTML = '<div class="day-detail-section"><div class="day-detail-body">불러오지 못했어요. 잠시 후 다시 시도해주세요.</div></div>';
       });
   }
 
