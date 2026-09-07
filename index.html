@@ -564,8 +564,6 @@
   .hps-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; flex: none; }
   .hps-list li { font-size: 0.78rem; color: var(--ink); min-height: 15px; padding-left: 13px; position: relative; }
   .hps-list li::before { content: "•"; position: absolute; left: 0; color: var(--ink-soft); }
-  .hps-list li.hps-empty { color: var(--ink-soft); padding-left: 0; }
-  .hps-list li.hps-empty::before { content: none; }
   .hps-divider { height: 1px; background: var(--line); margin: 8px 0; }
 
   /* ── 내 스케줄 관리하기 / 내 플래너 관리하기 (같은 레이아웃을 쓰는 전용 페이지들) ──
@@ -5851,11 +5849,9 @@
     const el = document.getElementById("homePlannerList-" + block);
     if (!el) return;
     const rows = items.filter(it => it.block === block && it.active);
-    el.innerHTML = rows.length
-      ? rows.map(it =>
-          '<li>' + (it.subject ? '<span class="planner-task-subject">[' + escapeHtml(it.subject) + ']</span> ' : '') + escapeHtml(it.text) + '</li>'
-        ).join("")
-      : '<li class="hps-empty">아직 없어요</li>';
+    el.innerHTML = rows.map(it =>
+      '<li>' + (it.subject ? '<span class="planner-task-subject">[' + escapeHtml(it.subject) + ']</span> ' : '') + escapeHtml(it.text) + '</li>'
+    ).join(""); // 항목이 없으면 그냥 빈 목록 — "아직 없어요" 같은 안내 문구를 넣지 않는다
   }
   function loadHomePlannerToday() {
     const dateEl = document.getElementById("homePlannerDate");
