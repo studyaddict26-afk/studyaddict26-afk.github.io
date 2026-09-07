@@ -5434,6 +5434,8 @@
   }
 
   // 오늘 날짜일 때만 호출된다 — "+ 추가하기"·삭제·완료 체크 등 실제 편집 UI.
+  // "+ 추가하기"는 없앴다 — 이 페이지에서는 계획을 직접 입력하지 않고 오른쪽 챗봇을 통해서만
+  // 세운다(구체적인 흐름은 추후 별도로 반영 예정). 완료 체크·삭제는 그대로 유지.
   function renderPpPlanBlocks() {
     const wrap = document.getElementById("ppPlanBlocks");
     if (!wrap) return;
@@ -5448,22 +5450,9 @@
           '</span>' +
           '<button type="button" class="planner-task-del" onclick="deletePpPlanItem(' + it.id + ')" aria-label="삭제">×</button>' +
         '</div>'
-      ).join("") +
-        (ppAddRowOpen[block]
-          ? '<div class="planner-task-row planner-task-new">' +
-              '<div class="planner-task-check-ghost"></div>' +
-              '<input type="text" class="planner-new-subject-input" id="ppNewSubject-' + block + '" placeholder="과목" ' +
-                'onkeydown="if(event.key===\'Enter\'){submitPpNewRow(\'' + block + '\');event.preventDefault();}" ' +
-                'onblur="handlePpNewRowBlur(\'' + block + '\')">' +
-              '<input type="text" class="planner-new-content-input" id="ppNewContent-' + block + '" placeholder="내용" ' +
-                'onkeydown="if(event.key===\'Enter\'){submitPpNewRow(\'' + block + '\');event.preventDefault();}" ' +
-                'onblur="handlePpNewRowBlur(\'' + block + '\')">' +
-            '</div>'
-          : '');
+      ).join("");
       return '<div class="planner-block" data-block="' + block + '">' +
-        '<div class="planner-block-head-row"><span class="planner-block-head">' + block + '</span>' +
-          '<button type="button" class="planner-block-add-btn" onclick="showPpAddRow(\'' + block + '\')">+ 추가하기</button>' +
-        '</div>' +
+        '<div class="planner-block-head-row"><span class="planner-block-head">' + block + '</span></div>' +
         '<div class="planner-tasks">' + rows + '</div>' +
       '</div>';
     }).join("");
