@@ -581,13 +581,13 @@
   /* 완전 고정 height — min/max로 범위를 두면 항목이 늘어날 때마다 그 범위 안에서도 계속
      커져서 아래(특이사항 메모·달력) 박스들이 밀려 내려간다. 항목 몇 개든 늘 이 크기 그대로,
      넘치면 그 안에서만 스크롤된다. */
-  .pp-plan-blocks { display: flex; flex-direction: column; gap: 12px; height: 100px; overflow-y: auto; }
+  .pp-plan-blocks { display: flex; flex-direction: column; gap: 12px; height: 108px; overflow-y: auto; }
   .pp-plan-empty { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--ink-soft); font-size: 0.8rem; }
   .pp-plan-blocks .planner-block-head { font-size: 0.72rem; }
   .pp-plan-blocks .planner-task-text { font-size: 0.72rem; }
   .pp-plan-blocks .planner-orig-empty { font-size: 0.72rem; color: var(--ink-soft); padding: 2px 0; }
   .pp-note-box { flex: none; }
-  .pp-note-box .planner-special-note-input { min-height: 26px; }
+  .pp-note-box .planner-special-note-input { min-height: 20px; padding: 4px 8px; }
   .pp-note-box .planner-special-note-input::placeholder { font-size: 0.68rem; }
   /* 시간표 박스(.sched-timetable-box)는 원래 남는 세로 공간을 다 채우도록 flex:1인데,
      달력은 사진과 달리 내용물 높이가 정해져 있어서 그대로 두면 박스 안쪽에 빈 공간이
