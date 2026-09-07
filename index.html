@@ -118,6 +118,28 @@
   .mypage-photo-status { font-size: 0.76rem; color: var(--ink-soft); margin-top: 10px; max-width: 420px; }
   .mypage-photo-status.success { color: var(--green-deep); }
   .mypage-photo-status.error { color: #B3261E; }
+  .mypage-examdate-card {
+    margin-top: 16px; max-width: 420px;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
+    padding: 18px 20px;
+  }
+  .mypage-examdate-label { font-size: 0.84rem; font-weight: 800; color: var(--ink); margin-bottom: 10px; }
+  .mypage-examdate-hint { font-size: 0.72rem; font-weight: 500; color: var(--ink-soft); }
+  .mypage-examdate-row { display: flex; gap: 8px; }
+  .mypage-examdate-row input[type="date"] {
+    flex: 1; min-width: 0; font-family: inherit; font-size: 0.86rem;
+    padding: 8px 10px; border: 1px solid var(--line-dark); border-radius: 8px;
+    background: var(--cream); color: var(--ink); box-sizing: border-box;
+  }
+  .mypage-examdate-save-btn {
+    flex: none; font-family: inherit; font-size: 0.84rem; font-weight: 700; color: #fff;
+    background: var(--ink); border: none; border-radius: 8px; padding: 8px 16px; cursor: pointer;
+    transition: background 0.18s;
+  }
+  .mypage-examdate-save-btn:hover { background: var(--green-deep); }
+  .mypage-examdate-status { font-size: 0.76rem; color: var(--ink-soft); margin-top: 8px; }
+  .mypage-examdate-status.success { color: var(--green-deep); }
+  .mypage-examdate-status.error { color: #B3261E; }
   /* "학생 계정 관리" 등록 폼(#studentAddForm)만 다른 곳의 .apply-field보다 훨씬 작고 좁게 —
      한 줄에 아이디/비밀번호/학교/이름/생년월일/성별/버튼이 다 들어가는 좁은 툴바라서다. */
   #studentAddForm .apply-field label { margin-bottom: 4px; }
@@ -1552,7 +1574,12 @@
   .rh-score-num.s1 { color: var(--tan); }
   .rh-score-num.s2 { color: #5C8C56; }
   .rh-score-num.s3 { color: var(--green-deep); }
-  .rh-tile-score-big { flex: 1; min-width: 0; text-align: center; }
+  /* 점수 + 디데이를 세로로 묶는 칸 — 점수가 위, 디데이가 그 아래 작게. */
+  .rh-tile-score-col { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+  .rh-tile-score-big { text-align: center; }
+  .rh-tile-dday { font-size: 0.76rem; font-weight: 700; color: var(--green-deep); text-align: center; }
+  .rh-tile-dday-empty { font-size: 0.72rem; font-weight: 600; color: var(--ink-soft); text-decoration: none; }
+  .rh-tile-dday-empty:hover { color: var(--green-deep); }
 
   @media (max-width: 760px) {
     .rh-tile-grid { grid-template-columns: 1fr; }
@@ -3079,7 +3106,10 @@
               <span class="rh-tile-status-val pending" id="rhTileStatus-chat">확인 중…</span>
             </div>
           </div>
-          <div class="rh-tile-score-big rh-score-num s1" id="rhTileScoreBig">1/3점</div>
+          <div class="rh-tile-score-col">
+            <div class="rh-tile-score-big rh-score-num s1" id="rhTileScoreBig">1/3점</div>
+            <div class="rh-tile-dday" id="rhTileDday"></div>
+          </div>
         </div>
       </button>
       <div class="home-schedule-box">
@@ -3545,6 +3575,15 @@
         </div>
       </div>
       <div class="mypage-photo-status" id="mypagePhotoStatus"></div>
+
+      <div class="mypage-examdate-card">
+        <div class="mypage-examdate-label">다음 시험일 <span class="mypage-examdate-hint">(홈 화면 디데이 계산용 — 수능이든 내신이든 가장 가까운 시험일로 설정해주세요)</span></div>
+        <div class="mypage-examdate-row">
+          <input type="date" id="mypageExamDateInput">
+          <button type="button" class="mypage-examdate-save-btn" onclick="saveMypageExamDate()">저장</button>
+        </div>
+        <div class="mypage-examdate-status" id="mypageExamDateStatus"></div>
+      </div>
     </div>
   </section>
 
@@ -5214,6 +5253,26 @@
     // 홈 화면 "오늘의 학습 기록" 카드 제목도 같은 기준으로 "오늘의 공부 MM월 DD일"로 표시한다.
     const titleEl = document.getElementById("rhTileTitle");
     if (titleEl) titleEl.textContent = "오늘의 공부 " + pad(d.getMonth() + 1) + "월 " + pad(d.getDate()) + "일";
+    renderHomeDday();
+  }
+  // "오늘의 공부" 카드의 점수 밑에 뜨는 디데이 — 학생이 마이페이지에 설정해둔 "다음 시험일"까지
+  // 남은 날짜를(학습일 기준 오늘로부터) 계산해서 보여준다. 아직 안 정했으면 설정하러 가는
+  // 링크를 대신 보여준다.
+  function renderHomeDday() {
+    const el = document.getElementById("rhTileDday");
+    if (!el) return;
+    const examDate = localStorage.getItem("holoStudentExamDate");
+    if (!examDate || !/^\d{4}-\d{2}-\d{2}$/.test(examDate)) {
+      el.innerHTML = '<a href="#" class="rh-tile-dday-empty" onclick="go(\'mypage\');return false;">마이페이지에서 시험일 설정하기 →</a>';
+      return;
+    }
+    const [ey, em, ed] = examDate.split("-").map(Number);
+    const target = new Date(ey, em - 1, ed);
+    const today = getStudyDate();
+    const diffDays = Math.round((target - today) / 86400000);
+    if (diffDays > 0) el.textContent = "시험까지 D-" + diffDays;
+    else if (diffDays === 0) el.textContent = "오늘이 시험일이에요! D-DAY";
+    else el.textContent = "시험일이 지났어요(D+" + Math.abs(diffDays) + ") — 마이페이지에서 다음 시험일로 바꿔주세요";
   }
   updateRecordDate();
   setInterval(updateRecordDate, 60 * 1000);
@@ -7770,6 +7829,7 @@
     localStorage.removeItem("holoStudentSchool");
     localStorage.removeItem("holoStudentGender");
     localStorage.removeItem("holoStudentPhoto");
+    localStorage.removeItem("holoStudentExamDate");
     localStorage.removeItem("holoStudentLoginDate");
     location.hash = "";
     location.reload();
@@ -7797,7 +7857,10 @@
       else localStorage.removeItem("holoStudentGender");
       if (data && data.photoData) localStorage.setItem("holoStudentPhoto", data.photoData);
       else localStorage.removeItem("holoStudentPhoto");
+      if (data && data.examDate) localStorage.setItem("holoStudentExamDate", data.examDate);
+      else localStorage.removeItem("holoStudentExamDate");
       renderSidebarProfile();
+      renderHomeDday();
     } catch (e) { /* 무시 */ }
   }
   // 아바타 한 칸을 사진 > 이름 첫 글자(성) 순으로 채운다 — 사진을 올렸으면 사진이 최우선,
@@ -7842,6 +7905,30 @@
     renderAvatarInto(avatarEl, name, photo);
     const statusEl = document.getElementById("mypagePhotoStatus");
     if (statusEl) { statusEl.textContent = ""; statusEl.className = "mypage-photo-status"; }
+    const examDateEl = document.getElementById("mypageExamDateInput");
+    if (examDateEl) examDateEl.value = localStorage.getItem("holoStudentExamDate") || "";
+    const examStatusEl = document.getElementById("mypageExamDateStatus");
+    if (examStatusEl) { examStatusEl.textContent = ""; examStatusEl.className = "mypage-examdate-status"; }
+  }
+  // 마이페이지에서 "다음 시험일"을 저장하면, 홈 화면 "오늘의 공부" 카드의 디데이가 바로 갱신된다.
+  function saveMypageExamDate() {
+    const input = document.getElementById("mypageExamDateInput");
+    const statusEl = document.getElementById("mypageExamDateStatus");
+    const val = input ? input.value : "";
+    if (!val) {
+      if (statusEl) { statusEl.textContent = "날짜를 선택해주세요."; statusEl.className = "mypage-examdate-status error"; }
+      return;
+    }
+    const id = localStorage.getItem("holoStudentId");
+    if (!id) return;
+    db.collection("students").doc(id).update({ examDate: val }).then(() => {
+      localStorage.setItem("holoStudentExamDate", val);
+      renderHomeDday();
+      if (statusEl) { statusEl.textContent = "저장됐어요."; statusEl.className = "mypage-examdate-status success"; }
+    }).catch(err => {
+      console.error(err);
+      if (statusEl) { statusEl.textContent = "저장 중 오류가 발생했어요."; statusEl.className = "mypage-examdate-status error"; }
+    });
   }
   // 마이페이지에서 프로필 사진을 바꾸면, 별도 파일 저장소 없이 학생 문서(students/{id})
   // 안에 바로 넣을 수 있도록 브라우저에서 정사각형으로 잘라 작게 압축한 뒤 base64로 저장한다.
@@ -7909,6 +7996,7 @@
     localStorage.removeItem("holoStudentSchool");
     localStorage.removeItem("holoStudentGender");
     localStorage.removeItem("holoStudentPhoto");
+    localStorage.removeItem("holoStudentExamDate");
       localStorage.removeItem("holoStudentLoginDate");
       showStudentGate();
       return;
@@ -7923,6 +8011,7 @@
     localStorage.removeItem("holoStudentSchool");
     localStorage.removeItem("holoStudentGender");
     localStorage.removeItem("holoStudentPhoto");
+    localStorage.removeItem("holoStudentExamDate");
         localStorage.removeItem("holoStudentLoginDate");
         showStudentGate();
       } else {
