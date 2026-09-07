@@ -563,7 +563,9 @@
   .pp-layout .sched-left-col { flex: 0 0 var(--pp-left-w); }
   .pp-plan-inner { gap: 10px; }
   /* 계획 항목이 많아져도 박스 세로 길이는 고정 — 그 안에서만 스크롤된다. */
-  .pp-plan-blocks { display: flex; flex-direction: column; gap: 12px; max-height: 220px; overflow-y: auto; }
+  /* height(고정값)로 둬야 "불러오는 중..." 같은 짧은 내용이 잠깐 떠도 박스 자체 크기가 줄었다
+     늘었다 하지 않는다(그래야 아래 달력 박스도 같이 늘었다 줄었다 하지 않음). */
+  .pp-plan-blocks { display: flex; flex-direction: column; gap: 12px; height: 220px; overflow-y: auto; }
   .pp-plan-blocks .planner-block-head { font-size: 0.72rem; }
   .pp-plan-blocks .planner-task-text { font-size: 0.72rem; }
   .pp-plan-blocks .planner-orig-empty { font-size: 0.72rem; color: var(--ink-soft); padding: 2px 0; }
@@ -2731,6 +2733,11 @@
     max-width: 760px; width: 100%; margin: 0 auto; padding: 0 20px 40px 20px; box-sizing: border-box;
     display: flex; flex-direction: column; gap: 10px;
   }
+  .week-back-link {
+    align-self: flex-start; font-family: inherit; font-size: 0.78rem; font-weight: 700; color: var(--ink-soft);
+    background: none; border: none; cursor: pointer; padding: 2px 4px; margin-bottom: 2px; transition: color 0.15s;
+  }
+  .week-back-link:hover { color: var(--ink); }
   .day-row { border: 1px solid var(--line); border-radius: 10px; background: var(--paper); overflow: hidden; }
   .day-row-main {
     width: 100%; display: flex; align-items: center; gap: 14px;
@@ -3446,7 +3453,8 @@
               <div class="pp-plan-blocks" id="ppPlanBlocks"></div>
             </div>
             <div class="pp-note-box">
-              <textarea id="ppSpecialNoteInput" class="planner-special-note-input" placeholder="예: 오늘 가족 일정이 있어서 공부를 많이 못할 예정이에요" oninput="schedulePpSpecialNoteSave()"></textarea>
+              <div class="planner-special-note-label">&lt;특이사항 메모&gt;</div>
+              <textarea id="ppSpecialNoteInput" class="planner-special-note-input" placeholder="가족 일정 있어서 공부 시간 부족" oninput="schedulePpSpecialNoteSave()"></textarea>
             </div>
           </aside>
 
@@ -5072,11 +5080,20 @@
   }
 
   // ── '내 학습 기록 살펴보기' 허브: '누적된 학습 기록' 카드의 "이번 주" 라벨 + 주간 누적 점수 평균 ──
+  // 그 달 1일부터 첫 번째 일요일까지를 1주차로 보고, 그 다음 월요일부터 새 주차가 시작되는 방식으로
+  // "몇 주차"를 계산한다(1일이 무슨 요일이든 월~일 단위로 정확히 나뉘도록). week_score의 주 시작일
+  // 계산(valtown.ts)과 반드시 같은 방식이어야 한다 — 하나만 고치면 라벨과 실제 평균 기간이 어긋난다.
+  function getWeekOfMonth(year, month, day) {
+    const firstWeekday = new Date(year, month - 1, 1).getDay(); // 0=일요일
+    const firstSunday = 1 + ((7 - firstWeekday) % 7);
+    if (day <= firstSunday) return 1;
+    return 1 + Math.ceil((day - firstSunday) / 7);
+  }
   function setRhCumWeekLabel() {
     const el = document.getElementById("rhCumWeekLabel");
     if (!el) return;
     const now = new Date();
-    const week = Math.ceil(now.getDate() / 7);
+    const week = getWeekOfMonth(now.getFullYear(), now.getMonth() + 1, now.getDate());
     el.textContent = (now.getMonth() + 1) + "월 " + week + "주차";
   }
   function loadRhWeekScore() {
@@ -6587,20 +6604,71 @@
     ).join("");
     selectYearMonth(defaultYm);
   }
+  // 달을 고르면 하루하루가 바로 나오지 않고, 그 달의 "N주차" 목록이 먼저 나온다 —
+  // 주차를 누르면 그 주 안의 날짜들이(기존과 같은 형태로) 나온다.
+  let currentCumYm = null;
   function selectYearMonth(ym) {
     document.querySelectorAll(".ym-month-col").forEach(b => b.classList.toggle("active", b.dataset.ym === ym));
+    currentCumYm = ym;
+    if (!allDaysData.length) {
+      const wrap = document.getElementById("day-list-wrap");
+      if (wrap) wrap.innerHTML = '<div class="reports-empty">아직 기록한 내용이 없어요. \'오늘의 학습 기록\'에서 시작해보세요.</div>';
+      return;
+    }
+    renderCumWeekList(ym);
+  }
+  function renderCumWeekList(ym) {
+    currentCumYm = ym;
     const wrap = document.getElementById("day-list-wrap");
     if (!wrap) return;
-    const days = allDaysData.filter(d => d.date.indexOf(ym) === 0);
-    if (!allDaysData.length) {
-      wrap.innerHTML = '<div class="reports-empty">아직 기록한 내용이 없어요. \'오늘의 학습 기록\'에서 시작해보세요.</div>';
-      return;
-    }
-    if (!days.length) {
-      wrap.innerHTML = '<div class="reports-empty">누적된 학습 기록이 없습니다.</div>';
-      return;
-    }
-    wrap.innerHTML = days.map(d =>
+    wrap.innerHTML = '<div class="reports-empty">불러오는 중...</div>';
+    planApi({ action: "month_week_scores", ym: ym, joinDate: localStorage.getItem("holoStudentJoinDate") || null })
+      .then(data => {
+        const weeks = data.weeks || [];
+        if (!weeks.length) {
+          wrap.innerHTML = '<div class="reports-empty">누적된 학습 기록이 없습니다.</div>';
+          return;
+        }
+        const [y, m] = ym.split("-");
+        wrap.innerHTML = weeks.map(w =>
+          '<div class="day-row">' +
+            '<button type="button" class="day-row-main" onclick="selectWeek(' + w.week + ')">' +
+              '<span class="day-row-date">' + y + '년 ' + m + '월 ' + w.week + '주차</span>' +
+              '<span class="day-row-score">평균 ' + w.avgScore + '점</span>' +
+              '<span class="day-row-arrow">›</span>' +
+            '</button>' +
+          '</div>'
+        ).join("");
+      })
+      .catch(err => {
+        console.error(err);
+        wrap.innerHTML = '<div class="reports-empty">불러오지 못했어요. 잠시 후 다시 시도해주세요.</div>';
+      });
+  }
+  // 어떤 달의 N주차가 그 달의 며칠~며칠인지 계산한다(1일부터 첫 번째 일요일까지가 1주차, 그 다음
+  // 월요일부터 새 주차 시작 — getWeekOfMonth/week_score와 같은 규칙의 반대 방향 계산).
+  function getWeekDayRange(year, month, week) {
+    const daysInMonth = new Date(year, month, 0).getDate();
+    const firstWeekday = new Date(year, month - 1, 1).getDay();
+    const firstSunday = 1 + ((7 - firstWeekday) % 7);
+    if (week === 1) return { startDay: 1, endDay: Math.min(firstSunday, daysInMonth) };
+    const startDay = firstSunday + 1 + (week - 2) * 7;
+    return { startDay: startDay, endDay: Math.min(startDay + 6, daysInMonth) };
+  }
+  function selectWeek(week) {
+    const wrap = document.getElementById("day-list-wrap");
+    if (!wrap || !currentCumYm) return;
+    const [y, m] = currentCumYm.split("-").map(Number);
+    const { startDay, endDay } = getWeekDayRange(y, m, week);
+    const pad = n => String(n).padStart(2, "0");
+    const startStr = y + "-" + pad(m) + "-" + pad(startDay);
+    const endStr = y + "-" + pad(m) + "-" + pad(endDay);
+    const days = allDaysData.filter(d => d.date >= startStr && d.date <= endStr);
+    const backRow = '<button type="button" class="week-back-link" onclick="renderCumWeekList(currentCumYm)">‹ ' + m + '월 주차 목록으로</button>';
+    wrap.innerHTML = backRow + (days.length ? renderCumDayRows(days) : '<div class="reports-empty">이 주에는 기록이 없어요.</div>');
+  }
+  function renderCumDayRows(days) {
+    return days.map(d =>
       '<div class="day-row">' +
         '<button type="button" class="day-row-main" onclick="openDayDetailPage(\'' + d.date + '\')">' +
           '<span class="day-row-date">' + escapeHtml(d.date) + '</span>' +
