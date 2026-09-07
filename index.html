@@ -570,7 +570,10 @@
      실제 높이가 그보다 작아질 수 있어서(계획 박스 150px 고정 등) 그 바닥값 때문에 억지로
      늘어나(align-items:stretch) 왼쪽 칸 안에 빈 공간이 다시 생긴다 — 이 페이지는 그 바닥값을
      빼고 내용물 높이 그대로 쓴다. */
-  #view-plannerPage .sched-manage-layout { min-height: 0; }
+  /* max-height도 같이 걸어서, 챗봇 대화가 쌓여도 이 행 자체가 계속 커지지 않고 여기서
+     멈추게 한다 — 그래야 안에 있는 .chat-wrap(flex:1;overflow-y:auto)이 "정해진 높이"를
+     갖게 되어 박스가 늘어나는 대신 그 안에서만 스크롤된다. */
+  #view-plannerPage .sched-manage-layout { min-height: 0; max-height: 620px; }
   .pp-layout.sched-manage-layout { --pp-left-w: 230px; }
   .pp-layout .sched-left-col { flex: 0 0 var(--pp-left-w); }
   .pp-plan-inner { gap: 10px; }
@@ -2250,7 +2253,7 @@
   }
 
   .chat-wrap {
-    flex: 1; width: 100%; max-width: 800px; margin: 0 auto;
+    flex: 1; min-height: 0; width: 100%; max-width: 800px; margin: 0 auto;
     padding: 28px 20px 8px 20px;
     display: flex; flex-direction: column; gap: 26px;
     overflow-y: auto;
