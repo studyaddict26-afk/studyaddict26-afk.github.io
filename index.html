@@ -510,8 +510,12 @@
      .consult-page가 이 규칙 없이 기본(블록, 높이 제한 없음) 상태로 있으면, 안의
      .sched-manage-layout이 기댈 "정해진 높이"가 없어서 왼쪽 칸 내용물 키만큼 세로로
      한없이 늘어나고(그러다 오른쪽 챗봇 칸까지 같이 늘어남), 화면이 넓을 때 특히 심해진다. */
-  #view-scheduleManage .consult-page, #view-plannerPage .consult-page { display: flex; flex-direction: column; align-items: flex-start; flex: 1; min-height: 0; }
-  #view-scheduleManage .sched-manage-layout, #view-plannerPage .sched-manage-layout { align-self: stretch; }
+  #view-scheduleManage .consult-page { display: flex; flex-direction: column; align-items: flex-start; flex: 1; min-height: 0; }
+  #view-scheduleManage .sched-manage-layout { align-self: stretch; }
+  /* 플래너 작성하기는 스케줄 페이지와 달리 시간표 박스가 내용물 크기만큼만 차지해서(flex:none),
+     .consult-page를 뷰포트 높이까지 늘리지 않아도 된다 — 오히려 그렇게 하면 오른쪽 챗봇 칸이
+     왼쪽 칸(달력 등)의 실제 내용물보다 더 늘어나 두 박스 아랫줄이 안 맞게 된다. .consult-page를
+     기본(내용물 크기) 그대로 둬서, 행 높이가 왼쪽 칸의 실제 내용물 높이에 맞춰지게 한다. */
   .sched-manage-layout { display: flex; gap: 20px; align-items: stretch; flex: 1; min-height: 480px; }
   .sched-left-col { flex: 0 0 190px; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
   .sched-sidebar {
