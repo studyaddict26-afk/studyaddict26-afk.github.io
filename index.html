@@ -573,7 +573,10 @@
   /* min-height는 "불러오는 중..." 같은 짧은 내용이 잠깐 떠도 박스가 훅 줄어들지 않을 만큼만
      (빈 블록 3개 높이 정도) 잡아두고, max-height는 항목이 많아졌을 때 박스가 한없이 커지지
      않고 그 안에서만 스크롤되게 잡아준다 — 항목이 적을 땐 아래에 빈 공간이 남지 않는다. */
-  .pp-plan-blocks { display: flex; flex-direction: column; gap: 12px; min-height: 100px; max-height: 220px; overflow-y: auto; }
+  /* 완전 고정 height — min/max로 범위를 두면 항목이 늘어날 때마다 그 범위 안에서도 계속
+     커져서 아래(특이사항 메모·달력) 박스들이 밀려 내려간다. 항목 몇 개든 늘 이 크기 그대로,
+     넘치면 그 안에서만 스크롤된다. */
+  .pp-plan-blocks { display: flex; flex-direction: column; gap: 12px; height: 150px; overflow-y: auto; }
   .pp-plan-empty { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--ink-soft); font-size: 0.8rem; }
   .pp-plan-blocks .planner-block-head { font-size: 0.72rem; }
   .pp-plan-blocks .planner-task-text { font-size: 0.72rem; }
