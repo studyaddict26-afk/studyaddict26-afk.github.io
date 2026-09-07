@@ -500,10 +500,10 @@
     display: flex; align-items: stretch; gap: 12px;
   }
   /* 위 4개 버튼 행(gap 12px, flex:1 1 0 넷)과 정확히 같은 격자에 맞춘다:
-     버튼 1개 폭 = (100% - 36px) / 4 — 이 값을 그대로 재사용해서
-     스케줄/프로모션은 버튼 1개 폭, 상태 박스는 버튼 2개 폭 + 그 사이 gap 만큼으로 고정한다. */
-  .home-promo-slot .home-schedule-box,
-  .home-promo-slot .home-promo-box {
+     버튼 1개 폭 = (100% - 36px) / 4 — 이 값을 그대로 재사용해서, .home-schedule-box를 쓰는
+     두 박스(내 스케줄 관리하기 / 내 플래너 관리하기)는 버튼 1개 폭씩, "오늘의 학습 기록"
+     카드는 버튼 2개 폭 + 그 사이 gap 만큼으로 고정한다. */
+  .home-promo-slot .home-schedule-box {
     flex: 0 1 calc((100% - 36px) / 4);
   }
   /* "오늘의 학습 기록" 카드(recordhub의 .rh-tile을 그대로 재사용)를 이 자리에서는
@@ -511,21 +511,19 @@
   .home-promo-slot .rh-tile {
     flex: 0 1 calc((100% - 36px) / 2 + 12px);
   }
-  .home-promo-video, .home-promo-box {
+  .home-promo-video {
     flex: 1 1 0; min-width: 0;
     border: 1.5px dashed var(--line-dark); border-radius: 12px;
     padding: 22px; text-align: center;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
   }
   .home-promo-video { aspect-ratio: 16 / 9; }
-  .home-promo-slot .home-promo-box { padding: 14px; }
   .home-promo-label {
     display: block; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.16em;
     color: var(--ink-soft); margin-bottom: 8px;
   }
-  .home-promo-slot p { color: var(--ink-soft); font-size: 0.82rem; margin: 0; }
 
-  /* 내 스케줄 관리하기 — 프로모션 박스와는 완전히 분리된 별도 박스 */
+  /* 내 스케줄 관리하기 / 내 플래너 관리하기 — 홈 화면 하단 프로모션 영상 박스와는 분리된 박스 */
   .home-schedule-box {
     flex: 1 1 0; min-width: 0; text-align: left;
     background: var(--paper);
@@ -559,20 +557,24 @@
   .home-schedule-title:hover { background: var(--cream); color: var(--ink-soft); }
   .home-schedule-title .arrow { color: var(--green); font-weight: 800; transition: transform 0.15s; }
   .home-schedule-title:hover .arrow { transform: translateX(2px); }
+  /* 홈 화면 "내 플래너 관리하기" 박스 안, 오늘 계획을 오전/오후/저녁으로 간단히 보여주는 목록 */
+  .home-planner-blocks { display: flex; flex-direction: column; flex: 1; justify-content: center; }
   .hps-block { display: flex; flex-direction: column; gap: 4px; flex: none; }
   .hps-title { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; color: var(--ink-soft); }
   .hps-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; flex: none; }
   .hps-list li { font-size: 0.78rem; color: var(--ink); min-height: 15px; padding-left: 13px; position: relative; }
   .hps-list li::before { content: "•"; position: absolute; left: 0; color: var(--ink-soft); }
+  .hps-list li.hps-empty { color: var(--ink-soft); padding-left: 0; }
+  .hps-list li.hps-empty::before { content: none; }
   .hps-divider { height: 1px; background: var(--line); margin: 8px 0; }
 
-  /* ── 내 스케줄 관리하기 / 플래너 미리 작성하기 (같은 레이아웃을 쓰는 전용 페이지들) ──
+  /* ── 내 스케줄 관리하기 / 내 플래너 관리하기 (같은 레이아웃을 쓰는 전용 페이지들) ──
      .consult-page가 이 규칙 없이 기본(블록, 높이 제한 없음) 상태로 있으면, 안의
      .sched-manage-layout이 기댈 "정해진 높이"가 없어서 왼쪽 칸 내용물 키만큼 세로로
      한없이 늘어나고(그러다 오른쪽 챗봇 칸까지 같이 늘어남), 화면이 넓을 때 특히 심해진다. */
   #view-scheduleManage .consult-page { display: flex; flex-direction: column; align-items: flex-start; flex: 1; min-height: 0; }
   #view-scheduleManage .sched-manage-layout { align-self: stretch; }
-  /* 플래너 미리 작성하기는 스케줄 페이지와 달리 시간표 박스가 내용물 크기만큼만 차지해서(flex:none),
+  /* 내 플래너 관리하기는 스케줄 페이지와 달리 시간표 박스가 내용물 크기만큼만 차지해서(flex:none),
      .consult-page를 뷰포트 높이까지 늘리지 않아도 된다 — 오히려 그렇게 하면 오른쪽 챗봇 칸이
      왼쪽 칸(달력 등)의 실제 내용물보다 더 늘어나 두 박스 아랫줄이 안 맞게 된다. .consult-page를
      기본(내용물 크기) 그대로 둬서, 행 높이가 왼쪽 칸의 실제 내용물 높이에 맞춰지게 한다. */
@@ -625,7 +627,7 @@
     transition: border-color 0.15s, background 0.15s;
   }
   .sched-sidebar-link-btn:hover { border-color: var(--green); background: var(--green-soft); }
-  /* ── 플래너 미리 작성하기 (내 스케줄 관리하기와 같은 레이아웃, 왼쪽 칸만 살짝 더 넓게) ── */
+  /* ── 내 플래너 관리하기 (내 스케줄 관리하기와 같은 레이아웃, 왼쪽 칸만 살짝 더 넓게) ── */
   /* 기본 .sched-manage-layout엔 min-height:480px 바닥값이 있는데, 이 페이지는 내용물
      실제 높이가 그보다 작아질 수 있어서(계획 박스 150px 고정 등) 그 바닥값 때문에 억지로
      늘어나(align-items:stretch) 왼쪽 칸 안에 빈 공간이 다시 생긴다 — 이 페이지는 그 바닥값을
@@ -1502,8 +1504,6 @@
 
   /* ── 내 학습 기록 살펴보기 (허브): 아이콘 카드 ── */
   .rh-tile-grid { display: grid; grid-template-columns: repeat(2, 1fr); align-items: stretch; gap: 14px; }
-  .rh-tile-col { display: flex; flex-direction: column; gap: 14px; }
-  .rh-tile-col .rh-tile { flex: 1 1 0; height: auto; }
   .rh-tile {
     background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
     padding: 20px 18px 18px; text-align: left; cursor: pointer; font-family: inherit;
@@ -3090,9 +3090,29 @@
           </ul>
         </div>
       </div>
-      <div class="home-promo-box">
-        <span class="home-promo-label">PROMOTION</span>
-        <p>이벤트나 공지사항이 있을 때 이 자리에 배너로 안내해드릴게요.</p>
+      <div class="home-schedule-box">
+        <div class="home-schedule-head">
+          <a class="home-schedule-title" href="#" onclick="go('plannerPage');return false;">내 플래너 관리하기 <span class="arrow">›</span></a>
+        </div>
+        <div class="home-schedule-inner">
+          <div class="home-schedule-date" id="homePlannerDate">확인 중…</div>
+          <div class="home-planner-blocks" id="homePlannerBlocks">
+            <div class="hps-block">
+              <div class="hps-title">오전</div>
+              <ul class="hps-list" id="homePlannerList-오전"></ul>
+            </div>
+            <div class="hps-divider"></div>
+            <div class="hps-block">
+              <div class="hps-title">오후</div>
+              <ul class="hps-list" id="homePlannerList-오후"></ul>
+            </div>
+            <div class="hps-divider"></div>
+            <div class="hps-block">
+              <div class="hps-title">저녁</div>
+              <ul class="hps-list" id="homePlannerList-저녁"></ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -3345,30 +3365,17 @@
             </div>
           </div>
         </button>
-        <div class="rh-tile-col">
-          <button type="button" class="rh-tile" onclick="go('plannerPage')">
-            <span class="rh-tile-head">
-              <span class="rh-tile-head-left">
-                <span class="rh-tile-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
-                </span>
-                <span class="rh-tile-title">플래너 미리 작성하기</span>
+        <button type="button" class="rh-tile" onclick="go('reports')">
+          <span class="rh-tile-head">
+            <span class="rh-tile-head-left">
+              <span class="rh-tile-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 19V6M12 19V3M19 19v-9"/></svg>
               </span>
-              <span class="rh-tile-head-right"><span class="rh-tile-arrow">›</span></span>
+              <span class="rh-tile-title">내 분석지</span>
             </span>
-          </button>
-          <button type="button" class="rh-tile" onclick="go('reports')">
-            <span class="rh-tile-head">
-              <span class="rh-tile-head-left">
-                <span class="rh-tile-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 19V6M12 19V3M19 19v-9"/></svg>
-                </span>
-                <span class="rh-tile-title">내 분석지</span>
-              </span>
-              <span class="rh-tile-head-right"><span class="rh-tile-arrow">›</span></span>
-            </span>
-          </button>
-        </div>
+            <span class="rh-tile-head-right"><span class="rh-tile-arrow">›</span></span>
+          </span>
+        </button>
       </div>
     </div>
   </section>
@@ -3454,11 +3461,11 @@
     </div>
   </section>
 
-  <!-- ─── 플래너 미리 작성하기 (내 스케줄 관리하기와 같은 레이아웃) ─── -->
+  <!-- ─── 내 플래너 관리하기 (내 스케줄 관리하기와 같은 레이아웃) ─── -->
   <section class="view" id="view-plannerPage">
     <div class="consult-page">
       <span class="eyebrow">PLANNER</span>
-      <h2>플래너 미리 작성하기</h2>
+      <h2>내 플래너 관리하기</h2>
       <div class="split"></div>
 
       <div class="sched-manage-layout pp-layout">
@@ -5038,13 +5045,13 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 & 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 & 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 & 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "플래너 미리 작성하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "타이머 & 스톱워치", mypage: "마이페이지", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 & 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 & 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 & 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "내 플래너 관리하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "타이머 & 스톱워치", mypage: "마이페이지", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { mathexam: "exam", engexam: "exam" };
   // "← 이전으로"가 상단 흰색 바(topbar)의 제목 오른쪽에 뜨는 페이지들과, 각각이 돌아갈 곳.
   const BACK_TARGET = {
     "consult-1": "consult", "consult-2": "consult", "consult-3": "consult",
     "consult-5": "consult", "consult-6": "consult", "consult-7": "consult", "consult-8": "consult",
-    todayrecord: "recordhub", plannerPage: "recordhub", cumulative: "recordhub", reports: "recordhub", dayDetail: "cumulative",
+    todayrecord: "home", plannerPage: "home", cumulative: "recordhub", reports: "recordhub", dayDetail: "cumulative",
   };
   function goBack() {
     const target = BACK_TARGET[currentView];
@@ -5078,7 +5085,7 @@
     if (view === "cumulative") loadDayList();
     // "오늘의 학습 기록" 카드(계획/일기/AI 홀로 현황 + 점수)가 이제 홈 화면에 있어서, 홈에
     // 들어올 때도 recordhub와 똑같이 loadTodayTileStatus()로 채운다.
-    if (view === "home") { loadTodayTileStatus(); loadHomeScheduleToday(); }
+    if (view === "home") { loadTodayTileStatus(); loadHomeScheduleToday(); loadHomePlannerToday(); }
     if (view === "recordhub") { loadRecordHubStatus(); setRhCumWeekLabel(); loadRhWeekScore(); }
     if (view === "scheduleManage") loadScheduleManage();
   }
@@ -5208,6 +5215,7 @@
     if (localStorage.getItem("holoStudentId")) {
       loadTodayTileStatus();
       loadHomeScheduleToday();
+      loadHomePlannerToday();
     }
   }, 0);
 
@@ -5357,7 +5365,7 @@
     planApi({ action: "special_note_save", date: getLocalDateKey(), text: input.value }).catch(err => console.error(err));
   }
 
-  // ── "플래너 미리 작성하기" 페이지 (내 스케줄 관리하기와 같은 레이아웃) ──
+  // ── "내 플래너 관리하기" 페이지 (내 스케줄 관리하기와 같은 레이아웃) ──
   // 왼쪽 위: 선택한 날짜의 계획(오늘·미래 날짜는 미리 써둘 수 있게 편집 가능, 지난 날이면 읽기 전용) /
   // 왼쪽 아래: 특이사항 메모 / 왼쪽 하단 박스: 날짜를 고를 수 있는 달력(미리 계획을 써두는 게 이
   // 페이지의 핵심이라, 미래 날짜도 자유롭게 눌러서 미리 쓸 수 있다) / 오른쪽: 계획 상담 AI 챗봇.
@@ -5835,6 +5843,31 @@
     planApi({ action: "schedule_today", date: getLocalDateKey(), weekday: getTodayWeekday() })
       .then(data => renderScheduleEventList(logEl, data.events))
       .catch(() => { /* 조회 실패 시 기본 예시를 그대로 둔다 */ });
+  }
+
+  // 홈 화면 "내 플래너 관리하기" 박스 — 오늘 계획을 오전/오후/저녁 목록으로 간단히 보여준다.
+  // 체크·삭제 등 실제 수정은 여기서 하지 않고(읽기 전용), 눌러서 들어가면 그 페이지에서 한다.
+  function renderHomePlannerList(block, items) {
+    const el = document.getElementById("homePlannerList-" + block);
+    if (!el) return;
+    const rows = items.filter(it => it.block === block && it.active);
+    el.innerHTML = rows.length
+      ? rows.map(it =>
+          '<li>' + (it.subject ? '<span class="planner-task-subject">[' + escapeHtml(it.subject) + ']</span> ' : '') + escapeHtml(it.text) + '</li>'
+        ).join("")
+      : '<li class="hps-empty">아직 없어요</li>';
+  }
+  function loadHomePlannerToday() {
+    const dateEl = document.getElementById("homePlannerDate");
+    if (dateEl) dateEl.textContent = formatTodayDateLabel();
+    const studentId = localStorage.getItem("holoStudentId");
+    if (!studentId) return;
+    planApi({ action: "plan_list", date: getLocalDateKey() })
+      .then(data => {
+        const items = data.items || [];
+        PLAN_BLOCKS.forEach(block => renderHomePlannerList(block, items));
+      })
+      .catch(() => { PLAN_BLOCKS.forEach(block => renderHomePlannerList(block, [])); });
   }
 
   // '내 스케줄 관리하기' 페이지
