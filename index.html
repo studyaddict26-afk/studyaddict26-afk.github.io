@@ -574,6 +574,7 @@
      (빈 블록 3개 높이 정도) 잡아두고, max-height는 항목이 많아졌을 때 박스가 한없이 커지지
      않고 그 안에서만 스크롤되게 잡아준다 — 항목이 적을 땐 아래에 빈 공간이 남지 않는다. */
   .pp-plan-blocks { display: flex; flex-direction: column; gap: 12px; min-height: 100px; max-height: 220px; overflow-y: auto; }
+  .pp-plan-empty { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--ink-soft); font-size: 0.8rem; }
   .pp-plan-blocks .planner-block-head { font-size: 0.72rem; }
   .pp-plan-blocks .planner-task-text { font-size: 0.72rem; }
   .pp-plan-blocks .planner-orig-empty { font-size: 0.72rem; color: var(--ink-soft); padding: 2px 0; }
@@ -5394,6 +5395,11 @@
   function renderPpPlanBlocksReadOnly(items) {
     const wrap = document.getElementById("ppPlanBlocks");
     if (!wrap) return;
+    // 그날 세 블록 다 통째로 기록이 없으면, 블록 헤더 대신 "기록 없음"만 정중앙에 보여준다.
+    if (!items.some(it => it.active)) {
+      wrap.innerHTML = '<div class="pp-plan-empty">기록 없음</div>';
+      return;
+    }
     wrap.innerHTML = PLAN_BLOCKS.map(block => {
       const rows = items.filter(it => it.block === block && it.active).map(it =>
         '<div class="planner-task-row' + (it.done ? ' done' : '') + '">' +
