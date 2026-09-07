@@ -118,28 +118,29 @@
   .mypage-photo-status { font-size: 0.76rem; color: var(--ink-soft); margin-top: 10px; max-width: 420px; }
   .mypage-photo-status.success { color: var(--green-deep); }
   .mypage-photo-status.error { color: #B3261E; }
-  .mypage-examdate-card {
+  /* 마이페이지의 "다음 시험일"/"랭킹 닉네임"이 함께 쓰는 카드 스타일 */
+  .mypage-field-card {
     margin-top: 16px; max-width: 420px;
     background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
     padding: 18px 20px;
   }
-  .mypage-examdate-label { font-size: 0.84rem; font-weight: 800; color: var(--ink); margin-bottom: 10px; }
-  .mypage-examdate-hint { font-size: 0.72rem; font-weight: 500; color: var(--ink-soft); }
-  .mypage-examdate-row { display: flex; gap: 8px; }
-  .mypage-examdate-row input[type="date"] {
+  .mypage-field-label { font-size: 0.84rem; font-weight: 800; color: var(--ink); margin-bottom: 10px; }
+  .mypage-field-hint { font-size: 0.72rem; font-weight: 500; color: var(--ink-soft); }
+  .mypage-field-row { display: flex; gap: 8px; }
+  .mypage-field-row input[type="date"], .mypage-field-row input[type="text"] {
     flex: 1; min-width: 0; font-family: inherit; font-size: 0.86rem;
     padding: 8px 10px; border: 1px solid var(--line-dark); border-radius: 8px;
     background: var(--cream); color: var(--ink); box-sizing: border-box;
   }
-  .mypage-examdate-save-btn {
+  .mypage-field-save-btn {
     flex: none; font-family: inherit; font-size: 0.84rem; font-weight: 700; color: #fff;
     background: var(--ink); border: none; border-radius: 8px; padding: 8px 16px; cursor: pointer;
     transition: background 0.18s;
   }
-  .mypage-examdate-save-btn:hover { background: var(--green-deep); }
-  .mypage-examdate-status { font-size: 0.76rem; color: var(--ink-soft); margin-top: 8px; }
-  .mypage-examdate-status.success { color: var(--green-deep); }
-  .mypage-examdate-status.error { color: #B3261E; }
+  .mypage-field-save-btn:hover { background: var(--green-deep); }
+  .mypage-field-status { font-size: 0.76rem; color: var(--ink-soft); margin-top: 8px; }
+  .mypage-field-status.success { color: var(--green-deep); }
+  .mypage-field-status.error { color: #B3261E; }
   /* "학생 계정 관리" 등록 폼(#studentAddForm)만 다른 곳의 .apply-field보다 훨씬 작고 좁게 —
      한 줄에 아이디/비밀번호/학교/이름/생년월일/성별/버튼이 다 들어가는 좁은 툴바라서다. */
   #studentAddForm .apply-field label { margin-bottom: 4px; }
@@ -529,10 +530,20 @@
     flex: 0 1 calc((100% - 36px) / 4);
   }
   /* "오늘의 학습 기록" 카드(recordhub의 .rh-tile을 그대로 재사용)를 이 자리에서는
-     예전 상태 박스와 같은 폭(버튼 2개 폭 + gap)으로 맞춘다. */
+     예전 상태 박스와 같은 폭(버튼 2개 폭 + gap)으로 맞춘다. 여기서는 카드 전체가 아니라
+     제목 줄만 눌리는 버튼이라(안에 "마이페이지" 링크도 따로 있어서 버튼 안에 버튼을 중첩할
+     수 없다), 카드 자체는 클릭 커서를 안 보여준다. */
   .home-promo-slot .rh-tile {
     flex: 0 1 calc((100% - 36px) / 2 + 12px);
+    cursor: default;
   }
+  .rh-tile-head-btn {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    background: none; border: none; padding: 0; margin: 0;
+    font-family: inherit; text-align: left; cursor: pointer;
+  }
+  .rh-tile-head-btn:hover .rh-tile-title { color: var(--green-deep); }
+  .rh-tile-head-btn:hover .rh-tile-arrow { transform: translateX(3px); }
   .home-promo-video {
     flex: 1 1 0; min-width: 0;
     border: 1.5px dashed var(--line-dark); border-radius: 12px;
@@ -1554,7 +1565,7 @@
   .rh-tile-avg-2col .rh-score-num { font-size: 1.15rem; }
   .rh-date-num.has-report { color: var(--green-deep); }
   .rh-tile-head-right { margin-left: auto; flex: none; display: flex; align-items: center; gap: 8px; }
-  .rh-tile-arrow { font-size: 1.15rem; font-weight: 800; color: var(--green); line-height: 1; }
+  .rh-tile-arrow { font-size: 1.15rem; font-weight: 800; color: var(--green); line-height: 1; display: inline-block; transition: transform 0.15s; }
 
   .rh-tile-status-wrap { display: flex; gap: 12px; align-items: center; flex: 1; }
   .rh-tile-status { display: grid; grid-template-columns: max-content auto; row-gap: 7px; column-gap: 22px; flex: none; }
@@ -2944,6 +2955,10 @@
     </div>
   </button>
 
+  <button type="button" class="sb-item" data-view="howto" onclick="go('howto')">
+    <span class="ico">•</span>학습 관리 시스템 사용 방법
+  </button>
+
   <button type="button" class="sb-logout" onclick="studentLogout()">로그아웃</button>
   <div class="sb-foot">© ROADMAP × STUDY ADDICT</div>
 </nav>
@@ -3064,8 +3079,8 @@
     </div>
 
     <div class="home-nav-grid">
-      <button type="button" class="home-nav-btn" onclick="go('howto')">
-        <span class="hn-title">학습 관리 시스템 사용 방법</span> <span class="hn-arrow">›</span>
+      <button type="button" class="home-nav-btn" onclick="go('ranking')">
+        <span class="hn-title">우리 독서실 랭킹</span> <span class="hn-arrow">›</span>
       </button>
       <button type="button" class="home-nav-btn" onclick="go('recordhub')">
         <span class="hn-title">내 학습 기록 살펴보기</span> <span class="hn-arrow">›</span>
@@ -3079,8 +3094,8 @@
     </div>
 
     <div class="home-promo-slot">
-      <button type="button" class="rh-tile" onclick="go('todayrecord')">
-        <span class="rh-tile-head">
+      <div class="rh-tile">
+        <button type="button" class="rh-tile-head rh-tile-head-btn" onclick="go('todayrecord')">
           <span class="rh-tile-head-left">
             <span class="rh-tile-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z" stroke-linejoin="round"/><path d="M4 9h16M9 4v16"/></svg>
@@ -3090,7 +3105,7 @@
           <span class="rh-tile-head-right">
             <span class="rh-tile-arrow">›</span>
           </span>
-        </span>
+        </button>
         <div class="rh-tile-status-wrap">
           <div class="rh-tile-status">
             <div class="rh-tile-status-row">
@@ -3111,7 +3126,7 @@
             <div class="rh-tile-dday" id="rhTileDday"></div>
           </div>
         </div>
-      </button>
+      </div>
       <div class="home-schedule-box">
         <div class="home-schedule-head">
           <a class="home-schedule-title" href="#" onclick="go('plannerPage');return false;">내 플래너 관리하기 <span class="arrow">›</span></a>
@@ -3554,6 +3569,24 @@
     </div>
   </section>
 
+  <!-- ─── 우리 독서실 랭킹 ─── -->
+  <section class="view" id="view-ranking">
+    <div class="consult-page">
+      <span class="eyebrow">RANKING</span>
+      <h2>우리 독서실 랭킹</h2>
+      <div class="split"></div>
+      <p class="ranking-desc">닉네임을 설정한 학생만 표시돼요(마이페이지에서 설정). 등록 학생 중 상위 50%까지만 순위가 나와요.</p>
+      <div class="ranking-tabs">
+        <button type="button" class="ranking-tab-btn active" id="rankingTabBtn-today" onclick="switchRankingTab('today')">오늘의 랭킹</button>
+        <button type="button" class="ranking-tab-btn" id="rankingTabBtn-week" onclick="switchRankingTab('week')">이번 주 랭킹</button>
+      </div>
+      <div class="ranking-my-status" id="rankingMyStatus"></div>
+      <div class="ranking-list" id="rankingList">
+        <div class="ranking-empty">불러오는 중...</div>
+      </div>
+    </div>
+  </section>
+
   <!-- ─── 마이페이지 ─── -->
   <section class="view" id="view-mypage">
     <div class="consult-page">
@@ -3576,13 +3609,22 @@
       </div>
       <div class="mypage-photo-status" id="mypagePhotoStatus"></div>
 
-      <div class="mypage-examdate-card">
-        <div class="mypage-examdate-label">다음 시험일 <span class="mypage-examdate-hint">(홈 화면 디데이 계산용 — 수능이든 내신이든 가장 가까운 시험일로 설정해주세요)</span></div>
-        <div class="mypage-examdate-row">
+      <div class="mypage-field-card">
+        <div class="mypage-field-label">다음 시험일 <span class="mypage-field-hint">(홈 화면 디데이 계산용 — 수능이든 내신이든 가장 가까운 시험일로 설정해주세요)</span></div>
+        <div class="mypage-field-row">
           <input type="date" id="mypageExamDateInput">
-          <button type="button" class="mypage-examdate-save-btn" onclick="saveMypageExamDate()">저장</button>
+          <button type="button" class="mypage-field-save-btn" onclick="saveMypageExamDate()">저장</button>
         </div>
-        <div class="mypage-examdate-status" id="mypageExamDateStatus"></div>
+        <div class="mypage-field-status" id="mypageExamDateStatus"></div>
+      </div>
+
+      <div class="mypage-field-card">
+        <div class="mypage-field-label">랭킹 닉네임 <span class="mypage-field-hint">(우리 독서실 랭킹에서 실명 대신 표시돼요 — 설정해야 랭킹에 참여돼요)</span></div>
+        <div class="mypage-field-row">
+          <input type="text" id="mypageNicknameInput" maxlength="12" placeholder="예: 열공왕">
+          <button type="button" class="mypage-field-save-btn" onclick="saveMypageNickname()">저장</button>
+        </div>
+        <div class="mypage-field-status" id="mypageNicknameStatus"></div>
       </div>
     </div>
   </section>
@@ -5164,6 +5206,83 @@
         el.classList.add("s" + Math.min(3, Math.round(avg)));
       })
       .catch(() => { /* 조회 실패 시 기본 표시(2.3점 예시)를 그대로 둔다 */ });
+  }
+
+  // ── "우리 독서실 랭킹" ──
+  // 학생 명단·닉네임은 Firestore에서, 점수는 valtown.ts(ranking_scores)에서 받아와 프론트에서
+  // 합친다. 닉네임을 설정한 학생만 표시하고, 전체 등록 학생 수 기준 상위 50%까지만 등수를 낸다
+  // (닉네임 없는 학생이 그 안에 있으면 그 자리는 그냥 건너뛴다 — 실명 노출 없이 익명 참여).
+  let rankingCurrentTab = "today";
+  function switchRankingTab(tab) {
+    rankingCurrentTab = tab;
+    const todayBtn = document.getElementById("rankingTabBtn-today");
+    const weekBtn = document.getElementById("rankingTabBtn-week");
+    if (todayBtn) todayBtn.classList.toggle("active", tab === "today");
+    if (weekBtn) weekBtn.classList.toggle("active", tab === "week");
+    loadRanking();
+  }
+  function renderRankingList(rows, myId) {
+    const listEl = document.getElementById("rankingList");
+    if (!listEl) return;
+    listEl.innerHTML = rows.length
+      ? rows.map(r =>
+          '<div class="ranking-row' + (r.id === myId ? ' me' : '') + '">' +
+            '<span class="ranking-rank">' + r.rank + '</span>' +
+            '<span class="ranking-nickname">' + escapeHtml(r.nickname) + '</span>' +
+            '<span class="ranking-score">' + r.score + '점</span>' +
+          '</div>'
+        ).join("")
+      : '<div class="ranking-empty">아직 닉네임을 설정한 학생이 없어요.</div>';
+  }
+  function loadRanking() {
+    const listEl = document.getElementById("rankingList");
+    const myStatusEl = document.getElementById("rankingMyStatus");
+    if (!listEl) return;
+    listEl.innerHTML = '<div class="ranking-empty">불러오는 중...</div>';
+    if (myStatusEl) myStatusEl.textContent = "";
+    const myId = localStorage.getItem("holoStudentId");
+    db.collection("students").get().then(snap => {
+      const roster = [];
+      snap.forEach(doc => {
+        const d = doc.data() || {};
+        roster.push({ id: doc.id, nickname: (d.rankingNickname || "").trim() });
+      });
+      const totalCount = roster.length;
+      if (!totalCount) { listEl.innerHTML = '<div class="ranking-empty">등록된 학생이 없어요.</div>'; return; }
+      const ids = roster.map(r => r.id);
+      fetch(CHAT_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "ranking_scores", period: rankingCurrentTab, date: getLocalDateKey(), studentIds: ids }),
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) throw new Error(data.error);
+          const scores = data.scores || {};
+          const combined = roster.map(r => ({ id: r.id, nickname: r.nickname, score: scores[r.id] || 0 }));
+          combined.sort((a, b) => b.score - a.score || (a.id < b.id ? -1 : 1)); // 동점이면 id 순으로 안정 정렬
+          const cutoff = Math.ceil(totalCount / 2);
+          const ranked = combined.slice(0, cutoff).map((r, i) => ({ ...r, rank: i + 1 }));
+          renderRankingList(ranked.filter(r => r.nickname), myId);
+          if (myStatusEl) {
+            const myIndex = combined.findIndex(r => r.id === myId);
+            if (myIndex === -1 || myIndex >= cutoff) {
+              myStatusEl.textContent = "아직 상위 50% 밖이에요 — 계획·일기·AI홀로를 꾸준히 채워보세요!";
+            } else if (!combined[myIndex].nickname) {
+              myStatusEl.textContent = "닉네임을 설정하면 랭킹에 표시돼요 → 마이페이지";
+            } else {
+              myStatusEl.textContent = "";
+            }
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          listEl.innerHTML = '<div class="ranking-empty">랭킹을 불러오지 못했어요.</div>';
+        });
+    }).catch(err => {
+      console.error(err);
+      listEl.innerHTML = '<div class="ranking-empty">학생 목록을 불러오지 못했어요.</div>';
+    });
   }
 
   // ── "오늘의 학습 기록" 카드(계획/일기/AI 홀로 사용 상태 + 점수) — 이제 홈 화면에 있고,
@@ -7830,6 +7949,7 @@
     localStorage.removeItem("holoStudentGender");
     localStorage.removeItem("holoStudentPhoto");
     localStorage.removeItem("holoStudentExamDate");
+    localStorage.removeItem("holoStudentNickname");
     localStorage.removeItem("holoStudentLoginDate");
     location.hash = "";
     location.reload();
@@ -7859,6 +7979,8 @@
       else localStorage.removeItem("holoStudentPhoto");
       if (data && data.examDate) localStorage.setItem("holoStudentExamDate", data.examDate);
       else localStorage.removeItem("holoStudentExamDate");
+      if (data && data.rankingNickname) localStorage.setItem("holoStudentNickname", data.rankingNickname);
+      else localStorage.removeItem("holoStudentNickname");
       renderSidebarProfile();
       renderHomeDday();
     } catch (e) { /* 무시 */ }
@@ -7908,7 +8030,11 @@
     const examDateEl = document.getElementById("mypageExamDateInput");
     if (examDateEl) examDateEl.value = localStorage.getItem("holoStudentExamDate") || "";
     const examStatusEl = document.getElementById("mypageExamDateStatus");
-    if (examStatusEl) { examStatusEl.textContent = ""; examStatusEl.className = "mypage-examdate-status"; }
+    if (examStatusEl) { examStatusEl.textContent = ""; examStatusEl.className = "mypage-field-status"; }
+    const nicknameEl = document.getElementById("mypageNicknameInput");
+    if (nicknameEl) nicknameEl.value = localStorage.getItem("holoStudentNickname") || "";
+    const nicknameStatusEl = document.getElementById("mypageNicknameStatus");
+    if (nicknameStatusEl) { nicknameStatusEl.textContent = ""; nicknameStatusEl.className = "mypage-field-status"; }
   }
   // 마이페이지에서 "다음 시험일"을 저장하면, 홈 화면 "오늘의 공부" 카드의 디데이가 바로 갱신된다.
   function saveMypageExamDate() {
@@ -7916,7 +8042,7 @@
     const statusEl = document.getElementById("mypageExamDateStatus");
     const val = input ? input.value : "";
     if (!val) {
-      if (statusEl) { statusEl.textContent = "날짜를 선택해주세요."; statusEl.className = "mypage-examdate-status error"; }
+      if (statusEl) { statusEl.textContent = "날짜를 선택해주세요."; statusEl.className = "mypage-field-status error"; }
       return;
     }
     const id = localStorage.getItem("holoStudentId");
@@ -7924,10 +8050,30 @@
     db.collection("students").doc(id).update({ examDate: val }).then(() => {
       localStorage.setItem("holoStudentExamDate", val);
       renderHomeDday();
-      if (statusEl) { statusEl.textContent = "저장됐어요."; statusEl.className = "mypage-examdate-status success"; }
+      if (statusEl) { statusEl.textContent = "저장됐어요."; statusEl.className = "mypage-field-status success"; }
     }).catch(err => {
       console.error(err);
-      if (statusEl) { statusEl.textContent = "저장 중 오류가 발생했어요."; statusEl.className = "mypage-examdate-status error"; }
+      if (statusEl) { statusEl.textContent = "저장 중 오류가 발생했어요."; statusEl.className = "mypage-field-status error"; }
+    });
+  }
+  // 마이페이지에서 "랭킹 닉네임"을 저장하면 students/{id}.rankingNickname에 저장된다 — 이
+  // 값이 없는 학생은 "우리 독서실 랭킹"에 아예 표시되지 않는다(설정해야 참여하는 방식).
+  function saveMypageNickname() {
+    const input = document.getElementById("mypageNicknameInput");
+    const statusEl = document.getElementById("mypageNicknameStatus");
+    const val = input ? input.value.trim() : "";
+    if (!val) {
+      if (statusEl) { statusEl.textContent = "닉네임을 입력해주세요."; statusEl.className = "mypage-field-status error"; }
+      return;
+    }
+    const id = localStorage.getItem("holoStudentId");
+    if (!id) return;
+    db.collection("students").doc(id).update({ rankingNickname: val }).then(() => {
+      localStorage.setItem("holoStudentNickname", val);
+      if (statusEl) { statusEl.textContent = "저장됐어요."; statusEl.className = "mypage-field-status success"; }
+    }).catch(err => {
+      console.error(err);
+      if (statusEl) { statusEl.textContent = "저장 중 오류가 발생했어요."; statusEl.className = "mypage-field-status error"; }
     });
   }
   // 마이페이지에서 프로필 사진을 바꾸면, 별도 파일 저장소 없이 학생 문서(students/{id})
@@ -7997,6 +8143,7 @@
     localStorage.removeItem("holoStudentGender");
     localStorage.removeItem("holoStudentPhoto");
     localStorage.removeItem("holoStudentExamDate");
+    localStorage.removeItem("holoStudentNickname");
       localStorage.removeItem("holoStudentLoginDate");
       showStudentGate();
       return;
@@ -8012,6 +8159,7 @@
     localStorage.removeItem("holoStudentGender");
     localStorage.removeItem("holoStudentPhoto");
     localStorage.removeItem("holoStudentExamDate");
+    localStorage.removeItem("holoStudentNickname");
         localStorage.removeItem("holoStudentLoginDate");
         showStudentGate();
       } else {
