@@ -566,15 +566,20 @@
   .pp-layout .sched-left-col { flex: 0 0 var(--pp-left-w); }
   .pp-plan-inner { gap: 10px; }
   /* 계획 항목이 많아져도 박스 세로 길이는 고정 — 그 안에서만 스크롤된다. */
-  /* height(고정값)로 둬야 "불러오는 중..." 같은 짧은 내용이 잠깐 떠도 박스 자체 크기가 줄었다
-     늘었다 하지 않는다(그래야 아래 달력 박스도 같이 늘었다 줄었다 하지 않음). */
-  .pp-plan-blocks { display: flex; flex-direction: column; gap: 12px; height: 220px; overflow-y: auto; }
+  /* min-height는 "불러오는 중..." 같은 짧은 내용이 잠깐 떠도 박스가 훅 줄어들지 않을 만큼만
+     (빈 블록 3개 높이 정도) 잡아두고, max-height는 항목이 많아졌을 때 박스가 한없이 커지지
+     않고 그 안에서만 스크롤되게 잡아준다 — 항목이 적을 땐 아래에 빈 공간이 남지 않는다. */
+  .pp-plan-blocks { display: flex; flex-direction: column; gap: 12px; min-height: 100px; max-height: 220px; overflow-y: auto; }
   .pp-plan-blocks .planner-block-head { font-size: 0.72rem; }
   .pp-plan-blocks .planner-task-text { font-size: 0.72rem; }
   .pp-plan-blocks .planner-orig-empty { font-size: 0.72rem; color: var(--ink-soft); padding: 2px 0; }
   .pp-note-box { flex: none; }
   .pp-note-box .planner-special-note-input { min-height: 40px; }
-  .pp-calendar { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  /* 시간표 박스(.sched-timetable-box)는 원래 남는 세로 공간을 다 채우도록 flex:1인데,
+     달력은 사진과 달리 내용물 높이가 정해져 있어서 그대로 두면 박스 안쪽에 빈 공간이
+     남는다 — 이 페이지에서는 내용물 크기 그대로 박스가 딱 맞게 감싸도록 한다. */
+  #view-plannerPage .sched-timetable-box { flex: none; }
+  .pp-calendar { display: flex; flex-direction: column; }
   .pp-cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
   .pp-cal-nav {
     font-family: inherit; font-size: 0.95rem; font-weight: 800; color: var(--ink-soft);
