@@ -5570,12 +5570,26 @@
       '</div>' +
       '<div class="pp-cal-weekdays">' + WEEKDAY_LABELS.map(w => '<span>' + w + '</span>').join("") + '</div>' +
       '<div class="pp-cal-grid">' + cells + '</div>';
+    syncPpColumnHeights();
   }
   function ppCalShift(delta) {
     ppCalMonth += delta;
     if (ppCalMonth > 12) { ppCalMonth = 1; ppCalYear++; }
     if (ppCalMonth < 1) { ppCalMonth = 12; ppCalYear--; }
     renderPpCalendar();
+  }
+  // CSS만으로는(중첩된 flex + max-height 조합) 챗봇 칸 높이를 왼쪽 칸에 안정적으로 맞추기가
+  // 어려워서, 왼쪽 칸(달력 등)이 실제로 그려진 픽셀 높이를 직접 재서 챗봇 칸에 그대로 못박아
+  // 준다 — 그래야 대화가 아무리 쌓여도 정확히 그 높이에서 멈추고 안에서만 스크롤된다.
+  // 달력이 몇 주짜리냐(5주/6주)에 따라 왼쪽 칸 높이가 달라질 수 있어 달력을 다시 그릴 때마다 부른다.
+  function syncPpColumnHeights() {
+    const left = document.querySelector("#view-plannerPage .sched-left-col");
+    const chat = document.querySelector("#view-plannerPage .sched-chat-col");
+    if (!left || !chat) return;
+    requestAnimationFrame(() => {
+      const h = left.getBoundingClientRect().height;
+      if (h > 0) chat.style.height = h + "px";
+    });
   }
   // "내 습관 또는 문제점 입력해두기" — 실제로 AI를 호출하지 않고, 학생이 편하게 이어서 적을 수
   // 있도록 안내하는 말을 챗봇이 먼저 건넨 것처럼 보여준다(스케줄 챗봇의 schedQuickPrompt와 같은 방식).
