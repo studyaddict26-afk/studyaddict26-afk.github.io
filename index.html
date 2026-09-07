@@ -2440,10 +2440,6 @@
   .record-mini-submit-btn:disabled { opacity: 0.7; cursor: default; border-color: var(--green); color: var(--green-deep); }
   .record-date { display: block; font-size: 0.66rem; font-weight: 700; color: var(--ink-soft); margin-top: 2px; }
   .planner-body { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }
-  /* 최초 계획 세우기 전에는 #plannerBody가 통째로 팝업 안으로 옮겨가서, 뒤쪽 자리가 비어
-     보인다 — 팝업이 떠 있는 동안만 자리를 지키는 흐릿한 뼈대(비활성)를 대신 보여준다. */
-  .planner-body-ghost { display: none; opacity: 0.4; pointer-events: none; }
-  .planner-body-ghost.on { display: flex; }
   .planner-block { display: flex; flex-direction: column; gap: 4px; }
   .planner-block-head { font-size: 0.68rem; font-weight: 800; color: var(--ink); letter-spacing: 0.04em; }
   .planner-block-head-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -2543,10 +2539,6 @@
     font-family: inherit; cursor: pointer; transition: background 0.18s;
   }
   .plan-gate-submit-btn:hover { background: var(--green-deep); }
-  #plannerBody.plan-gate-mode .planner-progress-label,
-  #plannerBody.plan-gate-mode .planner-count-badge,
-  #plannerBody.plan-gate-mode .planner-col-original { display: none; }
-  #plannerBody.plan-gate-mode .planner-col-edit { flex: 1 1 100%; }
 
   .record-back-link-row {
     max-width: 1100px; width: 100%; margin: 18px auto 0 auto; padding: 0 20px; box-sizing: border-box;
@@ -3330,17 +3322,6 @@
           </div>
         </button>
         <div class="rh-tile-col">
-          <button type="button" class="rh-tile" onclick="go('reports')">
-            <span class="rh-tile-head">
-              <span class="rh-tile-head-left">
-                <span class="rh-tile-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 19V6M12 19V3M19 19v-9"/></svg>
-                </span>
-                <span class="rh-tile-title">내 분석지</span>
-              </span>
-              <span class="rh-tile-head-right"><span class="rh-tile-arrow">›</span></span>
-            </span>
-          </button>
           <button type="button" class="rh-tile" onclick="go('plannerPage')">
             <span class="rh-tile-head">
               <span class="rh-tile-head-left">
@@ -3348,6 +3329,17 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
                 </span>
                 <span class="rh-tile-title">플래너 작성하기</span>
+              </span>
+              <span class="rh-tile-head-right"><span class="rh-tile-arrow">›</span></span>
+            </span>
+          </button>
+          <button type="button" class="rh-tile" onclick="go('reports')">
+            <span class="rh-tile-head">
+              <span class="rh-tile-head-left">
+                <span class="rh-tile-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 19V6M12 19V3M19 19v-9"/></svg>
+                </span>
+                <span class="rh-tile-title">내 분석지</span>
               </span>
               <span class="rh-tile-head-right"><span class="rh-tile-arrow">›</span></span>
             </span>
@@ -3472,6 +3464,7 @@
           <div class="sched-chat-quick-row">
             <button type="button" class="sched-chat-quick-btn" onclick="send('plan', '오늘 계획을 어떻게 세우면 좋을까요?')">📋 오늘 계획을 어떻게 세우면 좋을까요?</button>
             <button type="button" class="sched-chat-quick-btn" onclick="send('plan', '지금 세운 계획이 괜찮은지 봐주세요.')">✅ 지금 계획 괜찮은지 봐주세요</button>
+            <button type="button" class="sched-chat-quick-btn" onclick="ppQuickPrompt()">📝 내 습관 또는 문제점 입력해두기</button>
           </div>
           <div class="input-zone">
             <div class="input-box">
@@ -4096,27 +4089,6 @@
           <button type="button" class="record-mini-submit-btn" id="planSubmitBtn" onclick="quickSubmit(this, 'planSubmitStatus')">제출하기</button>
         </div>
         <div class="record-date" id="recordDate"></div>
-        <div id="plannerHome"></div>
-        <div class="planner-body planner-body-ghost" id="plannerBodyGhost" aria-hidden="true">
-          <div class="planner-dual">
-            <div class="planner-col planner-col-edit" style="flex: 1 1 100%;">
-              <div class="planner-col-body">
-                <div class="planner-block" data-block="오전">
-                  <div class="planner-block-head-row"><span class="planner-block-head">오전</span></div>
-                  <div class="planner-tasks"></div>
-                </div>
-                <div class="planner-block" data-block="오후">
-                  <div class="planner-block-head-row"><span class="planner-block-head">오후</span></div>
-                  <div class="planner-tasks"></div>
-                </div>
-                <div class="planner-block" data-block="저녁">
-                  <div class="planner-block-head-row"><span class="planner-block-head">저녁</span></div>
-                  <div class="planner-tasks"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="planner-body" id="plannerBody">
           <div class="planner-dual">
             <div class="planner-col planner-col-original">
@@ -4216,12 +4188,9 @@
       <div class="plan-gate-overlay" id="planGateOverlay">
         <div class="plan-gate-modal">
           <a class="plan-gate-home-link" href="#" onclick="closePlanGateToHome();return false;">← 뒤로가기</a>
-          <h2>최초 계획 세우기</h2>
-          <p class="plan-gate-hint">오늘 하루 계획을 세워주세요. 언제든 추가하거나 고칠 수 있어요.</p>
-          <div class="record-date" id="planGateDate"></div>
-          <div id="planGateBody"></div>
-          <div class="plan-gate-error" id="planGateError" style="display:none"></div>
-          <button type="button" class="plan-gate-submit-btn" onclick="submitInitialPlan()">제출하기</button>
+          <h2>금일 플래너를 아직 작성하지 않았습니다!</h2>
+          <p class="plan-gate-hint">플래너를 작성한 학생들만 공부 일기와 홀로AI를 이용할 수 있습니다.<br>아래의 버튼을 누른 후, 금일 플래너를 작성해주세요.</p>
+          <button type="button" class="plan-gate-submit-btn" onclick="goToPlannerPageFromGate()">플래너 작성하기 →</button>
         </div>
       </div>
 
@@ -4371,7 +4340,6 @@
       <h2>누적된 학습 기록</h2>
       <div class="split"></div>
     </div>
-    <p class="reports-intro">하루하루 쌓인 학습 기록을 월별로 모아볼 수 있어요. 날짜를 누르면 그날의 계획·일기·질문을 한눈에 확인할 수 있습니다.</p>
     <div class="ym-picker" id="ymPicker"></div>
     <div class="day-list" id="day-list-wrap">
       <div class="reports-empty">불러오는 중...</div>
@@ -5183,8 +5151,6 @@
     const text = String(d.getFullYear()).slice(-2) + "년 " + pad(d.getMonth() + 1) + "월 " + pad(d.getDate()) + "일 " + WEEKDAY_KO[d.getDay()] + "요일";
     const el = document.getElementById("recordDate");
     if (el) el.textContent = text;
-    const gateEl = document.getElementById("planGateDate");
-    if (gateEl) gateEl.textContent = text;
   }
   updateRecordDate();
   setInterval(updateRecordDate, 60 * 1000);
@@ -5562,6 +5528,14 @@
     if (ppCalMonth < 1) { ppCalMonth = 12; ppCalYear--; }
     renderPpCalendar();
   }
+  // "내 습관 또는 문제점 입력해두기" — 실제로 AI를 호출하지 않고, 학생이 편하게 이어서 적을 수
+  // 있도록 안내하는 말을 챗봇이 먼저 건넨 것처럼 보여준다(스케줄 챗봇의 schedQuickPrompt와 같은 방식).
+  function ppQuickPrompt() {
+    const text = "그동안 느꼈던 공부 습관이나 어려움이 있다면 편하게 말씀해주세요. 앞으로 계획 세울 때 참고할게요.";
+    addMsg("plan", "bot", escapeHtml(text));
+    if (!chatHistory["plan"]) chatHistory["plan"] = [];
+    chatHistory["plan"].push({ role: "assistant", content: text });
+  }
 
   // ── 학습 플래너/공부일기 ↔ 홀로 AI 질의응답 탭 전환 ──
   function switchRecordTab(tab) {
@@ -5634,7 +5608,6 @@
   // ── 학습 플래너 (오전/오후/저녁 시간대별 체크리스트) ──
   const PLAN_BLOCKS = ["오전", "오후", "저녁"];
   let planItems = [];
-  let planLoaded = false;
 
   function getLocalDateKey() {
     const d = new Date();
@@ -5798,69 +5771,41 @@
       .catch(() => { listEl.innerHTML = '<li class="sched-empty-msg">불러오지 못했어요.</li>'; });
   }
 
-  // 오늘 "최초 계획 세우기"를 이미 제출했는지 — 제출 전이면 지금 넣는 항목이 "최초 계획"이 되고,
-  // 제출 후(나중에 "+ 추가하기"로 넣는 것)는 "계획 수정하기"에만 반영되고 최초 계획에는 안 남는다.
+  // 오늘 "최초 계획"이 이미 있는지 — 없으면 지금부터 넣는 항목이 "최초 계획"이 되고,
+  // 있으면(나중에 "+ 추가하기"로 넣는 것) "계획 수정하기"에만 반영되고 최초 계획에는 안 남는다.
+  // 최초 계획은 이제 이 페이지가 아니라 "플래너 작성하기" 페이지에서 세운다 — 그 페이지에서
+  // 넣은 항목도 결국 같은 서버 데이터라, 이 페이지에 다시 들어올 때마다 새로 불러와서 확인한다
+  // (예전처럼 한 번 불러온 뒤 캐시해두면, 플래너 페이지에서 방금 세운 계획을 여기서 못 보고
+  // 게이트가 계속 뜨는 문제가 생긴다).
   let initialPlanLocked = false;
   function loadPlan() {
-    if (planLoaded) {
-      // 이미 한 번 불러온 뒤라면 다시 서버에서 받아오지 않고, 아직 최초 계획을
-      // 제출하지 않은 상태(initialPlanLocked === false)일 때만 게이트를 다시 띄운다
-      // — "뒤로가기"로 팝업만 닫고 제출은 안 한 채 다시 들어왔을 때 대응.
-      if (!initialPlanLocked) openPlanGate();
-      return;
-    }
-    planLoaded = true;
     const studentId = localStorage.getItem("holoStudentId");
     if (!studentId) return;
     planApi({ action: "plan_list", date: getLocalDateKey() })
       .then(data => {
         planItems = data.items || [];
-        initialPlanLocked = planItems.length > 0; // 이미 항목이 있으면 최초 계획은 이미 예전에 확정된 것
+        initialPlanLocked = planItems.length > 0; // 이미 항목이 있으면 최초 계획은 이미 세워진 것
         renderPlanner();
         if (!initialPlanLocked) openPlanGate();
+        else document.getElementById("planGateOverlay").classList.remove("on");
       })
       .catch(err => console.error(err));
   }
 
-  // 오늘 계획이 하나도 없으면(=아직 최초 계획을 안 세웠으면), 계획 입력 UI를 모달로 옮겨서
-  // 최초 계획을 세우기 전까지는 나머지 화면(챗봇 등)을 가리는 필수 관문으로 만든다.
+  // 오늘 계획이 하나도 없으면(=아직 최초 계획을 안 세웠으면), 공부일기·홀로AI를 가리고
+  // "플래너 작성하기" 페이지로 이동하라는 안내 팝업을 띄운다.
   function openPlanGate() {
-    const gateBody = document.getElementById("planGateBody");
-    const plannerBody = document.getElementById("plannerBody");
-    plannerBody.classList.add("plan-gate-mode");
-    gateBody.appendChild(plannerBody);
-    document.getElementById("plannerBodyGhost").classList.add("on");
-    document.getElementById("planGateError").style.display = "none";
     document.getElementById("planGateOverlay").classList.add("on");
   }
-  // 게이트 팝업 안으로 옮겨둔 plannerBody를 원래 자리로 되돌리고, 뼈대·오버레이를 끈다.
-  // (제출했을 때도, "뒤로가기"로 제출 없이 나갈 때도 공통으로 필요한 원상복구 로직)
-  function restorePlannerBodyHome() {
-    const plannerHome = document.getElementById("plannerHome");
-    const plannerBody = document.getElementById("plannerBody");
-    plannerBody.classList.remove("plan-gate-mode");
-    plannerHome.after(plannerBody);
-    document.getElementById("plannerBodyGhost").classList.remove("on");
-    document.getElementById("planGateOverlay").classList.remove("on");
-  }
   function closePlanGateToHome() {
-    // 제출은 안 했으므로 initialPlanLocked는 그대로 false로 둔다 — 이 페이지에 다시
-    // 들어오면 loadPlan()이 게이트를 다시 띄운다.
-    restorePlannerBodyHome();
+    // 아직 플래너를 안 썼으므로 initialPlanLocked는 그대로 false로 둔다 — 이 페이지에
+    // 다시 들어오면 loadPlan()이 게이트를 다시 띄운다.
+    document.getElementById("planGateOverlay").classList.remove("on");
     go("home");
   }
-
-  function submitInitialPlan() {
-    const missing = PLAN_BLOCKS.filter(block => !planItems.some(it => it.block === block && it.active));
-    const errEl = document.getElementById("planGateError");
-    if (missing.length) {
-      errEl.textContent = missing.join(", ") + " 계획을 최소 1개씩 입력해주세요.";
-      errEl.style.display = "block";
-      return;
-    }
-    errEl.style.display = "none";
-    initialPlanLocked = true; // 이 시점부터 넣는 항목은 "최초 계획"이 아니라 "나중에 추가한 것"
-    restorePlannerBodyHome();
+  function goToPlannerPageFromGate() {
+    document.getElementById("planGateOverlay").classList.remove("on");
+    go("plannerPage");
   }
 
   // 블록(오전/오후/저녁)별로 "새 항목 입력줄"이 지금 열려있는지 기억한다 — 기본은 닫혀있고,
