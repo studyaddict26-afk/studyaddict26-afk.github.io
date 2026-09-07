@@ -75,19 +75,19 @@
   }
   .sb-profile:hover { background: var(--green-soft); }
   /* 아바타는 사진/성별 아이콘/이니셜 세 상태를 공유한다 — 크기·모양은 여기서, 배경/글자색은
-     상태별 클래스(.av-photo/.av-icon/.av-initial, renderAvatarInto()가 붙여줌)에서 정한다. */
+     상태별 클래스(.av-photo/.av-initial, renderAvatarInto()가 붙여줌)에서 정한다. */
   .sb-profile-avatar {
     flex: none; width: 40px; height: 40px; border-radius: 50%; overflow: hidden;
     display: flex; align-items: center; justify-content: center;
     font-size: 0.9rem; font-weight: 800;
   }
   .sb-profile-info { min-width: 0; flex: 1; }
-  .sb-profile-name { font-size: 0.86rem; font-weight: 800; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .sb-profile-school { font-size: 0.7rem; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sb-profile-line1 { display: flex; align-items: baseline; min-width: 0; overflow: hidden; white-space: nowrap; }
+  .sb-profile-name { font-size: 0.86rem; font-weight: 800; color: var(--ink); flex: none; overflow: hidden; text-overflow: ellipsis; }
+  .sb-profile-sep { font-size: 0.78rem; color: var(--ink-soft); margin: 0 4px; flex: none; }
+  .sb-profile-school { font-size: 0.74rem; font-weight: 600; color: var(--ink-soft); min-width: 0; overflow: hidden; text-overflow: ellipsis; }
   .sb-profile-mypage-link { font-size: 0.68rem; font-weight: 700; color: var(--green-deep); margin-top: 3px; }
   .av-initial { background: var(--green-soft); color: var(--green-deep); }
-  .av-icon { background: var(--line); color: var(--ink-soft); }
-  .av-icon svg { width: 62%; height: 62%; }
   .av-photo { background: var(--line); }
   .av-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .mypage-profile-card {
@@ -118,16 +118,25 @@
   .mypage-photo-status { font-size: 0.76rem; color: var(--ink-soft); margin-top: 10px; max-width: 420px; }
   .mypage-photo-status.success { color: var(--green-deep); }
   .mypage-photo-status.error { color: #B3261E; }
-  .stu-gender-toggle { display: flex; gap: 6px; }
-  .stu-gender-opt {
-    display: flex; align-items: center; gap: 5px;
-    font-size: 0.84rem; font-weight: 600; color: var(--ink);
-    padding: 10px 14px; border: 1px solid var(--line-dark); border-radius: 8px;
-    cursor: pointer; background: var(--cream); white-space: nowrap;
-    transition: border-color 0.15s, background 0.15s;
+  /* "학생 계정 관리" 등록 폼(#studentAddForm)만 다른 곳의 .apply-field보다 훨씬 작고 좁게 —
+     한 줄에 아이디/비밀번호/학교/이름/생년월일/성별/버튼이 다 들어가는 좁은 툴바라서다. */
+  #studentAddForm .apply-field label { margin-bottom: 4px; }
+  #studentAddForm .apply-field input {
+    height: 34px; padding: 0 10px; font-size: 0.82rem; box-sizing: border-box;
   }
-  .stu-gender-opt:has(input:checked) { border-color: var(--green); background: var(--green-soft); color: var(--green-deep); }
-  .stu-gender-opt input { accent-color: var(--green); cursor: pointer; }
+  /* 성별 칸도 옆의 입력칸들과 높이·테두리가 똑같은 하나의 박스로 보이게 한다(각 옵션마다
+     따로 테두리를 두르지 않고, 박스 하나 안에 라디오 두 개를 나란히 둔다). */
+  .stu-gender-toggle {
+    display: flex; align-items: center; gap: 12px;
+    height: 34px; padding: 0 12px; box-sizing: border-box;
+    border: 1px solid var(--line-dark); border-radius: 8px; background: var(--cream);
+  }
+  .stu-gender-opt {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 0.82rem; font-weight: 600; color: var(--ink);
+    cursor: pointer; white-space: nowrap;
+  }
+  .stu-gender-opt input { accent-color: var(--green); cursor: pointer; margin: 0; }
 
   .sb-consult {
     display: block; width: 100%;
@@ -2925,8 +2934,9 @@
   <button type="button" class="sb-profile" onclick="go('mypage')">
     <div class="sb-profile-avatar" id="sbProfileAvatar">홀</div>
     <div class="sb-profile-info">
-      <div class="sb-profile-name" id="sbProfileName">학생</div>
-      <div class="sb-profile-school" id="sbProfileSchool"></div>
+      <div class="sb-profile-line1">
+        <span class="sb-profile-name" id="sbProfileName">학생</span><span class="sb-profile-sep" id="sbProfileSep"> / </span><span class="sb-profile-school" id="sbProfileSchool"></span>
+      </div>
       <div class="sb-profile-mypage-link">마이페이지 →</div>
     </div>
   </button>
@@ -4899,23 +4909,23 @@
           </div>
           <div class="admin-toolbar">
             <form id="studentAddForm" onsubmit="submitStudentAdd(event)" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; width:100%;">
-              <div class="apply-field" style="flex:1; min-width:110px; margin-bottom:0;">
+              <div class="apply-field" style="flex:none; width:100px; margin-bottom:0;">
                 <label for="stu-id">아이디</label>
                 <input type="text" id="stu-id" required>
               </div>
-              <div class="apply-field" style="flex:1; min-width:110px; margin-bottom:0;">
+              <div class="apply-field" style="flex:none; width:100px; margin-bottom:0;">
                 <label for="stu-pw">비밀번호</label>
                 <input type="text" id="stu-pw" required>
               </div>
-              <div class="apply-field" style="flex:1; min-width:130px; margin-bottom:0;">
+              <div class="apply-field" style="flex:none; width:120px; margin-bottom:0;">
                 <label for="stu-school">학교 (성인은 N수)</label>
                 <input type="text" id="stu-school" required>
               </div>
-              <div class="apply-field" style="flex:1; min-width:110px; margin-bottom:0;">
+              <div class="apply-field" style="flex:none; width:100px; margin-bottom:0;">
                 <label for="stu-name">학생 이름</label>
                 <input type="text" id="stu-name" required>
               </div>
-              <div class="apply-field" style="flex:1; min-width:130px; margin-bottom:0;">
+              <div class="apply-field" style="flex:none; width:120px; margin-bottom:0;">
                 <label for="stu-birth">생년월일</label>
                 <input type="text" id="stu-birth" placeholder="예: 2008-05-14" required>
               </div>
@@ -7778,21 +7788,14 @@
       renderSidebarProfile();
     } catch (e) { /* 무시 */ }
   }
-  // 회색 남학생/여학생 아이콘 — 사진을 아직 안 올린 학생의 기본 아바타로 쓴다. 머리(원)는
-  // 공통이고, 몸통 모양만 다르게(남: 각진 몸통 / 여: 치마 실루엣) 구분한다.
-  const AVATAR_ICON_MALE = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7" r="4"/><rect x="6" y="13" width="12" height="9" rx="3"/></svg>';
-  const AVATAR_ICON_FEMALE = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7" r="4"/><path d="M9.5 13h5l4 9H5.5Z"/></svg>';
-  // 아바타 한 칸을 사진 > 성별 아이콘 > 이름 첫 글자 순으로 채운다(사진을 올렸으면 사진이
-  // 최우선, 성별만 있으면 회색 아이콘, 둘 다 없으면(예전 계정) 이니셜로 대체).
-  function renderAvatarInto(el, name, gender, photo) {
+  // 아바타 한 칸을 사진 > 이름 첫 글자(성) 순으로 채운다 — 사진을 올렸으면 사진이 최우선,
+  // 안 올렸으면 이름 첫 글자(예: "송의준" → "송")로 대체한다.
+  function renderAvatarInto(el, name, photo) {
     if (!el) return;
-    el.classList.remove("av-photo", "av-icon", "av-initial");
+    el.classList.remove("av-photo", "av-initial");
     if (photo) {
       el.innerHTML = '<img src="' + photo + '" alt="프로필 사진">';
       el.classList.add("av-photo");
-    } else if (gender === "male" || gender === "female") {
-      el.innerHTML = gender === "male" ? AVATAR_ICON_MALE : AVATAR_ICON_FEMALE;
-      el.classList.add("av-icon");
     } else {
       el.textContent = name ? name.charAt(0) : "홀";
       el.classList.add("av-initial");
@@ -7802,20 +7805,20 @@
   function renderSidebarProfile() {
     const name = localStorage.getItem("holoStudentName") || "";
     const school = localStorage.getItem("holoStudentSchool") || "";
-    const gender = localStorage.getItem("holoStudentGender") || "";
     const photo = localStorage.getItem("holoStudentPhoto") || "";
     const nameEl = document.getElementById("sbProfileName");
     const schoolEl = document.getElementById("sbProfileSchool");
+    const sepEl = document.getElementById("sbProfileSep");
     const avatarEl = document.getElementById("sbProfileAvatar");
     if (nameEl) nameEl.textContent = name || "학생";
     if (schoolEl) schoolEl.textContent = school;
-    renderAvatarInto(avatarEl, name, gender, photo);
+    if (sepEl) sepEl.style.display = school ? "" : "none"; // 학교 정보가 없으면 "/" 구분자도 숨긴다
+    renderAvatarInto(avatarEl, name, photo);
   }
   function initMypage() {
     const name = localStorage.getItem("holoStudentName") || "";
     const school = localStorage.getItem("holoStudentSchool") || "";
     const id = localStorage.getItem("holoStudentId") || "";
-    const gender = localStorage.getItem("holoStudentGender") || "";
     const photo = localStorage.getItem("holoStudentPhoto") || "";
     const nameEl = document.getElementById("mypageName");
     const schoolEl = document.getElementById("mypageSchool");
@@ -7824,7 +7827,7 @@
     if (nameEl) nameEl.textContent = name || "학생";
     if (schoolEl) schoolEl.textContent = school;
     if (idEl) idEl.textContent = id ? "아이디: " + id : "";
-    renderAvatarInto(avatarEl, name, gender, photo);
+    renderAvatarInto(avatarEl, name, photo);
     const statusEl = document.getElementById("mypagePhotoStatus");
     if (statusEl) { statusEl.textContent = ""; statusEl.className = "mypage-photo-status"; }
   }
