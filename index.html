@@ -572,8 +572,11 @@
      빼고 내용물 높이 그대로 쓴다. */
   /* max-height도 같이 걸어서, 챗봇 대화가 쌓여도 이 행 자체가 계속 커지지 않고 여기서
      멈추게 한다 — 그래야 안에 있는 .chat-wrap(flex:1;overflow-y:auto)이 "정해진 높이"를
-     갖게 되어 박스가 늘어나는 대신 그 안에서만 스크롤된다. */
+     갖게 되어 박스가 늘어나는 대신 그 안에서만 스크롤된다.
+     .sched-chat-col 자체에도 똑같이 max-height를 걸어둔다 — 행(row)의 auto-height 계산이
+     늘어난 자식(챗봇 칸)의 내용물 크기를 그대로 반영해버리는 경우까지 막아주는 이중 안전장치. */
   #view-plannerPage .sched-manage-layout { min-height: 0; max-height: 620px; }
+  #view-plannerPage .sched-chat-col { max-height: 620px; }
   .pp-layout.sched-manage-layout { --pp-left-w: 230px; }
   .pp-layout .sched-left-col { flex: 0 0 var(--pp-left-w); }
   .pp-plan-inner { gap: 10px; }
@@ -3026,7 +3029,7 @@
         <span class="hn-title">나에게 맞는 학습 상담 알아보기</span> <span class="hn-arrow">›</span>
       </button>
       <button type="button" class="home-nav-btn" onclick="go('examhub')">
-        <span class="hn-title">우리 동네 내신 기출 공부하기</span> <span class="hn-arrow">›</span>
+        <span class="hn-title">타이머 & 스톱워치</span> <span class="hn-arrow">›</span>
       </button>
     </div>
 
@@ -3507,7 +3510,7 @@
   <section class="view" id="view-examhub">
     <div class="chat-head">
       <span class="eyebrow">EXAM</span>
-      <h2>우리 동네 내신 기출 공부하기</h2>
+      <h2>타이머 & 스톱워치</h2>
       <div class="split"></div>
     </div>
     <div class="hub-page-wrap">
@@ -5006,7 +5009,7 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 & 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 & 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 & 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "플래너 작성하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "우리 동네 내신 기출 공부하기", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 & 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 & 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 & 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "플래너 작성하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "타이머 & 스톱워치", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { mathexam: "exam", engexam: "exam" };
   // "← 이전으로"가 상단 흰색 바(topbar)의 제목 오른쪽에 뜨는 페이지들과, 각각이 돌아갈 곳.
   const BACK_TARGET = {
