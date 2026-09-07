@@ -2616,6 +2616,9 @@
 
   .planner-dual { display: flex; gap: 20px; flex: 1; min-height: 0; }
   .planner-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  /* 아직 최초 계획을 안 세운 상태(게이트 팝업)에서는 읽기 전용 "최초 계획" 칸을 숨기고,
+     편집 가능한 칸 하나만 "최초 계획"이라는 이름으로 보여준다(renderPlanner() 참고). */
+  #plannerBody.pp-initial-mode .planner-col-original { display: none; }
   .planner-col-head {
     font-size: 0.7rem; font-weight: 800; color: var(--ink); letter-spacing: 0.03em;
     padding-bottom: 6px; border-bottom: 1px solid var(--line);
@@ -4354,7 +4357,7 @@
         <div class="plan-gate-modal" id="planGateModal">
           <a class="plan-gate-home-link" href="#" onclick="closePlanGateToHome();return false;">← 뒤로가기</a>
           <h2>오늘의 플래너를 작성해주세요!</h2>
-          <p class="plan-gate-hint">플래너를 작성해야 공부 일기와 홀로AI를 이용할 수 있어요.<br>아래에서 오늘 세울 계획을 과목·내용별로 입력해주세요.</p>
+          <p class="plan-gate-hint">금일 플래너를 작성해야 공부 일기와 홀로AI를 이용할 수 있어요. 언제든 수정 가능합니다!</p>
           <div id="planGateBody"></div>
           <button type="button" class="plan-gate-submit-btn" onclick="confirmPlanGateDone()">계획 다 세웠어요, 시작하기 →</button>
         </div>
@@ -6305,7 +6308,11 @@
     const activeItems = planItems.filter(it => it.active);
     const total = activeItems.length;
     const done = activeItems.filter(it => it.done).length;
-    document.getElementById("plannerProgLabel").textContent = "계획 수정하면서 공부하기";
+    // 아직 최초 계획을 안 세운 상태(게이트 팝업 안)에서는 "최초 계획" 칸(읽기 전용)을 숨기고
+    // 이 칸(원래 "계획 수정하면서 공부하기") 하나만 "최초 계획"이라는 이름으로 보여준다 —
+    // 어차피 이때 넣는 항목이 곧 최초 계획이 되므로, 두 칸으로 나눌 이유가 없다.
+    document.getElementById("plannerBody").classList.toggle("pp-initial-mode", !initialPlanLocked);
+    document.getElementById("plannerProgLabel").textContent = initialPlanLocked ? "계획 수정하면서 공부하기" : "최초 계획";
     document.getElementById("plannerCountBadge").textContent = done + "/" + total;
 
     renderPlannerOriginal();
