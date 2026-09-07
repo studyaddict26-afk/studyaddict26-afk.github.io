@@ -620,6 +620,15 @@
   .pp-cal-cell.selected { background: var(--ink); color: #fff; }
   .pp-cal-cell.disabled { color: var(--line-dark); cursor: default; }
   .pp-cal-cell.empty { visibility: hidden; }
+  /* 계획 상담 챗봇 말풍선 안에 바로 뜨는 계획 입력 카드 — AI가 날짜를 확정하면 뜬다. */
+  .pp-chat-plan-card {
+    background: var(--cream); border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 16px; margin-top: 6px; max-width: 420px;
+  }
+  .pp-chat-plan-date { font-size: 0.78rem; font-weight: 800; color: var(--ink); text-align: center; margin-bottom: 10px; }
+  .pp-chat-plan-blocks { display: flex; flex-direction: column; gap: 10px; }
+  .pp-chat-plan-blocks .planner-block-head { font-size: 0.74rem; }
+  .pp-chat-plan-blocks .planner-task-text { font-size: 0.74rem; }
   .sched-chat-col {
     flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column;
     background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
@@ -5371,7 +5380,7 @@
     loadPpDate(today);
   }
 
-  function loadPpDate(dateStr) {
+  function loadPpDate(dateStr, onDone) {
     ppSelectedDate = dateStr;
     const dateEl = document.getElementById("ppSidebarDate");
     if (dateEl) {
@@ -5390,6 +5399,7 @@
           ppPlanItems = data.items || [];
           ppDateHadItemsOnLoad = ppPlanItems.some(it => it.active);
           renderPpPlanBlocks();
+          if (onDone) onDone();
         })
         .catch(err => console.error(err));
       return;
@@ -5512,15 +5522,93 @@
     const item = ppPlanItems.find(it => it.id === id);
     if (!item) return;
     item.done = item.done ? 0 : 1;
-    renderPpPlanBlocks();
+    refreshAllPpPlanViews();
     planApi({ action: "plan_toggle", itemId: id }).catch(err => console.error(err));
   }
   function deletePpPlanItem(id) {
     const item = ppPlanItems.find(it => it.id === id);
     if (!item) return;
     item.active = 0;
-    renderPpPlanBlocks();
+    refreshAllPpPlanViews();
     planApi({ action: "plan_delete", itemId: id }).catch(err => console.error(err));
+  }
+
+  // ── 계획 상담 챗봇 안에서 바로 계획을 입력하는 카드 ──
+  // AI가 날짜를 확정하면(오늘이든, "나중" 대화로 확인받은 날짜든) 답변에 실려온 PLAN_DATE_JSON을
+  // 보고 이 카드를 채팅 말풍선 안에 띄운다 — 왼쪽 사이드바와 같은 데이터(ppPlanItems)를 쓰되,
+  // 여러 카드가 동시에 대화에 남아있을 수 있어 각자 고유 번호(seq)로 자기 몫만 다시 그린다.
+  let ppChatFormSeq = 0;
+  const ppChatFormSeqs = [];
+  function refreshAllPpPlanViews() {
+    renderPpPlanBlocks();
+    ppChatFormSeqs.forEach(seq => renderPpChatPlanBlocks(seq));
+  }
+  function showPpChatPlanForm(dateStr) {
+    if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return;
+    ppChatFormSeq++;
+    const seq = ppChatFormSeq;
+    ppChatFormSeqs.push(seq);
+    const [y, m, d] = dateStr.split("-").map(Number);
+    const dateLabel = y + "년 " + String(m).padStart(2, "0") + "월 " + String(d).padStart(2, "0") + "일 (" + WEEKDAY_LABELS[new Date(y, m - 1, d).getDay()] + ")";
+    const html =
+      '<div class="pp-chat-plan-card">' +
+        '<div class="pp-chat-plan-date">' + escapeHtml(dateLabel) + '</div>' +
+        '<div class="pp-chat-plan-blocks" id="ppChatPlanBlocks-' + seq + '">' +
+          '<div class="planner-orig-empty">불러오는 중...</div>' +
+        '</div>' +
+      '</div>';
+    addMsg("plan", "bot", html);
+    // 왼쪽 사이드바/달력도 이 날짜로 같이 전환하고, 그 데이터가 준비되면 이 카드도 채운다.
+    loadPpDate(dateStr, () => renderPpChatPlanBlocks(seq));
+  }
+  function renderPpChatPlanBlocks(seq) {
+    const wrap = document.getElementById("ppChatPlanBlocks-" + seq);
+    if (!wrap) return;
+    wrap.innerHTML = PLAN_BLOCKS.map(block => {
+      const items = ppPlanItems.filter(it => it.block === block && it.active);
+      const rows = items.map(it =>
+        '<div class="planner-task-row' + (it.done ? ' done' : '') + '" data-id="' + it.id + '">' +
+          '<div class="planner-task-check" onclick="togglePpPlanItem(' + it.id + ')"></div>' +
+          '<span class="planner-task-text">' +
+            (it.subject ? '<span class="planner-task-subject">[' + escapeHtml(it.subject) + ']</span> ' : '') +
+            escapeHtml(it.text) +
+          '</span>' +
+          '<button type="button" class="planner-task-del" onclick="deletePpPlanItem(' + it.id + ')" aria-label="삭제">×</button>' +
+        '</div>'
+      ).join("");
+      return '<div class="planner-block" data-block="' + block + '">' +
+        '<div class="planner-block-head-row"><span class="planner-block-head">' + block + '</span></div>' +
+        '<div class="planner-tasks">' + rows +
+          '<div class="planner-task-row planner-task-new">' +
+            '<div class="planner-task-check-ghost"></div>' +
+            '<input type="text" class="planner-new-subject-input" id="ppChatSubject-' + seq + '-' + block + '" placeholder="과목" ' +
+              'onkeydown="if(event.key===\'Enter\'){submitPpChatRow(' + seq + ',\'' + block + '\');event.preventDefault();}">' +
+            '<input type="text" class="planner-new-content-input" id="ppChatContent-' + seq + '-' + block + '" placeholder="내용" ' +
+              'onkeydown="if(event.key===\'Enter\'){submitPpChatRow(' + seq + ',\'' + block + '\');event.preventDefault();}">' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join("");
+  }
+  function submitPpChatRow(seq, block) {
+    const subjInput = document.getElementById("ppChatSubject-" + seq + "-" + block);
+    const contInput = document.getElementById("ppChatContent-" + seq + "-" + block);
+    if (!subjInput || !contInput) return;
+    const subject = subjInput.value.trim();
+    const content = contInput.value.trim();
+    if (!subject || !content) { showToast("과목과 내용을 모두 입력해주세요."); return; }
+    const studentId = localStorage.getItem("holoStudentId");
+    if (!studentId) return;
+    const isInitial = !ppDateHadItemsOnLoad;
+    planApi({ action: "plan_add", date: ppSelectedDate, block: block, text: content, subject: subject, isInitial: isInitial })
+      .then(data => {
+        if (!data.ok) return;
+        ppPlanItems.push({ id: Number(data.id), block: block, subject: subject, text: content, original_text: content, done: 0, active: 1, is_initial: isInitial ? 1 : 0 });
+        refreshAllPpPlanViews();
+        const el = document.getElementById("ppChatSubject-" + seq + "-" + block);
+        if (el) el.focus();
+      })
+      .catch(err => console.error(err));
   }
 
   // 특이사항 메모(오늘 계획에 참고할 특이사항) — "오늘의 학습 기록" 안에 있는 것과 같은 값을 보여주는
@@ -6825,6 +6913,9 @@
           chatHistory[subject].push({ role: "assistant", content: data.answer });
           t.querySelector(".bubble").innerHTML = formatAiAnswer(data.answer);
           document.getElementById("chat-" + subject).scrollTop = 1e9;
+          // "plan" 챗봇이 날짜를 확정하면(오늘이든, "나중" 대화로 확인받은 날짜든) 답변에
+          // planDate가 실려오는데, 그러면 바로 이어서 계획 입력 카드를 띄운다.
+          if (subject === "plan" && data.planDate) showPpChatPlanForm(data.planDate);
         })
         .catch(err => {
           console.error(err);
