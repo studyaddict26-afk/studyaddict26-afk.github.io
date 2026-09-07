@@ -574,7 +574,8 @@
   .pp-plan-blocks .planner-task-text { font-size: 0.72rem; }
   .pp-plan-blocks .planner-orig-empty { font-size: 0.72rem; color: var(--ink-soft); padding: 2px 0; }
   .pp-note-box { flex: none; }
-  .pp-note-box .planner-special-note-input { min-height: 40px; }
+  .pp-note-box .planner-special-note-input { min-height: 26px; }
+  .pp-note-box .planner-special-note-input::placeholder { font-size: 0.68rem; }
   /* 시간표 박스(.sched-timetable-box)는 원래 남는 세로 공간을 다 채우도록 flex:1인데,
      달력은 사진과 달리 내용물 높이가 정해져 있어서 그대로 두면 박스 안쪽에 빈 공간이
      남는다 — 이 페이지에서는 내용물 크기 그대로 박스가 딱 맞게 감싸도록 한다. */
@@ -3454,7 +3455,7 @@
             </div>
             <div class="pp-note-box">
               <div class="planner-special-note-label">&lt;특이사항 메모&gt;</div>
-              <textarea id="ppSpecialNoteInput" class="planner-special-note-input" placeholder="가족 일정 있어서 공부 시간 부족" oninput="schedulePpSpecialNoteSave()"></textarea>
+              <textarea id="ppSpecialNoteInput" class="planner-special-note-input" placeholder="예시: 가족 일정 있어서 공부 시간 부족" oninput="schedulePpSpecialNoteSave()"></textarea>
             </div>
           </aside>
 
