@@ -532,16 +532,20 @@
     display: flex; flex-direction: column;
   }
   .home-schedule-head { display: flex; align-items: center; justify-content: center; }
+  /* 이 크림색 안쪽 박스는 "오늘의 학습 기록" 카드 높이에 맞춰 늘 같은 세로 길이를 유지한다
+     (min-height:0 + overflow-y:auto) — 스케줄 로그나 플래너 목록이 아무리 길어져도 이 박스
+     자체는 커지지 않고, 안쪽에서만 스크롤된다. */
   .home-schedule-inner {
     background: var(--cream); border-radius: 8px;
-    padding: 10px 12px; margin-top: 10px; flex: 1;
+    padding: 10px 12px; margin-top: 10px; flex: 1; min-height: 0;
     box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-start;
+    overflow-y: auto;
   }
-  .home-schedule-date { font-size: 0.74rem; font-weight: 700; color: var(--ink); margin: 0 0 10px; text-align: center; }
+  .home-schedule-date { font-size: 0.74rem; font-weight: 700; color: var(--ink); margin: 0 0 10px; text-align: center; flex: none; }
   .home-schedule-log {
     list-style: none; margin: 0; padding: 0;
     display: grid; grid-template-columns: auto auto; column-gap: 5px; row-gap: 6px;
-    flex: 1; align-content: center; justify-content: center;
+    flex: 1; min-height: 0; align-content: center; justify-content: center;
   }
   .home-schedule-log li { display: contents; }
   .home-schedule-log li.sched-empty-msg { display: block; grid-column: 1 / -1; text-align: center; }
@@ -558,9 +562,9 @@
   .home-schedule-title .arrow { color: var(--green); font-weight: 800; transition: transform 0.15s; }
   .home-schedule-title:hover .arrow { transform: translateX(2px); }
   /* 홈 화면 "내 플래너 관리하기" 박스 안, 오늘 계획을 오전/오후/저녁으로 간단히 보여주는 목록 */
-  .home-planner-blocks { display: flex; flex-direction: column; flex: 1; justify-content: center; }
+  .home-planner-blocks { display: flex; flex-direction: column; flex: 1; min-height: 0; justify-content: center; }
   .hps-block { display: flex; flex-direction: column; gap: 4px; flex: none; }
-  .hps-title { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; color: var(--ink-soft); }
+  .hps-title { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em; color: var(--ink-soft); }
   .hps-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; flex: none; }
   .hps-list li { font-size: 0.78rem; color: var(--ink); min-height: 15px; padding-left: 13px; position: relative; }
   .hps-list li::before { content: "•"; position: absolute; left: 0; color: var(--ink-soft); }
@@ -3053,7 +3057,7 @@
             <span class="rh-tile-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z" stroke-linejoin="round"/><path d="M4 9h16M9 4v16"/></svg>
             </span>
-            <span class="rh-tile-title">오늘의 학습 기록</span>
+            <span class="rh-tile-title" id="rhTileTitle">오늘의 학습 기록</span>
           </span>
           <span class="rh-tile-head-right">
             <span class="rh-tile-arrow">›</span>
@@ -3062,7 +3066,7 @@
         <div class="rh-tile-status-wrap">
           <div class="rh-tile-status">
             <div class="rh-tile-status-row">
-              <span class="rh-tile-status-label">오늘의 계획</span>
+              <span class="rh-tile-status-label">실제로 이행한 계획</span>
               <span class="rh-tile-status-val pending" id="rhTileStatus-plan">확인 중…</span>
             </div>
             <div class="rh-tile-status-row">
@@ -3070,7 +3074,7 @@
               <span class="rh-tile-status-val pending" id="rhTileStatus-diary">확인 중…</span>
             </div>
             <div class="rh-tile-status-row">
-              <span class="rh-tile-status-label">AI 홀로</span>
+              <span class="rh-tile-status-label">AI 홀로 질의응답</span>
               <span class="rh-tile-status-val pending" id="rhTileStatus-chat">확인 중…</span>
             </div>
           </div>
@@ -5066,7 +5070,10 @@
     document.getElementById("view-" + view).classList.add("on");
     document.querySelectorAll(".sb-item").forEach(b =>
       b.classList.toggle("active", b.dataset.view === view));
-    document.getElementById("viewTitle").textContent = titles[view];
+    // "오늘의 학습 기록" 페이지는 홈 화면 카드와 같은 방식으로 제목에 날짜를 실어 보여준다
+    // (새벽 6시 기준 학습일 — formatStudyDateShort() 참고).
+    document.getElementById("viewTitle").textContent =
+      view === "todayrecord" ? formatStudyDateShort() + " 오늘의 공부" : titles[view];
     const backLink = document.getElementById("topbarBackLink");
     if (backLink) backLink.style.display = BACK_TARGET[view] ? "" : "none";
     document.body.classList.toggle("is-admin", view === "admin" || view === "form");
@@ -5192,13 +5199,19 @@
   }
 
   // ── 오늘의 학습 기록 (플래너+챗봇+일기 통합) ──
+  // 여기서 쓰는 "오늘"은 새벽 6시가 지나야 넘어가는 학습일 기준이다(getLocalDateKey() 참고) —
+  // 그래야 실제로 보여주는 계획/일기 데이터의 날짜와 화면에 적힌 날짜가 항상 일치한다.
+  // 매분 다시 계산해서, 새벽 6시를 넘기는 순간 페이지를 새로고침 안 해도 날짜가 자동으로 바뀐다.
   function updateRecordDate() {
-    const d = new Date();
+    const d = getStudyDate();
     const pad = n => String(n).padStart(2, "0");
     const WEEKDAY_KO = ["일", "월", "화", "수", "목", "금", "토"];
     const text = String(d.getFullYear()).slice(-2) + "년 " + pad(d.getMonth() + 1) + "월 " + pad(d.getDate()) + "일 " + WEEKDAY_KO[d.getDay()] + "요일";
     const el = document.getElementById("recordDate");
     if (el) el.textContent = text;
+    // 홈 화면 "오늘의 학습 기록" 카드 제목도 같은 기준으로 "MM월 DD일 오늘의 공부"로 표시한다.
+    const titleEl = document.getElementById("rhTileTitle");
+    if (titleEl) titleEl.textContent = pad(d.getMonth() + 1) + "월 " + pad(d.getDate()) + "일 오늘의 공부";
   }
   updateRecordDate();
   setInterval(updateRecordDate, 60 * 1000);
@@ -5777,9 +5790,36 @@
   const PLAN_BLOCKS = ["오전", "오후", "저녁"];
   let planItems = [];
 
+  // 계획/일기/AI홀로 등 "학습 기록"의 하루는 자정이 아니라 새벽 6시에 넘어간다 — 자정~새벽
+  // 5시59분까지는 전날로 취급한다(예: 9/8 05:59까지는 "2026-09-07", 9/8 06:00부터 "2026-09-08").
+  // 새벽 6시가 지나면 그동안 쌓인 계획·일기·AI홀로 기록은 자연스럽게 "누적된 학습 기록"으로
+  // 넘어가고(그 날짜로 이미 저장돼 있으므로) "오늘의 학습 기록"에는 새 빈 하루가 나타난다.
+  // 서버(valtown.ts)의 kstTodayStr()도 반드시 같은 규칙이어야 한다 — 하나만 고치면 프론트가
+  // 보내는 날짜와 서버가 아는 "오늘"이 어긋난다.
   function getLocalDateKey() {
     const d = new Date();
+    if (d.getHours() < 6) d.setDate(d.getDate() - 1);
     return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+  // 새벽 6시 기준을 적용하지 않는 순수 달력 날짜(자정 기준) — 스케줄 입/퇴실 체크나 자동
+  // 로그아웃(자정 지나면 세션 만료)처럼 실제 달력상의 "그날"이 중요한 곳에서만 쓴다.
+  function getCalendarDateKey() {
+    const d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+  // getLocalDateKey()가 가리키는 "학습일"을 Date 객체로 돌려준다(요일 등, 날짜 표시용).
+  function getStudyDate() {
+    const [y, m, dd] = getLocalDateKey().split("-").map(Number);
+    return new Date(y, m - 1, dd);
+  }
+  function formatStudyDateLabel() {
+    const d = getStudyDate();
+    return d.getFullYear() + "년 " + (d.getMonth() + 1) + "월 " + d.getDate() + "일 (" + WEEKDAY_LABELS[d.getDay()] + ")";
+  }
+  function formatStudyDateShort() {
+    const d = getStudyDate();
+    const pad = n => String(n).padStart(2, "0");
+    return pad(d.getMonth() + 1) + "월 " + pad(d.getDate()) + "일";
   }
 
   function planApi(payload) {
@@ -5838,7 +5878,7 @@
     const logEl = document.getElementById("homeScheduleLog");
     if (dateEl) dateEl.textContent = formatTodayDateLabel();
     if (!logEl) return;
-    planApi({ action: "schedule_today", date: getLocalDateKey(), weekday: getTodayWeekday() })
+    planApi({ action: "schedule_today", date: getCalendarDateKey(), weekday: getTodayWeekday() })
       .then(data => renderScheduleEventList(logEl, data.events))
       .catch(() => { /* 조회 실패 시 기본 예시를 그대로 둔다 */ });
   }
@@ -5855,7 +5895,7 @@
   }
   function loadHomePlannerToday() {
     const dateEl = document.getElementById("homePlannerDate");
-    if (dateEl) dateEl.textContent = formatTodayDateLabel();
+    if (dateEl) dateEl.textContent = formatStudyDateLabel(); // 새벽 6시 기준 "오늘"(학습일)
     const studentId = localStorage.getItem("holoStudentId");
     if (!studentId) return;
     planApi({ action: "plan_list", date: getLocalDateKey() })
@@ -5873,7 +5913,7 @@
     if (dateEl) dateEl.textContent = formatTodayDateLabel();
     const sidebarEl = document.getElementById("schedSidebarEvents");
     if (sidebarEl) {
-      planApi({ action: "schedule_today", date: getLocalDateKey(), weekday: getTodayWeekday() })
+      planApi({ action: "schedule_today", date: getCalendarDateKey(), weekday: getTodayWeekday() })
         .then(data => renderSchedSidebarEvents(sidebarEl, data.events))
         .catch(() => { sidebarEl.innerHTML = SCHED_SIDEBAR_BLANK_TEMPLATE; });
     }
@@ -6968,6 +7008,9 @@
           messages: chatHistory[subject],
           studentId: localStorage.getItem("holoStudentId") || null,
           image: imagePayload,
+          // "AI 홀로" 사용도 계획/일기와 같은 새벽 6시 기준 학습일로 묶이도록, 이 메시지가
+          // 속한 날짜를 같이 보낸다(서버는 이 값을 holo_worries.chat_date에 저장한다).
+          date: getLocalDateKey(),
         }),
       })
         .then(res => res.json())
@@ -7704,7 +7747,7 @@
       }
       localStorage.setItem("holoStudentId", id);
       localStorage.setItem("holoStudentPw", pw);
-      localStorage.setItem("holoStudentLoginDate", getLocalDateKey());
+      localStorage.setItem("holoStudentLoginDate", getCalendarDateKey());
       storeStudentJoinYm(doc.data());
       hideStudentGate();
       go("home");
@@ -7850,7 +7893,7 @@
   // 남아있지 않도록, 로그인한 "날짜"가 오늘이 아니면(자정이 지나면) 자동 로그아웃시킨다.
   function isStudentSessionExpired() {
     const loginDate = localStorage.getItem("holoStudentLoginDate");
-    return loginDate !== getLocalDateKey();
+    return loginDate !== getCalendarDateKey();
   }
   function checkStudentSession() {
     const id = localStorage.getItem("holoStudentId");
