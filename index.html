@@ -141,6 +141,30 @@
   .mypage-field-status { font-size: 0.76rem; color: var(--ink-soft); margin-top: 8px; }
   .mypage-field-status.success { color: var(--green-deep); }
   .mypage-field-status.error { color: #B3261E; }
+
+  /* ── 우리 독서실 랭킹 ── */
+  .ranking-desc { font-size: 0.8rem; color: var(--ink-soft); margin: 4px 0 16px; max-width: 480px; line-height: 1.5; }
+  .ranking-tabs { display: flex; gap: 8px; margin-bottom: 14px; }
+  .ranking-tab-btn {
+    font-family: inherit; font-size: 0.86rem; font-weight: 700; color: var(--ink-soft);
+    background: var(--cream); border: 1px solid var(--line); border-radius: 999px;
+    padding: 8px 18px; cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .ranking-tab-btn:hover { border-color: var(--green); }
+  .ranking-tab-btn.active { background: var(--green-deep); color: #fff; border-color: var(--green-deep); }
+  .ranking-my-status { font-size: 0.8rem; font-weight: 600; color: var(--green-deep); margin-bottom: 12px; min-height: 1.2em; }
+  .ranking-list { display: flex; flex-direction: column; gap: 6px; max-width: 480px; }
+  .ranking-row {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 10px;
+    padding: 10px 16px;
+  }
+  .ranking-row.me { border-color: var(--green); background: var(--green-soft); }
+  .ranking-rank { flex: none; width: 28px; font-size: 0.9rem; font-weight: 800; color: var(--ink-soft); text-align: center; }
+  .ranking-nickname { flex: 1; min-width: 0; font-size: 0.88rem; font-weight: 700; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ranking-score { flex: none; font-size: 0.86rem; font-weight: 800; color: var(--green-deep); }
+  .ranking-empty { font-size: 0.82rem; color: var(--ink-soft); padding: 20px 0; text-align: center; }
+
   /* "학생 계정 관리" 등록 폼(#studentAddForm)만 다른 곳의 .apply-field보다 훨씬 작고 좁게 —
      한 줄에 아이디/비밀번호/학교/이름/생년월일/성별/버튼이 다 들어가는 좁은 툴바라서다. */
   #studentAddForm .apply-field label { margin-bottom: 4px; }
@@ -5129,7 +5153,7 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 & 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 & 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 & 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "내 플래너 관리하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "타이머 & 스톱워치", mypage: "마이페이지", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 & 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 & 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 & 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "내 플래너 관리하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "타이머 & 스톱워치", ranking: "우리 독서실 랭킹", mypage: "마이페이지", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { mathexam: "exam", engexam: "exam" };
   // "← 이전으로"가 상단 흰색 바(topbar)의 제목 오른쪽에 뜨는 페이지들과, 각각이 돌아갈 곳.
   const BACK_TARGET = {
@@ -5175,6 +5199,7 @@
     if (view === "home") { loadTodayTileStatus(); loadHomeScheduleToday(); loadHomePlannerToday(); }
     if (view === "recordhub") { loadRecordHubStatus(); setRhCumWeekLabel(); loadRhWeekScore(); }
     if (view === "scheduleManage") loadScheduleManage();
+    if (view === "ranking") switchRankingTab("today"); // 매번 "오늘의 랭킹" 탭부터 새로 불러온다
   }
 
   // ── '내 학습 기록 살펴보기' 허브: '누적된 학습 기록' 카드의 "이번 주" 라벨 + 주간 누적 점수 평균 ──
