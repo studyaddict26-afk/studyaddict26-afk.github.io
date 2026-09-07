@@ -5378,16 +5378,36 @@
         .catch(err => console.error(err));
       return;
     }
-    // 지난 날짜 — 편집 없이, 그날 정리된(또는 즉석 계산된) 계획 내용만 읽기 전용으로 보여준다.
+    // 지난 날짜 — 편집 없이, 오전/오후/저녁 형태 그대로(글로 풀어쓰지 않고) 읽기 전용으로 보여준다.
+    // 항목이 없는 블록은 "기록 없음" 문구 없이 그냥 헤더만 있고 비어있는 채로 둔다.
     wrap.innerHTML = '<div class="planner-orig-empty">불러오는 중...</div>';
-    planApi({ action: "day_detail", date: dateStr })
+    planApi({ action: "plan_list", date: dateStr })
       .then(data => {
-        wrap.innerHTML = '<div class="day-detail-body">' + escapeHtml(data.plan || data.error || "기록이 없어요.") + '</div>';
+        renderPpPlanBlocksReadOnly(data.items || []);
       })
       .catch(err => {
         console.error(err);
         wrap.innerHTML = '<div class="day-detail-body">불러오지 못했어요.</div>';
       });
+  }
+  // 지난 날짜용 — 헤더(오전/오후/저녁)만 있고, 항목이 있으면 텍스트로만(체크박스·삭제·추가 버튼 없이) 보여준다.
+  function renderPpPlanBlocksReadOnly(items) {
+    const wrap = document.getElementById("ppPlanBlocks");
+    if (!wrap) return;
+    wrap.innerHTML = PLAN_BLOCKS.map(block => {
+      const rows = items.filter(it => it.block === block && it.active).map(it =>
+        '<div class="planner-task-row' + (it.done ? ' done' : '') + '">' +
+          '<span class="planner-task-text">' +
+            (it.subject ? '<span class="planner-task-subject">[' + escapeHtml(it.subject) + ']</span> ' : '') +
+            escapeHtml(it.text) +
+          '</span>' +
+        '</div>'
+      ).join("");
+      return '<div class="planner-block" data-block="' + block + '">' +
+        '<div class="planner-block-head-row"><span class="planner-block-head">' + block + '</span></div>' +
+        '<div class="planner-tasks">' + rows + '</div>' +
+      '</div>';
+    }).join("");
   }
 
   // 오늘 날짜일 때만 호출된다 — "+ 추가하기"·삭제·완료 체크 등 실제 편집 UI.
