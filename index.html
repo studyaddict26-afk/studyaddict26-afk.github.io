@@ -770,11 +770,9 @@
   .home-status-card.done .home-status-state {
     color: var(--green-deep); background: var(--green-soft); border-color: #CFE3D6;
   }
-  p.home-status-desc { font-size: 0.7rem; color: var(--ink-soft); line-height: 1.6; margin: 0; white-space: nowrap; }
   @media (max-width: 760px) {
     .home-promo-slot { flex-direction: column; }
     .home-promo-video { aspect-ratio: auto; padding: 40px 22px; }
-    .home-status-desc { white-space: normal; }
   }
 
   /* ── 작은 허브 페이지 (내 학습 기록 / 우리 동네 내신 기출) ── */
@@ -3083,7 +3081,6 @@
             <span class="home-status-title">하루의 시작, 플래너 작성하기 <span class="arrow">→</span></span>
             <span class="home-status-state" id="homeStatus-plan-state">미제출</span>
           </div>
-          <p class="home-status-desc">학습 플래너 작성은 필수입니다. 하루 공부를 시작하기 전, 오늘의 계획을 세워주세요.</p>
         </button>
         <div class="home-status-divider"></div>
         <button type="button" class="home-status-card" id="homeStatus-diary-card" onclick="go('todayrecord')">
@@ -3092,7 +3089,6 @@
             <span class="home-status-title">하루의 마무리, 공부일기 작성하기 <span class="arrow">→</span></span>
             <span class="home-status-state" id="homeStatus-diary-state">미제출</span>
           </div>
-          <p class="home-status-desc">공부일기 작성은 필수입니다. 하루 공부를 마무리하며, 오늘의 공부일기를 작성해주세요.</p>
         </button>
       </div>
       <div class="home-schedule-box">
