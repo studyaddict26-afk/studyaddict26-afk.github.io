@@ -506,7 +506,9 @@
   .home-promo-slot .home-promo-box {
     flex: 0 1 calc((100% - 36px) / 4);
   }
-  .home-promo-slot .home-status-box {
+  /* "오늘의 학습 기록" 카드(recordhub의 .rh-tile을 그대로 재사용)를 이 자리에서는
+     예전 상태 박스와 같은 폭(버튼 2개 폭 + gap)으로 맞춘다. */
+  .home-promo-slot .rh-tile {
     flex: 0 1 calc((100% - 36px) / 2 + 12px);
   }
   .home-promo-video, .home-promo-box {
@@ -743,33 +745,6 @@
   .sched-modal-close:hover { color: var(--ink); }
   .sched-modal h3 { font-size: 0.94rem; font-weight: 800; margin: 0 0 16px 0; padding-right: 24px; }
 
-  .home-status-box {
-    flex: 2 1 0; min-width: 0;
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 14px 20px;
-    display: flex; flex-direction: column; justify-content: flex-start;
-    text-align: left;
-  }
-  .home-status-divider { height: 1px; background: var(--line); margin: 12px 0; flex: none; }
-  .home-status-card {
-    display: block; width: 100%; text-align: left; font-family: inherit;
-    background: none; border: none; padding: 6px 8px; margin: 0 -8px; cursor: pointer;
-    border-radius: 8px; transition: background 0.15s;
-  }
-  .home-status-card:hover { background: var(--cream); }
-  .home-status-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-  .home-status-title { font-size: 0.9rem; font-weight: 700; color: var(--ink); display: inline-flex; align-items: center; gap: 4px; }
-  .home-status-title .arrow { transition: transform 0.15s; }
-  .home-status-card:hover .home-status-title .arrow { transform: translateX(3px); }
-  .home-status-state {
-    margin-left: auto; font-size: 0.72rem; font-weight: 800; color: var(--ink-soft);
-    background: var(--cream); border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px;
-  }
-  .home-status-card.done .home-status-state {
-    color: var(--green-deep); background: var(--green-soft); border-color: #CFE3D6;
-  }
   @media (max-width: 760px) {
     .home-promo-slot { flex-direction: column; }
     .home-promo-video { aspect-ratio: auto; padding: 40px 22px; }
@@ -1526,7 +1501,7 @@
   }
 
   /* ── 내 학습 기록 살펴보기 (허브): 아이콘 카드 ── */
-  .rh-tile-grid { display: grid; grid-template-columns: repeat(3, 1fr); align-items: stretch; gap: 14px; }
+  .rh-tile-grid { display: grid; grid-template-columns: repeat(2, 1fr); align-items: stretch; gap: 14px; }
   .rh-tile-col { display: flex; flex-direction: column; gap: 14px; }
   .rh-tile-col .rh-tile { flex: 1 1 0; height: auto; }
   .rh-tile {
@@ -3074,23 +3049,36 @@
     </div>
 
     <div class="home-promo-slot">
-      <div class="home-status-box">
-        <button type="button" class="home-status-card" id="homeStatus-plan-card" onclick="go('todayrecord')">
-          <div class="home-status-head">
-            <span class="diary-required-badge">필수</span>
-            <span class="home-status-title">하루의 시작, 플래너 작성하기 <span class="arrow">→</span></span>
-            <span class="home-status-state" id="homeStatus-plan-state">미제출</span>
+      <button type="button" class="rh-tile" onclick="go('todayrecord')">
+        <span class="rh-tile-head">
+          <span class="rh-tile-head-left">
+            <span class="rh-tile-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z" stroke-linejoin="round"/><path d="M4 9h16M9 4v16"/></svg>
+            </span>
+            <span class="rh-tile-title">오늘의 학습 기록</span>
+          </span>
+          <span class="rh-tile-head-right">
+            <span class="rh-tile-arrow">›</span>
+          </span>
+        </span>
+        <div class="rh-tile-status-wrap">
+          <div class="rh-tile-status">
+            <div class="rh-tile-status-row">
+              <span class="rh-tile-status-label">오늘의 계획</span>
+              <span class="rh-tile-status-val pending" id="rhTileStatus-plan">확인 중…</span>
+            </div>
+            <div class="rh-tile-status-row">
+              <span class="rh-tile-status-label">공부 일기</span>
+              <span class="rh-tile-status-val pending" id="rhTileStatus-diary">확인 중…</span>
+            </div>
+            <div class="rh-tile-status-row">
+              <span class="rh-tile-status-label">AI 홀로</span>
+              <span class="rh-tile-status-val pending" id="rhTileStatus-chat">확인 중…</span>
+            </div>
           </div>
-        </button>
-        <div class="home-status-divider"></div>
-        <button type="button" class="home-status-card" id="homeStatus-diary-card" onclick="go('todayrecord')">
-          <div class="home-status-head">
-            <span class="diary-required-badge">필수</span>
-            <span class="home-status-title">하루의 마무리, 공부일기 작성하기 <span class="arrow">→</span></span>
-            <span class="home-status-state" id="homeStatus-diary-state">미제출</span>
-          </div>
-        </button>
-      </div>
+          <div class="rh-tile-score-big rh-score-num s1" id="rhTileScoreBig">1/3점</div>
+        </div>
+      </button>
       <div class="home-schedule-box">
         <div class="home-schedule-head">
           <a class="home-schedule-title" href="#" onclick="go('scheduleManage');return false;">내 스케줄 관리하기 <span class="arrow">›</span></a>
@@ -3336,36 +3324,6 @@
       <div class="split"></div>
 
       <div class="rh-tile-grid">
-        <button type="button" class="rh-tile" onclick="go('todayrecord')">
-          <span class="rh-tile-head">
-            <span class="rh-tile-head-left">
-              <span class="rh-tile-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z" stroke-linejoin="round"/><path d="M4 9h16M9 4v16"/></svg>
-              </span>
-              <span class="rh-tile-title">오늘의 학습 기록</span>
-            </span>
-            <span class="rh-tile-head-right">
-              <span class="rh-tile-arrow">›</span>
-            </span>
-          </span>
-          <div class="rh-tile-status-wrap">
-            <div class="rh-tile-status">
-              <div class="rh-tile-status-row">
-                <span class="rh-tile-status-label">오늘의 계획</span>
-                <span class="rh-tile-status-val pending" id="rhTileStatus-plan">확인 중…</span>
-              </div>
-              <div class="rh-tile-status-row">
-                <span class="rh-tile-status-label">공부 일기</span>
-                <span class="rh-tile-status-val pending" id="rhTileStatus-diary">확인 중…</span>
-              </div>
-              <div class="rh-tile-status-row">
-                <span class="rh-tile-status-label">AI 홀로</span>
-                <span class="rh-tile-status-val pending" id="rhTileStatus-chat">확인 중…</span>
-              </div>
-            </div>
-            <div class="rh-tile-score-big rh-score-num s1" id="rhTileScoreBig">1/3점</div>
-          </div>
-        </button>
         <button type="button" class="rh-tile" onclick="go('cumulative')">
           <span class="rh-tile-head">
             <span class="rh-tile-head-left">
@@ -5118,34 +5076,11 @@
     if (view === "mypage") initMypage();
     if (view === "reports") loadReports();
     if (view === "cumulative") loadDayList();
-    if (view === "home") { loadHomeStatusCards(); loadHomeScheduleToday(); }
+    // "오늘의 학습 기록" 카드(계획/일기/AI 홀로 현황 + 점수)가 이제 홈 화면에 있어서, 홈에
+    // 들어올 때도 recordhub와 똑같이 loadTodayTileStatus()로 채운다.
+    if (view === "home") { loadTodayTileStatus(); loadHomeScheduleToday(); }
     if (view === "recordhub") { loadRecordHubStatus(); setRhCumWeekLabel(); loadRhWeekScore(); }
     if (view === "scheduleManage") loadScheduleManage();
-  }
-
-  // ── 홈 화면 필수 항목 현황 카드 (오늘의 계획 / 공부일기 작성 여부) ──
-  function setHomeStatus(kind, done) {
-    const stateEl = document.getElementById("homeStatus-" + kind + "-state");
-    const cardEl = document.getElementById("homeStatus-" + kind + "-card");
-    if (!stateEl || !cardEl) return;
-    stateEl.textContent = done ? "제출 완료" : "미제출";
-    cardEl.classList.toggle("done", done);
-  }
-  function loadHomeStatusCards() {
-    const studentId = localStorage.getItem("holoStudentId");
-    if (!studentId) return;
-    const todayKey = getLocalDateKey();
-
-    planApi({ action: "plan_list", date: todayKey })
-      // plan_list는 "최초 계획" 비교용으로 삭제된(비활성) 항목까지 다 돌려주기 때문에,
-      // 개수만 세면 다 지운 뒤에도 "제출완료"로 잘못 나온다 — 실제 남아있는(active) 항목
-      // 기준으로 판단해야 한다 (today_status·플래너 화면과 동일한 기준).
-      .then(data => setHomeStatus("plan", (data.items || []).some(it => it.active)))
-      .catch(err => console.error(err));
-
-    planApi({ action: "diary_get", date: todayKey })
-      .then(data => setHomeStatus("diary", !!(data.q1 && data.q2 && data.q3 && data.q4)))
-      .catch(err => console.error(err));
   }
 
   // ── '내 학습 기록 살펴보기' 허브: '누적된 학습 기록' 카드의 "이번 주" 라벨 + 주간 누적 점수 평균 ──
@@ -5179,14 +5114,15 @@
       .catch(() => { /* 조회 실패 시 기본 표시(2.3점 예시)를 그대로 둔다 */ });
   }
 
-  // ── '내 학습 기록 살펴보기' 허브: '오늘의 학습 기록' 카드 안의 계획/일기/AI 홀로 사용 상태 ──
+  // ── "오늘의 학습 기록" 카드(계획/일기/AI 홀로 사용 상태 + 점수) — 이제 홈 화면에 있고,
+  // recordhub에는 더 이상 없다(recordhub에서는 "오늘의 학습 기록" 카드를 빼고 홈으로 옮겼다). ──
   function setRhTileStatus(kind, done, doneLabel, pendingLabel) {
     const val = document.getElementById("rhTileStatus-" + kind);
     if (!val) return;
     val.classList.toggle("done", done);
     val.textContent = done ? doneLabel : pendingLabel;
   }
-  function loadRecordHubStatus() {
+  function loadTodayTileStatus() {
     const studentId = localStorage.getItem("holoStudentId");
     if (!studentId) return;
     const scoreBigEl = document.getElementById("rhTileScoreBig");
@@ -5209,6 +5145,12 @@
         setRhTileStatus("chat", false, "사용 중", "확인 실패");
         // 점수는 조회 실패 시 건드리지 않고 기본 표시(1/3점)를 그대로 둔다.
       });
+  }
+
+  // ── '내 학습 기록 살펴보기' 허브: '누적된 학습 기록' / '내 분석지' 카드 데이터 ──
+  function loadRecordHubStatus() {
+    const studentId = localStorage.getItem("holoStudentId");
+    if (!studentId) return;
 
     // '누적된 학습 기록' 카드: 지금까지 기록을 남긴 총 날짜 수
     const totalDaysEl = document.getElementById("rhTotalDays");
@@ -5264,7 +5206,7 @@
   // 사이드바 등 나머지 스크립트 전체가 실행되지 않는 문제가 있었다.
   setTimeout(() => {
     if (localStorage.getItem("holoStudentId")) {
-      loadHomeStatusCards();
+      loadTodayTileStatus();
       loadHomeScheduleToday();
     }
   }, 0);
