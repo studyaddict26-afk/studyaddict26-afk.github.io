@@ -5548,6 +5548,14 @@
         }
       }
     }
+    if (statusId === "planSubmitStatus") {
+      // "실제로 이행한 계획"의 제출완료는 계획을 쓴 것과는 별개로, 이 버튼을 직접 눌러야
+      // 서버(holo_plan_submissions)에 남는다 — 안 그러면 계획 항목만 있어도 저절로
+      // 제출완료로 보이게 되어, 공부를 실제로 다 마쳤는지와 무관해진다.
+      planApi({ action: "plan_submit_mark", date: getLocalDateKey() })
+        .then(() => loadTodayTileStatus()) // 홈 화면 "오늘의 공부" 카드도 바로 반영
+        .catch(err => console.error(err));
+    }
     const statusEl = statusId ? document.getElementById(statusId) : null;
     if (statusEl) {
       statusEl.textContent = "제출완료";
