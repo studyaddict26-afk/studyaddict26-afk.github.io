@@ -6275,6 +6275,10 @@
     initialPlanLocked = true;
     restorePlannerBodyFromGate();
     document.getElementById("planGateOverlay").classList.remove("on");
+    // initialPlanLocked이 바뀌었으니 다시 그려야, "최초 계획"(읽기전용) 칸이 다시 보이고
+    // 편집 칸 라벨도 "계획 수정하면서 공부하기"로 되돌아온다 — 안 하면 게이트에서 쓰던
+    // 한 칸짜리 화면이 그대로 남아있는 채로 페이지가 넘어가는 버그가 있었다.
+    renderPlanner();
   }
 
   // 블록(오전/오후/저녁)별로 "새 항목 입력줄"이 지금 열려있는지 기억한다 — 기본은 닫혀있고,
