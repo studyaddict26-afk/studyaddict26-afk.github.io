@@ -141,6 +141,17 @@
   .mypage-field-status { font-size: 0.76rem; color: var(--ink-soft); margin-top: 8px; }
   .mypage-field-status.success { color: var(--green-deep); }
   .mypage-field-status.error { color: #B3261E; }
+  .mypage-dday-list { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
+  .mypage-dday-row {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--cream); border: 1px solid var(--line); border-radius: 8px;
+    padding: 8px 12px;
+  }
+  .mypage-dday-title { flex: 1; min-width: 0; font-size: 0.84rem; font-weight: 700; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mypage-dday-date { flex: none; font-size: 0.8rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .mypage-dday-del { flex: none; background: none; border: none; font-size: 1rem; color: var(--ink-soft); cursor: pointer; line-height: 1; padding: 2px 4px; }
+  .mypage-dday-del:hover { color: #B3261E; }
+  .mypage-dday-empty { font-size: 0.78rem; color: var(--ink-soft); margin-top: 10px; }
 
   /* ── 우리 독서실 랭킹 ── */
   .ranking-desc { font-size: 0.8rem; color: var(--ink-soft); margin: 4px 0 16px; max-width: 480px; line-height: 1.5; }
@@ -3654,16 +3665,18 @@
       <div class="mypage-photo-status" id="mypagePhotoStatus"></div>
 
       <div class="mypage-field-card">
-        <div class="mypage-field-label">다음 시험일 <span class="mypage-field-hint">(홈 화면 디데이 계산용 — 수능이든 내신이든 가장 가까운 시험일로 설정해주세요)</span></div>
+        <div class="mypage-field-label">D-Day 설정하기</div>
         <div class="mypage-field-row">
-          <input type="date" id="mypageExamDateInput">
-          <button type="button" class="mypage-field-save-btn" onclick="saveMypageExamDate()">저장</button>
+          <input type="text" id="mypageDdayTitleInput" maxlength="20" placeholder="제목 (예: 수능)">
+          <input type="date" id="mypageDdayDateInput">
+          <button type="button" class="mypage-field-save-btn" onclick="addMypageDday()">추가하기</button>
         </div>
-        <div class="mypage-field-status" id="mypageExamDateStatus"></div>
+        <div class="mypage-field-status" id="mypageDdayStatus"></div>
+        <div class="mypage-dday-list" id="mypageDdayList"></div>
       </div>
 
       <div class="mypage-field-card">
-        <div class="mypage-field-label">랭킹 닉네임 <span class="mypage-field-hint">(우리 독서실 랭킹에서 실명 대신 표시돼요 — 설정해야 랭킹에 참여돼요)</span></div>
+        <div class="mypage-field-label">닉네임 <span class="mypage-field-hint">(우리 독서실 랭킹에서 실명 대신 표시돼요 — 설정해야 랭킹에 참여돼요) 3회까지 다시 설정할 수 있습니다.</span></div>
         <div class="mypage-field-row">
           <input type="text" id="mypageNicknameInput" maxlength="12" placeholder="예: 열공왕">
           <button type="button" class="mypage-field-save-btn" onclick="saveMypageNickname()">저장</button>
@@ -5420,24 +5433,36 @@
     if (titleEl) titleEl.textContent = "오늘의 공부 " + pad(d.getMonth() + 1) + "월 " + pad(d.getDate()) + "일";
     renderHomeDday();
   }
-  // "오늘의 공부" 카드의 점수 밑에 뜨는 디데이 — 학생이 마이페이지에 설정해둔 "다음 시험일"까지
-  // 남은 날짜를(학습일 기준 오늘로부터) 계산해서 보여준다. 아직 안 정했으면 설정하러 가는
-  // 링크를 대신 보여준다.
+  // "오늘의 공부" 카드의 점수 밑에 뜨는 디데이 — 학생이 마이페이지에 등록해둔 디데이(최대
+  // 3개, 제목+날짜) 중 가장 가까운 것을(학습일 기준 오늘로부터) 계산해서 보여준다. 아직
+  // 하나도 없으면 등록하러 가는 링크를 대신 보여준다.
   function renderHomeDday() {
     const el = document.getElementById("rhTileDday");
     if (!el) return;
-    const examDate = localStorage.getItem("holoStudentExamDate");
-    if (!examDate || !/^\d{4}-\d{2}-\d{2}$/.test(examDate)) {
-      el.innerHTML = '<a href="#" class="rh-tile-dday-empty" onclick="go(\'mypage\');return false;">마이페이지에서 시험일 설정하기 →</a>';
+    let list = [];
+    try { list = JSON.parse(localStorage.getItem("holoStudentDdayList") || "[]"); } catch (e) { list = []; }
+    if (!Array.isArray(list) || !list.length) {
+      el.innerHTML = '<a href="#" class="rh-tile-dday-empty" onclick="go(\'mypage\');return false;">마이페이지에서 디데이 설정하기 →</a>';
       return;
     }
-    const [ey, em, ed] = examDate.split("-").map(Number);
-    const target = new Date(ey, em - 1, ed);
     const today = getStudyDate();
-    const diffDays = Math.round((target - today) / 86400000);
-    if (diffDays > 0) el.textContent = "시험까지 D-" + diffDays;
-    else if (diffDays === 0) el.textContent = "오늘이 시험일이에요! D-DAY";
-    else el.textContent = "시험일이 지났어요(D+" + Math.abs(diffDays) + ") — 마이페이지에서 다음 시험일로 바꿔주세요";
+    const withDiff = list
+      .filter(d => d && /^\d{4}-\d{2}-\d{2}$/.test(d.date))
+      .map(d => {
+        const [y, m, dd] = d.date.split("-").map(Number);
+        const diffDays = Math.round((new Date(y, m - 1, dd) - today) / 86400000);
+        return { title: d.title || "디데이", diffDays: diffDays };
+      });
+    if (!withDiff.length) {
+      el.innerHTML = '<a href="#" class="rh-tile-dday-empty" onclick="go(\'mypage\');return false;">마이페이지에서 디데이 설정하기 →</a>';
+      return;
+    }
+    // 아직 안 지난 것 중 가장 가까운 걸 우선 보여주고, 전부 지났으면 가장 최근에 지난 것을 보여준다.
+    const upcoming = withDiff.filter(d => d.diffDays >= 0).sort((a, b) => a.diffDays - b.diffDays);
+    const chosen = upcoming.length ? upcoming[0] : withDiff.sort((a, b) => b.diffDays - a.diffDays)[0];
+    if (chosen.diffDays > 0) el.textContent = chosen.title + "까지 D-" + chosen.diffDays;
+    else if (chosen.diffDays === 0) el.textContent = chosen.title + " 당일이에요! D-DAY";
+    else el.textContent = chosen.title + " 종료(D+" + Math.abs(chosen.diffDays) + ")";
   }
   // 홈 화면 세 박스(오늘의 공부 / 내 플래너 관리하기 / 내 스케줄 관리하기)의 세로 길이를 PC에서
   // 항상 고정해둔다 — "오늘의 공부" 카드(rh-tile)는 내용이 항상 정해진 양(상태 3줄+점수+디데이)
@@ -5647,7 +5672,6 @@
   // 왼쪽 위: 선택한 날짜의 계획(오늘·미래 날짜는 미리 써둘 수 있게 편집 가능, 지난 날이면 읽기 전용) /
   // 왼쪽 아래: 특이사항 메모 / 왼쪽 하단 박스: 날짜를 고를 수 있는 달력(미리 계획을 써두는 게 이
   // 페이지의 핵심이라, 미래 날짜도 자유롭게 눌러서 미리 쓸 수 있다) / 오른쪽: 계획 상담 AI 챗봇.
-  let ppInited = false;
   let ppSelectedDate = null;
   let ppPlanItems = [];
   const ppAddRowOpen = {};
@@ -5659,10 +5683,6 @@
 
   function initPlannerPage() {
     loadChatHistory("plan");
-    if (!ppInited) {
-      ppInited = true;
-      loadPpSpecialNote();
-    }
     const today = getLocalDateKey();
     const now = new Date();
     ppCalYear = now.getFullYear();
@@ -5679,6 +5699,7 @@
       dateEl.textContent = y + "년 " + String(m).padStart(2, "0") + "월 " + String(d).padStart(2, "0") + "일 (" + WEEKDAY_LABELS[new Date(y, m - 1, d).getDay()] + ")";
     }
     document.querySelectorAll(".pp-cal-cell").forEach(b => b.classList.toggle("selected", b.dataset.ymd === dateStr));
+    loadPpSpecialNote(dateStr);
     const wrap = document.getElementById("ppPlanBlocks");
     if (!wrap) return;
     const today = getLocalDateKey();
@@ -5902,13 +5923,18 @@
       .catch(err => console.error(err));
   }
 
-  // 특이사항 메모(오늘 계획에 참고할 특이사항) — "오늘의 학습 기록" 안에 있는 것과 같은 값을 보여주는
-  // 별도 입력창이다(둘 다 같은 날짜의 같은 메모를 읽고 쓴다).
-  function loadPpSpecialNote() {
-    planApi({ action: "special_note_get", date: getLocalDateKey() })
+  // 특이사항 메모(그 날짜 계획에 참고할 특이사항) — 달력에서 고른 날짜(ppSelectedDate)의
+  // 메모를 보여준다("오늘의 학습 기록"의 특이사항 메모와는 같은 날짜일 때만 같은 값). 날짜를
+  // 바꿀 때마다(loadPpDate) 다시 불러와야 하고, 텍스트가 없어도 이전 날짜 값이 남아있지
+  // 않도록 매번 값을 덮어써야 한다.
+  function loadPpSpecialNote(dateStr) {
+    const date = dateStr || ppSelectedDate;
+    planApi({ action: "special_note_get", date: date })
       .then(data => {
         const input = document.getElementById("ppSpecialNoteInput");
-        if (input && data.text) input.value = data.text;
+        // 응답이 온 시점에 이미 다른 날짜로 넘어갔으면(빠르게 여러 날짜를 클릭한 경우)
+        // 엉뚱한 날짜의 메모로 덮어쓰지 않는다.
+        if (input && date === ppSelectedDate) input.value = data.text || "";
       })
       .catch(err => console.error(err));
   }
@@ -5920,7 +5946,7 @@
   function savePpSpecialNote() {
     const input = document.getElementById("ppSpecialNoteInput");
     if (!input) return;
-    planApi({ action: "special_note_save", date: getLocalDateKey(), text: input.value }).catch(err => console.error(err));
+    planApi({ action: "special_note_save", date: ppSelectedDate, text: input.value }).catch(err => console.error(err));
   }
 
   // 날짜 선택용 달력 — 자유롭게 앞뒤 달로 넘길 수 있고, 미래 날짜도 눌러서 미리 계획을 써둘 수
@@ -8045,8 +8071,9 @@
     localStorage.removeItem("holoStudentSchool");
     localStorage.removeItem("holoStudentGender");
     localStorage.removeItem("holoStudentPhoto");
-    localStorage.removeItem("holoStudentExamDate");
+    localStorage.removeItem("holoStudentDdayList");
     localStorage.removeItem("holoStudentNickname");
+    localStorage.removeItem("holoStudentNicknameChangeCount");
     localStorage.removeItem("holoStudentLoginDate");
     location.hash = "";
     location.reload();
@@ -8074,10 +8101,11 @@
       else localStorage.removeItem("holoStudentGender");
       if (data && data.photoData) localStorage.setItem("holoStudentPhoto", data.photoData);
       else localStorage.removeItem("holoStudentPhoto");
-      if (data && data.examDate) localStorage.setItem("holoStudentExamDate", data.examDate);
-      else localStorage.removeItem("holoStudentExamDate");
+      if (data && Array.isArray(data.ddayList)) localStorage.setItem("holoStudentDdayList", JSON.stringify(data.ddayList));
+      else localStorage.removeItem("holoStudentDdayList");
       if (data && data.rankingNickname) localStorage.setItem("holoStudentNickname", data.rankingNickname);
       else localStorage.removeItem("holoStudentNickname");
+      localStorage.setItem("holoStudentNicknameChangeCount", String((data && data.rankingNicknameChangeCount) || 0));
       renderSidebarProfile();
       renderHomeDday();
     } catch (e) { /* 무시 */ }
@@ -8124,37 +8152,78 @@
     renderAvatarInto(avatarEl, name, photo);
     const statusEl = document.getElementById("mypagePhotoStatus");
     if (statusEl) { statusEl.textContent = ""; statusEl.className = "mypage-photo-status"; }
-    const examDateEl = document.getElementById("mypageExamDateInput");
-    if (examDateEl) examDateEl.value = localStorage.getItem("holoStudentExamDate") || "";
-    const examStatusEl = document.getElementById("mypageExamDateStatus");
-    if (examStatusEl) { examStatusEl.textContent = ""; examStatusEl.className = "mypage-field-status"; }
+    renderMypageDdayList();
+    const ddayStatusEl = document.getElementById("mypageDdayStatus");
+    if (ddayStatusEl) { ddayStatusEl.textContent = ""; ddayStatusEl.className = "mypage-field-status"; }
     const nicknameEl = document.getElementById("mypageNicknameInput");
     if (nicknameEl) nicknameEl.value = localStorage.getItem("holoStudentNickname") || "";
     const nicknameStatusEl = document.getElementById("mypageNicknameStatus");
     if (nicknameStatusEl) { nicknameStatusEl.textContent = ""; nicknameStatusEl.className = "mypage-field-status"; }
   }
-  // 마이페이지에서 "다음 시험일"을 저장하면, 홈 화면 "오늘의 공부" 카드의 디데이가 바로 갱신된다.
-  function saveMypageExamDate() {
-    const input = document.getElementById("mypageExamDateInput");
-    const statusEl = document.getElementById("mypageExamDateStatus");
-    const val = input ? input.value : "";
-    if (!val) {
-      if (statusEl) { statusEl.textContent = "날짜를 선택해주세요."; statusEl.className = "mypage-field-status error"; }
-      return;
-    }
+  // 마이페이지 "D-Day 설정하기" — 최대 3개까지, 제목+날짜로 여러 개 등록할 수 있다.
+  // 학생 문서(students/{id}.ddayList)에 배열로 저장하고, 캐시(holoStudentDdayList, JSON
+  // 문자열)를 갱신해서 홈 화면 "오늘의 공부" 카드의 디데이가 바로 반영되게 한다.
+  function getMypageDdayList() {
+    try {
+      const list = JSON.parse(localStorage.getItem("holoStudentDdayList") || "[]");
+      return Array.isArray(list) ? list : [];
+    } catch (e) { return []; }
+  }
+  function renderMypageDdayList() {
+    const wrap = document.getElementById("mypageDdayList");
+    if (!wrap) return;
+    const list = getMypageDdayList();
+    wrap.innerHTML = list.length
+      ? list.map((d, i) =>
+          '<div class="mypage-dday-row">' +
+            '<span class="mypage-dday-title">' + escapeHtml(d.title) + '</span>' +
+            '<span class="mypage-dday-date">' + escapeHtml(d.date) + '</span>' +
+            '<button type="button" class="mypage-dday-del" onclick="deleteMypageDday(' + i + ')" aria-label="삭제">×</button>' +
+          '</div>'
+        ).join("")
+      : '<div class="mypage-dday-empty">아직 등록한 디데이가 없어요.</div>';
+  }
+  function saveMypageDdayList(list, statusEl, successMsg) {
     const id = localStorage.getItem("holoStudentId");
     if (!id) return;
-    db.collection("students").doc(id).update({ examDate: val }).then(() => {
-      localStorage.setItem("holoStudentExamDate", val);
+    db.collection("students").doc(id).update({ ddayList: list }).then(() => {
+      localStorage.setItem("holoStudentDdayList", JSON.stringify(list));
+      renderMypageDdayList();
       renderHomeDday();
-      if (statusEl) { statusEl.textContent = "저장됐어요."; statusEl.className = "mypage-field-status success"; }
+      if (statusEl) { statusEl.textContent = successMsg; statusEl.className = "mypage-field-status success"; }
     }).catch(err => {
       console.error(err);
       if (statusEl) { statusEl.textContent = "저장 중 오류가 발생했어요."; statusEl.className = "mypage-field-status error"; }
     });
   }
-  // 마이페이지에서 "랭킹 닉네임"을 저장하면 students/{id}.rankingNickname에 저장된다 — 이
+  function addMypageDday() {
+    const titleEl = document.getElementById("mypageDdayTitleInput");
+    const dateEl = document.getElementById("mypageDdayDateInput");
+    const statusEl = document.getElementById("mypageDdayStatus");
+    const title = titleEl ? titleEl.value.trim() : "";
+    const date = dateEl ? dateEl.value : "";
+    if (!title || !date) {
+      if (statusEl) { statusEl.textContent = "제목과 날짜를 모두 입력해주세요."; statusEl.className = "mypage-field-status error"; }
+      return;
+    }
+    const list = getMypageDdayList();
+    if (list.length >= 3) {
+      if (statusEl) { statusEl.textContent = "디데이는 최대 3개까지만 등록할 수 있어요. 기존 항목을 지우고 추가해주세요."; statusEl.className = "mypage-field-status error"; }
+      return;
+    }
+    saveMypageDdayList(list.concat([{ title, date }]), statusEl, "추가됐어요.");
+    if (titleEl) titleEl.value = "";
+    if (dateEl) dateEl.value = "";
+  }
+  function deleteMypageDday(index) {
+    const list = getMypageDdayList();
+    const statusEl = document.getElementById("mypageDdayStatus");
+    saveMypageDdayList(list.slice(0, index).concat(list.slice(index + 1)), statusEl, "삭제됐어요.");
+  }
+  // 마이페이지에서 "닉네임"을 저장하면 students/{id}.rankingNickname에 저장된다 — 이
   // 값이 없는 학생은 "우리 독서실 랭킹"에 아예 표시되지 않는다(설정해야 참여하는 방식).
+  // 닉네임을 너무 자주 바꾸는 걸 막기 위해, 저장할 때마다 rankingNicknameChangeCount를 하나씩
+  // 늘리고 최대 3번까지만 허용한다(4번째 시도부터는 안내만 띄우고 저장을 막는다).
   function saveMypageNickname() {
     const input = document.getElementById("mypageNicknameInput");
     const statusEl = document.getElementById("mypageNicknameStatus");
@@ -8163,11 +8232,18 @@
       if (statusEl) { statusEl.textContent = "닉네임을 입력해주세요."; statusEl.className = "mypage-field-status error"; }
       return;
     }
+    const changeCount = Number(localStorage.getItem("holoStudentNicknameChangeCount") || "0");
+    if (changeCount >= 3) {
+      if (statusEl) { statusEl.textContent = "닉네임은 최대 3번까지만 다시 설정할 수 있어요."; statusEl.className = "mypage-field-status error"; }
+      return;
+    }
     const id = localStorage.getItem("holoStudentId");
     if (!id) return;
-    db.collection("students").doc(id).update({ rankingNickname: val }).then(() => {
+    const nextCount = changeCount + 1;
+    db.collection("students").doc(id).update({ rankingNickname: val, rankingNicknameChangeCount: nextCount }).then(() => {
       localStorage.setItem("holoStudentNickname", val);
-      if (statusEl) { statusEl.textContent = "저장됐어요."; statusEl.className = "mypage-field-status success"; }
+      localStorage.setItem("holoStudentNicknameChangeCount", String(nextCount));
+      if (statusEl) { statusEl.textContent = "저장됐어요. (" + nextCount + "/3회 사용)"; statusEl.className = "mypage-field-status success"; }
     }).catch(err => {
       console.error(err);
       if (statusEl) { statusEl.textContent = "저장 중 오류가 발생했어요."; statusEl.className = "mypage-field-status error"; }
@@ -8239,8 +8315,9 @@
     localStorage.removeItem("holoStudentSchool");
     localStorage.removeItem("holoStudentGender");
     localStorage.removeItem("holoStudentPhoto");
-    localStorage.removeItem("holoStudentExamDate");
+    localStorage.removeItem("holoStudentDdayList");
     localStorage.removeItem("holoStudentNickname");
+    localStorage.removeItem("holoStudentNicknameChangeCount");
       localStorage.removeItem("holoStudentLoginDate");
       showStudentGate();
       return;
@@ -8255,8 +8332,9 @@
     localStorage.removeItem("holoStudentSchool");
     localStorage.removeItem("holoStudentGender");
     localStorage.removeItem("holoStudentPhoto");
-    localStorage.removeItem("holoStudentExamDate");
+    localStorage.removeItem("holoStudentDdayList");
     localStorage.removeItem("holoStudentNickname");
+    localStorage.removeItem("holoStudentNicknameChangeCount");
         localStorage.removeItem("holoStudentLoginDate");
         showStudentGate();
       } else {
