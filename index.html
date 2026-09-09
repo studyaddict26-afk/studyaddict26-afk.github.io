@@ -2469,6 +2469,11 @@
   .msg.bot .avatar { background: var(--ink); }
   .msg.bot .bubble {
     background: none; border: none; padding: 4px 0;
+    /* .msg가 flex 컨테이너라, width를 안 주면 말풍선 안 내용(특히 이 안의 카드처럼
+       글자 수가 적은 내용)이 딱 그 내용 크기만큼만 줄어들어(shrink-to-fit) 카드
+       가로 길이를 아무리 늘려도 실제로는 안 넓어지는 문제가 있었다 — 말풍선 자체가
+       항상 남은 가로 폭을 다 쓰도록 명시한다. */
+    width: 100%; min-width: 0;
   }
   .msg.user { margin-left: auto; flex-direction: row-reverse; }
   .msg.user .avatar { background: var(--green); height: 13px; align-self: center; }
