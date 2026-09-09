@@ -6159,6 +6159,12 @@
     if (mode === "review") {
       send("plan", "그동안 제가 말씀드렸던 공부 습관이나 어려움들을 정리해서 보여주세요.");
     } else {
+      // ppQuickPrompt()는 AI를 부르지 않고 봇 안내문만 보여주는 함수라, 여기서 고른 선택도
+      // send()처럼 "ME" 말풍선으로 먼저 남겨둬야 뭘 눌렀는지 대화창에서 보인다.
+      const chosenText = "새로운 습관, 문제점을 입력할게요.";
+      addMsg("plan", "user", escapeHtml(chosenText));
+      if (!chatHistory["plan"]) chatHistory["plan"] = [];
+      chatHistory["plan"].push({ role: "user", content: chosenText });
       ppQuickPrompt();
     }
   }
