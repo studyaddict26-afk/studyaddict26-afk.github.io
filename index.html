@@ -2597,7 +2597,16 @@
   .record-mini-submit-btn:hover { border-color: var(--green); color: var(--green-deep); }
   .record-mini-submit-btn:disabled { opacity: 0.7; cursor: default; border-color: var(--green); color: var(--green-deep); }
   .record-date { display: block; font-size: 0.66rem; font-weight: 700; color: var(--ink-soft); margin-top: 2px; }
-  .planner-body { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }
+  .planner-body {
+    flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 14px; overflow-y: auto;
+    scrollbar-width: thin; scrollbar-color: var(--line-dark) transparent; /* Firefox */
+  }
+  /* 얇은 사이드바형 스크롤바 — 위아래 화살표 버튼 없이, 가는 막대만 보이게 한다(Chrome/Edge/Safari). */
+  .planner-body::-webkit-scrollbar { width: 6px; }
+  .planner-body::-webkit-scrollbar-track { background: transparent; }
+  .planner-body::-webkit-scrollbar-thumb { background: var(--line-dark); border-radius: 999px; }
+  .planner-body::-webkit-scrollbar-thumb:hover { background: var(--ink-soft); }
+  .planner-body::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
   .planner-block { display: flex; flex-direction: column; gap: 4px; }
   .planner-block-head { font-size: 0.68rem; font-weight: 800; color: var(--ink); letter-spacing: 0.04em; }
   .planner-block-head-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
