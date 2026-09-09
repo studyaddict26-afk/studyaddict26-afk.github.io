@@ -67,8 +67,8 @@
   .sb-brand:hover .sb-wordmark .holo,
   .sb-brand:hover .sb-wordmark .holo-en { color: var(--green-deep); }
   .sb-profile {
-    display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
-    font-family: inherit; text-align: center; cursor: pointer;
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    font-family: inherit; text-align: left; cursor: pointer;
     background: none; border: none; border-bottom: 1px solid var(--line);
     padding: 8px 4px 14px 4px; margin-bottom: 14px; border-radius: 10px 10px 0 0;
     transition: background 0.15s;
@@ -81,11 +81,10 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 0.9rem; font-weight: 800;
   }
-  /* flex:none(내용 크기만큼만) + 부모의 justify-content:center로, 아바타+텍스트 전체가
-     사이드바 안에서 왼쪽으로 쏠리지 않고 가운데로 온다. */
-  .sb-profile-info { min-width: 0; flex: none; max-width: 100%; }
-  .sb-profile-name { font-size: 0.86rem; font-weight: 800; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .sb-profile-school { font-size: 0.74rem; font-weight: 600; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sb-profile-info { min-width: 0; flex: 1; }
+  .sb-profile-line1 { display: flex; align-items: baseline; min-width: 0; overflow: hidden; white-space: nowrap; }
+  .sb-profile-name { font-size: 0.86rem; font-weight: 800; color: var(--ink); flex: none; overflow: hidden; text-overflow: ellipsis; }
+  .sb-profile-school { font-size: 0.74rem; font-weight: 600; color: var(--ink-soft); margin-left: 6px; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
   .sb-profile-mypage-link { font-size: 0.68rem; font-weight: 700; color: var(--green-deep); margin-top: 3px; }
   .av-initial { background: var(--green-soft); color: var(--green-deep); }
   .av-photo { background: var(--line); }
@@ -2640,7 +2639,7 @@
   .planner-body, .home-schedule-log, .home-planner-blocks {
     scrollbar-width: thin; scrollbar-color: var(--line-dark) transparent;
   }
-  .planner-body::-webkit-scrollbar, .home-schedule-log::-webkit-scrollbar, .home-planner-blocks::-webkit-scrollbar { width: 4px; }
+  .planner-body::-webkit-scrollbar, .home-schedule-log::-webkit-scrollbar, .home-planner-blocks::-webkit-scrollbar { width: 2px; }
   .planner-body::-webkit-scrollbar-track, .home-schedule-log::-webkit-scrollbar-track, .home-planner-blocks::-webkit-scrollbar-track { background: transparent; }
   .planner-body::-webkit-scrollbar-thumb, .home-schedule-log::-webkit-scrollbar-thumb, .home-planner-blocks::-webkit-scrollbar-thumb { background: var(--line-dark); border-radius: 999px; }
   .planner-body::-webkit-scrollbar-thumb:hover, .home-schedule-log::-webkit-scrollbar-thumb:hover, .home-planner-blocks::-webkit-scrollbar-thumb:hover { background: var(--ink-soft); }
@@ -3055,8 +3054,9 @@
   <button type="button" class="sb-profile" onclick="go('mypage')">
     <div class="sb-profile-avatar" id="sbProfileAvatar">홀</div>
     <div class="sb-profile-info">
-      <div class="sb-profile-name" id="sbProfileName">학생</div>
-      <div class="sb-profile-school" id="sbProfileSchool"></div>
+      <div class="sb-profile-line1">
+        <span class="sb-profile-name" id="sbProfileName">학생</span><span class="sb-profile-school" id="sbProfileSchool"></span>
+      </div>
       <div class="sb-profile-mypage-link">마이페이지 →</div>
     </div>
   </button>
