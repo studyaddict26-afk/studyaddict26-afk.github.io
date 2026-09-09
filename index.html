@@ -724,7 +724,9 @@
     display: grid; grid-template-columns: auto auto; column-gap: 5px; row-gap: 9px;
     list-style: none; margin: 0; padding: 0; flex: 1; align-content: center;
     justify-content: center;
-    max-height: 130px; overflow-y: auto;
+    /* "의무 시간표대로 학습" 같은 한 줄짜리 안내만 있을 때도, 원래 입실/외출/재입실/퇴실
+       4줄이 있을 때와 박스 높이가 똑같이 유지되도록 최소 높이를 둔다. */
+    min-height: 100px; max-height: 130px; overflow-y: auto;
   }
   .sched-sidebar-events li { display: contents; }
   .sched-sidebar-events li.sched-empty-msg { display: block; grid-column: 1 / -1; text-align: center; }
