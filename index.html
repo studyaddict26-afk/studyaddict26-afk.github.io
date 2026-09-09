@@ -96,7 +96,7 @@
     flex: 1 1 0; min-width: 0; max-width: none; margin-top: 0;
   }
   .mypage-profile-card {
-    display: flex; align-items: center; gap: 10px;
+    display: flex; align-items: center; gap: 16px;
     background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
     padding: 14px;
   }
@@ -2633,17 +2633,16 @@
   .planner-body {
     flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 14px; overflow-y: auto;
   }
-  /* 얇은 사이드바형 스크롤바 — 위아래 화살표 버튼 없이, 가는 막대만 보이게 한다(Chrome/Edge/Safari,
-     Firefox는 scrollbar-width/color). 스크롤되는 곳(플래너 본문, 홈 화면 스케줄/플래너 목록)마다
-     공통으로 쓴다. */
-  .planner-body, .home-schedule-log, .home-planner-blocks {
-    scrollbar-width: thin; scrollbar-color: var(--line-dark) transparent;
-  }
-  .planner-body::-webkit-scrollbar, .home-schedule-log::-webkit-scrollbar, .home-planner-blocks::-webkit-scrollbar { width: 2px; }
-  .planner-body::-webkit-scrollbar-track, .home-schedule-log::-webkit-scrollbar-track, .home-planner-blocks::-webkit-scrollbar-track { background: transparent; }
-  .planner-body::-webkit-scrollbar-thumb, .home-schedule-log::-webkit-scrollbar-thumb, .home-planner-blocks::-webkit-scrollbar-thumb { background: var(--line-dark); border-radius: 999px; }
-  .planner-body::-webkit-scrollbar-thumb:hover, .home-schedule-log::-webkit-scrollbar-thumb:hover, .home-planner-blocks::-webkit-scrollbar-thumb:hover { background: var(--ink-soft); }
-  .planner-body::-webkit-scrollbar-button, .home-schedule-log::-webkit-scrollbar-button, .home-planner-blocks::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+  /* 사이트 전체 스크롤바 기본값 — 얇은(1px) 막대만 보이고, 위아래 화살표 버튼은 없앤다
+     (Chrome/Edge/Safari는 ::-webkit-scrollbar-*, Firefox는 scrollbar-width/color). 이 밑에
+     더 구체적인 선택자(.chat-wrap 등)가 있으면 그쪽이 우선 적용된다(예: 챗봇 창은 스크롤바를
+     아예 숨기는 게 의도된 디자인이라 그대로 둠). */
+  * { scrollbar-width: thin; scrollbar-color: var(--line-dark) transparent; }
+  *::-webkit-scrollbar { width: 1px; height: 1px; }
+  *::-webkit-scrollbar-track { background: transparent; }
+  *::-webkit-scrollbar-thumb { background: var(--line-dark); border-radius: 999px; }
+  *::-webkit-scrollbar-thumb:hover { background: var(--ink-soft); }
+  *::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
   .planner-block { display: flex; flex-direction: column; gap: 4px; }
   .planner-block-head { font-size: 0.68rem; font-weight: 800; color: var(--ink); letter-spacing: 0.04em; }
   .planner-block-head-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -2872,15 +2871,8 @@
     width: 100%; box-sizing: border-box; border: 1px solid var(--line-dark); border-radius: 8px; padding: 10px;
     font-family: inherit; font-size: 0.82rem; color: var(--ink); resize: vertical;
     min-height: 32px; background: var(--paper);
-    scrollbar-width: thin; scrollbar-color: var(--line-dark) transparent; /* Firefox: 얇은 스크롤바 */
   }
   .diary-q-field textarea:focus { outline: none; border-color: var(--green); }
-  /* 네이티브 위/아래 화살표 버튼이 있는 스크롤바 대신, 얇은 막대만 있는 스크롤바로 (Chrome/Edge) */
-  .diary-q-field textarea::-webkit-scrollbar { width: 6px; }
-  .diary-q-field textarea::-webkit-scrollbar-track { background: transparent; }
-  .diary-q-field textarea::-webkit-scrollbar-thumb { background: var(--line-dark); border-radius: 999px; }
-  .diary-q-field textarea::-webkit-scrollbar-thumb:hover { background: var(--ink-soft); }
-  .diary-q-field textarea::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
   .note-list-divider { height: 1px; background: var(--line); margin: 4px 0; flex: none; }
 
   @media (max-width: 860px) {
