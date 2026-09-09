@@ -67,8 +67,8 @@
   .sb-brand:hover .sb-wordmark .holo,
   .sb-brand:hover .sb-wordmark .holo-en { color: var(--green-deep); }
   .sb-profile {
-    display: flex; align-items: center; gap: 10px; width: 100%;
-    font-family: inherit; text-align: left; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
+    font-family: inherit; text-align: center; cursor: pointer;
     background: none; border: none; border-bottom: 1px solid var(--line);
     padding: 8px 4px 14px 4px; margin-bottom: 14px; border-radius: 10px 10px 0 0;
     transition: background 0.15s;
@@ -81,58 +81,68 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 0.9rem; font-weight: 800;
   }
-  .sb-profile-info { min-width: 0; flex: 1; }
-  .sb-profile-line1 { display: flex; align-items: baseline; min-width: 0; overflow: hidden; white-space: nowrap; }
-  .sb-profile-name { font-size: 0.86rem; font-weight: 800; color: var(--ink); flex: none; overflow: hidden; text-overflow: ellipsis; }
-  .sb-profile-sep { font-size: 0.78rem; color: var(--ink-soft); margin: 0 4px; flex: none; }
-  .sb-profile-school { font-size: 0.74rem; font-weight: 600; color: var(--ink-soft); min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  /* flex:none(내용 크기만큼만) + 부모의 justify-content:center로, 아바타+텍스트 전체가
+     사이드바 안에서 왼쪽으로 쏠리지 않고 가운데로 온다. */
+  .sb-profile-info { min-width: 0; flex: none; max-width: 100%; }
+  .sb-profile-name { font-size: 0.86rem; font-weight: 800; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sb-profile-school { font-size: 0.74rem; font-weight: 600; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .sb-profile-mypage-link { font-size: 0.68rem; font-weight: 700; color: var(--green-deep); margin-top: 3px; }
   .av-initial { background: var(--green-soft); color: var(--green-deep); }
   .av-photo { background: var(--line); }
   .av-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* 프로필 카드 + 닉네임 카드를 나란히(각각 폭의 절반씩) 놓는 행 — 예전에 프로필 카드
+     혼자 420px를 다 쓰던 걸 반으로 줄이고, 남는 절반에 닉네임 카드를 배치한다. */
+  .mypage-top-row { display: flex; gap: 12px; max-width: 420px; align-items: stretch; }
+  .mypage-top-row .mypage-profile-card, .mypage-top-row .mypage-field-card {
+    flex: 1 1 0; min-width: 0; max-width: none; margin-top: 0;
+  }
   .mypage-profile-card {
-    display: flex; align-items: center; gap: 18px;
+    display: flex; align-items: center; gap: 10px;
     background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
-    padding: 24px; max-width: 420px;
+    padding: 14px;
   }
   .mypage-avatar-wrap { position: relative; flex: none; }
   .mypage-avatar {
-    width: 64px; height: 64px; border-radius: 50%; overflow: hidden;
+    width: 48px; height: 48px; border-radius: 50%; overflow: hidden;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.5rem; font-weight: 800;
+    font-size: 1.1rem; font-weight: 800;
   }
   .mypage-avatar-edit-btn {
     position: absolute; right: -2px; bottom: -2px;
-    width: 25px; height: 25px; border-radius: 50%;
+    width: 19px; height: 19px; border-radius: 50%;
     background: var(--paper); border: 1px solid var(--line);
     display: flex; align-items: center; justify-content: center;
     color: var(--ink-soft); cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.14);
     transition: border-color 0.15s, color 0.15s;
   }
   .mypage-avatar-edit-btn:hover { border-color: var(--green); color: var(--green-deep); }
-  .mypage-avatar-edit-btn svg { width: 13px; height: 13px; }
+  .mypage-avatar-edit-btn svg { width: 10px; height: 10px; }
   .mypage-info { min-width: 0; }
-  .mypage-name { font-size: 1.1rem; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
-  .mypage-school { font-size: 0.82rem; color: var(--ink-soft); margin-bottom: 2px; }
-  .mypage-id { font-size: 0.76rem; color: var(--ink-soft); }
+  .mypage-name { font-size: 0.92rem; font-weight: 800; color: var(--ink); margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mypage-school { font-size: 0.72rem; color: var(--ink-soft); margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mypage-id { font-size: 0.68rem; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .mypage-photo-status { font-size: 0.76rem; color: var(--ink-soft); margin-top: 10px; max-width: 420px; }
   .mypage-photo-status.success { color: var(--green-deep); }
   .mypage-photo-status.error { color: #B3261E; }
-  /* 마이페이지의 "다음 시험일"/"랭킹 닉네임"이 함께 쓰는 카드 스타일 */
+  /* 마이페이지의 "다음 시험일"/"닉네임"이 함께 쓰는 카드 스타일 — 위쪽 제목 칸(head)만
+     크림색 배경을 줘서 아래 본문(body, 흰 배경)과 구분되게 한다. */
   .mypage-field-card {
     margin-top: 14px; max-width: 420px;
     background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
-    padding: 16px 18px;
+    overflow: hidden;
   }
-  .mypage-field-label {
-    font-size: 0.66rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--ink-soft); margin-bottom: 8px;
+  .mypage-field-head {
+    background: var(--cream); border-bottom: 1px solid var(--line);
+    padding: 8px 16px;
+    font-size: 0.64rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-soft);
   }
-  .mypage-field-hint { display: block; margin-top: 2px; font-size: 0.72rem; font-weight: 500; letter-spacing: normal; text-transform: none; color: var(--ink-soft); opacity: 0.85; }
-  .mypage-field-row { display: flex; gap: 8px; }
+  .mypage-field-hint { display: block; margin-top: 2px; font-size: 0.68rem; font-weight: 500; letter-spacing: normal; text-transform: none; color: var(--ink-soft); opacity: 0.85; }
+  .mypage-field-body { padding: 12px 16px 14px; }
+  .mypage-field-row { display: flex; gap: 6px; }
   .mypage-field-row input[type="date"], .mypage-field-row input[type="text"] {
-    flex: 1; min-width: 0; font-family: inherit; font-size: 0.86rem;
-    padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px;
+    flex: 1; min-width: 0; font-family: inherit; font-size: 0.76rem;
+    padding: 5px 7px; border: 1px solid var(--line); border-radius: 7px;
     background: var(--paper); color: var(--ink); box-sizing: border-box;
     transition: border-color 0.15s;
   }
@@ -140,8 +150,8 @@
     outline: none; border-color: var(--green);
   }
   .mypage-field-save-btn {
-    flex: none; font-family: inherit; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.01em; color: #fff;
-    background: var(--ink); border: none; border-radius: 8px; padding: 8px 16px; cursor: pointer;
+    flex: none; font-family: inherit; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.01em; color: #fff;
+    background: var(--ink); border: none; border-radius: 7px; padding: 5px 12px; cursor: pointer;
     transition: background 0.18s;
   }
   .mypage-field-save-btn:hover { background: var(--green-deep); }
@@ -1656,7 +1666,7 @@
   .rh-score-num.s2 { color: #5C8C56; }
   .rh-score-num.s3 { color: var(--green-deep); }
   /* 점수 + 디데이를 세로로 묶는 칸 — 점수가 위, 디데이가 그 아래 작게. */
-  .rh-tile-score-col { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+  .rh-tile-score-col { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
   .rh-tile-score-big { text-align: center; }
   .rh-tile-dday { font-size: 0.76rem; font-weight: 700; color: var(--green-deep); text-align: center; }
   .rh-tile-dday-empty { font-size: 0.72rem; font-weight: 600; color: var(--ink-soft); text-decoration: none; }
@@ -2630,7 +2640,7 @@
   .planner-body, .home-schedule-log, .home-planner-blocks {
     scrollbar-width: thin; scrollbar-color: var(--line-dark) transparent;
   }
-  .planner-body::-webkit-scrollbar, .home-schedule-log::-webkit-scrollbar, .home-planner-blocks::-webkit-scrollbar { width: 6px; }
+  .planner-body::-webkit-scrollbar, .home-schedule-log::-webkit-scrollbar, .home-planner-blocks::-webkit-scrollbar { width: 4px; }
   .planner-body::-webkit-scrollbar-track, .home-schedule-log::-webkit-scrollbar-track, .home-planner-blocks::-webkit-scrollbar-track { background: transparent; }
   .planner-body::-webkit-scrollbar-thumb, .home-schedule-log::-webkit-scrollbar-thumb, .home-planner-blocks::-webkit-scrollbar-thumb { background: var(--line-dark); border-radius: 999px; }
   .planner-body::-webkit-scrollbar-thumb:hover, .home-schedule-log::-webkit-scrollbar-thumb:hover, .home-planner-blocks::-webkit-scrollbar-thumb:hover { background: var(--ink-soft); }
@@ -3045,9 +3055,8 @@
   <button type="button" class="sb-profile" onclick="go('mypage')">
     <div class="sb-profile-avatar" id="sbProfileAvatar">홀</div>
     <div class="sb-profile-info">
-      <div class="sb-profile-line1">
-        <span class="sb-profile-name" id="sbProfileName">학생</span><span class="sb-profile-sep" id="sbProfileSep"> / </span><span class="sb-profile-school" id="sbProfileSchool"></span>
-      </div>
+      <div class="sb-profile-name" id="sbProfileName">학생</div>
+      <div class="sb-profile-school" id="sbProfileSchool"></div>
       <div class="sb-profile-mypage-link">마이페이지 →</div>
     </div>
   </button>
@@ -3691,24 +3700,38 @@
       <span class="eyebrow">MY PAGE</span>
       <h2>마이페이지</h2>
       <div class="split"></div>
-      <div class="mypage-profile-card">
-        <div class="mypage-avatar-wrap">
-          <div class="mypage-avatar" id="mypageAvatar">홀</div>
-          <label class="mypage-avatar-edit-btn" for="mypagePhotoInput" title="사진 변경" aria-label="사진 변경">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8a2 2 0 0 1 2-2h2l1.5-2h5L16 6h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><circle cx="12" cy="13" r="3.3"/></svg>
-          </label>
-          <input type="file" id="mypagePhotoInput" accept="image/*" style="display:none;" onchange="handleMypagePhotoChange(event)">
+      <div class="mypage-top-row">
+        <div class="mypage-profile-card">
+          <div class="mypage-avatar-wrap">
+            <div class="mypage-avatar" id="mypageAvatar">홀</div>
+            <label class="mypage-avatar-edit-btn" for="mypagePhotoInput" title="사진 변경" aria-label="사진 변경">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8a2 2 0 0 1 2-2h2l1.5-2h5L16 6h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><circle cx="12" cy="13" r="3.3"/></svg>
+            </label>
+            <input type="file" id="mypagePhotoInput" accept="image/*" style="display:none;" onchange="handleMypagePhotoChange(event)">
+          </div>
+          <div class="mypage-info">
+            <div class="mypage-name" id="mypageName">-</div>
+            <div class="mypage-school" id="mypageSchool"></div>
+            <div class="mypage-id" id="mypageId"></div>
+          </div>
         </div>
-        <div class="mypage-info">
-          <div class="mypage-name" id="mypageName">-</div>
-          <div class="mypage-school" id="mypageSchool"></div>
-          <div class="mypage-id" id="mypageId"></div>
+
+        <div class="mypage-field-card">
+          <div class="mypage-field-head">닉네임 <span class="mypage-field-hint">설정 후 변경 불가능합니다.</span></div>
+          <div class="mypage-field-body">
+          <div class="mypage-field-row">
+            <input type="text" id="mypageNicknameInput" maxlength="12" placeholder="예: 열공왕">
+            <button type="button" class="mypage-field-save-btn" id="mypageNicknameSaveBtn" onclick="saveMypageNickname()">저장</button>
+          </div>
+          <div class="mypage-field-status" id="mypageNicknameStatus"></div>
+          </div>
         </div>
       </div>
       <div class="mypage-photo-status" id="mypagePhotoStatus"></div>
 
       <div class="mypage-field-card">
-        <div class="mypage-field-label">D-Day 설정하기</div>
+        <div class="mypage-field-head">D-Day 설정하기</div>
+        <div class="mypage-field-body">
         <div class="mypage-field-row">
           <input type="text" id="mypageDdayTitleInput" maxlength="20" placeholder="제목 (예: 수능)">
           <input type="date" id="mypageDdayDateInput">
@@ -3716,15 +3739,7 @@
         </div>
         <div class="mypage-field-status" id="mypageDdayStatus"></div>
         <div class="mypage-dday-list" id="mypageDdayList"></div>
-      </div>
-
-      <div class="mypage-field-card">
-        <div class="mypage-field-label">닉네임 <span class="mypage-field-hint">'내 랭킹'에서 실명 대신 표시되며, 설정 후 변경 불가능합니다.</span></div>
-        <div class="mypage-field-row">
-          <input type="text" id="mypageNicknameInput" maxlength="12" placeholder="예: 열공왕">
-          <button type="button" class="mypage-field-save-btn" id="mypageNicknameSaveBtn" onclick="saveMypageNickname()">저장</button>
         </div>
-        <div class="mypage-field-status" id="mypageNicknameStatus"></div>
       </div>
     </div>
   </section>
@@ -5504,7 +5519,7 @@
     // 아직 안 지난 것 중 가장 가까운 걸 우선 보여주고, 전부 지났으면 가장 최근에 지난 것을 보여준다.
     const upcoming = withDiff.filter(d => d.diffDays >= 0).sort((a, b) => a.diffDays - b.diffDays);
     const chosen = upcoming.length ? upcoming[0] : withDiff.sort((a, b) => b.diffDays - a.diffDays)[0];
-    if (chosen.diffDays > 0) el.textContent = chosen.title + "까지 D-" + chosen.diffDays;
+    if (chosen.diffDays > 0) el.textContent = chosen.title + " D-" + chosen.diffDays;
     else if (chosen.diffDays === 0) el.textContent = chosen.title + " 당일이에요! D-DAY";
     else el.textContent = chosen.title + " 종료(D+" + Math.abs(chosen.diffDays) + ")";
   }
@@ -8176,11 +8191,9 @@
     const photo = localStorage.getItem("holoStudentPhoto") || "";
     const nameEl = document.getElementById("sbProfileName");
     const schoolEl = document.getElementById("sbProfileSchool");
-    const sepEl = document.getElementById("sbProfileSep");
     const avatarEl = document.getElementById("sbProfileAvatar");
     if (nameEl) nameEl.textContent = name || "학생";
     if (schoolEl) schoolEl.textContent = school;
-    if (sepEl) sepEl.style.display = school ? "" : "none"; // 학교 정보가 없으면 "/" 구분자도 숨긴다
     renderAvatarInto(avatarEl, name, photo);
   }
   function initMypage() {
