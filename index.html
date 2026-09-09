@@ -5279,7 +5279,7 @@
     if (view === "cumulative") loadDayList();
     // "오늘의 학습 기록" 카드(계획/일기/AI 홀로 현황 + 점수)가 이제 홈 화면에 있어서, 홈에
     // 들어올 때도 recordhub와 똑같이 loadTodayTileStatus()로 채운다.
-    if (view === "home") { loadTodayTileStatus(); loadHomeScheduleToday(); loadHomePlannerToday(); }
+    if (view === "home") { syncHomeCardHeights(); loadTodayTileStatus(); loadHomeScheduleToday(); loadHomePlannerToday(); }
     if (view === "recordhub") { loadRecordHubStatus(); setRhCumWeekLabel(); loadRhWeekScore(); }
     if (view === "scheduleManage") loadScheduleManage();
     if (view === "ranking") switchRankingTab("today"); // 매번 "오늘의 랭킹" 탭부터 새로 불러온다
@@ -5534,6 +5534,18 @@
       if (h > 0) boxes.forEach(box => { box.style.height = h + "px"; });
     });
   }
+  // 위 syncHomeCardHeights()를 데이터 로드가 끝나는 시점마다 일일이 호출해주는 방식은,
+  // 폰트 로딩이 늦게 끝나거나 서버 응답이 느릴 때(콜드 스타트 등) 그 사이에는 박스 높이가
+  // 안 맞춰진 "풀린" 상태로 화면에 잠깐 보이는 문제가 있었다(새로고침할 때마다 랜덤하게
+  // 보이던 원인). ResizeObserver로 "오늘의 공부" 카드 자체의 실제 높이 변화를 직접 감시해서,
+  // 원인이 뭐든(폰트 스왑, 느린 응답, 배지 텍스트 길이 변화 등) 높이가 바뀌는 순간 항상
+  // 다시 맞춰주도록 안전장치를 둔다.
+  if (window.ResizeObserver) {
+    const rhHomeAnchor = document.querySelector(".home-promo-slot .rh-tile");
+    if (rhHomeAnchor) {
+      new ResizeObserver(() => syncHomeCardHeights()).observe(rhHomeAnchor);
+    }
+  }
   updateRecordDate();
   setInterval(updateRecordDate, 60 * 1000);
 
@@ -5545,6 +5557,7 @@
   // 사이드바 등 나머지 스크립트 전체가 실행되지 않는 문제가 있었다.
   setTimeout(() => {
     if (localStorage.getItem("holoStudentId")) {
+      syncHomeCardHeights();
       loadTodayTileStatus();
       loadHomeScheduleToday();
       loadHomePlannerToday();
