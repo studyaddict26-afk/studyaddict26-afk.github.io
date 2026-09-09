@@ -800,6 +800,23 @@
   .pp-chat-plan-blocks { display: flex; flex-direction: column; gap: 10px; }
   .pp-chat-plan-blocks .planner-block-head { font-size: 0.74rem; }
   .pp-chat-plan-blocks .planner-task-text { font-size: 0.74rem; }
+  /* "지금 계획 괜찮은지 봐주세요" 버튼을 누르면 바로 AI를 부르지 않고, 어떤 기준으로
+     봐줄지 먼저 고르게 하는 카드(챗봇 버블 안에 뜬다) */
+  .plan-check-choice {
+    background: var(--cream); border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 16px; margin-top: 6px; max-width: 320px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .plan-check-choice-q { font-size: 0.8rem; font-weight: 700; color: var(--ink); }
+  .plan-check-choice-opts { display: flex; flex-direction: column; gap: 8px; }
+  .plan-check-choice-btn {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+    font-family: inherit; font-size: 0.78rem; font-weight: 700; color: var(--ink); text-align: left;
+    background: var(--paper); border: 1px solid var(--line-dark); border-radius: 10px; padding: 10px 12px; cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
+  }
+  .plan-check-choice-btn:hover { border-color: var(--green); color: var(--green-deep); background: var(--green-soft); }
+  .plan-check-choice-picked { font-size: 0.78rem; font-weight: 700; color: var(--green-deep); }
   .sched-chat-col {
     flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column;
     background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
@@ -3643,7 +3660,7 @@
             <button type="button" class="sched-chat-quick-btn" onclick="send('plan', '내일 계획을 미리 세우고 싶어요.')">📅 내일 계획 미리 세우기</button>
             <button type="button" class="sched-chat-quick-btn" onclick="send('plan', '나중 날짜의 계획을 미리 세우고 싶어요.')">🗓️ 나중 계획 세우기</button>
             <button type="button" class="sched-chat-quick-btn" onclick="ppQuickPrompt()">📝 내 습관 또는 문제점 입력해두기</button>
-            <button type="button" class="sched-chat-quick-btn" onclick="send('plan', '지금 세운 계획이 괜찮은지 봐주세요.')">✅ 지금 계획 괜찮은지 봐주세요</button>
+            <button type="button" class="sched-chat-quick-btn" onclick="planCheckQuickPrompt()">✅ 지금 계획 괜찮은지 봐주세요</button>
           </div>
           <div class="input-zone">
             <div class="input-box">
@@ -6073,6 +6090,43 @@
     addMsg("plan", "bot", escapeHtml(text));
     if (!chatHistory["plan"]) chatHistory["plan"] = [];
     chatHistory["plan"].push({ role: "assistant", content: text });
+  }
+
+  // "지금 계획 괜찮은지 봐주세요" — 바로 AI를 부르지 않고, 어떤 기준으로 봐줄지 먼저
+  // 고르게 한다(누적된 이행 정도 기반 vs 특정 날짜 하나만). ppQuickPrompt와 같은 방식으로
+  // 봇이 먼저 말을 건넨 것처럼 chatHistory에도 남겨서, 다음 대화가 자연스럽게 이어지게 한다.
+  let planCheckSeq = 0;
+  const PLAN_CHECK_CHOICE_LABEL = {
+    accum: "📊 누적된 계획 및 이행 정도를 바탕으로 분석하기",
+    specific: "🗓️ 특정 날짜의 계획 분석하기",
+  };
+  const PLAN_CHECK_CHOICE_TEXT = {
+    accum: "그동안 세운 계획들과 실제로 얼마나 이행했는지를 누적해서 살펴보고, 지금 계획이 괜찮은지 분석해주세요.",
+    specific: "특정 날짜 하나를 골라서 그날의 계획이 괜찮은지 분석해주세요. 어떤 날짜인지 저한테 먼저 물어봐주세요.",
+  };
+  function planCheckQuickPrompt() {
+    planCheckSeq++;
+    const seq = planCheckSeq;
+    const askText = "지금 계획이 괜찮은지 봐드릴게요. 어떤 기준으로 봐드릴까요?";
+    const html =
+      '<div class="plan-check-choice" id="planCheckChoice-' + seq + '">' +
+        '<div class="plan-check-choice-q">' + escapeHtml(askText) + '</div>' +
+        '<div class="plan-check-choice-opts">' +
+          '<button type="button" class="plan-check-choice-btn" onclick="sendPlanCheckChoice(' + seq + ', \'accum\')">' + PLAN_CHECK_CHOICE_LABEL.accum + '</button>' +
+          '<button type="button" class="plan-check-choice-btn" onclick="sendPlanCheckChoice(' + seq + ', \'specific\')">' + PLAN_CHECK_CHOICE_LABEL.specific + '</button>' +
+        '</div>' +
+      '</div>';
+    addMsg("plan", "bot", html);
+    if (!chatHistory["plan"]) chatHistory["plan"] = [];
+    chatHistory["plan"].push({ role: "assistant", content: askText });
+  }
+  function sendPlanCheckChoice(seq, mode) {
+    const card = document.getElementById("planCheckChoice-" + seq);
+    if (card) {
+      const optsEl = card.querySelector(".plan-check-choice-opts");
+      if (optsEl) optsEl.outerHTML = '<div class="plan-check-choice-picked">' + escapeHtml(PLAN_CHECK_CHOICE_LABEL[mode] || "") + ' 선택함</div>';
+    }
+    send("plan", PLAN_CHECK_CHOICE_TEXT[mode]);
   }
 
   // ── 학습 플래너/공부일기 ↔ 홀로 AI 질의응답 탭 전환 ──
