@@ -3607,13 +3607,22 @@
           </div>
           <div class="chat-wrap" id="chat-schedule"></div>
           <div class="sched-chat-quick-row">
-            <button type="button" class="sched-chat-quick-btn" onclick="send('schedule', '고정 스케줄 - 돌발 스케줄 차이점이 뭔가요?')">❓ 고정 스케줄 - 돌발 스케줄 차이점이 뭔가요?</button>
-            <button type="button" class="sched-chat-quick-btn" onclick="send('schedule', '네, 방금 얘기한 대로 확정해서 저장해주세요.')">✅ 고정 스케줄 확정하기</button>
+            <button type="button" class="sched-chat-quick-btn" onclick="schedDiffPrompt()">❓ 고정 스케줄 - 돌발 스케줄 차이점이 뭔가요?</button>
+            <button type="button" class="sched-chat-quick-btn" onclick="send('schedule', '제 고정(요일별) 스케줄을 새로 확정하고 싶어요.')">✅ 고정 스케줄 확정하기</button>
             <button type="button" class="sched-chat-quick-btn" onclick="schedQuickPrompt('fixed')">📌 고정 스케줄 변경하기</button>
             <button type="button" class="sched-chat-quick-btn" onclick="schedQuickPrompt('adhoc')">🚪 돌발 스케줄 변경하기</button>
           </div>
           <div class="input-zone">
             <div class="input-box">
+              <div class="input-plus-wrap">
+                <button type="button" class="input-plus-btn" id="inputPlusBtn-schedule" onclick="toggleInputPlusMenu('schedule')" aria-label="더보기">+</button>
+                <div class="input-plus-menu" id="inputPlusMenu-schedule">
+                  <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('schedule');openPhotoPanel('schedule')">
+                    <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a5 5 0 0 1-7.07-7.07l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95l-9.19 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span>
+                    사진 첨부하기
+                  </button>
+                </div>
+              </div>
               <input id="q-schedule" type="text" placeholder="예: 월요일에 국어 학원이 생겼어요" autocomplete="off">
               <button onclick="send('schedule')">보내기</button>
             </div>
@@ -3621,6 +3630,33 @@
         </div>
       </div>
     </div>
+
+    <aside class="photo-panel" id="photo-panel-schedule">
+      <div class="photo-panel-head">
+        <h3>📎 사진 첨부하기</h3>
+        <button type="button" class="photo-panel-close" onclick="closePhotoPanel('schedule')" aria-label="닫기">×</button>
+      </div>
+      <div class="photo-drop-zone" id="photo-drop-schedule" tabindex="0" onclick="document.getElementById('file-schedule').click()" onpaste="handlePasteImage('schedule', event)">
+        <img id="photo-preview-schedule" src="" alt="첨부한 사진" style="display:none;">
+        <span class="photo-drop-placeholder" id="photo-drop-placeholder-schedule">클릭해서 업로드하거나<br>Ctrl+V로 붙여넣기</span>
+      </div>
+      <input type="file" id="file-schedule" accept="image/*" style="display:none" onchange="handleImageAttach('schedule', this)">
+      <div class="photo-panel-section">
+        <h3>사진에 대한 설명</h3>
+        <div class="photo-panel-field">
+          <label>1. 무엇에 대한 사진인가요?</label>
+          <textarea id="photo-q1-schedule" placeholder="예: 학원 시간표 변경 안내문, 진료확인서 등"></textarea>
+        </div>
+        <div class="photo-panel-field">
+          <label>2. 요청 사항</label>
+          <textarea id="photo-q2-schedule" placeholder="예: 이 시간표대로 화요일 스케줄을 바꿔주세요"></textarea>
+        </div>
+      </div>
+      <div class="photo-panel-actions">
+        <button type="button" class="apply-cancel-btn" onclick="closePhotoPanel('schedule')">취소</button>
+        <button type="button" class="apply-submit-btn" onclick="submitPhotoAttach('schedule')">보내기</button>
+      </div>
+    </aside>
 
     <div class="sched-modal-overlay" id="sched-panel-backdrop" onclick="closeSchedPanel()">
       <div class="sched-modal" id="sched-panel-fixed" onclick="event.stopPropagation()">
@@ -4516,7 +4552,7 @@
       </div>
     </div>
 
-    <div class="photo-panel-backdrop" id="photo-panel-backdrop" onclick="closePhotoPanel('chat')"></div>
+    <div class="photo-panel-backdrop" id="photo-panel-backdrop" onclick="closePhotoPanelViaBackdrop()"></div>
     <aside class="photo-panel" id="photo-panel-chat">
       <div class="photo-panel-head">
         <h3>📎 사진 첨부하기</h3>
@@ -6452,16 +6488,36 @@
     // 대화 기록이 있으면 그것만 불러오고 없으면 빈 채로 시작한다(quick 버튼으로 시작).
     loadChatHistory("schedule");
   }
+  // 각 quick 버튼을 눌렀을 때 학생이 "말한 것"처럼 먼저 남기는 ME 말풍선 라벨과,
+  // 그 뒤에 봇이 먼저 건네는 안내 문구(AI를 부르지 않고 바로 보여줌 — ppQuickPrompt와 같은 방식).
+  const SCHED_QUICK_LABELS = {
+    fixed: "고정 스케줄을 변경하고 싶어요.",
+    adhoc: "돌발 스케줄을 변경하고 싶어요.",
+  };
   const SCHED_QUICK_PROMPTS = {
-    fixed: "고정 스케줄 변경을 도와드릴게요~~ ~~하고 ~~해주세요",
-    adhoc: "돌발 스케줄 변경을 도와드릴게요~~ ~~하고 ~~해주세요",
+    fixed: "고정 스케줄 중 어떤 요일의 시간을 바꾸고 싶으신가요? 예를 들어 \"화요일은 이제 7시부터 10시까지로 바꿔주세요\"처럼 편하게 말씀해주세요.",
+    adhoc: "어떤 날짜의 일정 변경인지 편하게 말씀해주세요. 오늘 갑자기 늦거나 못 오시는 경우인지, 아니면 며칠 뒤 예정된 다른 날짜 일정인지 알려주시면 돼요. 학원 시간표 변경 안내문처럼 확인할 자료가 있으면 위쪽 + 버튼으로 사진도 첨부해주세요.",
   };
   function schedQuickPrompt(which) {
     const text = SCHED_QUICK_PROMPTS[which];
     if (!text) return;
-    addMsg("schedule", "bot", escapeHtml(text));
+    const label = SCHED_QUICK_LABELS[which] || text;
+    addMsg("schedule", "user", escapeHtml(label));
     if (!chatHistory["schedule"]) chatHistory["schedule"] = [];
+    chatHistory["schedule"].push({ role: "user", content: label });
+    addMsg("schedule", "bot", escapeHtml(text));
     chatHistory["schedule"].push({ role: "assistant", content: text });
+  }
+  // "고정 스케줄 - 돌발 스케줄 차이점이 뭔가요?" — 고정 답이 정해진 FAQ라서 AI를 부르지
+  // 않고 바로 안내한다(비용 절약 + 항상 같은 정확한 설명 보장).
+  function schedDiffPrompt() {
+    const askedText = "고정 스케줄 - 돌발 스케줄 차이점이 뭔가요?";
+    const answerText = "고정 스케줄은 요일마다 매주 반복되는 정규 등하원 시간표예요(예: 매주 화요일 5시~10시). 돌발 스케줄은 특정 날짜 하루에만 해당하는 예외 일정이에요(예: 이번 주 목요일만 학원 때문에 늦게 옴, 오늘 몸이 안 좋아서 조퇴). 매주 반복되면 고정, 그 날 하루만 다르면 돌발이라고 생각하시면 돼요.";
+    addMsg("schedule", "user", escapeHtml(askedText));
+    if (!chatHistory["schedule"]) chatHistory["schedule"] = [];
+    chatHistory["schedule"].push({ role: "user", content: askedText });
+    addMsg("schedule", "bot", escapeHtml(answerText));
+    chatHistory["schedule"].push({ role: "assistant", content: answerText });
   }
   function openSchedPanel(which) {
     document.getElementById("sched-panel-" + which).classList.add("on");
@@ -6967,7 +7023,7 @@
 
   // ── 사진 첨부 (질문하기 챗봇에서 문제/자료 사진을 찍어 보낼 수 있는 기능) ──
   const attachedImages = {};
-  const ATTACH_INPUT_PLACEHOLDER = { chat: "궁금한 것을 무엇이든 물어보세요" };
+  const ATTACH_INPUT_PLACEHOLDER = { chat: "궁금한 것을 무엇이든 물어보세요", schedule: "예: 월요일에 국어 학원이 생겼어요" };
 
   function resizeImage(dataUrl, maxDim, quality, callback) {
     const img = new Image();
@@ -7039,7 +7095,12 @@
     if (placeholder) placeholder.style.display = "block";
   }
 
+  // 사진 첨부 패널은 과목이 여러 개(chat/schedule 등)라 배경막(backdrop)은 하나만 공유해서
+  // 쓴다 — 지금 어떤 과목의 패널이 열려 있는지 기억해뒀다가, 배경막을 눌러 닫을 때 그
+  // 과목 패널을 정확히 닫는다(예전엔 'chat'으로 고정돼 있어서 다른 과목에서 열면 잘못 닫혔다).
+  let photoPanelOpenSubject = null;
   function openPhotoPanel(subject) {
+    photoPanelOpenSubject = subject;
     document.getElementById("photo-panel-" + subject).classList.add("on");
     document.getElementById("photo-panel-backdrop").classList.add("on");
   }
@@ -7047,6 +7108,10 @@
   function closePhotoPanel(subject) {
     document.getElementById("photo-panel-" + subject).classList.remove("on");
     document.getElementById("photo-panel-backdrop").classList.remove("on");
+    if (photoPanelOpenSubject === subject) photoPanelOpenSubject = null;
+  }
+  function closePhotoPanelViaBackdrop() {
+    if (photoPanelOpenSubject) closePhotoPanel(photoPanelOpenSubject);
   }
 
   // ── 다른 AI(GPT/Claude 등)에서 이미 공부한 내용을 홀로로 가져오기 ──
