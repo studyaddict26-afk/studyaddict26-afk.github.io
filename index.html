@@ -794,7 +794,7 @@
   /* 계획 상담 챗봇 말풍선 안에 바로 뜨는 계획 입력 카드 — AI가 날짜를 확정하면 뜬다. */
   .pp-chat-plan-card {
     background: var(--cream); border: 1px solid var(--line); border-radius: 12px;
-    padding: 14px 16px; margin-top: 6px; max-width: 420px;
+    padding: 14px 16px; margin-top: 6px; max-width: 1260px;
   }
   .pp-chat-plan-date { font-size: 0.78rem; font-weight: 800; color: var(--ink); text-align: center; margin-bottom: 10px; }
   .pp-chat-plan-blocks { display: flex; flex-direction: column; gap: 10px; }
@@ -3658,7 +3658,7 @@
           </div>
           <div class="chat-wrap" id="chat-plan"></div>
           <div class="sched-chat-quick-row">
-            <button type="button" class="sched-chat-quick-btn" onclick="send('plan', '오늘 계획을 세우고 싶어요.')">📅 오늘 계획 세우기</button>
+            <button type="button" class="sched-chat-quick-btn" onclick="todayPlanQuickPrompt()">📅 오늘 계획 세우기</button>
             <button type="button" class="sched-chat-quick-btn" onclick="send('plan', '나중 날짜의 계획을 미리 세우고 싶어요.')">🗓️ 나중 계획 미리 세우기</button>
             <button type="button" class="sched-chat-quick-btn" onclick="habitQuickPrompt()">📝 내 습관 또는 문제점 입력해두기</button>
             <button type="button" class="sched-chat-quick-btn" onclick="planCheckQuickPrompt()">✅ 지금 계획 괜찮은지 봐주세요</button>
@@ -6116,6 +6116,34 @@
         chat.style.height = h + "px";
       }
     });
+  }
+  // "오늘 계획 세우기" 버튼 — 오늘 "오늘의 공부" 페이지에서 최초 계획을 이미 세운 상태라면
+  // (그 이후로는 "오늘의 공부" 페이지에서만 수정 가능하므로) 여기서 새로 계획을 세우게 두지
+  // 않고, 안내 문구와 그 페이지로 바로 이동하는 버튼만 보여준다. 아직 최초 계획이 없으면
+  // 원래대로 AI 대화("오늘" 케이스)로 진행한다.
+  function todayPlanQuickPrompt() {
+    const askedText = "오늘 계획을 세우고 싶어요.";
+    planApi({ action: "today_status", date: getLocalDateKey() })
+      .then(data => {
+        if (data.hasPlan) {
+          addMsg("plan", "user", escapeHtml(askedText));
+          if (!chatHistory["plan"]) chatHistory["plan"] = [];
+          chatHistory["plan"].push({ role: "user", content: askedText });
+          const msgText = "오늘의 최초 계획은 이미 세워져 있어요. 계획 수정은 \"오늘의 공부\" 페이지에서만 가능해요.";
+          const html =
+            '<div class="plan-check-choice">' +
+              '<div class="plan-check-choice-q">' + escapeHtml(msgText) + '</div>' +
+              '<div class="plan-check-choice-opts">' +
+                '<button type="button" class="plan-check-choice-btn" onclick="go(\'todayrecord\')">오늘의 공부 페이지로 이동하기</button>' +
+              '</div>' +
+            '</div>';
+          addMsg("plan", "bot", html);
+          chatHistory["plan"].push({ role: "assistant", content: msgText });
+        } else {
+          send("plan", askedText);
+        }
+      })
+      .catch(() => send("plan", askedText));
   }
   // "내 습관 또는 문제점 입력해두기" — 실제로 AI를 호출하지 않고, 학생이 편하게 이어서 적을 수
   // 있도록 안내하는 말을 챗봇이 먼저 건넨 것처럼 보여준다(스케줄 챗봇의 schedQuickPrompt와 같은 방식).
