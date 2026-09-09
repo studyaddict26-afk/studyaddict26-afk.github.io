@@ -2434,7 +2434,9 @@
 
   .chat-wrap {
     flex: 1; min-height: 0; width: 100%; max-width: 800px; margin: 0 auto;
-    padding: 28px 20px 8px 20px;
+    /* 아래쪽 패딩을 마스크 흐림 구간(32px)보다 넉넉히 크게 둬서, 맨 아래 메시지 글자가
+       흐림 구간 안에 걸쳐 뿌옇게 보이지 않고 그 위에서 끝나도록 한다. */
+    padding: 28px 20px 40px 20px;
     display: flex; flex-direction: column; gap: 26px;
     overflow-y: auto;
     scrollbar-width: none;
