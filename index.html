@@ -6996,7 +6996,9 @@
     fetch(CHAT_API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "history", subject: subject, studentId: studentId }),
+      // 새벽 6시 기준 "오늘" 학습일치 대화만 불러온다(서버 history 액션 참고) — 지난 대화는
+      // 이미 "누적된 학습 기록"으로 정리되니, 매번 다시 보내는 살아있는 맥락은 그날치면 충분하다.
+      body: JSON.stringify({ action: "history", subject: subject, studentId: studentId, date: getLocalDateKey() }),
     })
       .then(res => res.json())
       .then(data => {
