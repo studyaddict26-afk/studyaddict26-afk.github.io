@@ -120,38 +120,51 @@
   .mypage-photo-status.error { color: #B3261E; }
   /* 마이페이지의 "다음 시험일"/"랭킹 닉네임"이 함께 쓰는 카드 스타일 */
   .mypage-field-card {
-    margin-top: 16px; max-width: 420px;
+    margin-top: 14px; max-width: 420px;
     background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
-    padding: 18px 20px;
+    padding: 16px 18px;
   }
-  .mypage-field-label { font-size: 0.84rem; font-weight: 800; color: var(--ink); margin-bottom: 10px; }
-  .mypage-field-hint { font-size: 0.72rem; font-weight: 500; color: var(--ink-soft); }
+  .mypage-field-label {
+    font-size: 0.66rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-soft); margin-bottom: 8px;
+  }
+  .mypage-field-hint { display: block; margin-top: 2px; font-size: 0.72rem; font-weight: 500; letter-spacing: normal; text-transform: none; color: var(--ink-soft); opacity: 0.85; }
   .mypage-field-row { display: flex; gap: 8px; }
   .mypage-field-row input[type="date"], .mypage-field-row input[type="text"] {
     flex: 1; min-width: 0; font-family: inherit; font-size: 0.86rem;
-    padding: 8px 10px; border: 1px solid var(--line-dark); border-radius: 8px;
-    background: var(--cream); color: var(--ink); box-sizing: border-box;
+    padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px;
+    background: var(--paper); color: var(--ink); box-sizing: border-box;
+    transition: border-color 0.15s;
+  }
+  .mypage-field-row input[type="date"]:focus, .mypage-field-row input[type="text"]:focus {
+    outline: none; border-color: var(--green);
   }
   .mypage-field-save-btn {
-    flex: none; font-family: inherit; font-size: 0.84rem; font-weight: 700; color: #fff;
+    flex: none; font-family: inherit; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.01em; color: #fff;
     background: var(--ink); border: none; border-radius: 8px; padding: 8px 16px; cursor: pointer;
     transition: background 0.18s;
   }
   .mypage-field-save-btn:hover { background: var(--green-deep); }
-  .mypage-field-status { font-size: 0.76rem; color: var(--ink-soft); margin-top: 8px; }
+  .mypage-field-save-btn:disabled { background: var(--line-dark); cursor: default; }
+  .mypage-field-row input:disabled { background: var(--cream); color: var(--ink-soft); }
+  .mypage-field-status { font-size: 0.74rem; color: var(--ink-soft); margin-top: 6px; min-height: 0; }
   .mypage-field-status.success { color: var(--green-deep); }
   .mypage-field-status.error { color: #B3261E; }
-  .mypage-dday-list { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
+  /* 디데이 목록 — 상자마다 테두리를 두르지 않고, 가는 구분선만 있는 매끈한 리스트로 보여준다. */
+  .mypage-dday-list { margin-top: 4px; }
   .mypage-dday-row {
     display: flex; align-items: center; gap: 10px;
-    background: var(--cream); border: 1px solid var(--line); border-radius: 8px;
-    padding: 8px 12px;
+    padding: 9px 2px; border-bottom: 1px solid var(--line);
   }
+  .mypage-dday-list .mypage-dday-row:last-child { border-bottom: none; }
   .mypage-dday-title { flex: 1; min-width: 0; font-size: 0.84rem; font-weight: 700; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .mypage-dday-date { flex: none; font-size: 0.8rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
-  .mypage-dday-del { flex: none; background: none; border: none; font-size: 1rem; color: var(--ink-soft); cursor: pointer; line-height: 1; padding: 2px 4px; }
+  .mypage-dday-date { flex: none; font-size: 0.78rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; letter-spacing: 0.01em; }
+  .mypage-dday-del {
+    flex: none; background: none; border: none; font-size: 0.92rem; color: var(--line-dark);
+    cursor: pointer; line-height: 1; padding: 2px 2px; transition: color 0.15s;
+  }
   .mypage-dday-del:hover { color: #B3261E; }
-  .mypage-dday-empty { font-size: 0.78rem; color: var(--ink-soft); margin-top: 10px; }
+  .mypage-dday-empty { font-size: 0.78rem; color: var(--ink-soft); margin-top: 4px; }
 
   /* ── 우리 독서실 랭킹 ── */
   .ranking-desc { font-size: 0.8rem; color: var(--ink-soft); margin: 4px 0 16px; max-width: 480px; line-height: 1.5; }
@@ -170,7 +183,17 @@
     background: var(--paper); border: 1px solid var(--line); border-radius: 10px;
     padding: 10px 16px;
   }
-  .ranking-row.me { border-color: var(--green); background: var(--green-soft); }
+  /* "내 랭킹"(로그인한 학생 본인 줄)은 눈에 띄게 강조한다 — 굵은 초록 테두리 + 은은한 그림자 +
+     "나" 배지. */
+  .ranking-row.me {
+    border: 2px solid var(--green-deep); background: var(--green-soft);
+    box-shadow: 0 4px 14px rgba(21,82,47,0.16); padding: 9px 15px;
+  }
+  .ranking-row.me .ranking-rank, .ranking-row.me .ranking-nickname { color: var(--green-deep); }
+  .ranking-me-badge {
+    flex: none; font-size: 0.62rem; font-weight: 800; color: #fff; background: var(--green-deep);
+    border-radius: 999px; padding: 2px 8px; letter-spacing: 0.02em;
+  }
   .ranking-rank { flex: none; width: 28px; font-size: 0.9rem; font-weight: 800; color: var(--ink-soft); text-align: center; }
   .ranking-nickname { flex: 1; min-width: 0; font-size: 0.88rem; font-weight: 700; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .ranking-score { flex: none; font-size: 0.86rem; font-weight: 800; color: var(--green-deep); }
@@ -606,20 +629,21 @@
     display: flex; flex-direction: column;
   }
   .home-schedule-head { display: flex; align-items: center; justify-content: center; }
-  /* 이 크림색 안쪽 박스는 "오늘의 학습 기록" 카드 높이에 맞춰 늘 같은 세로 길이를 유지한다
-     (min-height:0 + overflow-y:auto) — 스케줄 로그나 플래너 목록이 아무리 길어져도 이 박스
-     자체는 커지지 않고, 안쪽에서만 스크롤된다. */
+  /* 이 크림색 안쪽 박스는 "오늘의 학습 기록" 카드 높이에 맞춰 늘 같은 세로 길이를 유지한다.
+     스크롤은 이 박스 전체가 아니라 날짜 아래 목록(.home-schedule-log/.home-planner-blocks)
+     에서만 일어나야 날짜 줄이 안 밀리고 항상 고정으로 보인다 — 그래서 overflow는 여기가
+     아니라 그 목록 쪽에 준다(min-height:0만 여기 남겨서 자식이 남는 공간을 정확히 계산하게). */
   .home-schedule-inner {
     background: var(--cream); border-radius: 8px;
     padding: 10px 12px; margin-top: 10px; flex: 1; min-height: 0;
     box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-start;
-    overflow-y: auto;
   }
   .home-schedule-date { font-size: 0.74rem; font-weight: 700; color: var(--ink); margin: 0 0 10px; text-align: center; flex: none; }
   .home-schedule-log {
     list-style: none; margin: 0; padding: 0;
     display: grid; grid-template-columns: auto auto; column-gap: 5px; row-gap: 6px;
-    flex: 1; min-height: 0; align-content: center; justify-content: center;
+    flex: 1; min-height: 0; align-content: start; justify-content: center;
+    overflow-y: auto;
   }
   .home-schedule-log li { display: contents; }
   .home-schedule-log li.sched-empty-msg { display: block; grid-column: 1 / -1; text-align: center; }
@@ -636,7 +660,7 @@
   .home-schedule-title .arrow { color: var(--green); font-weight: 800; transition: transform 0.15s; }
   .home-schedule-title:hover .arrow { transform: translateX(2px); }
   /* 홈 화면 "내 플래너 관리하기" 박스 안, 오늘 계획을 오전/오후/저녁으로 간단히 보여주는 목록 */
-  .home-planner-blocks { display: flex; flex-direction: column; flex: 1; min-height: 0; justify-content: center; }
+  .home-planner-blocks { display: flex; flex-direction: column; flex: 1; min-height: 0; justify-content: flex-start; overflow-y: auto; }
   .hps-block { display: flex; flex-direction: column; gap: 4px; flex: none; }
   .hps-title { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em; color: var(--ink-soft); }
   .hps-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; flex: none; }
@@ -2599,14 +2623,18 @@
   .record-date { display: block; font-size: 0.66rem; font-weight: 700; color: var(--ink-soft); margin-top: 2px; }
   .planner-body {
     flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 14px; overflow-y: auto;
-    scrollbar-width: thin; scrollbar-color: var(--line-dark) transparent; /* Firefox */
   }
-  /* 얇은 사이드바형 스크롤바 — 위아래 화살표 버튼 없이, 가는 막대만 보이게 한다(Chrome/Edge/Safari). */
-  .planner-body::-webkit-scrollbar { width: 6px; }
-  .planner-body::-webkit-scrollbar-track { background: transparent; }
-  .planner-body::-webkit-scrollbar-thumb { background: var(--line-dark); border-radius: 999px; }
-  .planner-body::-webkit-scrollbar-thumb:hover { background: var(--ink-soft); }
-  .planner-body::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+  /* 얇은 사이드바형 스크롤바 — 위아래 화살표 버튼 없이, 가는 막대만 보이게 한다(Chrome/Edge/Safari,
+     Firefox는 scrollbar-width/color). 스크롤되는 곳(플래너 본문, 홈 화면 스케줄/플래너 목록)마다
+     공통으로 쓴다. */
+  .planner-body, .home-schedule-log, .home-planner-blocks {
+    scrollbar-width: thin; scrollbar-color: var(--line-dark) transparent;
+  }
+  .planner-body::-webkit-scrollbar, .home-schedule-log::-webkit-scrollbar, .home-planner-blocks::-webkit-scrollbar { width: 6px; }
+  .planner-body::-webkit-scrollbar-track, .home-schedule-log::-webkit-scrollbar-track, .home-planner-blocks::-webkit-scrollbar-track { background: transparent; }
+  .planner-body::-webkit-scrollbar-thumb, .home-schedule-log::-webkit-scrollbar-thumb, .home-planner-blocks::-webkit-scrollbar-thumb { background: var(--line-dark); border-radius: 999px; }
+  .planner-body::-webkit-scrollbar-thumb:hover, .home-schedule-log::-webkit-scrollbar-thumb:hover, .home-planner-blocks::-webkit-scrollbar-thumb:hover { background: var(--ink-soft); }
+  .planner-body::-webkit-scrollbar-button, .home-schedule-log::-webkit-scrollbar-button, .home-planner-blocks::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
   .planner-block { display: flex; flex-direction: column; gap: 4px; }
   .planner-block-head { font-size: 0.68rem; font-weight: 800; color: var(--ink); letter-spacing: 0.04em; }
   .planner-block-head-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -3691,10 +3719,10 @@
       </div>
 
       <div class="mypage-field-card">
-        <div class="mypage-field-label">닉네임 <span class="mypage-field-hint">(우리 독서실 랭킹에서 실명 대신 표시돼요 — 설정해야 랭킹에 참여돼요) 3회까지 다시 설정할 수 있습니다.</span></div>
+        <div class="mypage-field-label">닉네임 <span class="mypage-field-hint">'내 랭킹'에서 실명 대신 표시되며, 설정 후 변경 불가능합니다.</span></div>
         <div class="mypage-field-row">
           <input type="text" id="mypageNicknameInput" maxlength="12" placeholder="예: 열공왕">
-          <button type="button" class="mypage-field-save-btn" onclick="saveMypageNickname()">저장</button>
+          <button type="button" class="mypage-field-save-btn" id="mypageNicknameSaveBtn" onclick="saveMypageNickname()">저장</button>
         </div>
         <div class="mypage-field-status" id="mypageNicknameStatus"></div>
       </div>
@@ -5302,6 +5330,7 @@
           '<div class="ranking-row' + (r.id === myId ? ' me' : '') + '">' +
             '<span class="ranking-rank">' + r.rank + '</span>' +
             '<span class="ranking-nickname">' + escapeHtml(r.nickname) + '</span>' +
+            (r.id === myId ? '<span class="ranking-me-badge">나</span>' : '') +
             '<span class="ranking-score">' + r.score + '점</span>' +
           '</div>'
         ).join("")
@@ -8170,8 +8199,11 @@
     renderMypageDdayList();
     const ddayStatusEl = document.getElementById("mypageDdayStatus");
     if (ddayStatusEl) { ddayStatusEl.textContent = ""; ddayStatusEl.className = "mypage-field-status"; }
+    const savedNickname = localStorage.getItem("holoStudentNickname") || "";
     const nicknameEl = document.getElementById("mypageNicknameInput");
-    if (nicknameEl) nicknameEl.value = localStorage.getItem("holoStudentNickname") || "";
+    const nicknameBtn = document.getElementById("mypageNicknameSaveBtn");
+    if (nicknameEl) { nicknameEl.value = savedNickname; nicknameEl.disabled = !!savedNickname; }
+    if (nicknameBtn) nicknameBtn.disabled = !!savedNickname;
     const nicknameStatusEl = document.getElementById("mypageNicknameStatus");
     if (nicknameStatusEl) { nicknameStatusEl.textContent = ""; nicknameStatusEl.className = "mypage-field-status"; }
   }
@@ -8198,14 +8230,16 @@
         ).join("")
       : '<div class="mypage-dday-empty">아직 등록한 디데이가 없어요.</div>';
   }
-  function saveMypageDdayList(list, statusEl, successMsg) {
+  // 성공했을 때는 목록에 바로 반영되는 것 자체가 확인 표시라, 따로 "추가됐어요" 같은
+  // 문구를 띄우지 않는다(실패했을 때만 이유를 알려준다).
+  function saveMypageDdayList(list, statusEl) {
     const id = localStorage.getItem("holoStudentId");
     if (!id) return;
     db.collection("students").doc(id).update({ ddayList: list }).then(() => {
       localStorage.setItem("holoStudentDdayList", JSON.stringify(list));
       renderMypageDdayList();
       renderHomeDday();
-      if (statusEl) { statusEl.textContent = successMsg; statusEl.className = "mypage-field-status success"; }
+      if (statusEl) { statusEl.textContent = ""; statusEl.className = "mypage-field-status"; }
     }).catch(err => {
       console.error(err);
       if (statusEl) { statusEl.textContent = "저장 중 오류가 발생했어요."; statusEl.className = "mypage-field-status error"; }
@@ -8226,39 +8260,39 @@
       if (statusEl) { statusEl.textContent = "디데이는 최대 3개까지만 등록할 수 있어요. 기존 항목을 지우고 추가해주세요."; statusEl.className = "mypage-field-status error"; }
       return;
     }
-    saveMypageDdayList(list.concat([{ title, date }]), statusEl, "추가됐어요.");
+    saveMypageDdayList(list.concat([{ title, date }]), statusEl);
     if (titleEl) titleEl.value = "";
     if (dateEl) dateEl.value = "";
   }
   function deleteMypageDday(index) {
     const list = getMypageDdayList();
     const statusEl = document.getElementById("mypageDdayStatus");
-    saveMypageDdayList(list.slice(0, index).concat(list.slice(index + 1)), statusEl, "삭제됐어요.");
+    saveMypageDdayList(list.slice(0, index).concat(list.slice(index + 1)), statusEl);
   }
   // 마이페이지에서 "닉네임"을 저장하면 students/{id}.rankingNickname에 저장된다 — 이
   // 값이 없는 학생은 "우리 독서실 랭킹"에 아예 표시되지 않는다(설정해야 참여하는 방식).
-  // 닉네임을 너무 자주 바꾸는 걸 막기 위해, 저장할 때마다 rankingNicknameChangeCount를 하나씩
-  // 늘리고 최대 3번까지만 허용한다(4번째 시도부터는 안내만 띄우고 저장을 막는다).
+  // 한 번 설정하면 그 뒤로는 바꿀 수 없다(고정 닉네임) — 저장에 성공하면 입력칸·버튼을
+  // 잠가서 다시 못 누르게 한다(initMypage()에서도 이미 설정돼 있으면 똑같이 잠근다).
   function saveMypageNickname() {
     const input = document.getElementById("mypageNicknameInput");
+    const btn = document.getElementById("mypageNicknameSaveBtn");
     const statusEl = document.getElementById("mypageNicknameStatus");
     const val = input ? input.value.trim() : "";
     if (!val) {
       if (statusEl) { statusEl.textContent = "닉네임을 입력해주세요."; statusEl.className = "mypage-field-status error"; }
       return;
     }
-    const changeCount = Number(localStorage.getItem("holoStudentNicknameChangeCount") || "0");
-    if (changeCount >= 3) {
-      if (statusEl) { statusEl.textContent = "닉네임은 최대 3번까지만 다시 설정할 수 있어요."; statusEl.className = "mypage-field-status error"; }
+    if (localStorage.getItem("holoStudentNickname")) {
+      if (statusEl) { statusEl.textContent = "이미 설정한 닉네임은 변경할 수 없어요."; statusEl.className = "mypage-field-status error"; }
       return;
     }
     const id = localStorage.getItem("holoStudentId");
     if (!id) return;
-    const nextCount = changeCount + 1;
-    db.collection("students").doc(id).update({ rankingNickname: val, rankingNicknameChangeCount: nextCount }).then(() => {
+    db.collection("students").doc(id).update({ rankingNickname: val }).then(() => {
       localStorage.setItem("holoStudentNickname", val);
-      localStorage.setItem("holoStudentNicknameChangeCount", String(nextCount));
-      if (statusEl) { statusEl.textContent = "저장됐어요. (" + nextCount + "/3회 사용)"; statusEl.className = "mypage-field-status success"; }
+      if (statusEl) { statusEl.textContent = ""; statusEl.className = "mypage-field-status"; }
+      if (input) input.disabled = true;
+      if (btn) btn.disabled = true;
     }).catch(err => {
       console.error(err);
       if (statusEl) { statusEl.textContent = "저장 중 오류가 발생했어요."; statusEl.className = "mypage-field-status error"; }
