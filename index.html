@@ -2471,11 +2471,11 @@
     font-size: 0.76rem;
   }
   .bubble b { font-weight: 700; }
-  .ans-p { margin: 0 0 14px 0; }
+  .ans-p { margin: 0 0 6px 0; }
   .ans-p:last-child { margin-bottom: 0; }
   .ans-heading { font-size: 1.02rem; font-weight: 800; margin: 18px 0 8px 0; }
   .ans-heading:first-child { margin-top: 0; }
-  .ans-list { margin: 0 0 14px 0; padding-left: 22px; }
+  .ans-list { margin: 0 0 6px 0; padding-left: 22px; }
   .ans-list li { margin-bottom: 6px; }
   .ans-list li:last-child { margin-bottom: 0; }
   .bubble .src { display: block; margin-top: 8px; font-size: 0.75rem; color: var(--ink-soft); }
@@ -5956,6 +5956,10 @@
     // 왼쪽 사이드바/달력도 이 날짜로 같이 전환하고, 그 데이터가 준비되면 이 카드도 채운다.
     loadPpDate(dateStr, () => renderPpChatPlanBlocks(seq));
   }
+  // 각 (카드, 블록)별로 "+ 추가하기" 입력줄이 열려 있는지 — 왼쪽 사이드바/최초 계획 팝업의
+  // #plannerBody와 똑같이, 항목이 없을 때도 입력줄이 항상 보이는 게 아니라 "+ 추가하기"를
+  // 눌러야만 나타나고 등록하면 다시 닫히는 형식으로 맞춘다.
+  const ppChatAddRowOpen = {};
   function renderPpChatPlanBlocks(seq) {
     const wrap = document.getElementById("ppChatPlanBlocks-" + seq);
     if (!wrap) return;
@@ -5971,19 +5975,49 @@
           '<button type="button" class="planner-task-del" onclick="deletePpPlanItem(' + it.id + ')" aria-label="삭제">×</button>' +
         '</div>'
       ).join("");
-      return '<div class="planner-block" data-block="' + block + '">' +
-        '<div class="planner-block-head-row"><span class="planner-block-head">' + block + '</span></div>' +
-        '<div class="planner-tasks">' + rows +
-          '<div class="planner-task-row planner-task-new">' +
+      const addRow = ppChatAddRowOpen[seq + "-" + block]
+        ? '<div class="planner-task-row planner-task-new">' +
             '<div class="planner-task-check-ghost"></div>' +
             '<input type="text" class="planner-new-subject-input" id="ppChatSubject-' + seq + '-' + block + '" placeholder="과목" ' +
-              'onkeydown="if(event.key===\'Enter\'){submitPpChatRow(' + seq + ',\'' + block + '\');event.preventDefault();}">' +
+              'onkeydown="if(event.key===\'Enter\'){submitPpChatRow(' + seq + ',\'' + block + '\');event.preventDefault();}" ' +
+              'onblur="handlePpChatRowBlur(' + seq + ',\'' + block + '\')">' +
             '<input type="text" class="planner-new-content-input" id="ppChatContent-' + seq + '-' + block + '" placeholder="내용" ' +
-              'onkeydown="if(event.key===\'Enter\'){submitPpChatRow(' + seq + ',\'' + block + '\');event.preventDefault();}">' +
-          '</div>' +
+              'onkeydown="if(event.key===\'Enter\'){submitPpChatRow(' + seq + ',\'' + block + '\');event.preventDefault();}" ' +
+              'onblur="handlePpChatRowBlur(' + seq + ',\'' + block + '\')">' +
+          '</div>'
+        : '';
+      return '<div class="planner-block" data-block="' + block + '">' +
+        '<div class="planner-block-head-row">' +
+          '<span class="planner-block-head">' + block + '</span>' +
+          '<button type="button" class="planner-block-add-btn" onclick="showPpChatAddRow(' + seq + ',\'' + block + '\')">+ 추가하기</button>' +
         '</div>' +
+        '<div class="planner-tasks">' + rows + addRow + '</div>' +
       '</div>';
     }).join("");
+  }
+  function showPpChatAddRow(seq, block) {
+    ppChatAddRowOpen[seq + "-" + block] = true;
+    renderPpChatPlanBlocks(seq);
+    const el = document.getElementById("ppChatSubject-" + seq + "-" + block);
+    if (el) el.focus();
+  }
+  // 입력줄에서 포커스가 완전히 벗어났을 때: 둘 다 채워져 있으면 저장하고, 둘 다 비어있으면
+  // 입력줄을 닫는다(최초 계획 팝업의 handleNewRowBlur와 같은 방식).
+  function handlePpChatRowBlur(seq, block) {
+    setTimeout(() => {
+      const subjInput = document.getElementById("ppChatSubject-" + seq + "-" + block);
+      const contInput = document.getElementById("ppChatContent-" + seq + "-" + block);
+      if (!subjInput || !contInput) return;
+      if (document.activeElement === subjInput || document.activeElement === contInput) return;
+      const subject = subjInput.value.trim();
+      const content = contInput.value.trim();
+      if (!subject && !content) {
+        ppChatAddRowOpen[seq + "-" + block] = false;
+        renderPpChatPlanBlocks(seq);
+        return;
+      }
+      if (subject && content) submitPpChatRow(seq, block);
+    }, 0);
   }
   function submitPpChatRow(seq, block) {
     const subjInput = document.getElementById("ppChatSubject-" + seq + "-" + block);
@@ -5999,9 +6033,8 @@
       .then(data => {
         if (!data.ok) return;
         ppPlanItems.push({ id: Number(data.id), block: block, subject: subject, text: content, original_text: content, done: 0, active: 1, is_initial: isInitial ? 1 : 0 });
+        ppChatAddRowOpen[seq + "-" + block] = false;
         refreshAllPpPlanViews();
-        const el = document.getElementById("ppChatSubject-" + seq + "-" + block);
-        if (el) el.focus();
       })
       .catch(err => console.error(err));
   }
