@@ -3661,7 +3661,7 @@
           <div class="sched-chat-quick-row">
             <button type="button" class="sched-chat-quick-btn" onclick="send('plan', '내일 계획을 미리 세우고 싶어요.')">📅 내일 계획 미리 세우기</button>
             <button type="button" class="sched-chat-quick-btn" onclick="send('plan', '나중 날짜의 계획을 미리 세우고 싶어요.')">🗓️ 나중 계획 세우기</button>
-            <button type="button" class="sched-chat-quick-btn" onclick="ppQuickPrompt()">📝 내 습관 또는 문제점 입력해두기</button>
+            <button type="button" class="sched-chat-quick-btn" onclick="habitQuickPrompt()">📝 내 습관 또는 문제점 입력해두기</button>
             <button type="button" class="sched-chat-quick-btn" onclick="planCheckQuickPrompt()">✅ 지금 계획 괜찮은지 봐주세요</button>
           </div>
           <div class="input-zone">
@@ -6125,6 +6125,42 @@
     addMsg("plan", "bot", escapeHtml(text));
     if (!chatHistory["plan"]) chatHistory["plan"] = [];
     chatHistory["plan"].push({ role: "assistant", content: text });
+  }
+  // "내 습관 또는 문제점 입력해두기" 버튼 — 바로 위 ppQuickPrompt()를 곧장 부르지 않고,
+  // planCheckQuickPrompt()와 같은 선택 카드 방식으로 "누적된 것 확인하기" vs "새로 입력하기"
+  // 중 먼저 고르게 한다.
+  let habitChoiceSeq = 0;
+  const HABIT_CHOICE_LABEL = {
+    review: "📋 누적된 습관, 문제점 확인하기",
+    new: "✏️ 새로운 습관, 문제점 입력하기",
+  };
+  function habitQuickPrompt() {
+    habitChoiceSeq++;
+    const seq = habitChoiceSeq;
+    const askText = "습관이나 문제점, 어떻게 도와드릴까요?";
+    const html =
+      '<div class="plan-check-choice" id="habitChoice-' + seq + '">' +
+        '<div class="plan-check-choice-q">' + escapeHtml(askText) + '</div>' +
+        '<div class="plan-check-choice-opts">' +
+          '<button type="button" class="plan-check-choice-btn" onclick="sendHabitChoice(' + seq + ', \'review\')">' + HABIT_CHOICE_LABEL.review + '</button>' +
+          '<button type="button" class="plan-check-choice-btn" onclick="sendHabitChoice(' + seq + ', \'new\')">' + HABIT_CHOICE_LABEL.new + '</button>' +
+        '</div>' +
+      '</div>';
+    addMsg("plan", "bot", html);
+    if (!chatHistory["plan"]) chatHistory["plan"] = [];
+    chatHistory["plan"].push({ role: "assistant", content: askText });
+  }
+  function sendHabitChoice(seq, mode) {
+    const card = document.getElementById("habitChoice-" + seq);
+    if (card) {
+      const optsEl = card.querySelector(".plan-check-choice-opts");
+      if (optsEl) optsEl.outerHTML = '<div class="plan-check-choice-picked">' + escapeHtml(HABIT_CHOICE_LABEL[mode] || "") + ' 선택함</div>';
+    }
+    if (mode === "review") {
+      send("plan", "그동안 제가 말씀드렸던 공부 습관이나 어려움들을 정리해서 보여주세요.");
+    } else {
+      ppQuickPrompt();
+    }
   }
 
   // "지금 계획 괜찮은지 봐주세요" — 바로 AI를 부르지 않고, 어떤 기준으로 봐줄지 먼저
