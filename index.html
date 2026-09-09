@@ -816,6 +816,15 @@
   }
   .plan-check-choice-btn:hover { border-color: var(--ink-soft); background: var(--cream); }
   .plan-check-choice-picked { font-size: 0.72rem; font-weight: 500; color: var(--ink-soft); }
+  /* plan-check-choice-btn과 달리, 다른 페이지로 이동하는 링크형 버튼은 목록이 아니라
+     단일 CTA라서 가로로 늘어나지 않고 글자 길이만큼만 차지한다. */
+  .plan-check-goto-btn {
+    display: inline-flex; align-items: center; align-self: flex-start; width: auto;
+    font-family: inherit; font-size: 0.74rem; font-weight: 500; color: var(--ink); text-align: left;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 7px 11px; cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .plan-check-goto-btn:hover { border-color: var(--ink-soft); background: var(--cream); }
   .sched-chat-col {
     flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column;
     background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
@@ -6134,7 +6143,7 @@
             '<div class="plan-check-choice">' +
               '<div class="plan-check-choice-q">' + escapeHtml(msgText) + '</div>' +
               '<div class="plan-check-choice-opts">' +
-                '<button type="button" class="plan-check-choice-btn" onclick="go(\'todayrecord\')">오늘의 공부 페이지로 이동하기</button>' +
+                '<button type="button" class="plan-check-goto-btn" onclick="go(\'todayrecord\')">오늘의 공부 페이지로 이동하기 →</button>' +
               '</div>' +
             '</div>';
           addMsg("plan", "bot", html);
