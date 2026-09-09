@@ -803,20 +803,19 @@
   /* "지금 계획 괜찮은지 봐주세요" 버튼을 누르면 바로 AI를 부르지 않고, 어떤 기준으로
      봐줄지 먼저 고르게 하는 카드(챗봇 버블 안에 뜬다) */
   .plan-check-choice {
-    background: var(--cream); border: 1px solid var(--line); border-radius: 12px;
-    padding: 14px 16px; margin-top: 6px; max-width: 480px;
+    background: none; border: none; padding: 4px 0 0 0; margin-top: 6px; max-width: 480px;
     display: flex; flex-direction: column; gap: 10px;
   }
-  .plan-check-choice-q { font-size: 0.8rem; font-weight: 700; color: var(--ink); }
-  .plan-check-choice-opts { display: flex; flex-direction: column; gap: 8px; }
+  .plan-check-choice-q { font-size: 0.85rem; font-weight: 600; color: var(--ink); line-height: 1.55; }
+  .plan-check-choice-opts { display: flex; flex-direction: column; gap: 6px; }
   .plan-check-choice-btn {
-    display: flex; align-items: center; gap: 8px; width: 100%;
-    font-family: inherit; font-size: 0.78rem; font-weight: 700; color: var(--ink); text-align: left;
-    background: var(--paper); border: 1px solid var(--line-dark); border-radius: 10px; padding: 10px 12px; cursor: pointer;
-    transition: border-color 0.15s, background 0.15s, color 0.15s;
+    display: flex; align-items: center; width: 100%;
+    font-family: inherit; font-size: 0.82rem; font-weight: 500; color: var(--ink); text-align: left;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
   }
-  .plan-check-choice-btn:hover { border-color: var(--green); color: var(--green-deep); background: var(--green-soft); }
-  .plan-check-choice-picked { font-size: 0.78rem; font-weight: 700; color: var(--green-deep); }
+  .plan-check-choice-btn:hover { border-color: var(--ink-soft); background: var(--cream); }
+  .plan-check-choice-picked { font-size: 0.8rem; font-weight: 500; color: var(--ink-soft); }
   .sched-chat-col {
     flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column;
     background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
@@ -6131,8 +6130,8 @@
   // 중 먼저 고르게 한다.
   let habitChoiceSeq = 0;
   const HABIT_CHOICE_LABEL = {
-    review: "📋 누적된 습관, 문제점 확인하기",
-    new: "✏️ 새로운 습관, 문제점 입력하기",
+    review: "누적된 습관, 문제점 확인하기",
+    new: "새로운 습관, 문제점 입력하기",
   };
   function habitQuickPrompt() {
     habitChoiceSeq++;
@@ -6174,8 +6173,8 @@
   // 봇이 먼저 말을 건넨 것처럼 chatHistory에도 남겨서, 다음 대화가 자연스럽게 이어지게 한다.
   let planCheckSeq = 0;
   const PLAN_CHECK_CHOICE_LABEL = {
-    accum: "📊 누적된 계획 및 이행 정도를 바탕으로 분석하기",
-    specific: "🗓️ 특정 날짜의 계획 분석하기",
+    accum: "누적된 계획 및 이행 정도를 바탕으로 분석하기",
+    specific: "특정 날짜의 계획 분석하기",
   };
   const PLAN_CHECK_CHOICE_TEXT = {
     accum: "그동안 세운 계획들과 실제로 얼마나 이행했는지를 누적해서 살펴보고, 지금 계획이 괜찮은지 분석해주세요.",
