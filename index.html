@@ -194,7 +194,13 @@
     font-size: 0.82rem; font-weight: 600; color: var(--ink);
     cursor: pointer; white-space: nowrap;
   }
-  .stu-gender-opt input { accent-color: var(--green); cursor: pointer; margin: 0; }
+  .stu-gender-opt input {
+    accent-color: var(--green); cursor: pointer; margin: 0;
+    width: 14px; height: 14px; flex: none;
+  }
+  /* 이 폼의 "+ 계정 추가" 버튼도 다른 곳(.apply-submit-btn 기본은 padding:12px라 훨씬 큼)과
+     달리, 옆 입력칸들과 같은 34px 높이로 맞춘다. */
+  #studentAddForm .apply-submit-btn { height: 34px; padding: 0 16px; font-size: 0.82rem; }
 
   .sb-consult {
     display: block; width: 100%;
