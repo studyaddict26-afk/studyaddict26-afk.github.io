@@ -727,6 +727,7 @@
     max-height: 130px; overflow-y: auto;
   }
   .sched-sidebar-events li { display: contents; }
+  .sched-sidebar-events li.sched-empty-msg { display: block; grid-column: 1 / -1; text-align: center; }
   .sched-grid-label { font-size: 0.74rem; color: var(--ink-soft); font-weight: 600; white-space: nowrap; }
   .sched-grid-value { font-size: 0.74rem; color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .sched-sidebar-links { display: flex; flex-direction: column; gap: 8px; }
@@ -6410,12 +6411,11 @@
     const now = new Date();
     return now.getFullYear() + "년 " + (now.getMonth() + 1) + "월 " + now.getDate() + "일 (" + WEEKDAY_LABELS[now.getDay()] + ")";
   }
-  const SCHED_BLANK_TEMPLATE = ["입실", "외출", "재입실", "퇴실"].map(label =>
-    '<li><span class="hsl-label sched-log-label">' + label + '</span><span class="hsl-time sched-log-time">__시 __분</span></li>'
-  ).join("");
-  const SCHED_SIDEBAR_BLANK_TEMPLATE = ["입실", "외출", "재입실", "퇴실"].map(label =>
-    '<li><span class="sched-grid-label">' + label + '</span><span class="sched-grid-value">__시 __분</span></li>'
-  ).join("");
+  // 그날 등록된 고정/돌발 스케줄이 하나도 없으면(=학생이 따로 시간을 정해두지 않았으면),
+  // 입실/외출/재입실/퇴실 4줄을 빈 값(__시 __분)으로 보여주는 대신 "의무 시간표대로
+  // 학습"이라는 안내 한 줄로 보여준다.
+  const SCHED_BLANK_TEMPLATE = '<li class="sched-empty-msg">의무 시간표대로 학습</li>';
+  const SCHED_SIDEBAR_BLANK_TEMPLATE = '<li class="sched-empty-msg">의무 시간표대로 학습</li>';
   function renderSchedSidebarEvents(el, events) {
     if (!el) return;
     if (!events || !events.length) {
