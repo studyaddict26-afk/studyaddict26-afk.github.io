@@ -6418,14 +6418,24 @@
   // 학습"이라는 안내 한 줄로 보여준다.
   const SCHED_BLANK_TEMPLATE = '<li class="sched-empty-msg">의무 시간표대로 학습</li>';
   const SCHED_SIDEBAR_BLANK_TEMPLATE = '<li class="sched-empty-msg">의무 시간표대로 학습</li>';
+  // 그날 외출 없이 입실~퇴실만 있으면(이벤트 2개) 서버가 "외출"/"재입실" 없이 딱 2줄만
+  // 돌려주는데, 그래도 화면에서는 "외출"/"재입실" 자리를 없애지 말고 빈 값으로 그 사이에
+  // 끼워서 항상 4줄(입실/외출/재입실/퇴실) 모양을 유지한다. 외출이 실제로 있어서 이벤트가
+  // 2개보다 많으면(3개 이상) 있는 그대로 보여준다.
+  function fillScheduleEventGaps(events) {
+    if (Array.isArray(events) && events.length === 2) {
+      return [events[0], { label: "외출", time: null }, { label: "재입실", time: null }, events[1]];
+    }
+    return events;
+  }
   function renderSchedSidebarEvents(el, events) {
     if (!el) return;
     if (!events || !events.length) {
       el.innerHTML = SCHED_SIDEBAR_BLANK_TEMPLATE;
       return;
     }
-    el.innerHTML = events.map(e =>
-      '<li><span class="sched-grid-label">' + escapeHtml(e.label) + '</span><span class="sched-grid-value">' + formatTimeLabel(e.time) + '</span></li>'
+    el.innerHTML = fillScheduleEventGaps(events).map(e =>
+      '<li><span class="sched-grid-label">' + escapeHtml(e.label) + '</span><span class="sched-grid-value">' + (e.time ? formatTimeLabel(e.time) : "__시 __분") + '</span></li>'
     ).join("");
   }
   function renderScheduleEventList(el, events) {
@@ -6434,8 +6444,8 @@
       el.innerHTML = SCHED_BLANK_TEMPLATE;
       return;
     }
-    el.innerHTML = events.map(e =>
-      '<li><span class="hsl-label sched-log-label">' + escapeHtml(e.label) + '</span><span class="hsl-time sched-log-time">' + formatTimeLabel(e.time) + '</span></li>'
+    el.innerHTML = fillScheduleEventGaps(events).map(e =>
+      '<li><span class="hsl-label sched-log-label">' + escapeHtml(e.label) + '</span><span class="hsl-time sched-log-time">' + (e.time ? formatTimeLabel(e.time) : "__시 __분") + '</span></li>'
     ).join("");
   }
 
