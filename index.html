@@ -6448,10 +6448,8 @@
         .then(data => renderSchedSidebarEvents(sidebarEl, data.events))
         .catch(() => { sidebarEl.innerHTML = SCHED_SIDEBAR_BLANK_TEMPLATE; });
     }
-    const chatEl = document.getElementById("chat-schedule");
-    if (chatEl && !chatEl.querySelector(".msg")) {
-      addMsg("schedule", "bot", "안녕하세요, 'AI 홀로'예요. 스케줄 조정을 도와드릴게요.");
-    }
+    // '내 계획 상담하기'(plan) 챗봇과 디자인을 맞추기 위해, 시작 인사말 말풍선 없이
+    // 대화 기록이 있으면 그것만 불러오고 없으면 빈 채로 시작한다(quick 버튼으로 시작).
     loadChatHistory("schedule");
   }
   const SCHED_QUICK_PROMPTS = {
