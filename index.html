@@ -828,6 +828,20 @@
     transition: border-color 0.15s, background 0.15s;
   }
   .plan-check-goto-btn:hover { border-color: var(--ink-soft); background: var(--cream); }
+  /* "고정 스케줄 - 돌발 스케줄 차이점" 답변 아래에 붙는 스케줄 예시 박스 */
+  .sched-diff-example {
+    margin-top: 10px; max-width: 520px;
+    background: var(--cream); border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px 14px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .sched-diff-example-title { font-size: 0.72rem; font-weight: 800; color: var(--ink-soft); letter-spacing: 0.03em; }
+  .sched-diff-example-row { display: flex; gap: 8px; align-items: flex-start; }
+  .sched-diff-example-row .sde-tag {
+    flex: none; font-size: 0.66rem; font-weight: 800; color: var(--green-deep);
+    background: var(--green-soft); border: 1px solid #CFE3D6; border-radius: 6px;
+    padding: 2px 6px; margin-top: 1px;
+  }
+  .sched-diff-example-row .sde-body { font-size: 0.74rem; color: var(--ink); line-height: 1.6; }
   .sched-chat-col {
     flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column;
     background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
@@ -6524,12 +6538,24 @@
   // 않고 바로 안내한다(비용 절약 + 항상 같은 정확한 설명 보장).
   function schedDiffPrompt() {
     const askedText = "고정 스케줄 - 돌발 스케줄 차이점이 뭔가요?";
-    const answerText = "고정 스케줄은 요일마다 매주 반복되는 정규 등하원 시간표예요(예: 매주 화요일 5시~10시). 돌발 스케줄은 특정 날짜 하루에만 해당하는 예외 일정이에요(예: 이번 주 목요일만 학원 때문에 늦게 옴, 오늘 몸이 안 좋아서 조퇴). 매주 반복되면 고정, 그 날 하루만 다르면 돌발이라고 생각하시면 돼요.";
+    const answerText = "고정 스케줄은 요일마다 매주 반복되는 정규 등하원 시간표예요. 돌발 스케줄은 특정 날짜 하루에만 해당하는 예외 일정이에요. 매주 반복되면 고정, 그 날 하루만 다르면 돌발이라고 생각하시면 돼요.";
+    const exampleHtml =
+      '<div class="sched-diff-example">' +
+        '<div class="sched-diff-example-title">○○○ 학생 스케줄 예시</div>' +
+        '<div class="sched-diff-example-row"><span class="sde-tag">고정</span><span class="sde-body">' +
+          '[월] 18:00 입실 ~ 22:00 퇴실<br>' +
+          '[화] 18:00 입실 → 19:00 외출(수학 학원) → 20:30 재입실 → 22:00 퇴실<br>' +
+          '[수·목·금] 18:00 입실 ~ 22:00 퇴실' +
+        '</span></div>' +
+        '<div class="sched-diff-example-row"><span class="sde-tag">돌발</span><span class="sde-body">' +
+          '9월 15일: 병원 진료 때문에 15:45 외출 → 17:10 재입실 (증빙자료 확인 완료)' +
+        '</span></div>' +
+      '</div>';
     addMsg("schedule", "user", escapeHtml(askedText));
     if (!chatHistory["schedule"]) chatHistory["schedule"] = [];
     chatHistory["schedule"].push({ role: "user", content: askedText });
-    addMsg("schedule", "bot", escapeHtml(answerText));
-    chatHistory["schedule"].push({ role: "assistant", content: answerText });
+    addMsg("schedule", "bot", escapeHtml(answerText) + exampleHtml);
+    chatHistory["schedule"].push({ role: "assistant", content: answerText + "\n\n[○○○ 학생 스케줄 예시]\n고정: [월] 18:00 입실~22:00 퇴실 / [화] 18:00 입실→19:00 외출(수학 학원)→20:30 재입실→22:00 퇴실 / [수·목·금] 18:00 입실~22:00 퇴실\n돌발: 9월 15일 병원 진료 때문에 15:45 외출→17:10 재입실 (증빙자료 확인 완료)" });
   }
   function openSchedPanel(which) {
     document.getElementById("sched-panel-" + which).classList.add("on");
