@@ -5900,9 +5900,11 @@
     // "기록 없음"을 보여준다 — active 값 자체로 미리 판단하면(문자/숫자 등 타입 차이로)
     // "항목은 있다고 나오는데 셋 다 안 보이는" 불일치가 생길 수 있어, 실제로 그려질
     // rows를 기준으로 판단해서 항상 화면에 보이는 것과 일치하게 한다.
+    // 지난 날짜는 "그날 실제로 제출된 내용"을 있는 그대로 보여주는 기록이라, 완료/미완료를
+    // 굳이 선 긋기로 구분하지 않는다(완료 여부와 무관하게 전부 같은 모양으로 보여준다).
     const blocks = PLAN_BLOCKS.map(block => {
       const rows = items.filter(it => it.block === block && Number(it.active) === 1).map(it =>
-        '<div class="planner-task-row' + (Number(it.done) ? ' done' : '') + '">' +
+        '<div class="planner-task-row">' +
           '<span class="planner-task-text">' +
             (it.subject ? '<span class="planner-task-subject">[' + escapeHtml(it.subject) + ']</span> ' : '') +
             escapeHtml(it.text) +
@@ -5923,9 +5925,12 @@
     ).join("");
   }
 
-  // 오늘 날짜일 때만 호출된다 — "+ 추가하기"·삭제·완료 체크 등 실제 편집 UI.
-  // "+ 추가하기"는 없앴다 — 이 페이지에서는 계획을 직접 입력하지 않고 오른쪽 챗봇을 통해서만
-  // 세운다(구체적인 흐름은 추후 별도로 반영 예정). 완료 체크·삭제는 그대로 유지.
+  // 오늘/미래 날짜일 때 호출된다 — 이 사이드바는 이제 완전히 읽기 전용 표시 용도다.
+  // "+ 추가하기"·체크박스·삭제 버튼 전부 없앴다 — 계획 추가/수정은 오른쪽 챗봇을 통해서만
+  // 하고("나중 계획 세우기"/"고정 스케줄 변경하기" 등), 완료 체크는 "오늘의 공부" 페이지의
+  // "계획 수정하면서 공부하기"에서만 한다. 오늘 날짜는 그 완료 상태(선 긋기)를 그대로 보여주고
+  // (같은 holo_plans 데이터라 항상 동일하게 반영됨), 미래 날짜는 아직 완료될 수 없으니
+  // 자연히 전부 완료 전 모양으로 보인다.
   function renderPpPlanBlocks() {
     const wrap = document.getElementById("ppPlanBlocks");
     if (!wrap) return;
@@ -5933,12 +5938,10 @@
       const items = ppPlanItems.filter(it => it.block === block && it.active);
       const rows = items.map(it =>
         '<div class="planner-task-row' + (it.done ? ' done' : '') + '" data-id="' + it.id + '">' +
-          '<div class="planner-task-check" onclick="togglePpPlanItem(' + it.id + ')"></div>' +
           '<span class="planner-task-text">' +
             (it.subject ? '<span class="planner-task-subject">[' + escapeHtml(it.subject) + ']</span> ' : '') +
             escapeHtml(it.text) +
           '</span>' +
-          '<button type="button" class="planner-task-del" onclick="deletePpPlanItem(' + it.id + ')" aria-label="삭제">×</button>' +
         '</div>'
       ).join("");
       return '<div class="planner-block" data-block="' + block + '">' +
