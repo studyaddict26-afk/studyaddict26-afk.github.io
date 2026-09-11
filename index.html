@@ -6522,11 +6522,11 @@
   // 그 뒤에 봇이 먼저 건네는 안내 문구(AI를 부르지 않고 바로 보여줌 — ppQuickPrompt와 같은 방식).
   const SCHED_QUICK_LABELS = {
     fixed: "고정 스케줄을 변경하고 싶어요.",
-    adhoc: "돌발 스케줄을 변경하고 싶어요.",
+    adhoc: "돌발 스케줄을 추가하고 싶어요.",
   };
   const SCHED_QUICK_PROMPTS = {
     fixed: "고정 스케줄 중 어떤 요일을 바꾸고 싶으신가요?",
-    adhoc: "어떤 날짜의 일정 변경인지 편하게 말씀해주세요. 오늘 갑자기 늦거나 못 오시는 경우인지, 아니면 며칠 뒤 예정된 다른 날짜 일정인지 알려주시면 돼요. 학원 시간표 변경 안내문처럼 확인할 자료가 있으면 왼쪽 + 버튼으로 사진도 첨부해주세요.",
+    adhoc: "추가하실 날짜가 오늘인가요, 아니면 며칠 뒤 예정된 다른 날짜인가요?",
   };
   function schedQuickPrompt(which) {
     const text = SCHED_QUICK_PROMPTS[which];
@@ -6560,6 +6560,37 @@
     chatHistory["schedule"].push({ role: "user", content: askedText });
     addMsg("schedule", "bot", escapeHtml(answerText) + exampleHtml);
     chatHistory["schedule"].push({ role: "assistant", content: answerText + "\n\n[○○○ 학생 스케줄 예시]\n고정: [월] 18:00 입실~22:00 퇴실 / [화] 18:00 입실→19:00 외출(수학 학원)→20:30 재입실→22:00 퇴실 / [수·목·금] 18:00 입실~22:00 퇴실\n돌발: 9월 15일 병원 진료 때문에 15:45 외출→17:10 재입실 (증빙자료 확인 완료)" });
+  }
+  // 돌발 스케줄 추가 흐름 중 증빙자료 단계 — AI가 EVIDENCE_CHOICE를 답변에 실으면
+  // "지금 바로 제출" / "재입실 때 제출" 두 버튼을 보여준다(plan-check-choice와 같은
+  // 선택 카드 디자인 재사용).
+  let evidenceChoiceSeq = 0;
+  const EVIDENCE_CHOICE_LABEL = {
+    now: "지금 바로 증빙 자료 제출하기",
+    later: "외출 후 재입실할 때, 증빙 자료 제출하기",
+  };
+  function showEvidenceChoiceCard() {
+    evidenceChoiceSeq++;
+    const seq = evidenceChoiceSeq;
+    const html =
+      '<div class="plan-check-choice" id="evidenceChoice-' + seq + '">' +
+        '<div class="plan-check-choice-opts">' +
+          '<button type="button" class="plan-check-choice-btn" onclick="sendEvidenceChoice(' + seq + ', \'now\')">' + EVIDENCE_CHOICE_LABEL.now + '</button>' +
+          '<button type="button" class="plan-check-choice-btn" onclick="sendEvidenceChoice(' + seq + ', \'later\')">' + EVIDENCE_CHOICE_LABEL.later + '</button>' +
+        '</div>' +
+      '</div>';
+    // 이 카드는 방금 온 봇 답변 말풍선에 이어 붙이는 게 아니라, 별도 말풍선으로 추가한다
+    // (AI의 안내 문장은 이미 addMsg로 화면에 떴고, 이 카드는 그 바로 다음 턴처럼 보인다).
+    addMsg("schedule", "bot", html);
+  }
+  function sendEvidenceChoice(seq, mode) {
+    const card = document.getElementById("evidenceChoice-" + seq);
+    if (card) {
+      const optsEl = card.querySelector(".plan-check-choice-opts");
+      if (optsEl) optsEl.outerHTML = '<div class="plan-check-choice-picked">' + escapeHtml(EVIDENCE_CHOICE_LABEL[mode] || "") + ' 선택함</div>';
+    }
+    const text = mode === "now" ? "지금 바로 증빙 자료 제출할게요." : "외출 후 재입실할 때 증빙 자료 제출할게요.";
+    send("schedule", text);
   }
   function openSchedPanel(which) {
     document.getElementById("sched-panel-" + which).classList.add("on");
@@ -7668,6 +7699,9 @@
           // "plan" 챗봇이 날짜를 확정하면(오늘이든, "나중" 대화로 확인받은 날짜든) 답변에
           // planDate가 실려오는데, 그러면 바로 이어서 계획 입력 카드를 띄운다.
           if (subject === "plan" && data.planDate) showPpChatPlanForm(data.planDate);
+          // "schedule" 챗봇이 돌발 스케줄 추가 흐름에서 증빙자료 단계에 도달하면 답변에
+          // evidenceChoice가 실려오는데, 그러면 "지금 제출"/"재입실 때 제출" 선택 카드를 띄운다.
+          if (subject === "schedule" && data.evidenceChoice) showEvidenceChoiceCard();
         })
         .catch(err => {
           console.error(err);
