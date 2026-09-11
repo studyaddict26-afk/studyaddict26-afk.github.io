@@ -407,6 +407,15 @@
   .sl-switch-link a { color: var(--green-deep); font-weight: 700; text-decoration: none; }
   .sl-switch-link a:hover { text-decoration: underline; }
   .sl-signup-hint { font-size: 0.76rem; color: var(--ink-soft); margin: -12px 0 16px; line-height: 1.5; }
+  .sl-signup-type-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 4px; }
+  .sl-signup-type-btn {
+    width: 100%; font-family: inherit; text-align: left;
+    background: var(--cream); border: 1px solid var(--line-dark); border-radius: 8px;
+    padding: 14px 16px; font-size: 0.9rem; font-weight: 700; color: var(--ink);
+    cursor: pointer; transition: background 0.18s, border-color 0.18s;
+  }
+  .sl-signup-type-btn:hover { background: var(--green-soft); border-color: var(--green); }
+  .sl-signup-type-btn.soon { color: var(--ink-soft); }
 
   /* ═══════════ 홈 화면 ═══════════ */
   #view-home { overflow-y: auto; }
@@ -3096,7 +3105,26 @@
         <button type="submit" class="apply-submit-btn" id="studentLoginBtn" style="width:100%;">로그인</button>
         <div class="apply-status-msg" id="studentLoginMsg"></div>
       </form>
-      <p class="sl-switch-link"><a href="#" onclick="showStudentSignupPane();return false;">아직 계정이 없으신가요? 회원가입하기 →</a></p>
+      <p class="sl-switch-link"><a href="#" onclick="showStudentSignupTypePane();return false;">아직 계정이 없으신가요? 회원가입하기 →</a></p>
+    </div>
+
+    <div id="slSignupTypePane" style="display:none;">
+      <h2>회원가입</h2>
+      <p class="sl-signup-hint">어떤 방식으로 가입하시겠어요?</p>
+      <div class="sl-signup-type-list">
+        <button type="button" class="sl-signup-type-btn" onclick="showStudentSignupBranchPane()">독서실 학생으로 가입</button>
+        <button type="button" class="sl-signup-type-btn soon" onclick="showComingSoonModal()">개인으로 가입</button>
+      </div>
+      <p class="sl-switch-link"><a href="#" onclick="showStudentLoginPane();return false;">← 로그인으로 돌아가기</a></p>
+    </div>
+
+    <div id="slSignupBranchPane" style="display:none;">
+      <h2>어느 독서실 학생이세요?</h2>
+      <p class="sl-signup-hint">가입하실 독서실을 선택해주세요.</p>
+      <div class="sl-signup-type-list">
+        <button type="button" class="sl-signup-type-btn" onclick="selectSignupBranch('로드맵 독서실')">로드맵 독서실</button>
+      </div>
+      <p class="sl-switch-link"><a href="#" onclick="showStudentSignupTypePane();return false;">← 이전으로</a></p>
     </div>
 
     <div id="slSignupPane" style="display:none;">
@@ -3144,7 +3172,18 @@
         <button type="submit" class="apply-submit-btn" id="studentSignupBtn" style="width:100%;">가입 신청하기</button>
         <div class="apply-status-msg" id="studentSignupMsg"></div>
       </form>
-      <p class="sl-switch-link"><a href="#" onclick="showStudentLoginPane();return false;">← 로그인으로 돌아가기</a></p>
+      <p class="sl-switch-link"><a href="#" onclick="showStudentSignupBranchPane();return false;">← 이전으로</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ─── 개인 회원가입 준비중 팝업 ─── -->
+<div class="apply-modal-overlay" id="comingSoonModalOverlay" onclick="if(event.target===this) closeComingSoonModal()">
+  <div class="apply-modal" style="max-width:320px; text-align:center;">
+    <h3>준비중입니다</h3>
+    <p class="apply-sub">개인 회원가입은 아직 준비 중이에요. 조금만 기다려주세요!</p>
+    <div class="apply-actions" style="justify-content:center;">
+      <button type="button" class="apply-submit-btn" onclick="closeComingSoonModal()">확인</button>
     </div>
   </div>
 </div>
@@ -8577,13 +8616,38 @@
       msg.className = "apply-status-msg error";
     });
   }
-  function showStudentSignupPane() {
-    document.getElementById("slLoginPane").style.display = "none";
-    document.getElementById("slSignupPane").style.display = "block";
+  // 회원가입 가는 길(로그인 → 가입 방식 선택 → 독서실 선택 → 실제 가입 폼)에 뜨는
+  // 패널들을 전부 감춘 뒤, 보여줄 패널 하나만 다시 켠다. 독서실이 여러 곳으로 늘어나면
+  // slSignupBranchPane 안의 버튼 목록에 한 줄씩 추가하면 된다.
+  function hideAllStudentGatePanes() {
+    ["slLoginPane", "slSignupTypePane", "slSignupBranchPane", "slSignupPane"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = "none";
+    });
   }
   function showStudentLoginPane() {
-    document.getElementById("slSignupPane").style.display = "none";
+    hideAllStudentGatePanes();
     document.getElementById("slLoginPane").style.display = "block";
+  }
+  function showStudentSignupTypePane() {
+    hideAllStudentGatePanes();
+    document.getElementById("slSignupTypePane").style.display = "block";
+  }
+  function showStudentSignupBranchPane() {
+    hideAllStudentGatePanes();
+    document.getElementById("slSignupBranchPane").style.display = "block";
+  }
+  let selectedSignupAcademy = "";
+  function selectSignupBranch(academyName) {
+    selectedSignupAcademy = academyName;
+    hideAllStudentGatePanes();
+    document.getElementById("slSignupPane").style.display = "block";
+  }
+  function showComingSoonModal() {
+    document.getElementById("comingSoonModalOverlay").classList.add("on");
+  }
+  function closeComingSoonModal() {
+    document.getElementById("comingSoonModalOverlay").classList.remove("on");
   }
   // 학생이 직접 회원가입 신청 — 관리자가 만드는 계정과 같은 항목을 받되, status:"pending"으로
   // 저장해서 독서실이 승인하기 전까지는 로그인이 막히게 한다(studentLogin의 status 체크 참고).
@@ -8617,6 +8681,7 @@
       return db.collection("students").doc(id).set({
         password: pw, school: school, name: name, birth: birth, gender: gender,
         branch: branch, grade: grade, status: "pending",
+        academy: selectedSignupAcademy || "로드맵 독서실",
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       }).then(() => {
         btn.disabled = false;
