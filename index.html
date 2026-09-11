@@ -2739,6 +2739,10 @@
      편집 가능한 칸 하나만 "최초 계획"이라는 이름으로 보여준다(renderPlanner() 참고). */
   #plannerBody.pp-initial-mode .planner-col-original { display: none; }
   #plannerBody.pp-initial-mode .planner-count-badge { display: none; }
+  /* 최초 계획을 처음 세우는 단계(게이트 팝업 안)에서는 아직 아무것도 "완료"한 게
+     없으니 체크박스 자체를 없앤다 — 완료 체크는 계획을 다 세우고 실제로 공부를
+     시작한 뒤(계획 수정하면서 공부하기 단계)에만 의미가 있다. */
+  #plannerBody.pp-initial-mode .planner-task-check { display: none; }
   .planner-col-head {
     font-size: 0.7rem; font-weight: 800; color: var(--ink); letter-spacing: 0.03em;
     padding-bottom: 6px; border-bottom: 1px solid var(--line);
@@ -3627,7 +3631,7 @@
             <button type="button" class="sched-chat-quick-btn" onclick="schedDiffPrompt()">❓ 고정 스케줄 - 돌발 스케줄 차이점이 뭔가요?</button>
             <button type="button" class="sched-chat-quick-btn" onclick="send('schedule', '제 고정(요일별) 스케줄을 새로 확정하고 싶어요.')">✅ 고정 스케줄 확정하기</button>
             <button type="button" class="sched-chat-quick-btn" onclick="schedQuickPrompt('fixed')">📌 고정 스케줄 변경하기</button>
-            <button type="button" class="sched-chat-quick-btn" onclick="schedQuickPrompt('adhoc')">🚪 돌발 스케줄 변경하기</button>
+            <button type="button" class="sched-chat-quick-btn" onclick="schedQuickPrompt('adhoc')">🚪 돌발 스케줄 추가하기</button>
           </div>
           <div class="input-zone">
             <div class="input-box">
@@ -3685,7 +3689,7 @@
       <div class="sched-modal" id="sched-panel-adhoc" onclick="event.stopPropagation()">
         <button type="button" class="sched-modal-close" onclick="closeSchedPanel()" aria-label="닫기">×</button>
         <h3>돌발 스케줄</h3>
-        <p class="sched-fixed-view-hint">챗봇에서 "돌발 스케줄 변경하기" 버튼을 누르면, 수정이 가능해요.</p>
+        <p class="sched-fixed-view-hint">챗봇에서 "돌발 스케줄 추가하기" 버튼을 누르면, 수정이 가능해요.</p>
         <ul class="sched-adhoc-view-list" id="schedAdhocList">
           <li class="sched-empty-msg">등록된 돌발 스케줄이 없어요.</li>
         </ul>
