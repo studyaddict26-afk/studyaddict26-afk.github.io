@@ -410,69 +410,23 @@
   html[data-boot="login"] #studentLoginGate { display: flex; }
   #studentLoginGate {
     position: fixed; inset: 0; z-index: 500;
-    flex-direction: column;
+    align-items: center; justify-content: flex-end;
     /* 홈 히어로(.hero-collab)와 같은 은은한 색감의 그라디언트를 화면 전체에 깔아서,
-     로그인 카드가 그 위에 떠 있는 느낌으로 만든다. */
+     로그인 카드가 그 위에 떠 있는 느낌으로 만든다 — 아직은 배경에 별도 콘텐츠(로고/문구)는
+     넣지 않고 색감만 채운다. */
     background:
       radial-gradient(ellipse 70% 70% at 15% 15%, #EDF4EF 0%, transparent 60%),
       radial-gradient(ellipse 70% 70% at 85% 20%, #F1EADB 0%, transparent 60%),
       radial-gradient(ellipse 80% 80% at 30% 90%, #F1EADB 0%, transparent 55%),
       var(--paper);
     overflow-y: auto;
-  }
-  /* 위쪽 목차 바 — 이 화면(로그인 전)에서는 실제로 이동할 페이지가 없어서, 지금은 브랜드를
-     알리는 장식용 링크다(클릭해도 아무 데도 안 감). 나중에 로그인 없이도 볼 수 있는 소개
-     페이지가 생기면 그때 실제 링크로 연결하면 된다. */
-  .sl-navbar {
-    flex: none; display: flex; align-items: center; justify-content: space-between;
-    padding: 22px clamp(20px, 5vw, 64px); gap: 20px;
-  }
-  .sl-navbar-brand { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.01em; color: var(--ink); }
-  .sl-navbar-brand .holo { color: var(--green); }
-  .sl-navbar-links { display: flex; align-items: center; gap: clamp(16px, 3vw, 30px); list-style: none; margin: 0; padding: 0; }
-  .sl-navbar-links a {
-    font-size: 0.84rem; font-weight: 600; color: var(--ink-soft); text-decoration: none;
-    cursor: default;
-  }
-  .sl-navbar-links a:hover { color: var(--ink); }
-  .sl-gate-body {
-    flex: 1; display: flex; align-items: center; justify-content: space-between;
-    gap: clamp(24px, 5vw, 64px); min-height: 0;
-    padding: 10px clamp(20px, 5vw, 64px) 60px;
-  }
-  .sl-hero-content { flex: 1 1 480px; max-width: 560px; }
-  .sl-hero-eyebrow {
-    font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; color: var(--green-deep);
-    margin-bottom: 16px;
-  }
-  .sl-hero-content h1 {
-    font-size: clamp(1.9rem, 3.6vw, 2.7rem); font-weight: 800; line-height: 1.28;
-    letter-spacing: -0.02em; color: var(--ink); margin: 0 0 14px; word-break: keep-all;
-  }
-  .sl-hero-content h1 .accent { color: var(--green); }
-  .sl-hero-sub { font-size: 1.05rem; font-weight: 700; color: var(--ink); margin: 0 0 16px; word-break: keep-all; }
-  .sl-hero-desc {
-    font-size: 0.92rem; line-height: 1.85; color: var(--ink-soft); margin: 0 0 30px;
-    max-width: 460px; word-break: keep-all;
-  }
-  .sl-hero-cta {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--green-deep); color: #fff; border: none; border-radius: 999px;
-    padding: 14px 26px; font-family: inherit; font-size: 0.9rem; font-weight: 700;
-    cursor: pointer; transition: background 0.18s, transform 0.18s;
-  }
-  .sl-hero-cta:hover { background: var(--green); transform: translateY(-1px); }
-  @media (max-width: 900px) {
-    .sl-hero-content { display: none; }
-    .sl-gate-body { justify-content: center; }
+    padding: 40px 8vw;
   }
   @media (max-width: 760px) {
-    .sl-navbar-links { display: none; }
-    .sl-gate-body { padding: 10px 20px 40px; }
+    #studentLoginGate { justify-content: center; padding: 40px 20px; }
   }
   .student-login-box {
-    flex: none;
-    width: min(380px, 100%);
+    max-width: 380px; width: calc(100% - 40px);
     background: var(--paper); border: 1px solid var(--line);
     border-radius: 12px; padding: 40px 36px;
     text-align: center;
@@ -3193,24 +3147,7 @@
 
 <!-- ═══ 학생 로그인 게이트 ═══ -->
 <div id="studentLoginGate">
-  <nav class="sl-navbar">
-    <div class="sl-navbar-brand">홀로 <span class="holo">HOLO</span></div>
-    <ul class="sl-navbar-links">
-      <li><a href="#" onclick="return false;">특징</a></li>
-      <li><a href="#" onclick="return false;">이용 방법</a></li>
-      <li><a href="#" onclick="return false;">학습 상담</a></li>
-      <li><a href="#" onclick="return false;">문의</a></li>
-    </ul>
-  </nav>
-  <div class="sl-gate-body">
-    <div class="sl-hero-content">
-      <div class="sl-hero-eyebrow">로드맵 입시 관리형 독서실 학습 관리 시스템</div>
-      <h1>계획부터 분석까지,<br><span class="accent">홀로</span>가 관리합니다</h1>
-      <p class="sl-hero-sub">메타인지, 더 이상 혼자 고민하지 않아도 됩니다.</p>
-      <p class="sl-hero-desc">오늘의 계획을 세우고, 공부하다 궁금한 건 언제든 물어보고, 하루를 일기로 마무리하면, 홀로가 그 기록을 모아 학습 패턴과 약점을 분석해드려요. 더 깊은 고민은 학습 상담으로, 선생님과 직접 연결해드립니다.</p>
-      <button type="button" class="sl-hero-cta" onclick="showStudentSignupTypePane()">회원가입하기 →</button>
-    </div>
-    <div class="student-login-box">
+  <div class="student-login-box">
     <div class="sl-header">
       <div class="sl-wordmark">
         <div>학습 관리 시스템</div>
@@ -3321,7 +3258,6 @@
       </form>
       <p class="sl-switch-link"><a href="#" onclick="showStudentSignupBranchPane();return false;">← 이전으로</a></p>
     </div>
-  </div>
   </div>
 </div>
 
