@@ -410,7 +410,7 @@
   .sl-signup-type-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 4px; }
   .sl-signup-type-list.sl-row { flex-direction: row; }
   .sl-signup-type-btn {
-    width: 100%; font-family: inherit; text-align: left;
+    width: 100%; font-family: inherit; text-align: center;
     background: var(--cream); border: 1px solid var(--line-dark); border-radius: 8px;
     padding: 14px 16px; font-size: 0.9rem; font-weight: 700; color: var(--ink);
     cursor: pointer; transition: background 0.18s, border-color 0.18s;
@@ -3126,7 +3126,7 @@
       <h2>어느 독서실 학생이세요?</h2>
       <p class="sl-signup-hint">가입하실 독서실을 선택해주세요.</p>
       <div class="sl-signup-type-list">
-        <button type="button" class="sl-signup-type-btn" onclick="selectSignupBranch('로드맵 독서실')">로드맵 독서실</button>
+        <button type="button" class="sl-signup-type-btn" onclick="selectSignupBranch('로드맵 입시 관리형 독서실')">로드맵 입시 관리형 독서실</button>
       </div>
       <p class="sl-switch-link"><a href="#" onclick="showStudentSignupTypePane();return false;">← 이전으로</a></p>
     </div>
@@ -8681,7 +8681,7 @@
       return db.collection("students").doc(id).set({
         password: pw, school: school, name: name, birth: birth, gender: gender,
         branch: branch, grade: grade, status: "pending",
-        academy: selectedSignupAcademy || "로드맵 독서실",
+        academy: selectedSignupAcademy || "로드맵 입시 관리형 독서실",
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       }).then(() => {
         btn.disabled = false;
