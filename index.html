@@ -3160,13 +3160,15 @@
       <h2>독서실 학생으로 회원가입</h2>
       <p class="sl-signup-hint">가입 신청 후 독서실에서 승인하면 로그인할 수 있어요.</p>
       <form id="studentSignupForm" onsubmit="submitStudentSignup(event)">
-        <div class="apply-field">
-          <label for="ss-id">아이디</label>
-          <input type="text" id="ss-id" autocomplete="username" required>
-        </div>
-        <div class="apply-field">
-          <label for="ss-pw">비밀번호</label>
-          <input type="password" id="ss-pw" autocomplete="new-password" required>
+        <div class="ss-field-row">
+          <div class="apply-field">
+            <label for="ss-id">아이디</label>
+            <input type="text" id="ss-id" autocomplete="username" required>
+          </div>
+          <div class="apply-field">
+            <label for="ss-pw">비밀번호</label>
+            <input type="password" id="ss-pw" autocomplete="new-password" required>
+          </div>
         </div>
         <div class="ss-field-row">
           <div class="apply-field">
