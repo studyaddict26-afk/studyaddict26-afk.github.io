@@ -5177,6 +5177,17 @@
                   <label class="stu-gender-opt"><input type="radio" name="stu-gender" value="female"> 여</label>
                 </div>
               </div>
+              <div class="apply-field" style="flex:none; margin-bottom:0;">
+                <label>관 유형</label>
+                <div class="stu-gender-toggle">
+                  <label class="stu-gender-opt"><input type="radio" name="stu-branch" value="하이엔드관" required> 하이엔드관</label>
+                  <label class="stu-gender-opt"><input type="radio" name="stu-branch" value="N수관"> N수관</label>
+                </div>
+              </div>
+              <div class="apply-field" style="flex:none; width:80px; margin-bottom:0;">
+                <label for="stu-grade">학년</label>
+                <input type="text" id="stu-grade" placeholder="예: 고2" required>
+              </div>
               <button type="submit" class="apply-submit-btn" style="flex:none;">+ 계정 추가</button>
             </form>
           </div>
@@ -7688,6 +7699,10 @@
           // "AI 홀로" 사용도 계획/일기와 같은 새벽 6시 기준 학습일로 묶이도록, 이 메시지가
           // 속한 날짜를 같이 보낸다(서버는 이 값을 holo_worries.chat_date에 저장한다).
           date: getLocalDateKey(),
+          // 학생 프로필(관 유형/학년) — AI가 매번 "하이엔드관이세요 N수관이세요?" 같은
+          // 기본 정보를 되묻지 않고 답변에 참고하도록 매 요청에 함께 실어 보낸다.
+          studentBranch: localStorage.getItem("holoStudentBranch") || null,
+          studentGrade: localStorage.getItem("holoStudentGrade") || null,
         }),
       })
         .then(res => res.json())
@@ -8117,7 +8132,10 @@
     const birth = document.getElementById("stu-birth").value.trim();
     const genderInput = document.querySelector('input[name="stu-gender"]:checked');
     const gender = genderInput ? genderInput.value : "";
-    if (!id || !pw || !school || !name || !birth || !gender) return;
+    const branchInput = document.querySelector('input[name="stu-branch"]:checked');
+    const branch = branchInput ? branchInput.value : "";
+    const grade = document.getElementById("stu-grade").value.trim();
+    if (!id || !pw || !school || !name || !birth || !gender || !branch || !grade) return;
     db.collection("students").doc(id).get().then(doc => {
       if (doc.exists) {
         msg.textContent = "이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.";
@@ -8126,8 +8144,12 @@
       }
       // gender는 학생이 마이페이지에서 직접 사진을 올리기 전까지 프로필에 보여줄 회색
       // 남학생/여학생 아이콘을 고르는 데만 쓴다 — 사진을 올리면 그 사진이 우선한다.
+      // branch(하이엔드관/N수관)·grade(학년)는 AI 챗봇이 답변할 때 학생을 알아보고
+      // 참고하도록(예: 스케줄 챗봇이 "하이엔드관이세요 N수관이세요?"를 매번 안 묻도록)
+      // 매 채팅 요청에 함께 실어 보내는 학생 프로필 정보다.
       return db.collection("students").doc(id).set({
         password: pw, school: school, name: name, birth: birth, gender: gender,
+        branch: branch, grade: grade,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       }).then(() => {
         document.getElementById("studentAddForm").reset();
@@ -8447,6 +8469,8 @@
     localStorage.removeItem("holoStudentName");
     localStorage.removeItem("holoStudentSchool");
     localStorage.removeItem("holoStudentGender");
+    localStorage.removeItem("holoStudentBranch");
+    localStorage.removeItem("holoStudentGrade");
     localStorage.removeItem("holoStudentPhoto");
     localStorage.removeItem("holoStudentDdayList");
     localStorage.removeItem("holoStudentNickname");
@@ -8476,6 +8500,12 @@
       if (data && data.school) localStorage.setItem("holoStudentSchool", data.school);
       if (data && data.gender) localStorage.setItem("holoStudentGender", data.gender);
       else localStorage.removeItem("holoStudentGender");
+      // branch(하이엔드관/N수관)·grade(학년) — AI 챗봇 요청에 실어 보내서 답변이 학생을
+      // 알아보고 참고하게 하는 용도(예: 스케줄 챗봇이 관 유형을 매번 안 묻도록).
+      if (data && data.branch) localStorage.setItem("holoStudentBranch", data.branch);
+      else localStorage.removeItem("holoStudentBranch");
+      if (data && data.grade) localStorage.setItem("holoStudentGrade", data.grade);
+      else localStorage.removeItem("holoStudentGrade");
       if (data && data.photoData) localStorage.setItem("holoStudentPhoto", data.photoData);
       else localStorage.removeItem("holoStudentPhoto");
       if (data && Array.isArray(data.ddayList)) localStorage.setItem("holoStudentDdayList", JSON.stringify(data.ddayList));
@@ -8694,6 +8724,8 @@
     localStorage.removeItem("holoStudentName");
     localStorage.removeItem("holoStudentSchool");
     localStorage.removeItem("holoStudentGender");
+    localStorage.removeItem("holoStudentBranch");
+    localStorage.removeItem("holoStudentGrade");
     localStorage.removeItem("holoStudentPhoto");
     localStorage.removeItem("holoStudentDdayList");
     localStorage.removeItem("holoStudentNickname");
@@ -8711,6 +8743,8 @@
     localStorage.removeItem("holoStudentName");
     localStorage.removeItem("holoStudentSchool");
     localStorage.removeItem("holoStudentGender");
+    localStorage.removeItem("holoStudentBranch");
+    localStorage.removeItem("holoStudentGrade");
     localStorage.removeItem("holoStudentPhoto");
     localStorage.removeItem("holoStudentDdayList");
     localStorage.removeItem("holoStudentNickname");
