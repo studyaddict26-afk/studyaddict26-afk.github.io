@@ -3292,11 +3292,11 @@
       <button type="button" class="home-nav-btn" onclick="go('recordhub')">
         <span class="hn-title">내 학습 기록 살펴보기</span> <span class="hn-arrow">›</span>
       </button>
-      <button type="button" class="home-nav-btn" onclick="go('mockexam')">
-        <span class="hn-title">모의고사·내신 관리하기</span> <span class="hn-arrow">›</span>
-      </button>
       <button type="button" class="home-nav-btn" onclick="go('consult')">
         <span class="hn-title">나에게 맞는 학습 상담 알아보기</span> <span class="hn-arrow">›</span>
+      </button>
+      <button type="button" class="home-nav-btn" onclick="go('mockexam')">
+        <span class="hn-title">모의고사·내신 관리하기</span> <span class="hn-arrow">›</span>
       </button>
       <button type="button" class="home-nav-btn" onclick="go('examhub')">
         <span class="hn-title">시험 시뮬레이션</span> <span class="hn-arrow">›</span>
@@ -5214,9 +5214,9 @@
           <div class="admin-page-head">
             <span class="admin-page-ico">🔑</span>
             <div>
-              <h2>학생 계정 관리</h2>
+              <h2>학생 계정 관리 <span class="admin-status-pill status-대기" id="adminStudentsPendingCount" style="display:none;"></span></h2>
               <div class="split"></div>
-              <p class="admin-page-sub">'AI 홀로' 사이트에 로그인할 수 있는 학생 계정을 관리합니다. 계정을 삭제하면 그 즉시 로그인이 막힙니다.</p>
+              <p class="admin-page-sub">'AI 홀로' 사이트에 로그인할 수 있는 학생 계정을 관리합니다. 계정을 삭제하면 그 즉시 로그인이 막힙니다. 학생이 직접 회원가입한 계정은 '승인 대기' 상태로 뜨며, 승인해야 로그인할 수 있습니다.</p>
             </div>
           </div>
           <div class="admin-toolbar">
@@ -5272,6 +5272,7 @@
                   <th>이름</th>
                   <th>생년월일</th>
                   <th>등록일</th>
+                  <th>상태</th>
                   <th></th>
                 </tr>
               </thead>
@@ -8180,24 +8181,53 @@
   function renderStudents() {
     const body = document.getElementById("adminStudentsBody");
     const empty = document.getElementById("adminStudentsEmptyMsg");
+    const pendingCountEl = document.getElementById("adminStudentsPendingCount");
     if (!body) return;
+    const pendingCount = adminAllStudents.filter(s => s.status === "pending").length;
+    if (pendingCountEl) {
+      if (pendingCount > 0) {
+        pendingCountEl.textContent = "승인 대기 " + pendingCount + "명";
+        pendingCountEl.style.display = "inline-block";
+      } else {
+        pendingCountEl.style.display = "none";
+      }
+    }
     if (!adminAllStudents.length) {
       body.innerHTML = "";
       empty.style.display = "block";
       return;
     }
     empty.style.display = "none";
-    body.innerHTML = adminAllStudents.map(s => {
+    // 학생이 직접 회원가입해서 승인 대기 중인 계정을 목록 맨 위로 올려서 바로 눈에 띄게 한다
+    // (같은 그룹 안에서는 최신순인 기존 정렬이 안정 정렬로 그대로 유지된다).
+    const sorted = adminAllStudents.slice().sort((a, b) =>
+      (a.status === "pending" ? 0 : 1) - (b.status === "pending" ? 0 : 1));
+    body.innerHTML = sorted.map(s => {
       const created = s.createdAt && s.createdAt.toDate ? s.createdAt.toDate().toISOString().slice(0, 10) : "-";
+      const isPending = s.status === "pending";
+      const statusHtml = isPending
+        ? "<span class=\"admin-status-pill status-대기\">승인 대기</span>"
+        : "<span class=\"admin-status-pill status-확정\">승인됨</span>";
+      const actionHtml = (isPending ? "<button type=\"button\" class=\"admin-status-btn\" onclick=\"approveStudent('" + s.id + "')\">승인</button> " : "")
+        + "<button type=\"button\" class=\"admin-delete-btn\" onclick=\"deleteStudent('" + s.id + "')\">삭제</button>";
       return "<tr>"
         + "<td>" + escapeHtml(s.id) + "</td>"
         + "<td>" + escapeHtml(s.school || "-") + "</td>"
         + "<td>" + escapeHtml(s.name || "-") + "</td>"
         + "<td>" + escapeHtml(s.birth || "-") + "</td>"
         + "<td>" + created + "</td>"
-        + "<td><button type=\"button\" class=\"admin-delete-btn\" onclick=\"deleteStudent('" + s.id + "')\">삭제</button></td>"
+        + "<td>" + statusHtml + "</td>"
+        + "<td>" + actionHtml + "</td>"
         + "</tr>";
     }).join("");
+  }
+  function approveStudent(id) {
+    // status 필드를 아예 지운다 — 관리자가 직접 만든 기존 계정들도 status 필드가
+    // 없는 상태로 승인된 것으로 취급하고 있으므로(studentLogin() 참고), 같은 규칙을
+    // 그대로 따른다.
+    db.collection("students").doc(id).update({
+      status: firebase.firestore.FieldValue.delete()
+    }).catch(err => console.error(err));
   }
   function submitStudentAdd(e) {
     e.preventDefault();
