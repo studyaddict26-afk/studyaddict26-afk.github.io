@@ -221,12 +221,16 @@
     height: 34px; padding: 0 12px; box-sizing: border-box;
     border: 1px solid var(--line-dark); border-radius: 8px; background: var(--cream);
   }
-  .stu-gender-opt {
+  /* .apply-field label { display:block }이 label.stu-gender-opt보다 detail(클래스+요소)
+     명시도가 더 높아서 여기 display:flex를 그냥 덮어써버린다 — 그래서 라디오와 글자가
+     한 줄로 안 붙고 각자 따로 떨어져 보이던 게 진짜 원인이었다. 부모(.stu-gender-toggle)
+     까지 셀렉터에 포함시켜 명시도를 확실히 더 높여서 이긴다. */
+  .stu-gender-toggle .stu-gender-opt {
     display: flex; align-items: center; gap: 4px;
     font-size: 0.82rem; font-weight: 600; color: var(--ink);
     cursor: pointer; white-space: nowrap;
   }
-  .stu-gender-opt input {
+  .stu-gender-toggle .stu-gender-opt input {
     accent-color: var(--green); cursor: pointer; margin: 0;
     width: 14px; height: 14px; flex: none;
   }
@@ -239,13 +243,15 @@
      곳에 그대로 쓰면 옵션마다 버튼처럼 나뉘어 보이지 않고 텍스트가 깨져 보인다. 그래서
      옵션 하나하나를 독립된 박스로 분리한 전용 스타일을 따로 둔다. */
   .ss-radio-group { display: flex; gap: 8px; }
-  .ss-radio-opt {
+  /* .apply-field label { display:block }이 명시도(클래스+요소)가 더 높아서 .ss-radio-opt
+     하나만으로는 display:flex가 덮어써진다 — 부모까지 셀렉터에 포함시켜 확실히 이긴다. */
+  .ss-radio-group .ss-radio-opt {
     flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
     padding: 10px 8px; border: 1px solid var(--line-dark); border-radius: 8px;
     background: var(--cream); font-size: 0.86rem; font-weight: 600; color: var(--ink);
     cursor: pointer; white-space: nowrap; box-sizing: border-box;
   }
-  .ss-radio-opt input {
+  .ss-radio-group .ss-radio-opt input {
     accent-color: var(--green); cursor: pointer; margin: 0;
     width: 15px; height: 15px; flex: none;
   }
