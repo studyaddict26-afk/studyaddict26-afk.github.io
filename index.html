@@ -386,20 +386,27 @@
   html[data-boot="login"] #studentLoginGate { display: flex; }
   #studentLoginGate {
     position: fixed; inset: 0; z-index: 500;
-    align-items: center; justify-content: center;
+    align-items: flex-start; justify-content: center;
     background: var(--cream);
+    overflow-y: auto;
+    padding: 40px 0;
   }
   .student-login-box {
     max-width: 380px; width: calc(100% - 40px);
     background: var(--paper); border: 1px solid var(--line);
     border-radius: 12px; padding: 40px 36px;
     text-align: center;
+    margin: auto;
   }
   .student-login-box .sl-wordmark { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.01em; }
   .student-login-box .sl-wordmark .holo { color: var(--green); }
   .student-login-box .sl-caption { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.14em; color: var(--ink-soft); margin-top: 4px; }
   .student-login-box h2 { font-size: 1.05rem; font-weight: 700; margin: 20px 0 20px 0; color: var(--ink-soft); }
   .student-login-box .apply-field { text-align: left; }
+  .sl-switch-link { margin-top: 14px; font-size: 0.78rem; }
+  .sl-switch-link a { color: var(--green-deep); font-weight: 700; text-decoration: none; }
+  .sl-switch-link a:hover { text-decoration: underline; }
+  .sl-signup-hint { font-size: 0.76rem; color: var(--ink-soft); margin: -12px 0 16px; line-height: 1.5; }
 
   /* ═══════════ 홈 화면 ═══════════ */
   #view-home { overflow-y: auto; }
@@ -3074,19 +3081,71 @@
   <div class="student-login-box">
     <div class="sl-wordmark">공부 AI <span class="holo">홀로</span></div>
     <div class="sl-caption">ROADMAP × STUDY ADDICT</div>
-    <h2>등록된 아이디로 로그인해주세요</h2>
-    <form id="studentLoginForm" onsubmit="studentLogin(event)">
-      <div class="apply-field">
-        <label for="sl-id">아이디</label>
-        <input type="text" id="sl-id" autocomplete="username" required>
-      </div>
-      <div class="apply-field">
-        <label for="sl-pw">비밀번호</label>
-        <input type="password" id="sl-pw" autocomplete="current-password" required>
-      </div>
-      <button type="submit" class="apply-submit-btn" id="studentLoginBtn" style="width:100%;">로그인</button>
-      <div class="apply-status-msg" id="studentLoginMsg"></div>
-    </form>
+
+    <div id="slLoginPane">
+      <h2>등록된 아이디로 로그인해주세요</h2>
+      <form id="studentLoginForm" onsubmit="studentLogin(event)">
+        <div class="apply-field">
+          <label for="sl-id">아이디</label>
+          <input type="text" id="sl-id" autocomplete="username" required>
+        </div>
+        <div class="apply-field">
+          <label for="sl-pw">비밀번호</label>
+          <input type="password" id="sl-pw" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="apply-submit-btn" id="studentLoginBtn" style="width:100%;">로그인</button>
+        <div class="apply-status-msg" id="studentLoginMsg"></div>
+      </form>
+      <p class="sl-switch-link"><a href="#" onclick="showStudentSignupPane();return false;">아직 계정이 없으신가요? 회원가입하기 →</a></p>
+    </div>
+
+    <div id="slSignupPane" style="display:none;">
+      <h2>독서실 학생으로 회원가입</h2>
+      <p class="sl-signup-hint">가입 신청 후 독서실에서 승인하면 로그인할 수 있어요.</p>
+      <form id="studentSignupForm" onsubmit="submitStudentSignup(event)">
+        <div class="apply-field">
+          <label for="ss-id">아이디</label>
+          <input type="text" id="ss-id" autocomplete="username" required>
+        </div>
+        <div class="apply-field">
+          <label for="ss-pw">비밀번호</label>
+          <input type="password" id="ss-pw" autocomplete="new-password" required>
+        </div>
+        <div class="apply-field">
+          <label for="ss-name">이름</label>
+          <input type="text" id="ss-name" required>
+        </div>
+        <div class="apply-field">
+          <label for="ss-school">학교 (성인은 N수)</label>
+          <input type="text" id="ss-school" required>
+        </div>
+        <div class="apply-field">
+          <label for="ss-birth">생년월일</label>
+          <input type="text" id="ss-birth" placeholder="예: 2008-05-14" required>
+        </div>
+        <div class="apply-field">
+          <label>성별</label>
+          <div class="stu-gender-toggle">
+            <label class="stu-gender-opt"><input type="radio" name="ss-gender" value="male" required> 남</label>
+            <label class="stu-gender-opt"><input type="radio" name="ss-gender" value="female"> 여</label>
+          </div>
+        </div>
+        <div class="apply-field">
+          <label>관 유형</label>
+          <div class="stu-gender-toggle">
+            <label class="stu-gender-opt"><input type="radio" name="ss-branch" value="하이엔드관" required> 하이엔드관</label>
+            <label class="stu-gender-opt"><input type="radio" name="ss-branch" value="N수관"> N수관</label>
+          </div>
+        </div>
+        <div class="apply-field">
+          <label for="ss-grade">학년</label>
+          <input type="text" id="ss-grade" placeholder="예: 고2" required>
+        </div>
+        <button type="submit" class="apply-submit-btn" id="studentSignupBtn" style="width:100%;">가입 신청하기</button>
+        <div class="apply-status-msg" id="studentSignupMsg"></div>
+      </form>
+      <p class="sl-switch-link"><a href="#" onclick="showStudentLoginPane();return false;">← 로그인으로 돌아가기</a></p>
+    </div>
   </div>
 </div>
 
@@ -3230,17 +3289,17 @@
     </div>
 
     <div class="home-nav-grid">
-      <button type="button" class="home-nav-btn" onclick="go('ranking')">
-        <span class="hn-title">우리 독서실 랭킹</span> <span class="hn-arrow">›</span>
-      </button>
       <button type="button" class="home-nav-btn" onclick="go('recordhub')">
         <span class="hn-title">내 학습 기록 살펴보기</span> <span class="hn-arrow">›</span>
+      </button>
+      <button type="button" class="home-nav-btn" onclick="go('mockexam')">
+        <span class="hn-title">모의고사·내신 관리하기</span> <span class="hn-arrow">›</span>
       </button>
       <button type="button" class="home-nav-btn" onclick="go('consult')">
         <span class="hn-title">나에게 맞는 학습 상담 알아보기</span> <span class="hn-arrow">›</span>
       </button>
       <button type="button" class="home-nav-btn" onclick="go('examhub')">
-        <span class="hn-title">타이머 & 스톱워치</span> <span class="hn-arrow">›</span>
+        <span class="hn-title">시험 시뮬레이션</span> <span class="hn-arrow">›</span>
       </button>
     </div>
 
@@ -3749,7 +3808,19 @@
   <section class="view" id="view-examhub">
     <div class="chat-head">
       <span class="eyebrow">EXAM</span>
-      <h2>타이머 & 스톱워치</h2>
+      <h2>시험 시뮬레이션</h2>
+      <div class="split"></div>
+    </div>
+    <div class="hub-page-wrap">
+      <p class="hub-coming-soon">준비중입니다</p>
+    </div>
+  </section>
+
+  <!-- ─── 모의고사·내신 관리하기 ─── -->
+  <section class="view" id="view-mockexam">
+    <div class="chat-head">
+      <span class="eyebrow">MOCK EXAM</span>
+      <h2>모의고사·내신 관리하기</h2>
       <div class="split"></div>
     </div>
     <div class="hub-page-wrap">
@@ -5336,7 +5407,7 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 & 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 & 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 & 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "내 플래너 관리하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "타이머 & 스톱워치", ranking: "우리 독서실 랭킹", mypage: "마이페이지", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 & 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 & 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 & 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "내 플래너 관리하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "시험 시뮬레이션", mockexam: "모의고사·내신 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { mathexam: "exam", engexam: "exam" };
   // "← 이전으로"가 상단 흰색 바(topbar)의 제목 오른쪽에 뜨는 페이지들과, 각각이 돌아갈 곳.
   const BACK_TARGET = {
@@ -8455,6 +8526,13 @@
         msg.className = "apply-status-msg error";
         return;
       }
+      // status가 없는 계정(관리자가 직접 만든 예전/기존 계정)은 그냥 승인된 것으로 본다 —
+      // "pending"으로 명시된 경우(학생이 직접 회원가입 신청한 뒤 아직 승인 전)만 막는다.
+      if (doc.data().status === "pending") {
+        msg.textContent = "아직 독서실에서 승인 대기 중이에요. 승인되면 로그인할 수 있어요.";
+        msg.className = "apply-status-msg error";
+        return;
+      }
       localStorage.setItem("holoStudentId", id);
       localStorage.setItem("holoStudentPw", pw);
       localStorage.setItem("holoStudentLoginDate", getCalendarDateKey());
@@ -8466,6 +8544,62 @@
       btn.disabled = false;
       btn.textContent = "로그인";
       msg.textContent = "로그인 중 오류가 발생했어요. 다시 시도해주세요.";
+      msg.className = "apply-status-msg error";
+    });
+  }
+  function showStudentSignupPane() {
+    document.getElementById("slLoginPane").style.display = "none";
+    document.getElementById("slSignupPane").style.display = "block";
+  }
+  function showStudentLoginPane() {
+    document.getElementById("slSignupPane").style.display = "none";
+    document.getElementById("slLoginPane").style.display = "block";
+  }
+  // 학생이 직접 회원가입 신청 — 관리자가 만드는 계정과 같은 항목을 받되, status:"pending"으로
+  // 저장해서 독서실이 승인하기 전까지는 로그인이 막히게 한다(studentLogin의 status 체크 참고).
+  function submitStudentSignup(e) {
+    e.preventDefault();
+    const btn = document.getElementById("studentSignupBtn");
+    const msg = document.getElementById("studentSignupMsg");
+    msg.textContent = "";
+    msg.className = "apply-status-msg";
+    const id = document.getElementById("ss-id").value.trim();
+    const pw = document.getElementById("ss-pw").value.trim();
+    const name = document.getElementById("ss-name").value.trim();
+    const school = document.getElementById("ss-school").value.trim();
+    const birth = document.getElementById("ss-birth").value.trim();
+    const genderInput = document.querySelector('input[name="ss-gender"]:checked');
+    const gender = genderInput ? genderInput.value : "";
+    const branchInput = document.querySelector('input[name="ss-branch"]:checked');
+    const branch = branchInput ? branchInput.value : "";
+    const grade = document.getElementById("ss-grade").value.trim();
+    if (!id || !pw || !name || !school || !birth || !gender || !branch || !grade) return;
+    btn.disabled = true;
+    btn.textContent = "신청 중...";
+    db.collection("students").doc(id).get().then(doc => {
+      if (doc.exists) {
+        btn.disabled = false;
+        btn.textContent = "가입 신청하기";
+        msg.textContent = "이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.";
+        msg.className = "apply-status-msg error";
+        return;
+      }
+      return db.collection("students").doc(id).set({
+        password: pw, school: school, name: name, birth: birth, gender: gender,
+        branch: branch, grade: grade, status: "pending",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(() => {
+        btn.disabled = false;
+        btn.textContent = "가입 신청하기";
+        document.getElementById("studentSignupForm").reset();
+        msg.textContent = "가입 신청이 접수됐어요! 독서실에서 승인하면 로그인할 수 있어요.";
+        msg.className = "apply-status-msg success";
+      });
+    }).catch(err => {
+      console.error(err);
+      btn.disabled = false;
+      btn.textContent = "가입 신청하기";
+      msg.textContent = "신청 중 오류가 발생했어요. 다시 시도해주세요.";
       msg.className = "apply-status-msg error";
     });
   }
