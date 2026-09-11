@@ -462,13 +462,12 @@
     cursor: pointer; transition: background 0.18s, transform 0.18s;
   }
   .sl-hero-cta:hover { background: var(--green); transform: translateY(-1px); }
-  @media (max-width: 900px) {
+  /* 아이패드(세로 768px~)·노트북·데스크톱에서는 목차 바 + 히어로 콘텐츠까지 다 보여주는
+     랜딩 페이지 느낌으로, 핸드폰(앱, 767px 이하)에서는 로그인 카드만 딱 나오게 한다. */
+  @media (max-width: 767px) {
+    .sl-navbar { display: none; }
     .sl-hero-content { display: none; }
-    .sl-gate-body { justify-content: center; }
-  }
-  @media (max-width: 760px) {
-    .sl-navbar-links { display: none; }
-    .sl-gate-body { padding: 10px 20px 40px; }
+    .sl-gate-body { justify-content: center; padding: 10px 20px 40px; }
   }
   .student-login-box {
     flex: none;
