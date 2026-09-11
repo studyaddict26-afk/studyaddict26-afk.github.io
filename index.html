@@ -234,6 +234,24 @@
      달리, 옆 입력칸들과 같은 34px 높이로 맞춘다. */
   #studentAddForm .apply-submit-btn { height: 34px; padding: 0 16px; font-size: 0.82rem; }
 
+  /* 학생 회원가입 폼(#studentSignupForm) 전용 — 위 .stu-gender-toggle은 관리자 툴바처럼
+     아주 좁은 한 줄(34px 고정 높이)에 맞춘 것이라, 이 폼처럼 필드 하나가 넉넉한 폭을 쓰는
+     곳에 그대로 쓰면 옵션마다 버튼처럼 나뉘어 보이지 않고 텍스트가 깨져 보인다. 그래서
+     옵션 하나하나를 독립된 박스로 분리한 전용 스타일을 따로 둔다. */
+  .ss-radio-group { display: flex; gap: 8px; }
+  .ss-radio-opt {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 10px 8px; border: 1px solid var(--line-dark); border-radius: 8px;
+    background: var(--cream); font-size: 0.86rem; font-weight: 600; color: var(--ink);
+    cursor: pointer; white-space: nowrap; box-sizing: border-box;
+  }
+  .ss-radio-opt input {
+    accent-color: var(--green); cursor: pointer; margin: 0;
+    width: 15px; height: 15px; flex: none;
+  }
+  .ss-field-row { display: flex; gap: 10px; }
+  .ss-field-row .apply-field { flex: 1; min-width: 0; }
+
   .sb-consult {
     display: block; width: 100%;
     border: none; cursor: pointer; font-family: inherit; text-align: left;
@@ -2109,12 +2127,13 @@
   .apply-ai-recommend-body { font-size: 0.84rem; color: var(--ink); line-height: 1.7; }
   .apply-field { margin-bottom: 14px; }
   .apply-field label { display: block; font-size: 0.78rem; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
-  .apply-field input, .apply-field textarea {
+  .apply-field input, .apply-field textarea, .apply-field select {
     width: 100%; font-family: inherit; font-size: 0.88rem;
     padding: 10px 12px; border: 1px solid var(--line-dark); border-radius: 8px;
     background: var(--cream); color: var(--ink); box-sizing: border-box;
   }
   .apply-field textarea { resize: vertical; min-height: 70px; }
+  .apply-field select { cursor: pointer; }
   .apply-req { color: #B3261E; }
   .apply-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   @media (max-width: 480px) {
@@ -3143,35 +3162,49 @@
           <label for="ss-pw">비밀번호</label>
           <input type="password" id="ss-pw" autocomplete="new-password" required>
         </div>
-        <div class="apply-field">
-          <label for="ss-name">이름</label>
-          <input type="text" id="ss-name" required>
-        </div>
-        <div class="apply-field">
-          <label for="ss-school">학교 (성인은 N수)</label>
-          <input type="text" id="ss-school" required>
-        </div>
-        <div class="apply-field">
-          <label for="ss-birth">생년월일</label>
-          <input type="text" id="ss-birth" placeholder="예: 2008-05-14" required>
-        </div>
-        <div class="apply-field">
-          <label>성별</label>
-          <div class="stu-gender-toggle">
-            <label class="stu-gender-opt"><input type="radio" name="ss-gender" value="male" required> 남</label>
-            <label class="stu-gender-opt"><input type="radio" name="ss-gender" value="female"> 여</label>
+        <div class="ss-field-row">
+          <div class="apply-field">
+            <label for="ss-name">이름</label>
+            <input type="text" id="ss-name" required>
           </div>
-        </div>
-        <div class="apply-field">
-          <label>관 유형</label>
-          <div class="stu-gender-toggle">
-            <label class="stu-gender-opt"><input type="radio" name="ss-branch" value="하이엔드관" required> 하이엔드관</label>
-            <label class="stu-gender-opt"><input type="radio" name="ss-branch" value="N수관"> N수관</label>
+          <div class="apply-field">
+            <label for="ss-school">학교 (성인은 출신 고등학교)</label>
+            <input type="text" id="ss-school" required>
           </div>
         </div>
         <div class="apply-field">
           <label for="ss-grade">학년</label>
-          <input type="text" id="ss-grade" placeholder="예: 고2" required>
+          <select id="ss-grade" required>
+            <option value="" disabled selected>선택해주세요</option>
+            <option value="예비 중3">예비 중3</option>
+            <option value="중3">중3</option>
+            <option value="예비 고1">예비 고1</option>
+            <option value="고1">고1</option>
+            <option value="예비 고2">예비 고2</option>
+            <option value="고2">고2</option>
+            <option value="예비 고3">예비 고3</option>
+            <option value="고3">고3</option>
+          </select>
+        </div>
+        <div class="ss-field-row">
+          <div class="apply-field">
+            <label for="ss-birth">생년월일</label>
+            <input type="text" id="ss-birth" placeholder="예: 2008-05-14" required>
+          </div>
+          <div class="apply-field">
+            <label>성별</label>
+            <div class="ss-radio-group">
+              <label class="ss-radio-opt"><input type="radio" name="ss-gender" value="male" required> 남</label>
+              <label class="ss-radio-opt"><input type="radio" name="ss-gender" value="female"> 여</label>
+            </div>
+          </div>
+        </div>
+        <div class="apply-field">
+          <label>독서실 학습관 유형</label>
+          <div class="ss-radio-group">
+            <label class="ss-radio-opt"><input type="radio" name="ss-branch" value="하이엔드관" required> 하이엔드관</label>
+            <label class="ss-radio-opt"><input type="radio" name="ss-branch" value="N수관"> N수관</label>
+          </div>
         </div>
         <button type="submit" class="apply-submit-btn" id="studentSignupBtn" style="width:100%;">가입 신청하기</button>
         <div class="apply-status-msg" id="studentSignupMsg"></div>
