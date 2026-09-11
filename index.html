@@ -6208,9 +6208,14 @@
   // 원래대로 AI 대화("오늘" 케이스)로 진행한다.
   function todayPlanQuickPrompt() {
     const askedText = "오늘 계획을 세우고 싶어요.";
-    planApi({ action: "today_status", date: getLocalDateKey() })
+    // today_status의 hasPlan은 "제출하기 버튼을 눌렀는지"(holo_plan_submissions) 기준이라
+    // 여기서 쓰면 안 된다 — 계획을 이미 세워뒀어도(챗봇으로 추가만 하고 아직 제출은 안 했으면)
+    // hasPlan이 false로 나와서 "최초 계획이 없다"고 잘못 판단하는 버그가 있었다. 여기서는
+    // 순수하게 "오늘 최초 계획(is_initial) 항목이 이미 있는지"만 plan_list로 직접 확인한다.
+    planApi({ action: "plan_list", date: getLocalDateKey() })
       .then(data => {
-        if (data.hasPlan) {
+        const hasInitialPlan = (data.items || []).some(it => Number(it.active) === 1 && Number(it.is_initial) !== 0);
+        if (hasInitialPlan) {
           addMsg("plan", "user", escapeHtml(askedText));
           if (!chatHistory["plan"]) chatHistory["plan"] = [];
           chatHistory["plan"].push({ role: "user", content: askedText });
