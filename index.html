@@ -432,11 +432,34 @@
     text-align: center;
     box-shadow: 0 20px 60px rgba(23,24,26,0.10);
   }
-  .student-login-box .sl-wordmark { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.01em; }
-  .student-login-box .sl-wordmark .holo { color: var(--green); }
-  .student-login-box .sl-caption { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.14em; color: var(--ink-soft); margin-top: 4px; }
-  .student-login-box h2 { font-size: 1.05rem; font-weight: 700; margin: 20px 0 20px 0; color: var(--ink-soft); }
+  /* 제목 구역(로고+워드마크)만 카드 다른 배경색으로 분리 — 카드 자체 padding을 역마진으로
+     상쇄해서 카드 가장자리까지 색이 꽉 차게 만든다. 바로 아래 h2(각 화면의 부제, 예:
+     "등록된 아이디로 로그인해주세요")도 같은 색으로 이어붙여서 하나의 색 구역처럼 보이게 한다 —
+     h2는 화면(로그인/회원가입 등)마다 내용이 바뀌므로 정적으로 고정하지 않고 그대로 재사용한다. */
+  .sl-header {
+    background: var(--green-deep);
+    margin: -40px -36px 0 -36px;
+    padding: 30px 36px 6px 36px;
+    border-radius: 12px 12px 0 0;
+    text-align: left;
+  }
+  .sl-header .sl-wordmark { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.01em; color: #fff; }
+  .sl-header .sl-wordmark .holo { color: #CFEFDB; }
+  .student-login-box h2 {
+    background: var(--green-deep);
+    margin: 0 -36px 22px -36px;
+    padding: 0 36px 22px 36px;
+    font-size: 0.8rem; font-weight: 600; letter-spacing: -0.005em;
+    color: rgba(255,255,255,0.82);
+    text-align: left;
+  }
   .student-login-box .apply-field { text-align: left; }
+  .sl-input-group { position: relative; }
+  .sl-input-group .sl-input-icon {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    font-size: 0.95rem; line-height: 1; pointer-events: none;
+  }
+  .apply-field .sl-input-group input { padding-left: 38px; }
   .sl-switch-link { margin-top: 14px; font-size: 0.78rem; }
   .sl-switch-link a { color: var(--green-deep); font-weight: 700; text-decoration: none; }
   .sl-switch-link a:hover { text-decoration: underline; }
@@ -3125,21 +3148,27 @@
 <!-- ═══ 학생 로그인 게이트 ═══ -->
 <div id="studentLoginGate">
   <div class="student-login-box">
-    <div class="sl-wordmark">
-      <div>학습 관리 시스템</div>
-      <div class="holo">홀로 HOLO</div>
+    <div class="sl-header">
+      <div class="sl-wordmark">
+        <div>학습 관리 시스템</div>
+        <div class="holo">홀로 HOLO</div>
+      </div>
     </div>
 
     <div id="slLoginPane">
       <h2>등록된 아이디로 로그인해주세요</h2>
       <form id="studentLoginForm" onsubmit="studentLogin(event)">
         <div class="apply-field">
-          <label for="sl-id">아이디</label>
-          <input type="text" id="sl-id" autocomplete="username" required>
+          <div class="sl-input-group">
+            <span class="sl-input-icon" aria-hidden="true">👤</span>
+            <input type="text" id="sl-id" autocomplete="username" required placeholder="아이디" aria-label="아이디">
+          </div>
         </div>
         <div class="apply-field">
-          <label for="sl-pw">비밀번호</label>
-          <input type="password" id="sl-pw" autocomplete="current-password" required>
+          <div class="sl-input-group">
+            <span class="sl-input-icon" aria-hidden="true">🔒</span>
+            <input type="password" id="sl-pw" autocomplete="current-password" required placeholder="비밀번호" aria-label="비밀번호">
+          </div>
         </div>
         <button type="submit" class="apply-submit-btn" id="studentLoginBtn" style="width:100%;">로그인</button>
         <div class="apply-status-msg" id="studentLoginMsg"></div>
