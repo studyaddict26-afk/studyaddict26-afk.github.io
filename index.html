@@ -420,12 +420,6 @@
       var(--paper);
     overflow-y: auto;
   }
-  /* 위쪽 바 — 로고만 표시. .sl-gate-body와 같은 max-width로 맞춰서, 넓은 화면에서 로고가
-     화면 진짜 가장자리가 아니라 아래 히어로 콘텐츠와 같은 세로선에 오도록 정렬한다. */
-  .sl-navbar { flex: none; padding: 22px clamp(20px, 5vw, 64px) 0; }
-  .sl-navbar-inner { max-width: 1280px; width: 100%; margin: 0 auto; }
-  .sl-navbar-brand { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.01em; color: var(--ink); }
-  .sl-navbar-brand .holo { color: var(--green); }
   .sl-gate-body {
     flex: 1; display: flex; align-items: center; justify-content: space-between;
     gap: clamp(24px, 5vw, 64px); min-height: 0;
@@ -550,7 +544,6 @@
   /* 아이패드(세로 768px~)·노트북·데스크톱에서는 목차 바 + 히어로 콘텐츠까지 다 보여주는
      랜딩 페이지 느낌으로, 핸드폰(앱, 767px 이하)에서는 로그인 카드만 딱 나오게 한다. */
   @media (max-width: 767px) {
-    .sl-navbar { display: none; }
     .sl-hero-content { display: none; }
     .sl-gate-body { justify-content: center; padding: 10px 20px 40px; }
   }
@@ -3297,11 +3290,6 @@
 
 <!-- ═══ 학생 로그인 게이트 ═══ -->
 <div id="studentLoginGate">
-  <nav class="sl-navbar">
-    <div class="sl-navbar-inner">
-      <div class="sl-navbar-brand">홀로 <span class="holo">HOLO</span></div>
-    </div>
-  </nav>
   <div class="sl-gate-body">
     <div class="sl-hero-content">
       <div class="sl-hero-eyebrow">관리형 독서실 학습 관리 시스템</div>
