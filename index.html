@@ -428,7 +428,10 @@
     max-width: 1280px; width: 100%; margin: 0 auto;
     padding: 10px clamp(20px, 5vw, 64px) 60px; box-sizing: border-box;
   }
-  .sl-hero-content { flex: 1 1 480px; max-width: 560px; }
+  /* align-self:flex-start + 고정 margin-top — 카드뉴스 슬라이드마다 카드 세로 길이가
+     달라져도(칩이 있는 슬라이드가 더 김) 위쪽 라벨/타이틀 위치는 흔들리지 않고, 카드만
+     아래로 늘어나게 한다. (부모 .sl-gate-body의 align-items:center를 이 아이템만 벗어남) */
+  .sl-hero-content { flex: 1 1 480px; max-width: 560px; align-self: flex-start; margin-top: clamp(40px, 11vh, 130px); }
   .sl-hero-eyebrow {
     font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; color: #D9BC8A;
     margin-bottom: 16px;
@@ -449,22 +452,6 @@
     background: linear-gradient(155deg, #1E7A4C 0%, var(--green-deep) 100%);
     border: 1px solid rgba(255,255,255,0.10);
   }
-  .sl-slide-card::before, .sl-lightbox-card::before {
-    content: attr(data-num);
-    position: absolute; z-index: 0; pointer-events: none;
-    font-weight: 800; line-height: 1; color: rgba(255,255,255,0.08);
-    font-family: inherit;
-  }
-  .sl-slide-card::before { font-size: 4.6rem; right: 2px; top: -6px; }
-  .sl-lightbox-card::before { font-size: 7.2rem; right: 2px; top: -10px; }
-  .sl-slide-icon, .sl-lightbox-icon {
-    position: relative; z-index: 1; display: flex; align-items: center; justify-content: center;
-    border-radius: 50%; background: rgba(255,255,255,0.14); color: #fff;
-  }
-  .sl-slide-icon { width: 34px; height: 34px; margin-bottom: 14px; }
-  .sl-slide-icon svg { width: 17px; height: 17px; }
-  .sl-lightbox-icon { width: 48px; height: 48px; margin-bottom: 18px; }
-  .sl-lightbox-icon svg { width: 23px; height: 23px; }
   .sl-slide-card {
     display: block; width: 100%; max-width: 460px; text-align: left;
     border: none; border-radius: 14px;
@@ -3319,7 +3306,6 @@
       <div class="sl-hero-eyebrow">관리형 독서실 학습 관리 시스템</div>
       <h1><span class="accent">홀로</span> <span class="en">HOLO</span></h1>
       <button type="button" class="sl-slide-card" id="slHeroSlideCard" onclick="openHeroSlideLightbox()">
-        <span class="sl-slide-icon" id="slHeroSlideIcon" aria-hidden="true"></span>
         <h3 id="slHeroSlideTitle"></h3>
         <p class="sl-slide-lead" id="slHeroSlideLead" style="display:none;"></p>
         <div class="sl-slide-chips" id="slHeroSlideChips" style="display:none;"></div>
@@ -3462,7 +3448,6 @@
   <div class="sl-lightbox-stage">
     <button type="button" class="sl-lightbox-nav prev" onclick="moveLightboxSlide(-1)" aria-label="이전">‹</button>
     <div class="sl-lightbox-card">
-      <span class="sl-lightbox-icon" id="slLightboxIcon" aria-hidden="true"></span>
       <h3 id="slLightboxTitle"></h3>
       <p class="sl-lightbox-lead" id="slLightboxLead" style="display:none;"></p>
       <div class="sl-lightbox-chips" id="slLightboxChips" style="display:none;"></div>
@@ -8959,11 +8944,6 @@
   }
   // 로그인 게이트 왼쪽 히어로의 "핵심 가치 3가지" 카드뉴스. 평소엔 작은 카드로 자동 회전
   // 하다가, 누르면 라이트박스로 크게 열리고 거기서 좌우로 넘겨볼 수 있다.
-  const HOLO_SLIDE_ICONS = [
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M12 20V4"/><path d="M20 20v-7"/></svg>',
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="12" rx="3"/><path d="M8 21l4-4"/></svg>',
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l11-11-4-4L4 16v4z"/><path d="M14 6l4 4"/></svg>'
-  ];
   const HOLO_HERO_SLIDES = [
     {
       title: "메타인지, 더 이상 혼자 고민하지 않아도 됩니다",
@@ -8985,12 +8965,10 @@
   function holoJoinLines(val) {
     return Array.isArray(val) ? val.join("<br>") : val;
   }
-  function renderSlideInto(idx, cardEl, titleEl, bodyEl, iconEl, leadEl, chipsEl, chipClass) {
+  function renderSlideInto(idx, titleEl, bodyEl, leadEl, chipsEl, chipClass) {
     const slide = HOLO_HERO_SLIDES[idx];
-    cardEl.setAttribute("data-num", idx + 1);
     titleEl.innerHTML = holoJoinLines(slide.title);
     bodyEl.innerHTML = slide.bullets.map(b => "<li>" + b + "</li>").join("");
-    if (iconEl) iconEl.innerHTML = HOLO_SLIDE_ICONS[idx];
     if (leadEl) {
       if (slide.lead) { leadEl.innerHTML = holoJoinLines(slide.lead); leadEl.style.display = ""; }
       else { leadEl.innerHTML = ""; leadEl.style.display = "none"; }
@@ -9009,9 +8987,9 @@
     const card = document.getElementById("slHeroSlideCard");
     if (!card) return; // 히어로 콘텐츠는 767px 이하(핸드폰)에서는 DOM에 있어도 안 쓰인다
     renderSlideInto(
-      holoHeroSlideIdx, card,
+      holoHeroSlideIdx,
       document.getElementById("slHeroSlideTitle"), document.getElementById("slHeroSlideBody"),
-      document.getElementById("slHeroSlideIcon"), document.getElementById("slHeroSlideLead"),
+      document.getElementById("slHeroSlideLead"),
       document.getElementById("slHeroSlideChips"), "sl-slide-chip"
     );
     const dotsEl = document.getElementById("slHeroSlideDots");
@@ -9039,9 +9017,9 @@
   // 카드뉴스 확대(라이트박스) — 작은 카드를 누르면 열리고, 좌우 화살표/키보드로 넘긴다.
   function renderLightboxSlide() {
     renderSlideInto(
-      holoHeroSlideIdx, document.querySelector("#slSlideLightbox .sl-lightbox-card"),
+      holoHeroSlideIdx,
       document.getElementById("slLightboxTitle"), document.getElementById("slLightboxBody"),
-      document.getElementById("slLightboxIcon"), document.getElementById("slLightboxLead"),
+      document.getElementById("slLightboxLead"),
       document.getElementById("slLightboxChips"), "sl-lightbox-chip"
     );
     const dotsEl = document.getElementById("slLightboxDots");
