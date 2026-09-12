@@ -994,7 +994,7 @@
      .sched-chat-col 자체에도 똑같이 max-height를 걸어둔다 — 행(row)의 auto-height 계산이
      늘어난 자식(챗봇 칸)의 내용물 크기를 그대로 반영해버리는 경우까지 막아주는 이중 안전장치. */
   #view-plannerPage .sched-manage-layout { min-height: 0; max-height: 620px; }
-  #view-plannerPage .sched-chat-col { height: 620px; max-height: 620px; }
+  #view-plannerPage .sched-chat-col { max-height: 620px; }
   .pp-layout.sched-manage-layout { --pp-left-w: 230px; }
   .pp-layout .sched-left-col { flex: 0 0 var(--pp-left-w); }
   .pp-plan-inner { gap: 10px; }
@@ -6571,6 +6571,18 @@
       '</div>' +
       '<div class="pp-cal-weekdays">' + WEEKDAY_LABELS.map(w => '<span>' + w + '</span>').join("") + '</div>' +
       '<div class="pp-cal-grid">' + cells + '</div>';
+    syncPpColumnHeights();
+  }
+  // 왼쪽 칸(달력 등)이 실제로 그려진 픽셀 높이를 그대로 재서 챗봇 칸 높이에 맞춘다 — 5주짜리
+  // 달이든 6주짜리 달이든, 챗봇 칸 아랫줄이 항상 왼쪽 칸 아랫줄과 같은 위치에 오도록(늘어나기만
+  // 하고 줄어들지 않는 버그가 있었어서, 매번 그 순간의 실제 높이로 다시 맞춘다 — 늘고 줄고 다 됨).
+  function syncPpColumnHeights() {
+    const left = document.querySelector("#view-plannerPage .sched-left-col");
+    const chat = document.querySelector("#view-plannerPage .sched-chat-col");
+    if (!left || !chat) return;
+    requestAnimationFrame(() => {
+      chat.style.height = left.getBoundingClientRect().height + "px";
+    });
   }
   function ppCalShift(delta) {
     ppCalMonth += delta;
