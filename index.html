@@ -411,13 +411,15 @@
   #studentLoginGate {
     position: fixed; inset: 0; z-index: 500;
     flex-direction: column;
-    /* 홈 히어로(.hero-collab)와 같은 은은한 색감의 그라디언트를 화면 전체에 깔아서,
-     로그인 카드가 그 위에 떠 있는 느낌으로 만든다. */
+    /* 짙은 그린 베이스 위에 그린/골드 글로우와 아주 옅은 그레인 텍스처를 얹은 배경 —
+     화이트 로그인 카드와 그린 카드뉴스가 그 위에 또렷하게 떠 보이도록 한다. */
     background:
-      radial-gradient(ellipse 70% 70% at 15% 15%, #EDF4EF 0%, transparent 60%),
-      radial-gradient(ellipse 70% 70% at 85% 20%, #F1EADB 0%, transparent 60%),
-      radial-gradient(ellipse 80% 80% at 30% 90%, #F1EADB 0%, transparent 55%),
-      var(--paper);
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E"),
+      radial-gradient(ellipse 55% 45% at 82% 12%, rgba(214,178,120,0.16) 0%, transparent 65%),
+      radial-gradient(ellipse 65% 55% at 12% 88%, rgba(30,107,65,0.42) 0%, transparent 65%),
+      radial-gradient(ellipse 90% 65% at 50% -5%, rgba(30,107,65,0.30) 0%, transparent 70%),
+      #0D1912;
+    background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat;
     overflow-y: auto;
   }
   .sl-gate-body {
@@ -428,23 +430,24 @@
   }
   .sl-hero-content { flex: 1 1 480px; max-width: 560px; }
   .sl-hero-eyebrow {
-    font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; color: var(--green-deep);
+    font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; color: #D9BC8A;
     margin-bottom: 16px;
   }
   .sl-hero-content h1 {
     font-size: clamp(1.9rem, 3.6vw, 2.7rem); font-weight: 800; line-height: 1.28;
-    letter-spacing: -0.02em; color: var(--ink); margin: 0 0 14px; word-break: keep-all;
+    letter-spacing: -0.02em; color: #fff; margin: 0 0 14px; word-break: keep-all;
   }
-  .sl-hero-content h1 .accent { color: var(--green); }
+  .sl-hero-content h1 .accent { color: #56C98A; }
   .sl-hero-content h1 .en {
-    background: linear-gradient(120deg, var(--ink) 0%, var(--green-deep) 55%, var(--green) 100%);
+    background: linear-gradient(120deg, #D9BC8A 0%, #56C98A 100%);
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
   /* 히어로 카드뉴스 — 세 가지 핵심 가치를 한 장씩 보여준다. 카드를 누르면 확대(라이트박스)로
      열리고, 거기서 좌우로 넘겨볼 수 있다(openHeroSlideLightbox/moveLightboxSlide 참고). */
   .sl-slide-card, .sl-lightbox-card {
     position: relative; overflow: hidden;
-    background: linear-gradient(155deg, var(--green-deep) 0%, #0F3D22 100%);
+    background: linear-gradient(155deg, #1E7A4C 0%, var(--green-deep) 100%);
+    border: 1px solid rgba(255,255,255,0.10);
   }
   .sl-slide-card::before, .sl-lightbox-card::before {
     content: attr(data-num);
@@ -561,7 +564,7 @@
     background: var(--paper); border: 1px solid var(--line);
     border-radius: 12px; padding: 40px 36px;
     text-align: center;
-    box-shadow: 0 20px 60px rgba(23,24,26,0.10);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.06);
   }
   /* 제목 구역(로고+워드마크)만 카드 다른 배경색으로 분리 — 카드 자체 padding을 역마진으로
      상쇄해서 카드 가장자리까지 색이 꽉 차게 만든다. 바로 아래 h2(각 화면의 부제, 예:
