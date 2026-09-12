@@ -442,41 +442,111 @@
     letter-spacing: -0.02em; color: var(--ink); margin: 0 0 14px; word-break: keep-all;
   }
   .sl-hero-content h1 .accent { color: var(--green); }
-  /* 히어로 카드뉴스 — 세 가지 핵심 가치를 한 장씩 넘겨보는 슬라이드 */
+  .sl-hero-content h1 .en {
+    background: linear-gradient(120deg, var(--ink) 0%, var(--green-deep) 55%, var(--green) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  /* 히어로 카드뉴스 — 세 가지 핵심 가치를 한 장씩 보여준다. 카드를 누르면 확대(라이트박스)로
+     열리고, 거기서 좌우로 넘겨볼 수 있다(openHeroSlideLightbox/moveLightboxSlide 참고). */
+  .sl-slide-card, .sl-lightbox-card {
+    position: relative; overflow: hidden;
+    background: linear-gradient(155deg, var(--green-deep) 0%, #0F3D22 100%);
+  }
+  .sl-slide-card::before, .sl-lightbox-card::before {
+    content: attr(data-num);
+    position: absolute; z-index: 0; pointer-events: none;
+    font-weight: 800; line-height: 1; color: rgba(255,255,255,0.08);
+    font-family: inherit;
+  }
+  .sl-slide-card::before { font-size: 7.4rem; right: -4px; top: -20px; }
+  .sl-lightbox-card::before { font-size: 11.5rem; right: -8px; top: -32px; }
+  .sl-slide-icon, .sl-lightbox-icon {
+    position: relative; z-index: 1; display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; background: rgba(255,255,255,0.14); color: #fff;
+  }
+  .sl-slide-icon { width: 34px; height: 34px; margin-bottom: 14px; }
+  .sl-slide-icon svg { width: 17px; height: 17px; }
+  .sl-lightbox-icon { width: 48px; height: 48px; margin-bottom: 18px; }
+  .sl-lightbox-icon svg { width: 23px; height: 23px; }
   .sl-slide-card {
-    background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
-    padding: 24px 26px 20px; max-width: 460px;
-    box-shadow: 0 10px 30px rgba(23,24,26,0.06);
+    display: block; width: 100%; max-width: 460px; text-align: left;
+    border: none; border-radius: 14px;
+    padding: 24px 26px 22px; font-family: inherit; cursor: pointer;
+    box-shadow: 0 14px 34px rgba(11,42,25,0.28);
+    transition: box-shadow 0.18s, transform 0.18s;
   }
-  .sl-slide-num { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; color: var(--green); margin-bottom: 9px; }
+  .sl-slide-card:hover { box-shadow: 0 18px 42px rgba(11,42,25,0.36); transform: translateY(-2px); }
   .sl-slide-card h3 {
-    font-size: 1.08rem; font-weight: 800; margin: 0 0 12px; letter-spacing: -0.01em;
-    color: var(--ink); word-break: keep-all; min-height: 2.8em;
+    position: relative; z-index: 1;
+    font-size: 1.1rem; font-weight: 800; margin: 0 0 12px; letter-spacing: -0.01em;
+    color: #fff; word-break: keep-all; min-height: 2.8em;
   }
-  .sl-slide-card ul { list-style: none; margin: 0; padding: 0; min-height: 5.2em; }
+  .sl-slide-card ul { position: relative; z-index: 1; list-style: none; margin: 0; padding: 0; min-height: 5.2em; }
   .sl-slide-card li {
     position: relative; padding-left: 15px; font-size: 0.86rem; line-height: 1.6;
-    color: var(--ink-soft); word-break: keep-all;
+    color: rgba(255,255,255,0.75); word-break: keep-all;
   }
   .sl-slide-card li + li { margin-top: 6px; }
   .sl-slide-card li::before {
     content: ""; position: absolute; left: 0; top: 0.62em;
-    width: 5px; height: 5px; border-radius: 50%; background: var(--green);
+    width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.6);
   }
-  .sl-slide-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; max-width: 460px; }
+  .sl-slide-dots-row { display: flex; justify-content: center; max-width: 460px; margin-top: 14px; }
   .sl-slide-dots { display: flex; gap: 7px; }
   .sl-slide-dot {
     width: 7px; height: 7px; border-radius: 50%; background: var(--line-dark);
     border: none; padding: 0; cursor: pointer; transition: background 0.18s, transform 0.18s;
   }
   .sl-slide-dot.on { background: var(--green-deep); transform: scale(1.3); }
-  .sl-slide-arrows { display: flex; gap: 6px; }
-  .sl-slide-arrow {
-    width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--line-dark);
-    background: var(--paper); color: var(--ink); cursor: pointer; font-size: 0.9rem;
-    display: flex; align-items: center; justify-content: center; font-family: inherit;
+
+  /* 카드뉴스 확대(라이트박스) 보기 */
+  .sl-lightbox-overlay {
+    position: fixed; inset: 0; z-index: 900;
+    background: rgba(10,14,11,0.72);
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    gap: 18px; padding: 24px;
   }
-  .sl-slide-arrow:hover { background: var(--cream); }
+  .sl-lightbox-overlay.on { display: flex; }
+  .sl-lightbox-stage { display: flex; align-items: center; gap: 18px; max-width: 100%; }
+  .sl-lightbox-card {
+    width: min(480px, 80vw); border-radius: 18px;
+    padding: 42px 42px 36px; box-shadow: 0 30px 90px rgba(0,0,0,0.45);
+  }
+  .sl-lightbox-card h3 {
+    position: relative; z-index: 1;
+    font-size: 1.42rem; font-weight: 800; margin: 0 0 18px; letter-spacing: -0.01em;
+    color: #fff; word-break: keep-all;
+  }
+  .sl-lightbox-card ul { position: relative; z-index: 1; list-style: none; margin: 0; padding: 0; }
+  .sl-lightbox-card li {
+    position: relative; padding-left: 18px; font-size: 0.97rem; line-height: 1.75;
+    color: rgba(255,255,255,0.75); word-break: keep-all;
+  }
+  .sl-lightbox-card li + li { margin-top: 9px; }
+  .sl-lightbox-card li::before {
+    content: ""; position: absolute; left: 0; top: 0.68em;
+    width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.6);
+  }
+  .sl-lightbox-nav {
+    flex: none; width: 40px; height: 40px; border-radius: 50%; border: none;
+    background: rgba(255,255,255,0.16); color: #fff; cursor: pointer; font-size: 1.1rem;
+    display: flex; align-items: center; justify-content: center; font-family: inherit;
+    transition: background 0.15s;
+  }
+  .sl-lightbox-nav:hover { background: rgba(255,255,255,0.28); }
+  .sl-lightbox-close {
+    position: absolute; top: 22px; right: 24px; width: 36px; height: 36px; border-radius: 50%;
+    border: none; background: rgba(255,255,255,0.16); color: #fff; cursor: pointer;
+    font-size: 1rem; display: flex; align-items: center; justify-content: center;
+  }
+  .sl-lightbox-close:hover { background: rgba(255,255,255,0.28); }
+  .sl-lightbox-overlay .sl-slide-dots .sl-slide-dot { background: rgba(255,255,255,0.35); }
+  .sl-lightbox-overlay .sl-slide-dots .sl-slide-dot.on { background: #fff; }
+  @media (max-width: 560px) {
+    .sl-lightbox-stage { gap: 8px; }
+    .sl-lightbox-nav { width: 32px; height: 32px; font-size: 1rem; }
+    .sl-lightbox-card { padding: 30px 24px 26px; }
+  }
   /* 아이패드(세로 768px~)·노트북·데스크톱에서는 목차 바 + 히어로 콘텐츠까지 다 보여주는
      랜딩 페이지 느낌으로, 핸드폰(앱, 767px 이하)에서는 로그인 카드만 딱 나오게 한다. */
   @media (max-width: 767px) {
@@ -535,6 +605,11 @@
   }
   .sl-input-group .sl-input-icon svg { width: 16px; height: 16px; display: block; }
   .apply-field .sl-input-group input { padding-left: 38px; }
+  /* 로그인 탭(#slLoginPane)만 다른 화면(회원가입 등)보다 살짝 낮은 세로 길이로 —
+     역할 토글 바로 아래에 입력칸 2개+버튼까지 있어서 더 압축된 느낌이 낫다. */
+  #slLoginPane .apply-field input { padding-top: 7px; padding-bottom: 7px; }
+  #slLoginPane .apply-submit-btn { padding-top: 9px; padding-bottom: 9px; }
+  #slLoginPane .sl-role-btn { padding-top: 6px; padding-bottom: 6px; }
   .sl-switch-link { margin-top: 14px; font-size: 0.78rem; }
   .sl-switch-link a { color: var(--green-deep); font-weight: 700; text-decoration: none; }
   .sl-switch-link a:hover { text-decoration: underline; }
@@ -3230,18 +3305,14 @@
   <div class="sl-gate-body">
     <div class="sl-hero-content">
       <div class="sl-hero-eyebrow">관리형 독서실 학습 관리 시스템</div>
-      <h1><span class="accent">홀로</span> HOLO</h1>
-      <div class="sl-slide-card">
-        <div class="sl-slide-num" id="slHeroSlideNum">01 / 03</div>
+      <h1><span class="accent">홀로</span> <span class="en">HOLO</span></h1>
+      <button type="button" class="sl-slide-card" id="slHeroSlideCard" onclick="openHeroSlideLightbox()">
+        <span class="sl-slide-icon" id="slHeroSlideIcon" aria-hidden="true"></span>
         <h3 id="slHeroSlideTitle"></h3>
         <ul id="slHeroSlideBody"></ul>
-      </div>
-      <div class="sl-slide-nav">
+      </button>
+      <div class="sl-slide-dots-row">
         <div class="sl-slide-dots" id="slHeroSlideDots"></div>
-        <div class="sl-slide-arrows">
-          <button type="button" class="sl-slide-arrow" onclick="moveHeroSlide(-1)" aria-label="이전">‹</button>
-          <button type="button" class="sl-slide-arrow" onclick="moveHeroSlide(1)" aria-label="다음">›</button>
-        </div>
       </div>
     </div>
     <div class="student-login-box">
@@ -3275,6 +3346,7 @@
         <div class="apply-status-msg" id="studentLoginMsg"></div>
       </form>
       <p class="sl-switch-link" id="slLoginSwitchLink"><a href="#" onclick="showStudentSignupTypePane();return false;">아직 계정이 없으신가요? 회원가입하기 →</a></p>
+      <p class="sl-switch-link" id="slAdminInquiryLink" style="display:none;"><a href="#" onclick="return false;">관리형 독서실 도입 문의하기 →</a></p>
     </div>
 
     <div id="slSignupTypePane" style="display:none;">
@@ -3368,6 +3440,21 @@
   <div class="apply-modal" style="max-width:320px; text-align:center;">
     <h3 style="margin-bottom:0;">준비중입니다</h3>
   </div>
+</div>
+
+<!-- ─── 히어로 카드뉴스 확대 보기 ─── -->
+<div class="sl-lightbox-overlay" id="slSlideLightbox" onclick="if(event.target===this) closeHeroSlideLightbox()">
+  <button type="button" class="sl-lightbox-close" onclick="closeHeroSlideLightbox()" aria-label="닫기">✕</button>
+  <div class="sl-lightbox-stage">
+    <button type="button" class="sl-lightbox-nav prev" onclick="moveLightboxSlide(-1)" aria-label="이전">‹</button>
+    <div class="sl-lightbox-card">
+      <span class="sl-lightbox-icon" id="slLightboxIcon" aria-hidden="true"></span>
+      <h3 id="slLightboxTitle"></h3>
+      <ul id="slLightboxBody"></ul>
+    </div>
+    <button type="button" class="sl-lightbox-nav next" onclick="moveLightboxSlide(1)" aria-label="다음">›</button>
+  </div>
+  <div class="sl-slide-dots" id="slLightboxDots"></div>
 </div>
 
 <!-- ═══ 사이드바 ═══ -->
@@ -8770,6 +8857,7 @@
     const idInput = document.getElementById("sl-id");
     const h2 = document.getElementById("slLoginH2");
     const switchLink = document.getElementById("slLoginSwitchLink");
+    const adminInquiryLink = document.getElementById("slAdminInquiryLink");
     const msg = document.getElementById("studentLoginMsg");
     if (msg) { msg.textContent = ""; msg.className = "apply-status-msg"; }
     if (role === "admin") {
@@ -8779,12 +8867,14 @@
       idInput.autocomplete = "username";
       if (h2) h2.textContent = "관리자 계정으로 로그인해주세요";
       if (switchLink) switchLink.style.display = "none";
+      if (adminInquiryLink) adminInquiryLink.style.display = "";
     } else {
       idInput.type = "text";
       idInput.placeholder = "아이디";
       idInput.setAttribute("aria-label", "아이디");
       if (h2) h2.textContent = "등록된 아이디로 로그인해주세요";
       if (switchLink) switchLink.style.display = "";
+      if (adminInquiryLink) adminInquiryLink.style.display = "none";
     }
   }
   function handleLoginGateSubmit(e) {
@@ -8851,14 +8941,20 @@
       msg.className = "apply-status-msg error";
     });
   }
-  // 로그인 게이트 왼쪽 히어로의 "핵심 가치 3가지" 카드뉴스 — 한 장씩 넘겨보는 슬라이드.
+  // 로그인 게이트 왼쪽 히어로의 "핵심 가치 3가지" 카드뉴스. 평소엔 작은 카드로 자동 회전
+  // 하다가, 누르면 라이트박스로 크게 열리고 거기서 좌우로 넘겨볼 수 있다.
+  const HOLO_SLIDE_ICONS = [
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M12 20V4"/><path d="M20 20v-7"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="12" rx="3"/><path d="M8 21l4-4"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l11-11-4-4L4 16v4z"/><path d="M14 6l4 4"/></svg>'
+  ];
   const HOLO_HERO_SLIDES = [
     {
       title: "메타인지, 더 이상 혼자 고민하지 않아도 됩니다",
       bullets: ["학습 플래너, 공부 일기, 홀로 AI", "모든 기록을 하나로 모아 나만의 분석지 제공"]
     },
     {
-      title: "나를 잘 모르는 선생님과의 피상적인 학습 상담은 이제 그만",
+      title: "겉만 아는 선생님과의 상담은 이제 그만",
       bullets: ["분석지 데이터를 근거로 학습 패턴과 반복되는 문제 상황을 구체적으로 파악", "최상위권 선생님의 1:1 개인 맞춤형 학습 상담"]
     },
     {
@@ -8868,13 +8964,21 @@
   ];
   let holoHeroSlideIdx = 0;
   let holoHeroSlideTimer = null;
-  function renderHeroSlide() {
-    const titleEl = document.getElementById("slHeroSlideTitle");
-    if (!titleEl) return; // 히어로 콘텐츠는 767px 이하(핸드폰)에서는 DOM에 있어도 안 쓰인다
-    const slide = HOLO_HERO_SLIDES[holoHeroSlideIdx];
+  function renderSlideInto(idx, cardEl, titleEl, bodyEl, iconEl) {
+    const slide = HOLO_HERO_SLIDES[idx];
+    cardEl.setAttribute("data-num", idx + 1);
     titleEl.textContent = slide.title;
-    document.getElementById("slHeroSlideBody").innerHTML = slide.bullets.map(b => "<li>" + b + "</li>").join("");
-    document.getElementById("slHeroSlideNum").textContent = "0" + (holoHeroSlideIdx + 1) + " / 0" + HOLO_HERO_SLIDES.length;
+    bodyEl.innerHTML = slide.bullets.map(b => "<li>" + b + "</li>").join("");
+    if (iconEl) iconEl.innerHTML = HOLO_SLIDE_ICONS[idx];
+  }
+  function renderHeroSlide() {
+    const card = document.getElementById("slHeroSlideCard");
+    if (!card) return; // 히어로 콘텐츠는 767px 이하(핸드폰)에서는 DOM에 있어도 안 쓰인다
+    renderSlideInto(
+      holoHeroSlideIdx, card,
+      document.getElementById("slHeroSlideTitle"), document.getElementById("slHeroSlideBody"),
+      document.getElementById("slHeroSlideIcon")
+    );
     const dotsEl = document.getElementById("slHeroSlideDots");
     dotsEl.innerHTML = HOLO_HERO_SLIDES.map((_, i) =>
       "<button type=\"button\" class=\"sl-slide-dot" + (i === holoHeroSlideIdx ? " on" : "") + "\" aria-label=\"슬라이드 " + (i + 1) + "\" onclick=\"goHeroSlide(" + i + ")\"></button>"
@@ -8896,6 +9000,44 @@
   }
   renderHeroSlide();
   restartHeroSlideTimer();
+
+  // 카드뉴스 확대(라이트박스) — 작은 카드를 누르면 열리고, 좌우 화살표/키보드로 넘긴다.
+  function renderLightboxSlide() {
+    renderSlideInto(
+      holoHeroSlideIdx, document.querySelector("#slSlideLightbox .sl-lightbox-card"),
+      document.getElementById("slLightboxTitle"), document.getElementById("slLightboxBody"),
+      document.getElementById("slLightboxIcon")
+    );
+    const dotsEl = document.getElementById("slLightboxDots");
+    dotsEl.innerHTML = HOLO_HERO_SLIDES.map((_, i) =>
+      "<button type=\"button\" class=\"sl-slide-dot" + (i === holoHeroSlideIdx ? " on" : "") + "\" aria-label=\"슬라이드 " + (i + 1) + "\" onclick=\"goLightboxSlide(" + i + ")\"></button>"
+    ).join("");
+  }
+  function openHeroSlideLightbox() {
+    if (holoHeroSlideTimer) clearInterval(holoHeroSlideTimer);
+    renderLightboxSlide();
+    document.getElementById("slSlideLightbox").classList.add("on");
+    document.addEventListener("keydown", handleLightboxKeydown);
+  }
+  function closeHeroSlideLightbox() {
+    document.getElementById("slSlideLightbox").classList.remove("on");
+    document.removeEventListener("keydown", handleLightboxKeydown);
+    renderHeroSlide(); // 라이트박스에서 넘긴 슬라이드가 작은 카드에도 그대로 반영되도록
+    restartHeroSlideTimer();
+  }
+  function moveLightboxSlide(dir) {
+    holoHeroSlideIdx = (holoHeroSlideIdx + dir + HOLO_HERO_SLIDES.length) % HOLO_HERO_SLIDES.length;
+    renderLightboxSlide();
+  }
+  function goLightboxSlide(i) {
+    holoHeroSlideIdx = i;
+    renderLightboxSlide();
+  }
+  function handleLightboxKeydown(e) {
+    if (e.key === "Escape") closeHeroSlideLightbox();
+    else if (e.key === "ArrowLeft") moveLightboxSlide(-1);
+    else if (e.key === "ArrowRight") moveLightboxSlide(1);
+  }
 
   // 회원가입 가는 길(로그인 → 가입 방식 선택 → 독서실 선택 → 실제 가입 폼)에 뜨는
   // 패널들을 전부 감춘 뒤, 보여줄 패널 하나만 다시 켠다. 독서실이 여러 곳으로 늘어나면
