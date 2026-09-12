@@ -438,7 +438,8 @@
   .sl-gate-body {
     flex: 1; display: flex; align-items: center; justify-content: space-between;
     gap: clamp(24px, 5vw, 64px); min-height: 0;
-    padding: 10px clamp(20px, 5vw, 64px) 60px;
+    max-width: 1280px; width: 100%; margin: 0 auto;
+    padding: 10px clamp(20px, 5vw, 64px) 60px; box-sizing: border-box;
   }
   .sl-hero-content { flex: 1 1 480px; max-width: 560px; }
   .sl-hero-eyebrow {
@@ -455,13 +456,6 @@
     font-size: 0.92rem; line-height: 1.85; color: var(--ink-soft); margin: 0 0 30px;
     max-width: 460px; word-break: keep-all;
   }
-  .sl-hero-cta {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--green-deep); color: #fff; border: none; border-radius: 999px;
-    padding: 14px 26px; font-family: inherit; font-size: 0.9rem; font-weight: 700;
-    cursor: pointer; transition: background 0.18s, transform 0.18s;
-  }
-  .sl-hero-cta:hover { background: var(--green); transform: translateY(-1px); }
   /* 아이패드(세로 768px~)·노트북·데스크톱에서는 목차 바 + 히어로 콘텐츠까지 다 보여주는
      랜딩 페이지 느낌으로, 핸드폰(앱, 767px 이하)에서는 로그인 카드만 딱 나오게 한다. */
   @media (max-width: 767px) {
@@ -3203,11 +3197,10 @@
   </nav>
   <div class="sl-gate-body">
     <div class="sl-hero-content">
-      <div class="sl-hero-eyebrow">로드맵 입시 관리형 독서실 학습 관리 시스템</div>
+      <div class="sl-hero-eyebrow">관리형 독서실 학습 관리 시스템</div>
       <h1>계획부터 분석까지,<br><span class="accent">홀로</span>가 관리합니다</h1>
       <p class="sl-hero-sub">메타인지, 더 이상 혼자 고민하지 않아도 됩니다.</p>
       <p class="sl-hero-desc">오늘의 계획을 세우고, 공부하다 궁금한 건 언제든 물어보고, 하루를 일기로 마무리하면, 홀로가 그 기록을 모아 학습 패턴과 약점을 분석해드려요. 더 깊은 고민은 학습 상담으로, 선생님과 직접 연결해드립니다.</p>
-      <button type="button" class="sl-hero-cta" onclick="showStudentSignupTypePane()">회원가입하기 →</button>
     </div>
     <div class="student-login-box">
     <div class="sl-header">
