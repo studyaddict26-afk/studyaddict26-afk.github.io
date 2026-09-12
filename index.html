@@ -482,6 +482,13 @@
     position: relative; z-index: 1; font-size: 0.86rem; font-weight: 700;
     color: rgba(255,255,255,0.88); margin: 0 0 8px; word-break: keep-all;
   }
+  /* 기능 이름들을 실제 버튼이 아니라 알약 모양 태그로만 보여준다(클릭 안 됨, 디자인용) */
+  .sl-slide-chips { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; }
+  .sl-slide-chip {
+    display: inline-block; padding: 4px 10px; border-radius: 999px;
+    background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.18);
+    font-size: 0.74rem; font-weight: 700; color: #fff; white-space: nowrap;
+  }
   .sl-slide-card ul { position: relative; z-index: 1; list-style: none; margin: 0; padding: 0; min-height: 5.2em; }
   .sl-slide-card li {
     position: relative; padding-left: 15px; font-size: 0.86rem; line-height: 1.6;
@@ -521,6 +528,12 @@
   .sl-lightbox-lead {
     position: relative; z-index: 1; font-size: 0.98rem; font-weight: 700;
     color: rgba(255,255,255,0.88); margin: 0 0 12px; word-break: keep-all;
+  }
+  .sl-lightbox-chips { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
+  .sl-lightbox-chip {
+    display: inline-block; padding: 6px 14px; border-radius: 999px;
+    background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.18);
+    font-size: 0.84rem; font-weight: 700; color: #fff; white-space: nowrap;
   }
   .sl-lightbox-card ul { position: relative; z-index: 1; list-style: none; margin: 0; padding: 0; }
   .sl-lightbox-card li {
@@ -3309,6 +3322,7 @@
         <span class="sl-slide-icon" id="slHeroSlideIcon" aria-hidden="true"></span>
         <h3 id="slHeroSlideTitle"></h3>
         <p class="sl-slide-lead" id="slHeroSlideLead" style="display:none;"></p>
+        <div class="sl-slide-chips" id="slHeroSlideChips" style="display:none;"></div>
         <ul id="slHeroSlideBody"></ul>
       </button>
       <div class="sl-slide-dots-row">
@@ -3451,6 +3465,7 @@
       <span class="sl-lightbox-icon" id="slLightboxIcon" aria-hidden="true"></span>
       <h3 id="slLightboxTitle"></h3>
       <p class="sl-lightbox-lead" id="slLightboxLead" style="display:none;"></p>
+      <div class="sl-lightbox-chips" id="slLightboxChips" style="display:none;"></div>
       <ul id="slLightboxBody"></ul>
     </div>
     <button type="button" class="sl-lightbox-nav next" onclick="moveLightboxSlide(1)" aria-label="다음">›</button>
@@ -8960,21 +8975,34 @@
       bullets: ["학습 패턴과 반복되는 문제 상황을 구체적으로 파악", "최상위권 선생님과의 1:1 개인 맞춤형 학습 상담 진행"]
     },
     {
-      title: "내신·모의고사 시뮬레이션으로 시험을 대비하세요",
-      bullets: ["랜덤 소음 ASMR·문항별 랩타임·나만의 과목 설정 기능 제공", "시험장 시뮬레이션·피드백 오답노트·성적 통계 기능 제공", "누적된 기록을 바탕으로 최상위권 선배와의 학습 상담 요청 가능"]
+      title: ["실력과 성적은 다릅니다.", "시험을 철저히 대비할 수 있도록 도와드립니다."],
+      chips: ["시험장 시뮬레이션", "문항별 랩타임", "랜덤 소음 ASMR", "나만의 과목 생성", "피드백 오답노트", "성적 통계"],
+      bullets: ["위의 모든 기능 제공", "누적된 기록을 바탕으로 최상위권 선배에게 상담 요청 가능"]
     }
   ];
   let holoHeroSlideIdx = 0;
   let holoHeroSlideTimer = null;
-  function renderSlideInto(idx, cardEl, titleEl, bodyEl, iconEl, leadEl) {
+  function holoJoinLines(val) {
+    return Array.isArray(val) ? val.join("<br>") : val;
+  }
+  function renderSlideInto(idx, cardEl, titleEl, bodyEl, iconEl, leadEl, chipsEl, chipClass) {
     const slide = HOLO_HERO_SLIDES[idx];
     cardEl.setAttribute("data-num", idx + 1);
-    titleEl.textContent = slide.title;
+    titleEl.innerHTML = holoJoinLines(slide.title);
     bodyEl.innerHTML = slide.bullets.map(b => "<li>" + b + "</li>").join("");
     if (iconEl) iconEl.innerHTML = HOLO_SLIDE_ICONS[idx];
     if (leadEl) {
-      if (slide.lead) { leadEl.textContent = slide.lead; leadEl.style.display = ""; }
-      else { leadEl.textContent = ""; leadEl.style.display = "none"; }
+      if (slide.lead) { leadEl.innerHTML = holoJoinLines(slide.lead); leadEl.style.display = ""; }
+      else { leadEl.innerHTML = ""; leadEl.style.display = "none"; }
+    }
+    if (chipsEl) {
+      if (slide.chips) {
+        chipsEl.innerHTML = slide.chips.map(c => "<span class=\"" + chipClass + "\">" + c + "</span>").join("");
+        chipsEl.style.display = "";
+      } else {
+        chipsEl.innerHTML = "";
+        chipsEl.style.display = "none";
+      }
     }
   }
   function renderHeroSlide() {
@@ -8983,7 +9011,8 @@
     renderSlideInto(
       holoHeroSlideIdx, card,
       document.getElementById("slHeroSlideTitle"), document.getElementById("slHeroSlideBody"),
-      document.getElementById("slHeroSlideIcon"), document.getElementById("slHeroSlideLead")
+      document.getElementById("slHeroSlideIcon"), document.getElementById("slHeroSlideLead"),
+      document.getElementById("slHeroSlideChips"), "sl-slide-chip"
     );
     const dotsEl = document.getElementById("slHeroSlideDots");
     dotsEl.innerHTML = HOLO_HERO_SLIDES.map((_, i) =>
@@ -9012,7 +9041,8 @@
     renderSlideInto(
       holoHeroSlideIdx, document.querySelector("#slSlideLightbox .sl-lightbox-card"),
       document.getElementById("slLightboxTitle"), document.getElementById("slLightboxBody"),
-      document.getElementById("slLightboxIcon"), document.getElementById("slLightboxLead")
+      document.getElementById("slLightboxIcon"), document.getElementById("slLightboxLead"),
+      document.getElementById("slLightboxChips"), "sl-lightbox-chip"
     );
     const dotsEl = document.getElementById("slLightboxDots");
     dotsEl.innerHTML = HOLO_HERO_SLIDES.map((_, i) =>
