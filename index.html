@@ -420,21 +420,12 @@
       var(--paper);
     overflow-y: auto;
   }
-  /* 위쪽 목차 바 — 이 화면(로그인 전)에서는 실제로 이동할 페이지가 없어서, 지금은 브랜드를
-     알리는 장식용 링크다(클릭해도 아무 데도 안 감). 나중에 로그인 없이도 볼 수 있는 소개
-     페이지가 생기면 그때 실제 링크로 연결하면 된다. */
-  .sl-navbar {
-    flex: none; display: flex; align-items: center; justify-content: space-between;
-    padding: 22px clamp(20px, 5vw, 64px); gap: 20px;
-  }
+  /* 위쪽 바 — 로고만 표시. .sl-gate-body와 같은 max-width로 맞춰서, 넓은 화면에서 로고가
+     화면 진짜 가장자리가 아니라 아래 히어로 콘텐츠와 같은 세로선에 오도록 정렬한다. */
+  .sl-navbar { flex: none; padding: 22px clamp(20px, 5vw, 64px) 0; }
+  .sl-navbar-inner { max-width: 1280px; width: 100%; margin: 0 auto; }
   .sl-navbar-brand { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.01em; color: var(--ink); }
   .sl-navbar-brand .holo { color: var(--green); }
-  .sl-navbar-links { display: flex; align-items: center; gap: clamp(16px, 3vw, 30px); list-style: none; margin: 0; padding: 0; }
-  .sl-navbar-links a {
-    font-size: 0.84rem; font-weight: 600; color: var(--ink-soft); text-decoration: none;
-    cursor: default;
-  }
-  .sl-navbar-links a:hover { color: var(--ink); }
   .sl-gate-body {
     flex: 1; display: flex; align-items: center; justify-content: space-between;
     gap: clamp(24px, 5vw, 64px); min-height: 0;
@@ -496,8 +487,10 @@
   .sl-input-group { position: relative; }
   .sl-input-group .sl-input-icon {
     position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-    font-size: 0.95rem; line-height: 1; pointer-events: none;
+    line-height: 1; pointer-events: none; color: var(--ink-soft);
+    display: flex;
   }
+  .sl-input-group .sl-input-icon svg { width: 16px; height: 16px; display: block; }
   .apply-field .sl-input-group input { padding-left: 38px; }
   .sl-switch-link { margin-top: 14px; font-size: 0.78rem; }
   .sl-switch-link a { color: var(--green-deep); font-weight: 700; text-decoration: none; }
@@ -3187,13 +3180,9 @@
 <!-- ═══ 학생 로그인 게이트 ═══ -->
 <div id="studentLoginGate">
   <nav class="sl-navbar">
-    <div class="sl-navbar-brand">홀로 <span class="holo">HOLO</span></div>
-    <ul class="sl-navbar-links">
-      <li><a href="#" onclick="return false;">특징</a></li>
-      <li><a href="#" onclick="return false;">이용 방법</a></li>
-      <li><a href="#" onclick="return false;">학습 상담</a></li>
-      <li><a href="#" onclick="return false;">문의</a></li>
-    </ul>
+    <div class="sl-navbar-inner">
+      <div class="sl-navbar-brand">홀로 <span class="holo">HOLO</span></div>
+    </div>
   </nav>
   <div class="sl-gate-body">
     <div class="sl-hero-content">
@@ -3215,13 +3204,13 @@
       <form id="studentLoginForm" onsubmit="studentLogin(event)">
         <div class="apply-field">
           <div class="sl-input-group">
-            <span class="sl-input-icon" aria-hidden="true">👤</span>
+            <span class="sl-input-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"></path></svg></span>
             <input type="text" id="sl-id" autocomplete="username" required placeholder="아이디" aria-label="아이디">
           </div>
         </div>
         <div class="apply-field">
           <div class="sl-input-group">
-            <span class="sl-input-icon" aria-hidden="true">🔒</span>
+            <span class="sl-input-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg></span>
             <input type="password" id="sl-pw" autocomplete="current-password" required placeholder="비밀번호" aria-label="비밀번호">
           </div>
         </div>
