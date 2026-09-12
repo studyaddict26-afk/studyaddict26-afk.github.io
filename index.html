@@ -442,11 +442,41 @@
     letter-spacing: -0.02em; color: var(--ink); margin: 0 0 14px; word-break: keep-all;
   }
   .sl-hero-content h1 .accent { color: var(--green); }
-  .sl-hero-sub { font-size: 1.05rem; font-weight: 700; color: var(--ink); margin: 0 0 16px; word-break: keep-all; }
-  .sl-hero-desc {
-    font-size: 0.92rem; line-height: 1.85; color: var(--ink-soft); margin: 0 0 30px;
-    max-width: 460px; word-break: keep-all;
+  /* 히어로 카드뉴스 — 세 가지 핵심 가치를 한 장씩 넘겨보는 슬라이드 */
+  .sl-slide-card {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
+    padding: 24px 26px 20px; max-width: 460px;
+    box-shadow: 0 10px 30px rgba(23,24,26,0.06);
   }
+  .sl-slide-num { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; color: var(--green); margin-bottom: 9px; }
+  .sl-slide-card h3 {
+    font-size: 1.08rem; font-weight: 800; margin: 0 0 12px; letter-spacing: -0.01em;
+    color: var(--ink); word-break: keep-all; min-height: 2.8em;
+  }
+  .sl-slide-card ul { list-style: none; margin: 0; padding: 0; min-height: 5.2em; }
+  .sl-slide-card li {
+    position: relative; padding-left: 15px; font-size: 0.86rem; line-height: 1.6;
+    color: var(--ink-soft); word-break: keep-all;
+  }
+  .sl-slide-card li + li { margin-top: 6px; }
+  .sl-slide-card li::before {
+    content: ""; position: absolute; left: 0; top: 0.62em;
+    width: 5px; height: 5px; border-radius: 50%; background: var(--green);
+  }
+  .sl-slide-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; max-width: 460px; }
+  .sl-slide-dots { display: flex; gap: 7px; }
+  .sl-slide-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--line-dark);
+    border: none; padding: 0; cursor: pointer; transition: background 0.18s, transform 0.18s;
+  }
+  .sl-slide-dot.on { background: var(--green-deep); transform: scale(1.3); }
+  .sl-slide-arrows { display: flex; gap: 6px; }
+  .sl-slide-arrow {
+    width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--line-dark);
+    background: var(--paper); color: var(--ink); cursor: pointer; font-size: 0.9rem;
+    display: flex; align-items: center; justify-content: center; font-family: inherit;
+  }
+  .sl-slide-arrow:hover { background: var(--cream); }
   /* 아이패드(세로 768px~)·노트북·데스크톱에서는 목차 바 + 히어로 콘텐츠까지 다 보여주는
      랜딩 페이지 느낌으로, 핸드폰(앱, 767px 이하)에서는 로그인 카드만 딱 나오게 한다. */
   @media (max-width: 767px) {
@@ -3188,8 +3218,18 @@
     <div class="sl-hero-content">
       <div class="sl-hero-eyebrow">관리형 독서실 학습 관리 시스템</div>
       <h1>계획부터 분석까지,<br><span class="accent">홀로</span>가 관리합니다</h1>
-      <p class="sl-hero-sub">메타인지, 더 이상 혼자 고민하지 않아도 됩니다.</p>
-      <p class="sl-hero-desc">오늘의 계획을 세우고, 공부하다 궁금한 건 언제든 물어보고, 하루를 일기로 마무리하면, 홀로가 그 기록을 모아 학습 패턴과 약점을 분석해드려요. 더 깊은 고민은 학습 상담으로, 선생님과 직접 연결해드립니다.</p>
+      <div class="sl-slide-card">
+        <div class="sl-slide-num" id="slHeroSlideNum">01 / 03</div>
+        <h3 id="slHeroSlideTitle"></h3>
+        <ul id="slHeroSlideBody"></ul>
+      </div>
+      <div class="sl-slide-nav">
+        <div class="sl-slide-dots" id="slHeroSlideDots"></div>
+        <div class="sl-slide-arrows">
+          <button type="button" class="sl-slide-arrow" onclick="moveHeroSlide(-1)" aria-label="이전">‹</button>
+          <button type="button" class="sl-slide-arrow" onclick="moveHeroSlide(1)" aria-label="다음">›</button>
+        </div>
+      </div>
     </div>
     <div class="student-login-box">
     <div class="sl-header">
@@ -8741,6 +8781,52 @@
       msg.className = "apply-status-msg error";
     });
   }
+  // 로그인 게이트 왼쪽 히어로의 "핵심 가치 3가지" 카드뉴스 — 한 장씩 넘겨보는 슬라이드.
+  const HOLO_HERO_SLIDES = [
+    {
+      title: "메타인지, 더 이상 혼자 고민하지 않아도 됩니다",
+      bullets: ["학습 플래너, 공부 일기, 홀로 AI", "모든 기록을 하나로 모아 나만의 분석지 제공"]
+    },
+    {
+      title: "나를 잘 모르는 선생님과의 피상적인 학습 상담은 이제 그만",
+      bullets: ["분석지 데이터를 근거로 학습 패턴과 반복되는 문제 상황을 구체적으로 파악", "최상위권 선생님의 1:1 개인 맞춤형 학습 상담"]
+    },
+    {
+      title: "내신·모의고사 시뮬레이션으로 시험을 대비하세요",
+      bullets: ["랜덤 소음 ASMR·문항별 랩타임·나만의 과목 설정 기능 제공", "시험장 시뮬레이션·피드백 오답노트·성적 통계 기능 제공", "누적된 기록을 바탕으로 최상위권 선배와의 학습 상담 요청 가능"]
+    }
+  ];
+  let holoHeroSlideIdx = 0;
+  let holoHeroSlideTimer = null;
+  function renderHeroSlide() {
+    const titleEl = document.getElementById("slHeroSlideTitle");
+    if (!titleEl) return; // 히어로 콘텐츠는 767px 이하(핸드폰)에서는 DOM에 있어도 안 쓰인다
+    const slide = HOLO_HERO_SLIDES[holoHeroSlideIdx];
+    titleEl.textContent = slide.title;
+    document.getElementById("slHeroSlideBody").innerHTML = slide.bullets.map(b => "<li>" + b + "</li>").join("");
+    document.getElementById("slHeroSlideNum").textContent = "0" + (holoHeroSlideIdx + 1) + " / 0" + HOLO_HERO_SLIDES.length;
+    const dotsEl = document.getElementById("slHeroSlideDots");
+    dotsEl.innerHTML = HOLO_HERO_SLIDES.map((_, i) =>
+      "<button type=\"button\" class=\"sl-slide-dot" + (i === holoHeroSlideIdx ? " on" : "") + "\" aria-label=\"슬라이드 " + (i + 1) + "\" onclick=\"goHeroSlide(" + i + ")\"></button>"
+    ).join("");
+  }
+  function goHeroSlide(i) {
+    holoHeroSlideIdx = i;
+    renderHeroSlide();
+    restartHeroSlideTimer();
+  }
+  function moveHeroSlide(dir) {
+    holoHeroSlideIdx = (holoHeroSlideIdx + dir + HOLO_HERO_SLIDES.length) % HOLO_HERO_SLIDES.length;
+    renderHeroSlide();
+    restartHeroSlideTimer();
+  }
+  function restartHeroSlideTimer() {
+    if (holoHeroSlideTimer) clearInterval(holoHeroSlideTimer);
+    holoHeroSlideTimer = setInterval(() => moveHeroSlide(1), 5000);
+  }
+  renderHeroSlide();
+  restartHeroSlideTimer();
+
   // 회원가입 가는 길(로그인 → 가입 방식 선택 → 독서실 선택 → 실제 가입 폼)에 뜨는
   // 패널들을 전부 감춘 뒤, 보여줄 패널 하나만 다시 켠다. 독서실이 여러 곳으로 늘어나면
   // slSignupBranchPane 안의 버튼 목록에 한 줄씩 추가하면 된다.
