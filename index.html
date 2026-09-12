@@ -449,8 +449,11 @@
      열리고, 거기서 좌우로 넘겨볼 수 있다(openHeroSlideLightbox/moveLightboxSlide 참고). */
   .sl-slide-card, .sl-lightbox-card {
     position: relative; overflow: hidden;
-    background: linear-gradient(155deg, #1E7A4C 0%, var(--green-deep) 100%);
-    border: 1px solid rgba(255,255,255,0.10);
+    background:
+      radial-gradient(ellipse 70% 55% at 12% -10%, rgba(255,255,255,0.14) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 70% at 105% 115%, rgba(0,0,0,0.18) 0%, transparent 60%),
+      linear-gradient(155deg, #1E7A4C 0%, var(--green-deep) 100%);
+    border: 1px solid rgba(255,255,255,0.12);
   }
   .sl-slide-card {
     display: block; width: 100%; max-width: 460px; text-align: left;
@@ -462,8 +465,12 @@
   .sl-slide-card:hover { box-shadow: 0 18px 42px rgba(11,42,25,0.36); transform: translateY(-2px); }
   .sl-slide-card h3 {
     position: relative; z-index: 1;
-    font-size: 1.1rem; font-weight: 800; margin: 0 0 12px; letter-spacing: -0.01em;
-    color: #fff; word-break: keep-all; min-height: 2.8em;
+    font-size: 1.1rem; font-weight: 800; letter-spacing: -0.01em;
+    color: #fff; word-break: keep-all; margin: 0 0 16px;
+  }
+  .sl-slide-card h3::after {
+    content: ""; display: block; width: 34px; height: 3px; margin-top: 12px;
+    background: rgba(217,188,138,0.75); border-radius: 2px;
   }
   .sl-slide-lead {
     position: relative; z-index: 1; font-size: 0.86rem; font-weight: 700;
@@ -478,13 +485,15 @@
   }
   .sl-slide-card ul { position: relative; z-index: 1; list-style: none; margin: 0; padding: 0; min-height: 5.2em; }
   .sl-slide-card li {
-    position: relative; padding-left: 15px; font-size: 0.86rem; line-height: 1.6;
-    color: rgba(255,255,255,0.75); word-break: keep-all;
+    position: relative; padding-left: 22px; font-size: 0.86rem; line-height: 1.6;
+    color: rgba(255,255,255,0.8); word-break: keep-all;
   }
-  .sl-slide-card li + li { margin-top: 6px; }
+  .sl-slide-card li + li { margin-top: 8px; }
   .sl-slide-card li::before {
-    content: ""; position: absolute; left: 0; top: 0.62em;
-    width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.6);
+    content: "✓"; position: absolute; left: 0; top: 0.1em;
+    width: 15px; height: 15px; border-radius: 50%;
+    background: rgba(255,255,255,0.16); color: #DCF3E4;
+    font-size: 9px; font-weight: 800; line-height: 15px; text-align: center;
   }
   .sl-slide-dots-row { display: flex; justify-content: center; max-width: 460px; margin-top: 14px; }
   .sl-slide-dots { display: flex; gap: 7px; }
@@ -509,8 +518,12 @@
   }
   .sl-lightbox-card h3 {
     position: relative; z-index: 1;
-    font-size: 1.42rem; font-weight: 800; margin: 0 0 18px; letter-spacing: -0.01em;
+    font-size: 1.42rem; font-weight: 800; margin: 0 0 22px; letter-spacing: -0.01em;
     color: #fff; word-break: keep-all;
+  }
+  .sl-lightbox-card h3::after {
+    content: ""; display: block; width: 44px; height: 4px; margin-top: 16px;
+    background: rgba(217,188,138,0.75); border-radius: 2px;
   }
   .sl-lightbox-lead {
     position: relative; z-index: 1; font-size: 0.98rem; font-weight: 700;
@@ -524,13 +537,15 @@
   }
   .sl-lightbox-card ul { position: relative; z-index: 1; list-style: none; margin: 0; padding: 0; }
   .sl-lightbox-card li {
-    position: relative; padding-left: 18px; font-size: 0.97rem; line-height: 1.75;
-    color: rgba(255,255,255,0.75); word-break: keep-all;
+    position: relative; padding-left: 27px; font-size: 0.97rem; line-height: 1.75;
+    color: rgba(255,255,255,0.8); word-break: keep-all;
   }
-  .sl-lightbox-card li + li { margin-top: 9px; }
+  .sl-lightbox-card li + li { margin-top: 11px; }
   .sl-lightbox-card li::before {
-    content: ""; position: absolute; left: 0; top: 0.68em;
-    width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.6);
+    content: "✓"; position: absolute; left: 0; top: 0.32em;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: rgba(255,255,255,0.16); color: #DCF3E4;
+    font-size: 10px; font-weight: 800; line-height: 18px; text-align: center;
   }
   .sl-lightbox-nav {
     flex: none; width: 40px; height: 40px; border-radius: 50%; border: none;
