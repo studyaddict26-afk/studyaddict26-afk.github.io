@@ -452,8 +452,8 @@
     font-weight: 800; line-height: 1; color: rgba(255,255,255,0.08);
     font-family: inherit;
   }
-  .sl-slide-card::before { font-size: 7.4rem; right: -4px; top: -20px; }
-  .sl-lightbox-card::before { font-size: 11.5rem; right: -8px; top: -32px; }
+  .sl-slide-card::before { font-size: 4.6rem; right: 2px; top: -6px; }
+  .sl-lightbox-card::before { font-size: 7.2rem; right: 2px; top: -10px; }
   .sl-slide-icon, .sl-lightbox-icon {
     position: relative; z-index: 1; display: flex; align-items: center; justify-content: center;
     border-radius: 50%; background: rgba(255,255,255,0.14); color: #fff;
@@ -474,6 +474,10 @@
     position: relative; z-index: 1;
     font-size: 1.1rem; font-weight: 800; margin: 0 0 12px; letter-spacing: -0.01em;
     color: #fff; word-break: keep-all; min-height: 2.8em;
+  }
+  .sl-slide-lead {
+    position: relative; z-index: 1; font-size: 0.86rem; font-weight: 700;
+    color: rgba(255,255,255,0.88); margin: 0 0 8px; word-break: keep-all;
   }
   .sl-slide-card ul { position: relative; z-index: 1; list-style: none; margin: 0; padding: 0; min-height: 5.2em; }
   .sl-slide-card li {
@@ -510,6 +514,10 @@
     position: relative; z-index: 1;
     font-size: 1.42rem; font-weight: 800; margin: 0 0 18px; letter-spacing: -0.01em;
     color: #fff; word-break: keep-all;
+  }
+  .sl-lightbox-lead {
+    position: relative; z-index: 1; font-size: 0.98rem; font-weight: 700;
+    color: rgba(255,255,255,0.88); margin: 0 0 12px; word-break: keep-all;
   }
   .sl-lightbox-card ul { position: relative; z-index: 1; list-style: none; margin: 0; padding: 0; }
   .sl-lightbox-card li {
@@ -3297,6 +3305,7 @@
       <button type="button" class="sl-slide-card" id="slHeroSlideCard" onclick="openHeroSlideLightbox()">
         <span class="sl-slide-icon" id="slHeroSlideIcon" aria-hidden="true"></span>
         <h3 id="slHeroSlideTitle"></h3>
+        <p class="sl-slide-lead" id="slHeroSlideLead" style="display:none;"></p>
         <ul id="slHeroSlideBody"></ul>
       </button>
       <div class="sl-slide-dots-row">
@@ -3438,6 +3447,7 @@
     <div class="sl-lightbox-card">
       <span class="sl-lightbox-icon" id="slLightboxIcon" aria-hidden="true"></span>
       <h3 id="slLightboxTitle"></h3>
+      <p class="sl-lightbox-lead" id="slLightboxLead" style="display:none;"></p>
       <ul id="slLightboxBody"></ul>
     </div>
     <button type="button" class="sl-lightbox-nav next" onclick="moveLightboxSlide(1)" aria-label="다음">›</button>
@@ -8942,8 +8952,9 @@
       bullets: ["학습 플래너, 공부 일기, 홀로 AI", "모든 기록을 하나로 모아 나만의 분석지 제공"]
     },
     {
-      title: "겉만 아는 선생님과의 상담은 이제 그만",
-      bullets: ["분석지 데이터를 근거로 학습 패턴과 반복되는 문제 상황을 구체적으로 파악", "최상위권 선생님의 1:1 개인 맞춤형 학습 상담"]
+      title: "겉만 아는 선생님과의 상담은 이제 그만하세요",
+      lead: "누적된 분석지 데이터를 근거로",
+      bullets: ["학습 패턴과 반복되는 문제 상황을 구체적으로 파악", "최상위권 선생님과의 1:1 개인 맞춤형 학습 상담 진행"]
     },
     {
       title: "내신·모의고사 시뮬레이션으로 시험을 대비하세요",
@@ -8952,12 +8963,16 @@
   ];
   let holoHeroSlideIdx = 0;
   let holoHeroSlideTimer = null;
-  function renderSlideInto(idx, cardEl, titleEl, bodyEl, iconEl) {
+  function renderSlideInto(idx, cardEl, titleEl, bodyEl, iconEl, leadEl) {
     const slide = HOLO_HERO_SLIDES[idx];
     cardEl.setAttribute("data-num", idx + 1);
     titleEl.textContent = slide.title;
     bodyEl.innerHTML = slide.bullets.map(b => "<li>" + b + "</li>").join("");
     if (iconEl) iconEl.innerHTML = HOLO_SLIDE_ICONS[idx];
+    if (leadEl) {
+      if (slide.lead) { leadEl.textContent = slide.lead; leadEl.style.display = ""; }
+      else { leadEl.textContent = ""; leadEl.style.display = "none"; }
+    }
   }
   function renderHeroSlide() {
     const card = document.getElementById("slHeroSlideCard");
@@ -8965,7 +8980,7 @@
     renderSlideInto(
       holoHeroSlideIdx, card,
       document.getElementById("slHeroSlideTitle"), document.getElementById("slHeroSlideBody"),
-      document.getElementById("slHeroSlideIcon")
+      document.getElementById("slHeroSlideIcon"), document.getElementById("slHeroSlideLead")
     );
     const dotsEl = document.getElementById("slHeroSlideDots");
     dotsEl.innerHTML = HOLO_HERO_SLIDES.map((_, i) =>
@@ -8994,7 +9009,7 @@
     renderSlideInto(
       holoHeroSlideIdx, document.querySelector("#slSlideLightbox .sl-lightbox-card"),
       document.getElementById("slLightboxTitle"), document.getElementById("slLightboxBody"),
-      document.getElementById("slLightboxIcon")
+      document.getElementById("slLightboxIcon"), document.getElementById("slLightboxLead")
     );
     const dotsEl = document.getElementById("slLightboxDots");
     dotsEl.innerHTML = HOLO_HERO_SLIDES.map((_, i) =>
