@@ -513,6 +513,19 @@
     color: rgba(255,255,255,0.82);
     text-align: left;
   }
+  /* 로그인 화면 맨 위 "관리자 / 학생" 역할 전환 토글 — 같은 아이디/비밀번호 입력칸을
+     공유하되, 어느 쪽을 선택했는지에 따라 라벨·검증 방식(학생 아이디 vs 관리자 이메일)과
+     로그인 처리 로직이 바뀐다(setLoginRole() 참고). */
+  .sl-role-toggle {
+    display: flex; gap: 3px; background: var(--cream); border: 1px solid var(--line-dark);
+    border-radius: 8px; padding: 3px; margin-bottom: 18px;
+  }
+  .sl-role-btn {
+    flex: 1; border: none; background: none; font-family: inherit;
+    font-size: 0.84rem; font-weight: 700; color: var(--ink-soft);
+    padding: 8px 0; border-radius: 6px; cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .sl-role-btn.on { background: var(--green-deep); color: #fff; }
   .student-login-box .apply-field { text-align: left; }
   .sl-input-group { position: relative; }
   .sl-input-group .sl-input-icon {
@@ -3217,7 +3230,7 @@
   <div class="sl-gate-body">
     <div class="sl-hero-content">
       <div class="sl-hero-eyebrow">관리형 독서실 학습 관리 시스템</div>
-      <h1>계획부터 분석까지,<br><span class="accent">홀로</span>가 관리합니다</h1>
+      <h1><span class="accent">홀로</span> HOLO</h1>
       <div class="sl-slide-card">
         <div class="sl-slide-num" id="slHeroSlideNum">01 / 03</div>
         <h3 id="slHeroSlideTitle"></h3>
@@ -3240,8 +3253,12 @@
     </div>
 
     <div id="slLoginPane">
-      <h2>등록된 아이디로 로그인해주세요</h2>
-      <form id="studentLoginForm" onsubmit="studentLogin(event)">
+      <h2 id="slLoginH2">등록된 아이디로 로그인해주세요</h2>
+      <div class="sl-role-toggle" id="slRoleToggle">
+        <button type="button" class="sl-role-btn" data-role="admin" onclick="setLoginRole('admin')">관리자</button>
+        <button type="button" class="sl-role-btn on" data-role="student" onclick="setLoginRole('student')">학생</button>
+      </div>
+      <form id="studentLoginForm" onsubmit="handleLoginGateSubmit(event)">
         <div class="apply-field">
           <div class="sl-input-group">
             <span class="sl-input-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"></path></svg></span>
@@ -3257,7 +3274,7 @@
         <button type="submit" class="apply-submit-btn" id="studentLoginBtn" style="width:100%;">로그인</button>
         <div class="apply-status-msg" id="studentLoginMsg"></div>
       </form>
-      <p class="sl-switch-link"><a href="#" onclick="showStudentSignupTypePane();return false;">아직 계정이 없으신가요? 회원가입하기 →</a></p>
+      <p class="sl-switch-link" id="slLoginSwitchLink"><a href="#" onclick="showStudentSignupTypePane();return false;">아직 계정이 없으신가요? 회원가입하기 →</a></p>
     </div>
 
     <div id="slSignupTypePane" style="display:none;">
@@ -8740,6 +8757,59 @@
     if (document.documentElement.getAttribute("data-boot") === "login") {
       document.documentElement.removeAttribute("data-boot");
     }
+  }
+  // "관리자 / 학생" 로그인 역할 토글 — 아이디/비밀번호 입력칸은 그대로 공유하고, 관리자를
+  // 고르면 그 칸이 이메일 입력으로 바뀌고 제출 시 학생 로그인 대신 관리자(Firebase Auth)
+  // 로그인 로직을 탄다. 관리자는 회원가입하는 개념이 아니라서 회원가입 링크도 숨긴다.
+  let studentGateRole = "student";
+  function setLoginRole(role) {
+    studentGateRole = role;
+    document.querySelectorAll("#slRoleToggle .sl-role-btn").forEach(btn => {
+      btn.classList.toggle("on", btn.dataset.role === role);
+    });
+    const idInput = document.getElementById("sl-id");
+    const h2 = document.getElementById("slLoginH2");
+    const switchLink = document.getElementById("slLoginSwitchLink");
+    const msg = document.getElementById("studentLoginMsg");
+    if (msg) { msg.textContent = ""; msg.className = "apply-status-msg"; }
+    if (role === "admin") {
+      idInput.type = "email";
+      idInput.placeholder = "이메일";
+      idInput.setAttribute("aria-label", "이메일");
+      idInput.autocomplete = "username";
+      if (h2) h2.textContent = "관리자 계정으로 로그인해주세요";
+      if (switchLink) switchLink.style.display = "none";
+    } else {
+      idInput.type = "text";
+      idInput.placeholder = "아이디";
+      idInput.setAttribute("aria-label", "아이디");
+      if (h2) h2.textContent = "등록된 아이디로 로그인해주세요";
+      if (switchLink) switchLink.style.display = "";
+    }
+  }
+  function handleLoginGateSubmit(e) {
+    if (studentGateRole === "admin") adminLoginFromGate(e);
+    else studentLogin(e);
+  }
+  function adminLoginFromGate(e) {
+    e.preventDefault();
+    const email = document.getElementById("sl-id").value.trim();
+    const pw = document.getElementById("sl-pw").value;
+    const btn = document.getElementById("studentLoginBtn");
+    const msg = document.getElementById("studentLoginMsg");
+    msg.textContent = "";
+    msg.className = "apply-status-msg";
+    if (!email || !pw) return;
+    btn.disabled = true;
+    btn.textContent = "로그인 중...";
+    auth.signInWithEmailAndPassword(email, pw).then(() => {
+      document.documentElement.setAttribute("data-boot", "admin");
+    }).catch(err => {
+      btn.disabled = false;
+      btn.textContent = "로그인";
+      msg.textContent = "로그인 정보가 올바르지 않아요.";
+      msg.className = "apply-status-msg error";
+    });
   }
   function studentLogin(e) {
     e.preventDefault();
