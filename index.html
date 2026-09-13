@@ -5143,6 +5143,12 @@
       <h2>누적된 학습 기록</h2>
       <div class="split"></div>
     </div>
+    <div class="reports-subtabs" id="cumSubtabs">
+      <button type="button" class="reports-subtab-btn on" data-tab="all" onclick="switchCumTab('all')">전체</button>
+      <button type="button" class="reports-subtab-btn" data-tab="plan" onclick="switchCumTab('plan')">학습 플래너</button>
+      <button type="button" class="reports-subtab-btn" data-tab="diary" onclick="switchCumTab('diary')">공부 일기</button>
+      <button type="button" class="reports-subtab-btn" data-tab="exam" onclick="switchCumTab('exam')">시험 통계</button>
+    </div>
     <div class="ym-picker" id="ymPicker"></div>
     <div class="day-list" id="day-list-wrap">
       <div class="reports-empty">불러오는 중...</div>
@@ -7966,6 +7972,24 @@
   // 달을 고르면 하루하루가 바로 나오지 않고, 그 달의 "N주차" 목록이 먼저 나온다 —
   // 주차를 누르면 그 주 안의 날짜들이(기존과 같은 형태로) 나온다.
   let currentCumYm = null;
+  // "전체 / 학습 플래너 / 공부 일기 / 시험 통계" 서브탭 — 전체는 기존처럼 서버가 계산한 주간 평균
+  // 점수를 보여주고, 플래너·일기는 allDaysData(이미 다 불러와 있음)를 이용해 클라이언트에서 바로
+  // "작성한 날 수"를 계산해서 보여준다(별도 서버 호출 불필요). 시험 통계는 아직 오답노트 기능
+  // 자체가 준비중이라 다른 시험 관련 페이지와 같은 "준비중입니다" 안내만 보여준다.
+  let currentCumTab = "all";
+  function switchCumTab(tab) {
+    currentCumTab = tab;
+    document.querySelectorAll("#cumSubtabs .reports-subtab-btn").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
+    const ymPicker = document.getElementById("ymPicker");
+    const wrap = document.getElementById("day-list-wrap");
+    if (tab === "exam") {
+      if (ymPicker) ymPicker.style.display = "none";
+      if (wrap) wrap.innerHTML = '<p class="hub-coming-soon">준비중입니다</p>';
+      return;
+    }
+    if (ymPicker) ymPicker.style.display = "";
+    if (currentCumYm) renderCumWeekList(currentCumYm);
+  }
   function selectYearMonth(ym) {
     document.querySelectorAll(".ym-month-col").forEach(b => b.classList.toggle("active", b.dataset.ym === ym));
     currentCumYm = ym;
@@ -7976,10 +8000,48 @@
     }
     renderCumWeekList(ym);
   }
+  // 학습 플래너 / 공부 일기 탭: allDaysData를 주차별로 묶어서 "작성 O일/전체 O일"을 보여준다.
+  function renderCumWeekListLocal(ym, tab) {
+    const wrap = document.getElementById("day-list-wrap");
+    if (!wrap) return;
+    const [y, m] = ym.split("-").map(Number);
+    const daysInMonth = new Date(y, m, 0).getDate();
+    const monthDays = allDaysData.filter(d => d.date.slice(0, 7) === ym);
+    if (!monthDays.length) {
+      wrap.innerHTML = '<div class="reports-empty">누적된 학습 기록이 없습니다.</div>';
+      return;
+    }
+    const flagKey = tab === "plan" ? "hasPlan" : "hasDiary";
+    const label = tab === "plan" ? "플래너 작성" : "일기 작성";
+    const pad = n => String(n).padStart(2, "0");
+    let rows = "";
+    for (let week = 1; ; week++) {
+      const { startDay, endDay } = getWeekDayRange(y, m, week);
+      if (startDay > daysInMonth) break;
+      const startStr = y + "-" + pad(m) + "-" + pad(startDay);
+      const endStr = y + "-" + pad(m) + "-" + pad(endDay);
+      const days = monthDays.filter(d => d.date >= startStr && d.date <= endStr);
+      if (days.length) {
+        const done = days.filter(d => d[flagKey]).length;
+        rows += '<div class="day-row">' +
+          '<button type="button" class="day-row-main" onclick="selectWeek(' + week + ')">' +
+            '<span class="day-row-date">' + y + '년 ' + m + '월 ' + week + '주차</span>' +
+            '<span class="day-row-score">' + label + ' ' + done + '/' + days.length + '일</span>' +
+            '<span class="day-row-arrow">›</span>' +
+          '</button>' +
+        '</div>';
+      }
+    }
+    wrap.innerHTML = rows || '<div class="reports-empty">누적된 학습 기록이 없습니다.</div>';
+  }
   function renderCumWeekList(ym) {
     currentCumYm = ym;
     const wrap = document.getElementById("day-list-wrap");
     if (!wrap) return;
+    if (currentCumTab === "plan" || currentCumTab === "diary") {
+      renderCumWeekListLocal(ym, currentCumTab);
+      return;
+    }
     wrap.innerHTML = '<div class="reports-empty">불러오는 중...</div>';
     planApi({ action: "month_week_scores", ym: ym, joinDate: localStorage.getItem("holoStudentJoinDate") || null })
       .then(data => {
