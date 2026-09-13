@@ -500,16 +500,19 @@
     display: flex; align-items: center; gap: 12px;
     max-width: 640px; margin-top: 56px; user-select: none;
   }
-  .sl-fun-stage {
-    max-width: 640px; margin-top: 10px; min-height: 1.2em;
-    font-size: 0.78rem; font-weight: 700; color: #D9BC8A;
-  }
   .sl-fun-label {
     flex: none; font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.7); white-space: nowrap;
   }
   .sl-fun-line {
     position: relative; flex: 1; height: 4px; border-radius: 2px;
     background: rgba(255,255,255,0.18);
+  }
+  /* 구간 문구는 좌우 라벨(공부 시작/입시 끝)을 뺀, 선분 자체의 정가운데에 오도록 선(.sl-fun-line)
+     기준으로 절대 배치한다 — 트랙 전체 기준으로 하면 좌우 라벨 폭 때문에 살짝 안 맞는다. */
+  .sl-fun-stage {
+    position: absolute; left: 50%; top: 100%; transform: translateX(-50%);
+    margin-top: 10px; white-space: nowrap;
+    font-size: 0.78rem; font-weight: 700; color: #D9BC8A;
   }
   .sl-fun-fill {
     position: absolute; left: 0; top: 0; height: 100%; border-radius: 2px;
@@ -3370,10 +3373,10 @@
         <div class="sl-fun-line">
           <div class="sl-fun-fill" id="slFunFill"></div>
           <div class="sl-fun-runner" id="slFunRunner" role="slider" aria-label="드래그해보세요" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="15">🏃</div>
+          <div class="sl-fun-stage" id="slFunStage"></div>
         </div>
         <span class="sl-fun-label">입시 끝</span>
       </div>
-      <div class="sl-fun-stage" id="slFunStage"></div>
     </div>
     <div class="student-login-box">
     <div class="sl-header">
@@ -8559,7 +8562,17 @@
       .onSnapshot(snap => {
         adminAllStudents = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         renderStudents();
+        syncPublicStudentCount();
       }, err => console.error(err));
+  }
+  // 로그인 화면의 소셜 프루프("OO명의 학생이 홀로와 함께하고 있어요")용 공개 카운트를
+  // 여기(관리자, 인증된 상태)에서만 갱신해서 stats/public에 써둔다 — students 컬렉션 자체는
+  // 비인증 사용자에게 절대 열어주지 않고(비밀번호 등 개인정보 보호), 숫자 하나만 담은 이
+  // 별도 문서만 공개로 읽게 한다(Firestore 규칙에서 stats/{docId}만 read:true 필요).
+  function syncPublicStudentCount() {
+    const approvedCount = adminAllStudents.filter(s => s.status !== "pending").length;
+    db.collection("stats").doc("public").set({ studentCount: approvedCount }, { merge: true })
+      .catch(err => console.error(err));
   }
   function renderStudents() {
     const body = document.getElementById("adminStudentsBody");
@@ -9149,8 +9162,12 @@
   function initHeroSocialProof() {
     const el = document.getElementById("slHeroSocialProof");
     if (!el) return;
-    db.collection("students").get().then(snap => {
-      const n = snap.size;
+    // students 컬렉션은 개인정보(비밀번호 포함)라 비로그인 사용자에게 못 열어주므로,
+    // 숫자 하나만 담은 공개 문서(stats/public, 관리자가 로그인해서 학생 목록을 볼 때마다
+    // syncPublicStudentCount()가 갱신해둠)에서만 읽는다. 이 문서 자체가 아직 없거나
+    // Firestore 규칙에서 stats/{docId}를 공개로 열어주지 않았으면 조용히 숨긴다.
+    db.collection("stats").doc("public").get().then(doc => {
+      const n = doc.exists ? doc.data().studentCount : 0;
       if (n > 0) {
         el.textContent = n.toLocaleString() + "명의 학생이 홀로와 함께하고 있어요";
         el.style.display = "";
