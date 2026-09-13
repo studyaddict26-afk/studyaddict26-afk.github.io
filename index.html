@@ -619,6 +619,16 @@
     padding: 8px 0; border-radius: 6px; cursor: pointer; transition: background 0.15s, color 0.15s;
   }
   .sl-role-btn.on { background: var(--green-deep); color: #fff; }
+  /* 비밀번호 입력칸의 눈 모양 표시/숨기기 토글 */
+  .sl-pw-group { position: relative; }
+  .sl-pw-group input { padding-right: 40px; }
+  .sl-pw-toggle {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; padding: 4px; margin: 0; cursor: pointer;
+    color: var(--ink-soft); display: flex; align-items: center; justify-content: center;
+  }
+  .sl-pw-toggle:hover { color: var(--ink); }
+  .sl-pw-toggle svg { width: 18px; height: 18px; }
   .student-login-box .apply-field { text-align: left; }
   .sl-input-group { position: relative; }
   .sl-input-group .sl-input-icon {
@@ -640,7 +650,7 @@
   #slSignupPane .apply-field input, #slSignupPane .apply-field select {
     padding-top: 7px; padding-bottom: 7px;
   }
-  #slSignupPane .ss-radio-group .ss-radio-opt { padding-top: 7px; padding-bottom: 7px; }
+  #slSignupPane .ss-radio-group .ss-radio-opt { padding-top: 7px; padding-bottom: 7px; font-size: 0.78rem; }
   #slSignupPane .apply-submit-btn { padding-top: 9px; padding-bottom: 9px; }
   .sl-switch-link { margin-top: 14px; font-size: 0.78rem; }
   .sl-switch-link a { color: var(--green-deep); font-weight: 700; text-decoration: none; }
@@ -3407,11 +3417,23 @@
         </div>
         <div class="apply-field">
           <label for="sc-pw">비밀번호</label>
-          <input type="password" id="sc-pw" autocomplete="new-password" placeholder="영문+숫자 포함 8자 이상" required>
+          <div class="sl-pw-group">
+            <input type="password" id="sc-pw" autocomplete="new-password" placeholder="영문+숫자 포함 8자 이상" required>
+            <button type="button" class="sl-pw-toggle" onclick="togglePwVisibility('sc-pw', this)" aria-label="비밀번호 표시/숨기기">
+              <svg class="eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 7 11 7a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+            </button>
+          </div>
         </div>
         <div class="apply-field">
           <label for="sc-pw2">비밀번호 확인</label>
-          <input type="password" id="sc-pw2" autocomplete="new-password" required>
+          <div class="sl-pw-group">
+            <input type="password" id="sc-pw2" autocomplete="new-password" required>
+            <button type="button" class="sl-pw-toggle" onclick="togglePwVisibility('sc-pw2', this)" aria-label="비밀번호 표시/숨기기">
+              <svg class="eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 7 11 7a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+            </button>
+          </div>
         </div>
         <button type="submit" class="apply-submit-btn" id="slSignupCredBtn" style="width:100%;">다음</button>
         <div class="apply-status-msg" id="slSignupCredMsg"></div>
@@ -9152,6 +9174,14 @@
   }
   function closeComingSoonModal() {
     document.getElementById("comingSoonModalOverlay").classList.remove("on");
+  }
+  // 비밀번호 입력칸의 눈 아이콘 — 누르면 텍스트로 바꿔서 보여주고 다시 누르면 가린다.
+  function togglePwVisibility(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const showing = input.type === "text";
+    input.type = showing ? "password" : "text";
+    btn.querySelector(".eye-on").style.display = showing ? "" : "none";
+    btn.querySelector(".eye-off").style.display = showing ? "none" : "";
   }
   // 회원가입 1단계 — 아이디/비밀번호만 먼저 정하고, 여기서 중복 아이디와 비밀번호 확인까지
   // 끝내둔다. 통과하면 pendingSignupId/pendingSignupPw에 담아두고 다음 화면(나머지 정보
