@@ -8960,7 +8960,7 @@
     const listEl = document.getElementById("slHeroTitleList");
     if (!listEl) return; // 히어로 콘텐츠는 767px 이하(핸드폰)에서는 DOM에 있어도 안 쓰인다
     listEl.innerHTML = HOLO_HERO_SLIDES.map(slide => {
-      const t = Array.isArray(slide.title) ? slide.title.join(" ") : slide.title;
+      const t = Array.isArray(slide.title) ? slide.title.join("<br>") : slide.title;
       return "<li>" + t + "</li>";
     }).join("");
   }
