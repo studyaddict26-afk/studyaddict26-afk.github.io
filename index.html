@@ -3356,6 +3356,7 @@
         </div>
         <span class="sl-fun-label">입시 끝</span>
       </div>
+      <div class="sl-fun-stage" id="slFunStage"></div>
     </div>
     <div class="student-login-box">
     <div class="sl-header">
@@ -3493,7 +3494,7 @@
         <button type="submit" class="apply-submit-btn" id="studentSignupBtn" style="width:100%;">가입 신청하기</button>
         <div class="apply-status-msg" id="studentSignupMsg"></div>
       </form>
-      <p class="sl-switch-link"><a href="#" onclick="showStudentLoginPane();return false;">로그인 화면으로 →</a></p>
+      <p class="sl-switch-link" id="slSignupBottomLink"><a href="#" onclick="showStudentSignupCredPane();return false;">← 이전으로</a></p>
     </div>
   </div>
   </div>
@@ -9146,6 +9147,12 @@
   function showStudentSignupTypePane() {
     hideAllStudentGatePanes();
     document.getElementById("slSignupTypePane").style.display = "block";
+    // 이전에 한 번 가입 신청을 완료해서 "로그인 화면으로"로 바뀌어 있었을 수 있으니,
+    // 새로 회원가입을 시작할 때는 원래 링크("이전으로")로 되돌려둔다.
+    const bottomLink = document.getElementById("slSignupBottomLink");
+    if (bottomLink) {
+      bottomLink.innerHTML = '<a href="#" onclick="showStudentSignupCredPane();return false;">← 이전으로</a>';
+    }
   }
   function showStudentSignupBranchPane() {
     hideAllStudentGatePanes();
@@ -9285,6 +9292,10 @@
       pendingSignupPw = "";
       msg.textContent = "접수됐습니다. 독서실에서 승인한 후, 로그인 가능합니다.";
       msg.className = "apply-status-msg success";
+      // 신청 완료 후에는 "이전으로"(아이디 재설정 화면) 대신 로그인 화면으로 바로
+      // 이어지는 링크로 바꿔준다.
+      document.getElementById("slSignupBottomLink").innerHTML =
+        '<a href="#" onclick="showStudentLoginPane();return false;">로그인 화면으로 →</a>';
     }).catch(err => {
       if (err && err.message === "DUPLICATE_ID") {
         btn.disabled = false;
