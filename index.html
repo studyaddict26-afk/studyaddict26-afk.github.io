@@ -483,6 +483,33 @@
     transition: transform 0.15s;
   }
   .sl-slide-cta:hover { transform: translateX(4px); }
+  /* 심심풀이용 드래그 트랙 — "공부 시작"~"입시 끝" 선 위에서 달리는 사람을 좌우로 끌 수 있다.
+     실제 진도 데이터와는 무관한 순수 장식/놀이 요소(initHeroFunTrack 참고). */
+  .sl-fun-track {
+    display: flex; align-items: center; gap: 12px;
+    max-width: 640px; margin-top: 56px; user-select: none;
+  }
+  .sl-fun-label {
+    flex: none; font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.7); white-space: nowrap;
+  }
+  .sl-fun-line {
+    position: relative; flex: 1; height: 4px; border-radius: 2px;
+    background: rgba(255,255,255,0.18);
+  }
+  .sl-fun-fill {
+    position: absolute; left: 0; top: 0; height: 100%; border-radius: 2px;
+    background: linear-gradient(90deg, #56C98A, #D9BC8A);
+    pointer-events: none;
+  }
+  .sl-fun-runner {
+    position: absolute; top: 50%; transform: translate(-50%, -50%);
+    width: 34px; height: 34px; border-radius: 50%;
+    background: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 17px; line-height: 1; cursor: grab;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+    touch-action: none;
+  }
+  .sl-fun-runner:active { cursor: grabbing; }
   .sl-slide-dots { display: flex; gap: 7px; }
   .sl-slide-dot {
     width: 7px; height: 7px; border-radius: 50%; background: var(--line-dark);
@@ -3301,6 +3328,15 @@
       <div class="sl-slide-card">
         <ul class="sl-slide-title-list" id="slHeroTitleList"></ul>
         <button type="button" class="sl-slide-cta" onclick="openHeroSlideLightbox(0)">구체적인 기능 알아보기 →</button>
+      </div>
+      <!-- 그냥 심심할 때 드래그하며 노는 장식용 미니 위젯 — 실제 진도/데이터와는 무관하다. -->
+      <div class="sl-fun-track" id="slFunTrack">
+        <span class="sl-fun-label">공부 시작</span>
+        <div class="sl-fun-line">
+          <div class="sl-fun-fill" id="slFunFill"></div>
+          <div class="sl-fun-runner" id="slFunRunner" role="slider" aria-label="드래그해보세요" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="15">🏃</div>
+        </div>
+        <span class="sl-fun-label">입시 끝</span>
       </div>
     </div>
     <div class="student-login-box">
@@ -8973,6 +9009,47 @@
     }).join("");
   }
   renderHeroTitleList();
+
+  // "공부 시작"~"입시 끝" 드래그 트랙 — 사람 모양을 좌우로 끌면 선 위에서 움직인다.
+  // 저장되는 값도 없고 실제 데이터랑도 무관한, 그냥 심심할 때 만지는 장식 위젯이다.
+  function initHeroFunTrack() {
+    const track = document.getElementById("slFunTrack");
+    if (!track) return; // 히어로 콘텐츠는 767px 이하(핸드폰)에서는 DOM에 있어도 안 쓰인다
+    const line = track.querySelector(".sl-fun-line");
+    const runner = document.getElementById("slFunRunner");
+    const fill = document.getElementById("slFunFill");
+    let dragging = false;
+
+    function setPct(pct) {
+      pct = Math.max(0, Math.min(100, pct));
+      runner.style.left = pct + "%";
+      fill.style.width = pct + "%";
+      runner.setAttribute("aria-valuenow", Math.round(pct));
+    }
+    setPct(15);
+
+    function pctFromClientX(clientX) {
+      const rect = line.getBoundingClientRect();
+      return ((clientX - rect.left) / rect.width) * 100;
+    }
+    runner.addEventListener("pointerdown", e => {
+      dragging = true;
+      runner.setPointerCapture(e.pointerId);
+    });
+    runner.addEventListener("pointermove", e => {
+      if (!dragging) return;
+      setPct(pctFromClientX(e.clientX));
+    });
+    runner.addEventListener("pointerup", () => { dragging = false; });
+    runner.addEventListener("pointercancel", () => { dragging = false; });
+    // 키보드로도 조작 가능하게(접근성)
+    runner.addEventListener("keydown", e => {
+      const cur = parseFloat(runner.style.left) || 15;
+      if (e.key === "ArrowLeft") { setPct(cur - 5); e.preventDefault(); }
+      else if (e.key === "ArrowRight") { setPct(cur + 5); e.preventDefault(); }
+    });
+  }
+  initHeroFunTrack();
 
   // 카드뉴스 확대(라이트박스) — 작은 카드를 누르면 열리고, 좌우 화살표/키보드로 넘긴다.
   function renderLightboxSlide() {
