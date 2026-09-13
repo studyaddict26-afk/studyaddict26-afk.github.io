@@ -581,26 +581,17 @@
     text-align: center;
     box-shadow: 0 30px 80px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.06);
   }
-  /* 제목 구역(로고+워드마크)만 카드 다른 배경색으로 분리 — 카드 자체 padding을 역마진으로
-     상쇄해서 카드 가장자리까지 색이 꽉 차게 만든다. 바로 아래 h2(각 화면의 부제, 예:
-     "등록된 아이디로 로그인해주세요")도 같은 색으로 이어붙여서 하나의 색 구역처럼 보이게 한다 —
-     h2는 화면(로그인/회원가입 등)마다 내용이 바뀌므로 정적으로 고정하지 않고 그대로 재사용한다. */
-  .sl-header {
-    background: var(--green-deep);
-    margin: -40px -36px 0 -36px;
-    padding: 30px 36px 6px 36px;
-    border-radius: 12px 12px 0 0;
-    text-align: left;
+  /* 제목 구역 — 브랜드 워드마크 텍스트 대신, 가운데 정렬된 원형 아바타 아이콘만 보여준다. */
+  .sl-header { display: flex; justify-content: center; margin-bottom: 22px; }
+  .sl-avatar {
+    width: 64px; height: 64px; border-radius: 50%; background: var(--green-deep);
+    display: flex; align-items: center; justify-content: center; color: #fff;
+    box-shadow: 0 6px 18px rgba(21,82,47,0.35);
   }
-  .sl-header .sl-wordmark { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.01em; color: #fff; }
-  .sl-header .sl-wordmark .holo { color: #CFEFDB; }
+  .sl-avatar svg { width: 32px; height: 32px; }
   .student-login-box h2 {
-    background: var(--green-deep);
-    margin: 0 -36px 22px -36px;
-    padding: 0 36px 22px 36px;
-    font-size: 0.8rem; font-weight: 600; letter-spacing: -0.005em;
-    color: rgba(255,255,255,0.82);
-    text-align: left;
+    font-size: 0.86rem; font-weight: 700; letter-spacing: -0.005em;
+    color: var(--ink-soft); text-align: center; margin: 0 0 20px;
   }
   /* 로그인 화면 맨 위 "관리자 / 학생" 역할 전환 토글 — 같은 아이디/비밀번호 입력칸을
      공유하되, 어느 쪽을 선택했는지에 따라 라벨·검증 방식(학생 아이디 vs 관리자 이메일)과
@@ -3332,14 +3323,12 @@
     </div>
     <div class="student-login-box">
     <div class="sl-header">
-      <div class="sl-wordmark">
-        <div>학습 관리 시스템</div>
-        <div class="holo">홀로 HOLO</div>
-      </div>
+      <span class="sl-avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"></path></svg>
+      </span>
     </div>
 
     <div id="slLoginPane">
-      <h2 id="slLoginH2">등록된 아이디로 로그인해주세요</h2>
       <div class="sl-role-toggle" id="slRoleToggle">
         <button type="button" class="sl-role-btn" data-role="admin" onclick="setLoginRole('admin')">관리자</button>
         <button type="button" class="sl-role-btn on" data-role="student" onclick="setLoginRole('student')">학생</button>
