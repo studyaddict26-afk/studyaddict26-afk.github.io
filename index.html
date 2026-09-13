@@ -411,13 +411,16 @@
   #studentLoginGate {
     position: fixed; inset: 0; z-index: 500;
     flex-direction: column;
+    --mx: 0; --my: 0;
     /* 짙은 그린 베이스 위에 그린/골드 글로우와 아주 옅은 그레인 텍스처를 얹은 배경 —
-     화이트 로그인 카드와 그린 카드뉴스가 그 위에 또렷하게 떠 보이도록 한다. */
+     화이트 로그인 카드와 그린 카드뉴스가 그 위에 또렷하게 떠 보이도록 한다. 글로우 중심
+     좌표에 마우스 위치(--mx/--my, initHeroParallax가 갱신)를 살짝 더해서 커서를 따라
+     은은하게 움직이는 입체감을 준다. */
     background:
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E"),
-      radial-gradient(ellipse 55% 45% at 82% 12%, rgba(214,178,120,0.24) 0%, transparent 65%),
-      radial-gradient(ellipse 65% 55% at 12% 88%, rgba(30,107,65,0.55) 0%, transparent 65%),
-      radial-gradient(ellipse 90% 65% at 50% -5%, rgba(30,107,65,0.42) 0%, transparent 70%),
+      radial-gradient(ellipse 55% 45% at calc(82% + var(--mx) * 4%) calc(12% + var(--my) * 4%), rgba(214,178,120,0.24) 0%, transparent 65%),
+      radial-gradient(ellipse 65% 55% at calc(12% - var(--mx) * 3%) calc(88% - var(--my) * 3%), rgba(30,107,65,0.55) 0%, transparent 65%),
+      radial-gradient(ellipse 90% 65% at calc(50% + var(--mx) * 2%) calc(-5% + var(--my) * 2%), rgba(30,107,65,0.42) 0%, transparent 70%),
       #1B3324;
     background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat;
     overflow-y: auto;
@@ -485,9 +488,21 @@
   .sl-slide-cta:hover { transform: translateX(4px); }
   /* 심심풀이용 드래그 트랙 — "공부 시작"~"입시 끝" 선 위에서 달리는 사람을 좌우로 끌 수 있다.
      실제 진도 데이터와는 무관한 순수 장식/놀이 요소(initHeroFunTrack 참고). */
+  .sl-hero-social {
+    display: flex; align-items: center; gap: 8px; margin-top: 18px;
+    font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.78);
+  }
+  .sl-hero-social::before {
+    content: ""; width: 7px; height: 7px; border-radius: 50%;
+    background: #56C98A; box-shadow: 0 0 0 3px rgba(86,201,138,0.25); flex: none;
+  }
   .sl-fun-track {
     display: flex; align-items: center; gap: 12px;
     max-width: 640px; margin-top: 56px; user-select: none;
+  }
+  .sl-fun-stage {
+    max-width: 640px; margin-top: 10px; min-height: 1.2em;
+    font-size: 0.78rem; font-weight: 700; color: #D9BC8A;
   }
   .sl-fun-label {
     flex: none; font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.7); white-space: nowrap;
@@ -3347,6 +3362,8 @@
         <ul class="sl-slide-title-list" id="slHeroTitleList"></ul>
         <button type="button" class="sl-slide-cta" onclick="openHeroSlideLightbox(0)">구체적인 기능 알아보기 →</button>
       </div>
+      <!-- 실제 등록된 학생 수를 세어 보여준다(initHeroSocialProof) — 못 불러오면 그냥 숨김 -->
+      <div class="sl-hero-social" id="slHeroSocialProof" style="display:none;"></div>
       <!-- 그냥 심심할 때 드래그하며 노는 장식용 미니 위젯 — 실제 진도/데이터와는 무관하다. -->
       <div class="sl-fun-track" id="slFunTrack">
         <span class="sl-fun-label">공부 시작</span>
@@ -9055,12 +9072,21 @@
 
   // "공부 시작"~"입시 끝" 드래그 트랙 — 사람 모양을 좌우로 끌면 선 위에서 움직인다.
   // 저장되는 값도 없고 실제 데이터랑도 무관한, 그냥 심심할 때 만지는 장식 위젯이다.
+  // 트랙 위치 구간별로 짧은 문구를 보여준다 — 그냥 토이가 아니라 "학습 여정"처럼 읽히게.
+  const HOLO_FUN_STAGES = [
+    { max: 20, text: "기초를 다지는 시간" },
+    { max: 45, text: "학습 패턴을 파악하는 시간" },
+    { max: 70, text: "약점을 채워나가는 시간" },
+    { max: 90, text: "실전 감각을 쌓는 시간" },
+    { max: 101, text: "마무리 점검의 시간" }
+  ];
   function initHeroFunTrack() {
     const track = document.getElementById("slFunTrack");
     if (!track) return; // 히어로 콘텐츠는 767px 이하(핸드폰)에서는 DOM에 있어도 안 쓰인다
     const line = track.querySelector(".sl-fun-line");
     const runner = document.getElementById("slFunRunner");
     const fill = document.getElementById("slFunFill");
+    const stageEl = document.getElementById("slFunStage");
     let dragging = false;
 
     function setPct(pct) {
@@ -9068,6 +9094,10 @@
       runner.style.left = pct + "%";
       fill.style.width = pct + "%";
       runner.setAttribute("aria-valuenow", Math.round(pct));
+      if (stageEl) {
+        const stage = HOLO_FUN_STAGES.find(s => pct <= s.max);
+        stageEl.textContent = stage ? stage.text : "";
+      }
     }
     setPct(15);
 
@@ -9093,6 +9123,41 @@
     });
   }
   initHeroFunTrack();
+
+  // 배경 글로우가 마우스를 아주 은은하게 따라다니게 한다(고급스러운 느낌만 살짝).
+  // rAF로 한 프레임에 한 번만 반영해서 mousemove가 아무리 자주 와도 과하게 무겁지 않게 한다.
+  function initHeroParallax() {
+    const gate = document.getElementById("studentLoginGate");
+    if (!gate) return;
+    let queued = false, mx = 0, my = 0;
+    function apply() {
+      gate.style.setProperty("--mx", mx.toFixed(3));
+      gate.style.setProperty("--my", my.toFixed(3));
+      queued = false;
+    }
+    gate.addEventListener("mousemove", e => {
+      mx = (e.clientX / window.innerWidth - 0.5) * 2;
+      my = (e.clientY / window.innerHeight - 0.5) * 2;
+      if (!queued) { queued = true; requestAnimationFrame(apply); }
+    });
+  }
+  initHeroParallax();
+
+  // 소셜 프루프 한 줄 — 실제 등록된 학생 수를 세서 보여준다. 로그인 전 화면에서 읽기 권한이
+  // 없을 수도 있으니(관리자만 학생 목록을 읽을 수 있는 보안 규칙일 가능성), 실패하면 그냥
+  // 조용히 숨긴다 — 숫자를 지어내서 보여주지 않는다.
+  function initHeroSocialProof() {
+    const el = document.getElementById("slHeroSocialProof");
+    if (!el) return;
+    db.collection("students").get().then(snap => {
+      const n = snap.size;
+      if (n > 0) {
+        el.textContent = n.toLocaleString() + "명의 학생이 홀로와 함께하고 있어요";
+        el.style.display = "";
+      }
+    }).catch(() => { /* 권한 등으로 실패하면 그냥 안 보여준다 */ });
+  }
+  initHeroSocialProof();
 
   // 카드뉴스 확대(라이트박스) — 작은 카드를 누르면 열리고, 좌우 화살표/키보드로 넘긴다.
   function renderLightboxSlide() {
