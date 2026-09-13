@@ -3398,20 +3398,31 @@
       <p class="sl-switch-link"><a href="#" onclick="showStudentSignupTypePane();return false;">← 이전으로</a></p>
     </div>
 
+    <div id="slSignupCredPane" style="display:none;">
+      <h2>아이디 · 비밀번호 설정</h2>
+      <form id="slSignupCredForm" onsubmit="submitSignupCred(event)">
+        <div class="apply-field">
+          <label for="sc-id">아이디</label>
+          <input type="text" id="sc-id" autocomplete="username" required>
+        </div>
+        <div class="apply-field">
+          <label for="sc-pw">비밀번호</label>
+          <input type="password" id="sc-pw" autocomplete="new-password" required>
+        </div>
+        <div class="apply-field">
+          <label for="sc-pw2">비밀번호 확인</label>
+          <input type="password" id="sc-pw2" autocomplete="new-password" required>
+        </div>
+        <button type="submit" class="apply-submit-btn" id="slSignupCredBtn" style="width:100%;">다음</button>
+        <div class="apply-status-msg" id="slSignupCredMsg"></div>
+      </form>
+      <p class="sl-switch-link"><a href="#" onclick="showStudentSignupBranchPane();return false;">← 이전으로</a></p>
+    </div>
+
     <div id="slSignupPane" style="display:none;">
       <h2>독서실 학생으로 회원가입</h2>
       <p class="sl-signup-hint">가입 신청 후 독서실에서 승인하면 로그인할 수 있어요.</p>
       <form id="studentSignupForm" onsubmit="submitStudentSignup(event)">
-        <div class="ss-field-row">
-          <div class="apply-field">
-            <label for="ss-id">아이디</label>
-            <input type="text" id="ss-id" autocomplete="username" required>
-          </div>
-          <div class="apply-field">
-            <label for="ss-pw">비밀번호</label>
-            <input type="password" id="ss-pw" autocomplete="new-password" required>
-          </div>
-        </div>
         <div class="ss-field-row">
           <div class="apply-field">
             <label for="ss-name">이름</label>
@@ -3460,7 +3471,7 @@
         <button type="submit" class="apply-submit-btn" id="studentSignupBtn" style="width:100%;">가입 신청하기</button>
         <div class="apply-status-msg" id="studentSignupMsg"></div>
       </form>
-      <p class="sl-switch-link"><a href="#" onclick="showStudentSignupBranchPane();return false;">← 이전으로</a></p>
+      <p class="sl-switch-link"><a href="#" onclick="showStudentSignupCredPane();return false;">← 이전으로</a></p>
     </div>
   </div>
   </div>
@@ -9101,7 +9112,7 @@
   // 패널들을 전부 감춘 뒤, 보여줄 패널 하나만 다시 켠다. 독서실이 여러 곳으로 늘어나면
   // slSignupBranchPane 안의 버튼 목록에 한 줄씩 추가하면 된다.
   function hideAllStudentGatePanes() {
-    ["slLoginPane", "slSignupTypePane", "slSignupBranchPane", "slSignupPane"].forEach(id => {
+    ["slLoginPane", "slSignupTypePane", "slSignupBranchPane", "slSignupCredPane", "slSignupPane"].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.style.display = "none";
     });
@@ -9122,7 +9133,19 @@
   function selectSignupBranch(academyName) {
     selectedSignupAcademy = academyName;
     hideAllStudentGatePanes();
-    document.getElementById("slSignupPane").style.display = "block";
+    document.getElementById("slSignupCredPane").style.display = "block";
+  }
+  function showStudentSignupCredPane() {
+    hideAllStudentGatePanes();
+    document.getElementById("slSignupCredPane").style.display = "block";
+    // 이전 화면(실제 가입 폼)에서 돌아왔을 때 다시 입력하지 않도록 이미 정한 아이디/비밀번호를
+    // 그대로 복원해둔다(비밀번호 확인 칸은 그대로 pendingSignupPw로 채워서 다시 맞춰볼 필요가
+    // 없게 한다).
+    if (pendingSignupId) {
+      document.getElementById("sc-id").value = pendingSignupId;
+      document.getElementById("sc-pw").value = pendingSignupPw;
+      document.getElementById("sc-pw2").value = pendingSignupPw;
+    }
   }
   function showComingSoonModal() {
     document.getElementById("comingSoonModalOverlay").classList.add("on");
@@ -9130,16 +9153,60 @@
   function closeComingSoonModal() {
     document.getElementById("comingSoonModalOverlay").classList.remove("on");
   }
+  // 회원가입 1단계 — 아이디/비밀번호만 먼저 정하고, 여기서 중복 아이디와 비밀번호 확인까지
+  // 끝내둔다. 통과하면 pendingSignupId/pendingSignupPw에 담아두고 다음 화면(나머지 정보
+  // 입력 폼)으로 넘어간다 — 그 폼에는 더 이상 아이디/비밀번호 칸이 없다.
+  let pendingSignupId = "";
+  let pendingSignupPw = "";
+  function submitSignupCred(e) {
+    e.preventDefault();
+    const btn = document.getElementById("slSignupCredBtn");
+    const msg = document.getElementById("slSignupCredMsg");
+    msg.textContent = "";
+    msg.className = "apply-status-msg";
+    const id = document.getElementById("sc-id").value.trim();
+    const pw = document.getElementById("sc-pw").value.trim();
+    const pw2 = document.getElementById("sc-pw2").value.trim();
+    if (!id || !pw || !pw2) return;
+    if (pw !== pw2) {
+      msg.textContent = "비밀번호가 서로 일치하지 않아요. 다시 확인해주세요.";
+      msg.className = "apply-status-msg error";
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = "확인 중...";
+    db.collection("students").doc(id).get().then(doc => {
+      btn.disabled = false;
+      btn.textContent = "다음";
+      if (doc.exists) {
+        msg.textContent = "이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.";
+        msg.className = "apply-status-msg error";
+        return;
+      }
+      pendingSignupId = id;
+      pendingSignupPw = pw;
+      hideAllStudentGatePanes();
+      document.getElementById("slSignupPane").style.display = "block";
+    }).catch(err => {
+      console.error(err);
+      btn.disabled = false;
+      btn.textContent = "다음";
+      msg.textContent = "확인 중 오류가 발생했어요. 다시 시도해주세요.";
+      msg.className = "apply-status-msg error";
+    });
+  }
   // 학생이 직접 회원가입 신청 — 관리자가 만드는 계정과 같은 항목을 받되, status:"pending"으로
   // 저장해서 독서실이 승인하기 전까지는 로그인이 막히게 한다(studentLogin의 status 체크 참고).
+  // 아이디/비밀번호는 이전 화면(submitSignupCred)에서 이미 확정해뒀으므로 여기서는 나머지
+  // 정보만 받는다.
   function submitStudentSignup(e) {
     e.preventDefault();
     const btn = document.getElementById("studentSignupBtn");
     const msg = document.getElementById("studentSignupMsg");
     msg.textContent = "";
     msg.className = "apply-status-msg";
-    const id = document.getElementById("ss-id").value.trim();
-    const pw = document.getElementById("ss-pw").value.trim();
+    const id = pendingSignupId;
+    const pw = pendingSignupPw;
     const name = document.getElementById("ss-name").value.trim();
     const school = document.getElementById("ss-school").value.trim();
     const birth = document.getElementById("ss-birth").value.trim();
@@ -9155,7 +9222,7 @@
       if (doc.exists) {
         btn.disabled = false;
         btn.textContent = "가입 신청하기";
-        msg.textContent = "이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.";
+        msg.textContent = "이미 존재하는 아이디입니다. 이전 화면에서 아이디를 다시 정해주세요.";
         msg.className = "apply-status-msg error";
         return;
       }
@@ -9168,6 +9235,8 @@
         btn.disabled = false;
         btn.textContent = "가입 신청하기";
         document.getElementById("studentSignupForm").reset();
+        pendingSignupId = "";
+        pendingSignupPw = "";
         msg.textContent = "가입 신청이 접수됐어요! 독서실에서 승인하면 로그인할 수 있어요.";
         msg.className = "apply-status-msg success";
       });
