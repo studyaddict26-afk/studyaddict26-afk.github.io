@@ -445,9 +445,10 @@
     background: linear-gradient(120deg, #D9BC8A 0%, #56C98A 100%);
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
-  /* 히어로 카드뉴스 — 세 가지 핵심 가치를 한 장씩 보여준다. 카드를 누르면 확대(라이트박스)로
-     열리고, 거기서 좌우로 넘겨볼 수 있다(openHeroSlideLightbox/moveLightboxSlide 참고). */
-  .sl-slide-card, .sl-lightbox-card {
+  /* 히어로의 "핵심 가치 3가지"는 카드로 감싸지 않고 배경 위에 바로 얹는다(위쪽 타이틀과
+     같은 느낌) — 자세한 내용은 아래 CTA 버튼을 눌러야 보이는 라이트박스(카드 형태 유지)에서
+     확인한다(openHeroSlideLightbox/moveLightboxSlide 참고). */
+  .sl-lightbox-card {
     position: relative; overflow: hidden;
     background:
       radial-gradient(ellipse 70% 55% at 12% -10%, rgba(255,255,255,0.14) 0%, transparent 60%),
@@ -455,14 +456,8 @@
       linear-gradient(155deg, #1E7A4C 0%, var(--green-deep) 100%);
     border: 1px solid rgba(255,255,255,0.12);
   }
-  .sl-slide-card {
-    display: block; width: 100%; max-width: 460px; text-align: left;
-    border-radius: 14px; padding: 26px 26px 24px;
-    box-shadow: 0 14px 34px rgba(11,42,25,0.28);
-  }
-  /* 카드뉴스 3개의 제목만 모아서 한눈에 훑어보게 하고, 자세한 내용은 아래 CTA 버튼을 눌러야
-     보이는 라이트박스에서 확인한다(openHeroSlideLightbox 참고). 순서가 있는 3가지라
-     번호 배지를 붙인다. */
+  .sl-slide-card { display: block; width: 100%; max-width: 460px; text-align: left; }
+  /* 순서가 있는 3가지라 번호 배지를 붙인다. */
   .sl-slide-title-list { position: relative; z-index: 1; list-style: none; margin: 0 0 22px; padding: 0; counter-reset: heroTitle; }
   .sl-slide-title-list li {
     position: relative; padding-left: 30px; font-size: 0.94rem; font-weight: 700;
