@@ -634,6 +634,15 @@
   #slLoginPane .apply-field input { padding-top: 7px; padding-bottom: 7px; }
   #slLoginPane .apply-submit-btn { padding-top: 9px; padding-bottom: 9px; }
   #slLoginPane .sl-role-btn { padding-top: 6px; padding-bottom: 6px; }
+  /* 회원가입 폼(#slSignupPane)도 필드가 많아서 카드가 너무 길어지지 않도록 세로 여백을
+     압축한다(입력칸/선택칸/성별·관유형 버튼/제출 버튼 전부). */
+  #slSignupPane .apply-field { margin-bottom: 10px; }
+  #slSignupPane .apply-field label { margin-bottom: 4px; }
+  #slSignupPane .apply-field input, #slSignupPane .apply-field select {
+    padding-top: 7px; padding-bottom: 7px;
+  }
+  #slSignupPane .ss-radio-group .ss-radio-opt { padding-top: 7px; padding-bottom: 7px; }
+  #slSignupPane .apply-submit-btn { padding-top: 9px; padding-bottom: 9px; }
   .sl-switch-link { margin-top: 14px; font-size: 0.78rem; }
   .sl-switch-link a { color: var(--green-deep); font-weight: 700; text-decoration: none; }
   .sl-switch-link a:hover { text-decoration: underline; }
@@ -3410,7 +3419,7 @@
             <input type="text" id="ss-name" required>
           </div>
           <div class="apply-field">
-            <label for="ss-school">재학 중인 학교 (성인은 출신 고등학교)</label>
+            <label for="ss-school">재학 중인 학교</label>
             <input type="text" id="ss-school" required>
           </div>
         </div>
@@ -3426,6 +3435,7 @@
             <option value="고2">고2</option>
             <option value="예비 고3">예비 고3</option>
             <option value="고3">고3</option>
+            <option value="N수">N수</option>
           </select>
         </div>
         <div class="ss-field-row">
