@@ -460,22 +460,22 @@
   /* 순서가 있는 3가지라 번호 배지를 붙인다. */
   .sl-slide-title-list { position: relative; z-index: 1; list-style: none; margin: 0 0 22px; padding: 0; counter-reset: heroTitle; }
   .sl-slide-title-list li {
-    position: relative; padding-left: 30px; font-size: 0.94rem; font-weight: 700;
+    position: relative; padding-left: 34px; font-size: 1.14rem; font-weight: 700;
     color: #fff; line-height: 1.55; word-break: keep-all;
   }
   .sl-slide-title-list li + li { margin-top: 14px; }
   .sl-slide-title-list li::before {
     counter-increment: heroTitle; content: counter(heroTitle);
-    position: absolute; left: 0; top: 0;
-    width: 20px; height: 20px; border-radius: 50%;
+    position: absolute; left: 0; top: 1px;
+    width: 24px; height: 24px; border-radius: 50%;
     background: rgba(255,255,255,0.16); color: #DCF3E4;
-    font-size: 0.72rem; font-weight: 800; line-height: 20px; text-align: center;
+    font-size: 0.8rem; font-weight: 800; line-height: 24px; text-align: center;
   }
   .sl-slide-cta {
-    position: relative; z-index: 1; display: block; width: 100%;
+    position: relative; z-index: 1; display: inline-block; width: auto;
     background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.28);
     color: #fff; font-family: inherit; font-weight: 700; font-size: 0.88rem;
-    padding: 13px; border-radius: 10px; cursor: pointer;
+    padding: 10px 16px; border-radius: 10px; cursor: pointer; white-space: nowrap;
     transition: background 0.15s;
   }
   .sl-slide-cta:hover { background: rgba(255,255,255,0.24); }
