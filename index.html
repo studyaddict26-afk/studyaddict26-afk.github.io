@@ -1265,16 +1265,19 @@
   .exsim-noise-desc { font-size: 0.78rem; color: var(--ink-soft); line-height: 1.6; }
   .exsim-noise-toggle-row, .exsim-noise-vol-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.84rem; font-weight: 600; color: var(--ink); }
   .exsim-noise-vol-row input[type="range"] { flex: 1 1 auto; margin-left: 16px; accent-color: var(--green-deep); }
-  .exsim-hub-buttons { display: flex; flex-direction: column; gap: 12px; }
+  .exsim-hub-buttons { display: flex; gap: 12px; }
   .exsim-hub-btn {
-    display: flex; align-items: center; gap: 14px; width: 100%; text-align: left;
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
     font-family: inherit; background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
-    padding: 20px 22px; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    padding: 22px 10px; cursor: pointer; text-align: center; transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
   }
   .exsim-hub-btn:hover { transform: translateY(-2px); border-color: var(--green); box-shadow: 0 6px 16px rgba(23,24,26,0.08); }
-  .exsim-hub-ico { flex: none; font-size: 1.3rem; }
-  .exsim-hub-title { flex: 1; font-size: 0.98rem; font-weight: 800; color: var(--ink); }
-  .exsim-hub-arrow { flex: none; font-size: 1.1rem; color: var(--green-deep); }
+  .exsim-hub-ico { font-size: 1.4rem; }
+  .exsim-hub-title { font-size: 0.84rem; font-weight: 800; color: var(--ink); line-height: 1.35; }
+  @media (max-width: 480px) {
+    .exsim-hub-title { font-size: 0.74rem; }
+    .exsim-hub-btn { padding: 16px 6px; }
+  }
   .exsim-naeshin-card { border: 1px solid var(--line); border-radius: 14px; background: var(--paper); padding: 22px; display: flex; flex-direction: column; gap: 14px; }
   .exsim-naeshin-start-btn { width: 100%; height: 56px; border-radius: 28px; align-self: stretch; }
   .exsim-file-label {
@@ -4467,35 +4470,15 @@
         <button type="button" class="exsim-hub-btn" onclick="go('examSuneung')">
           <span class="exsim-hub-ico">🎓</span>
           <span class="exsim-hub-title">수능 시뮬레이션</span>
-          <span class="exsim-hub-arrow">›</span>
         </button>
         <button type="button" class="exsim-hub-btn" onclick="go('examNaeshin')">
           <span class="exsim-hub-ico">📖</span>
           <span class="exsim-hub-title">내신 시뮬레이션</span>
-          <span class="exsim-hub-arrow">›</span>
         </button>
-      </div>
-
-      <div class="exsim-links-row">
-        <button type="button" class="exsim-link-btn" id="exsimHistoryToggleBtn" onclick="exsimToggleHistory()">📋 모의고사 기록 보기</button>
-        <button type="button" class="exsim-link-btn" onclick="exsimOpenNoisePanel()">🔊 시험장 소음 설정하기</button>
-      </div>
-      <div class="exsim-history" id="exsimHistory" style="display:none;"></div>
-
-      <div class="exsim-noise-panel" id="exsimNoisePanel" style="display:none;">
-        <div class="exsim-noise-panel-head">
-          <span>🔊 시험장 소음 설정</span>
-          <button type="button" class="exsim-noise-panel-close" onclick="exsimOpenNoisePanel()" aria-label="닫기">×</button>
-        </div>
-        <p class="exsim-noise-desc">시험 중 백색소음을 켜서 시험장 분위기에 익숙해지는 연습을 할 수 있어요. (실제 안내방송·기침소리 등은 준비중이라 우선 백색소음만 제공돼요)</p>
-        <label class="exsim-noise-toggle-row">
-          <span>기본으로 켜기</span>
-          <input type="checkbox" id="exsimNoiseDefaultOn" onchange="exsimSaveNoisePref()">
-        </label>
-        <label class="exsim-noise-vol-row">
-          <span>볼륨</span>
-          <input type="range" id="exsimNoiseVol" min="0" max="100" value="15" oninput="exsimSaveNoisePref()">
-        </label>
+        <button type="button" class="exsim-hub-btn" onclick="go('mockexam')">
+          <span class="exsim-hub-ico">📊</span>
+          <span class="exsim-hub-title">누적된 기록 확인하기</span>
+        </button>
       </div>
     </div>
   </section>
@@ -4510,6 +4493,25 @@
     <div class="exsim-wrap">
       <div class="exsim-period-tabs" id="exsimPeriodTabs"></div>
       <div class="exsim-selected-card" id="exsimSelectedCard"></div>
+
+      <div class="exsim-links-row">
+        <button type="button" class="exsim-link-btn" onclick="exsimOpenNoisePanel('suneung')">🔊 시험장 소음 설정하기</button>
+      </div>
+      <div class="exsim-noise-panel" id="exsimNoisePanel-suneung" style="display:none;">
+        <div class="exsim-noise-panel-head">
+          <span>🔊 시험장 소음 설정</span>
+          <button type="button" class="exsim-noise-panel-close" onclick="exsimOpenNoisePanel('suneung')" aria-label="닫기">×</button>
+        </div>
+        <p class="exsim-noise-desc">시험 중 백색소음을 켜서 시험장 분위기에 익숙해지는 연습을 할 수 있어요. (실제 안내방송·기침소리 등은 준비중이라 우선 백색소음만 제공돼요)</p>
+        <label class="exsim-noise-toggle-row">
+          <span>기본으로 켜기</span>
+          <input type="checkbox" id="exsimNoiseDefaultOn-suneung" onchange="exsimSaveNoisePref('suneung')">
+        </label>
+        <label class="exsim-noise-vol-row">
+          <span>볼륨</span>
+          <input type="range" id="exsimNoiseVol-suneung" min="0" max="100" value="15" oninput="exsimSaveNoisePref('suneung')">
+        </label>
+      </div>
     </div>
   </section>
 
@@ -4531,6 +4533,25 @@
           <input type="number" id="exsimNaeshinMinutes" min="10" max="180" value="50">
         </div>
         <button type="button" class="exsim-start-btn exsim-naeshin-start-btn" onclick="exsimStartNaeshin()">시험 시작</button>
+      </div>
+
+      <div class="exsim-links-row">
+        <button type="button" class="exsim-link-btn" onclick="exsimOpenNoisePanel('naeshin')">🔊 시험장 소음 설정하기</button>
+      </div>
+      <div class="exsim-noise-panel" id="exsimNoisePanel-naeshin" style="display:none;">
+        <div class="exsim-noise-panel-head">
+          <span>🔊 시험장 소음 설정</span>
+          <button type="button" class="exsim-noise-panel-close" onclick="exsimOpenNoisePanel('naeshin')" aria-label="닫기">×</button>
+        </div>
+        <p class="exsim-noise-desc">시험 중 백색소음을 켜서 시험장 분위기에 익숙해지는 연습을 할 수 있어요. (실제 안내방송·기침소리 등은 준비중이라 우선 백색소음만 제공돼요)</p>
+        <label class="exsim-noise-toggle-row">
+          <span>기본으로 켜기</span>
+          <input type="checkbox" id="exsimNoiseDefaultOn-naeshin" onchange="exsimSaveNoisePref('naeshin')">
+        </label>
+        <label class="exsim-noise-vol-row">
+          <span>볼륨</span>
+          <input type="range" id="exsimNoiseVol-naeshin" min="0" max="100" value="15" oninput="exsimSaveNoisePref('naeshin')">
+        </label>
       </div>
     </div>
   </section>
@@ -8578,20 +8599,18 @@
     return m + "분 " + String(s).padStart(2, "0") + "초";
   }
 
-  // 시험 시뮬레이션 허브(수능/내신 두 페이지로 들어가는 선택 화면) — 별도로 초기화할 건 없고,
-  // 소음 설정/기록 패널은 매번 닫힌 상태로 시작한다.
-  function initExamHub() {
-    const hist = document.getElementById("exsimHistory");
-    const noise = document.getElementById("exsimNoisePanel");
-    if (hist) hist.style.display = "none";
-    if (noise) noise.style.display = "none";
-  }
+  // 시험 시뮬레이션 허브 — 수능/내신/누적된 기록 세 페이지로 들어가는 선택 화면, 별도 초기화 없음.
+  function initExamHub() {}
   function initExamSuneung() {
     exsimRenderPeriodTabs();
+    const noise = document.getElementById("exsimNoisePanel-suneung");
+    if (noise) noise.style.display = "none";
   }
   function initExamNaeshin() {
     document.getElementById("exsimNaeshinSubject").value = "";
     document.getElementById("exsimNaeshinMinutes").value = "50";
+    const noise = document.getElementById("exsimNoisePanel-naeshin");
+    if (noise) noise.style.display = "none";
   }
   // 내신은 국가 공식 시간표가 없어 예비령/준비령 없이, 지금 이 순간을 가상 시작 시각으로 삼아
   // 바로 "진행 중" 상태로 시작한다(exsimIsSimpleMode로 판별해 타임라인/문구만 간소화).
@@ -8676,22 +8695,23 @@
     exsimOpen(exsimRunQueue[0]);
   }
 
-  // ── 홈 화면: 시험장 소음 설정(백색소음 볼륨/기본 On 여부, localStorage에 저장) ──
-  function exsimOpenNoisePanel() {
-    const el = document.getElementById("exsimNoisePanel");
+  // ── 시험장 소음 설정(백색소음 볼륨/기본 On 여부) — 수능/내신 페이지 각각에 버튼이 있지만,
+  // localStorage 키는 공통이라 어느 쪽에서 바꾸든 같은 설정을 공유한다.
+  function exsimOpenNoisePanel(page) {
+    const el = document.getElementById("exsimNoisePanel-" + page);
     if (!el) return;
     const show = el.style.display === "none";
     el.style.display = show ? "flex" : "none";
     if (show) {
-      const cb = document.getElementById("exsimNoiseDefaultOn");
-      const rg = document.getElementById("exsimNoiseVol");
+      const cb = document.getElementById("exsimNoiseDefaultOn-" + page);
+      const rg = document.getElementById("exsimNoiseVol-" + page);
       if (cb) cb.checked = localStorage.getItem("exsimNoiseDefaultOn") === "1";
       if (rg) rg.value = localStorage.getItem("exsimNoiseVol") || "15";
     }
   }
-  function exsimSaveNoisePref() {
-    const cb = document.getElementById("exsimNoiseDefaultOn");
-    const rg = document.getElementById("exsimNoiseVol");
+  function exsimSaveNoisePref(page) {
+    const cb = document.getElementById("exsimNoiseDefaultOn-" + page);
+    const rg = document.getElementById("exsimNoiseVol-" + page);
     if (cb) localStorage.setItem("exsimNoiseDefaultOn", cb.checked ? "1" : "0");
     if (rg) localStorage.setItem("exsimNoiseVol", rg.value);
   }
