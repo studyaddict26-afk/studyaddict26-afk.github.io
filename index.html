@@ -1252,10 +1252,16 @@
   .exsim-history-subject { font-size: 0.86rem; font-weight: 700; color: var(--ink); }
   .exsim-history-date { font-size: 0.72rem; color: var(--ink-soft); margin-top: 2px; }
   .exsim-history-duration { font-size: 0.8rem; font-weight: 700; color: var(--green-deep); flex: none; }
-  .exsim-noise-panel-body { padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; }
+  .exsim-noise-panel-body { padding: 18px 20px; display: flex; flex-direction: column; gap: 16px; }
   .exsim-noise-desc { font-size: 0.78rem; color: var(--ink-soft); line-height: 1.6; }
-  .exsim-noise-toggle-row, .exsim-noise-vol-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.84rem; font-weight: 600; color: var(--ink); }
-  .exsim-noise-vol-row input[type="range"] { flex: 1 1 auto; margin-left: 16px; accent-color: var(--green-deep); }
+  .exsim-noise-toprow { display: flex; align-items: center; gap: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+  .exsim-noise-default-inline { display: flex; align-items: center; gap: 7px; font-size: 0.84rem; font-weight: 700; color: var(--ink); flex: none; white-space: nowrap; }
+  .exsim-noise-default-inline input[type="checkbox"] { accent-color: var(--green-deep); }
+  .exsim-noise-vol-inline { display: flex; align-items: center; gap: 10px; font-size: 0.84rem; font-weight: 700; color: var(--ink); flex: 1; min-width: 0; }
+  .exsim-noise-vol-inline input[type="range"] { flex: 1 1 auto; accent-color: var(--green-deep); }
+  .exsim-noise-type-list { display: flex; flex-direction: column; gap: 2px; }
+  .exsim-noise-type-row { display: flex; align-items: center; gap: 10px; padding: 9px 2px; font-size: 0.86rem; font-weight: 600; color: var(--ink); cursor: pointer; }
+  .exsim-noise-type-row input[type="checkbox"] { accent-color: var(--green-deep); width: 17px; height: 17px; }
   .exsim-hub-buttons { display: flex; gap: 12px; }
   .exsim-hub-btn {
     flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
@@ -1303,13 +1309,14 @@
   .exsim-picker-close { background: none; border: none; font-size: 1.4rem; color: var(--ink-soft); cursor: pointer; line-height: 1; }
   .exsim-picker-list { overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 2px; }
   .exsim-picker-row {
-    display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; text-align: left;
-    font-family: inherit; background: none; border: none; border-radius: 10px; padding: 13px 12px; cursor: pointer;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 5px; width: 100%; text-align: left;
+    font-family: inherit; background: none; border: none; border-radius: 10px; padding: 12px 12px; cursor: pointer;
   }
   .exsim-picker-row:hover { background: var(--cream); }
   .exsim-picker-row.on { background: var(--green-soft); }
   .exsim-picker-row-label { font-size: 0.86rem; font-weight: 700; color: var(--ink); }
-  .exsim-picker-row-sub { font-size: 0.74rem; color: var(--ink-soft); flex: none; }
+  .exsim-picker-row-sub { font-size: 0.72rem; color: var(--ink-soft); }
+  .exsim-picker-row-sub .t { color: var(--ink); font-weight: 700; }
   .exsim-picker-row.on .exsim-picker-row-label { color: var(--green-deep); }
   @media (max-width: 640px) {
     .exsim-selected-card { flex-direction: column; align-items: stretch; }
@@ -3904,15 +3911,18 @@
       <button type="button" class="exsim-picker-close" onclick="exsimCloseNoisePanel()" aria-label="닫기">×</button>
     </div>
     <div class="exsim-noise-panel-body">
-      <p class="exsim-noise-desc">다양한 소음을 설정하여 시험장 분위기에 익숙해질 수 있습니다.</p>
-      <label class="exsim-noise-toggle-row">
-        <span>기본으로 켜기</span>
-        <input type="checkbox" id="exsimNoiseDefaultOn" onchange="exsimSaveNoisePref()">
-      </label>
-      <label class="exsim-noise-vol-row">
-        <span>볼륨</span>
-        <input type="range" id="exsimNoiseVol" min="0" max="100" value="15" oninput="exsimSaveNoisePref()">
-      </label>
+      <p class="exsim-noise-desc">다양한 소음을 설정하여 시험장 분위기에 익숙해질 수 있습니다.<br>중복 선택하면, 소음이 랜덤으로 반복적으로 나옵니다.</p>
+      <div class="exsim-noise-toprow">
+        <label class="exsim-noise-default-inline">
+          <input type="checkbox" id="exsimNoiseDefaultOn" onchange="exsimSaveNoisePref()">
+          <span>기본으로 켜기</span>
+        </label>
+        <label class="exsim-noise-vol-inline">
+          <span>볼륨</span>
+          <input type="range" id="exsimNoiseVol" min="0" max="100" value="15" oninput="exsimSaveNoisePref()">
+        </label>
+      </div>
+      <div class="exsim-noise-type-list" id="exsimNoiseTypeList"></div>
     </div>
   </div>
 </div>
@@ -8668,7 +8678,10 @@
   let exsimSelectedPeriodId = null;
   function exsimSubjectTabList() {
     return [{ id: "all", tabLabel: "전과목", sub: "전 과목 이어서 진행" }].concat(
-      EXAM_PERIODS.map(p => ({ id: p.id, tabLabel: p.periodLabel + " " + p.subject, sub: p.start + "~" + p.end }))
+      EXAM_PERIODS.map(p => ({
+        id: p.id, tabLabel: p.periodLabel + " " + p.subject,
+        sub: '예비령 <span class="t">' + p.pre + '</span> · 준비령 <span class="t">' + p.ready + '</span> · 시작 <span class="t">' + p.start + '</span> · 종료 <span class="t">' + p.end + '</span>'
+      }))
     );
   }
   function exsimOpenSubjectPicker() {
@@ -8748,13 +8761,42 @@
     exsimOpen(exsimRunQueue[0]);
   }
 
-  // ── 시험장 소음 설정(백색소음 볼륨/기본 On 여부) — 수능/내신 페이지 어디서 열어도 같은
-  // 팝업 하나를 공유한다(설정값도 localStorage로 공통).
+  // ── 시험장 소음 설정(볼륨/기본 On 여부/소음 종류) — 수능/내신 페이지 어디서 열어도 같은
+  // 팝업 하나를 공유한다(설정값도 localStorage로 공통). 백색소음은 Web Audio로 실제와 비슷하게
+  // 만들 수 있지만, 기침·코훌쩍임 등은 진짜 녹음 파일이 없어서 우선 노이즈를 짧게 합성해
+  // 흉내만 낸 것 — 나중에 진짜 음원으로 바꾸려면 exsimPlayEffectBurst()만 고치면 된다.
+  const EXSIM_NOISE_TYPES = [
+    { id: "white", label: "백색 소음" },
+    { id: "cough", label: "기침" },
+    { id: "sniffle", label: "코 훌쩍임" },
+    { id: "legshake", label: "다리 떨기" },
+    { id: "chairdrag", label: "의자 끌기" },
+    { id: "desk", label: "책상 삐그덕" },
+  ];
+  function exsimLoadNoiseTypes() {
+    const raw = localStorage.getItem("exsimNoiseTypes");
+    if (raw === null) return ["white"]; // 처음 쓰는 사람은 백색소음만 기본으로 체크
+    try {
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : ["white"];
+    } catch (e) { return ["white"]; }
+  }
+  function exsimSaveNoiseTypes() {
+    const checked = Array.from(document.querySelectorAll("#exsimNoiseTypeList input[type=checkbox]:checked")).map(cb => cb.dataset.noise);
+    localStorage.setItem("exsimNoiseTypes", JSON.stringify(checked));
+  }
   function exsimOpenNoisePanel() {
     const cb = document.getElementById("exsimNoiseDefaultOn");
     const rg = document.getElementById("exsimNoiseVol");
     if (cb) cb.checked = localStorage.getItem("exsimNoiseDefaultOn") === "1";
     if (rg) rg.value = localStorage.getItem("exsimNoiseVol") || "15";
+    const listEl = document.getElementById("exsimNoiseTypeList");
+    const selected = exsimLoadNoiseTypes();
+    if (listEl) {
+      listEl.innerHTML = EXSIM_NOISE_TYPES.map(t =>
+        '<label class="exsim-noise-type-row"><input type="checkbox" data-noise="' + t.id + '"' + (selected.includes(t.id) ? " checked" : "") + ' onchange="exsimSaveNoiseTypes()"><span>' + t.label + '</span></label>'
+      ).join("");
+    }
     document.getElementById("exsimNoiseOverlay").classList.add("on");
   }
   function exsimCloseNoisePanel() {
@@ -8942,40 +8984,84 @@
     showToast("랩타임 기록! (" + exsimState.laps.length + "번째)");
   }
 
-  // ── 진행 화면: 백색소음(Web Audio API로 생성 — 별도 음원 파일 없이 재생) ──
-  let exsimAudioCtx = null, exsimNoiseSrc = null;
+  // ── 진행 화면: 시험장 소음(Web Audio API로 생성 — 별도 음원 파일 없이 재생) ──
+  // 백색소음은 계속 흐르고, 기침·코훌쩍임 등 나머지는 체크된 종류 중 하나를 무작위로 골라
+  // 랜덤한 간격(6~20초)으로 반복 재생한다. 진짜 녹음이 아니라 노이즈를 짧게 합성해 흉내만 낸
+  // 것 — 나중에 실제 음원 파일이 생기면 exsimPlayEffectBurst() 안의 합성 부분만 <audio> 재생
+  // 코드로 바꾸면 된다.
+  let exsimAudioCtx = null, exsimNoiseSrc = null, exsimEffectTimer = null;
   function exsimToggleNoise() {
     if (!exsimState) return;
     exsimState.noiseOn = !exsimState.noiseOn;
     const btn = document.getElementById("exlvNoiseBtn");
     if (exsimState.noiseOn) {
       exsimStartNoise();
-      if (btn) { btn.textContent = "🔊 백색소음"; btn.classList.add("on"); }
+      if (btn) { btn.textContent = "🔊 시험장 소음"; btn.classList.add("on"); }
     } else {
       exsimStopNoise();
-      if (btn) { btn.textContent = "🔇 백색소음"; btn.classList.remove("on"); }
+      if (btn) { btn.textContent = "🔇 시험장 소음"; btn.classList.remove("on"); }
     }
   }
   function exsimStartNoise() {
     try {
       if (!exsimAudioCtx) exsimAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (exsimAudioCtx.state === "suspended") exsimAudioCtx.resume();
-      const bufferSize = 2 * exsimAudioCtx.sampleRate;
-      const buffer = exsimAudioCtx.createBuffer(1, bufferSize, exsimAudioCtx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-      const src = exsimAudioCtx.createBufferSource();
-      src.buffer = buffer; src.loop = true;
-      const gain = exsimAudioCtx.createGain();
-      const vol = Number(localStorage.getItem("exsimNoiseVol") || "15") / 100;
-      gain.gain.value = vol * 0.3;
-      src.connect(gain).connect(exsimAudioCtx.destination);
-      src.start(0);
-      exsimNoiseSrc = src;
-    } catch (e) { console.error(e); }
+    } catch (e) { console.error(e); return; }
+    const types = exsimLoadNoiseTypes();
+    if (types.includes("white")) exsimStartWhiteNoise();
+    const effectTypes = types.filter(t => t !== "white");
+    if (effectTypes.length) exsimScheduleEffectNoise(effectTypes);
   }
   function exsimStopNoise() {
     if (exsimNoiseSrc) { try { exsimNoiseSrc.stop(); } catch (e) {} exsimNoiseSrc = null; }
+    if (exsimEffectTimer) { clearTimeout(exsimEffectTimer); exsimEffectTimer = null; }
+  }
+  function exsimStartWhiteNoise() {
+    const bufferSize = 2 * exsimAudioCtx.sampleRate;
+    const buffer = exsimAudioCtx.createBuffer(1, bufferSize, exsimAudioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+    const src = exsimAudioCtx.createBufferSource();
+    src.buffer = buffer; src.loop = true;
+    const gain = exsimAudioCtx.createGain();
+    const vol = Number(localStorage.getItem("exsimNoiseVol") || "15") / 100;
+    gain.gain.value = vol * 0.3;
+    src.connect(gain).connect(exsimAudioCtx.destination);
+    src.start(0);
+    exsimNoiseSrc = src;
+  }
+  function exsimScheduleEffectNoise(effectTypes) {
+    const gap = 6000 + Math.random() * 14000; // 6~20초 랜덤 간격으로 반복
+    exsimEffectTimer = setTimeout(function () {
+      const type = effectTypes[Math.floor(Math.random() * effectTypes.length)];
+      exsimPlayEffectBurst(type);
+      exsimScheduleEffectNoise(effectTypes);
+    }, gap);
+  }
+  function exsimPlayEffectBurst(type) {
+    if (!exsimAudioCtx) return;
+    try {
+      const durMap = { cough: 0.35, sniffle: 0.25, legshake: 0.6, chairdrag: 0.8, desk: 0.15 };
+      const freqMap = { cough: 400, sniffle: 1200, legshake: 200, chairdrag: 600, desk: 900 };
+      const dur = durMap[type] || 0.3;
+      const bufferSize = Math.floor(exsimAudioCtx.sampleRate * dur);
+      const buffer = exsimAudioCtx.createBuffer(1, bufferSize, exsimAudioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        const decay = 1 - i / bufferSize;
+        data[i] = (Math.random() * 2 - 1) * decay;
+      }
+      const src = exsimAudioCtx.createBufferSource();
+      src.buffer = buffer;
+      const filter = exsimAudioCtx.createBiquadFilter();
+      filter.type = "bandpass";
+      filter.frequency.value = freqMap[type] || 500;
+      const gain = exsimAudioCtx.createGain();
+      const vol = Number(localStorage.getItem("exsimNoiseVol") || "15") / 100;
+      gain.gain.value = vol * 0.5;
+      src.connect(filter).connect(gain).connect(exsimAudioCtx.destination);
+      src.start(0);
+    } catch (e) { console.error(e); }
   }
 
   // ── 진행 화면: 종료(X 버튼 확인 / 자동 종료) → 종료 요약 화면 ──
