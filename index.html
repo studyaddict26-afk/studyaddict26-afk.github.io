@@ -1363,11 +1363,14 @@
   .exlv-lap-row { display: flex; gap: 12px; margin-bottom: 36px; flex-wrap: wrap; justify-content: center; }
   .exlv-noise-btn, .exlv-lap-btn { font-family: inherit; font-size: 0.82rem; font-weight: 700; color: #fff; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 10px 18px; cursor: pointer; }
   .exlv-noise-btn.on { background: var(--green-deep); border-color: var(--green-deep); }
-  .exlv-timeline { width: 100%; max-width: 520px; display: flex; align-items: flex-start; gap: 0; margin-top: 18px; overflow-x: auto; }
-  .exlv-tl-pt { flex: 1; position: relative; text-align: center; padding-top: 10px; border-top: 2px solid rgba(255,255,255,0.25); font-size: 0.68rem; color: rgba(255,255,255,0.5); }
+  .exlv-timeline { width: 100%; max-width: 347px; margin-top: 18px; }
+  .exlv-tl-track { position: relative; height: 2px; background: rgba(255,255,255,0.25); border-radius: 1px; overflow: hidden; }
+  .exlv-tl-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--green); }
+  .exlv-tl-labels { display: flex; align-items: flex-start; gap: 0; margin-top: 10px; overflow-x: auto; }
+  .exlv-tl-pt { flex: 1; position: relative; text-align: center; font-size: 0.68rem; color: rgba(255,255,255,0.5); }
   .exlv-tl-pt:first-child { text-align: left; }
   .exlv-tl-pt:last-child { text-align: right; }
-  .exlv-tl-pt.done { border-top-color: var(--green); color: rgba(255,255,255,0.85); }
+  .exlv-tl-pt.done { color: rgba(255,255,255,0.85); }
   .exlv-tl-pt .exlv-tl-time { display: block; font-weight: 700; margin-bottom: 2px; }
   .exlv-tl-pt button { background: none; border: none; color: inherit; font: inherit; padding: 0; cursor: pointer; }
 
@@ -3890,7 +3893,10 @@
     <button type="button" class="exlv-noise-btn" id="exlvNoiseBtn" onclick="event.stopPropagation();exsimToggleNoise()">🔇 시험장 소음 켜기</button>
     <button type="button" class="exlv-lap-btn" onclick="event.stopPropagation();exsimRecordLap()">🚩 랩타임 기록</button>
   </div>
-  <div class="exlv-timeline" id="exlvTimeline"></div>
+  <div class="exlv-timeline" id="exlvTimeline">
+    <div class="exlv-tl-track"><div class="exlv-tl-fill" id="exlvTlFill"></div></div>
+    <div class="exlv-tl-labels" id="exlvTlLabels"></div>
+  </div>
 </div>
 
 <!-- ═══ 시험 시뮬레이션: 종료 요약 화면 ═══ -->
@@ -9027,9 +9033,7 @@
       const key = currentPhase === "준비령" ? "ready" : currentPhase === "본령" ? "start" : null;
       if (key) exsimPlayPhaseAnnouncement(key);
     }
-    document.querySelectorAll("#exlvTimeline .exlv-tl-pt").forEach(el => {
-      el.classList.toggle("done", exsimState.elapsedSec >= Number(el.dataset.at));
-    });
+    exsimUpdateTimelineFill();
     // 영어 본령 시작 시점에 첨부한 듣기 음원을 한 번만 자동 재생
     if (exsimState.period.hasListening && exsimListeningObjectUrl && !exsimState.listeningPlayed) {
       const startAtSec = (exsimState.startMin - exsimState.preMin) * 60;
@@ -9040,11 +9044,10 @@
       }
     }
   }
-  function exsimRenderTimeline() {
-    const el = document.getElementById("exlvTimeline");
-    if (!el || !exsimState) return;
+  function exsimTimelinePoints() {
+    if (!exsimState) return [];
     const p = exsimState.period;
-    const points = exsimIsSimpleMode(p)
+    return exsimIsSimpleMode(p)
       ? [ { time: p.start, label: "시작", atSec: 0 }, { time: p.end, label: "종료", atSec: exsimState.totalSec } ]
       : [
           { time: p.pre, label: "예비령", atSec: 0 },
@@ -9052,11 +9055,37 @@
           { time: p.start, label: "본령", atSec: (exsimState.startMin - exsimState.preMin) * 60 },
           { time: p.end, label: "시험 끝", atSec: exsimState.totalSec },
         ];
-    el.innerHTML = points.map(pt =>
+  }
+  function exsimRenderTimeline() {
+    const el = document.getElementById("exlvTlLabels");
+    if (!el || !exsimState) return;
+    el.innerHTML = exsimTimelinePoints().map(pt =>
       '<div class="exlv-tl-pt" data-at="' + pt.atSec + '">' +
         '<button type="button" onclick="exsimScrubTo(' + pt.atSec + ')"><span class="exlv-tl-time">' + pt.time + '</span>' + pt.label + '</button>' +
       '</div>'
     ).join("");
+    exsimUpdateTimelineFill();
+  }
+  // 라벨은 (요청대로) 균등 간격으로 두되, 초록 바는 "현재 구간 안에서 실제로 얼마나 지났는지"를
+  // 그 구간의 화면 폭에 비례해 매끄럽게 채운다 — 그래야 막 시작했을 때 바가 예비령 칸을 통째로
+  // 건너뛰어 준비령 쪽까지 차 있는 것처럼 보이지 않는다.
+  function exsimUpdateTimelineFill() {
+    const fillEl = document.getElementById("exlvTlFill");
+    if (!fillEl || !exsimState) return;
+    const points = exsimTimelinePoints();
+    if (points.length < 2) return;
+    const es = exsimState.elapsedSec;
+    let segIdx = points.length - 2;
+    for (let i = 0; i < points.length - 1; i++) {
+      if (es < points[i + 1].atSec) { segIdx = i; break; }
+    }
+    const segStart = points[segIdx].atSec, segEnd = points[segIdx + 1].atSec;
+    const segFrac = segEnd > segStart ? (es - segStart) / (segEnd - segStart) : 1;
+    const pct = (segIdx + Math.max(0, Math.min(1, segFrac))) / (points.length - 1) * 100;
+    fillEl.style.width = Math.max(0, Math.min(100, pct)) + "%";
+    document.querySelectorAll("#exlvTlLabels .exlv-tl-pt").forEach(el => {
+      el.classList.toggle("done", es >= Number(el.dataset.at));
+    });
   }
   function exsimScrubTo(sec) {
     if (!exsimState) return;
