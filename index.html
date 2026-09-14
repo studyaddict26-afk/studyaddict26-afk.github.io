@@ -1265,16 +1265,23 @@
   .exsim-noise-desc { font-size: 0.78rem; color: var(--ink-soft); line-height: 1.6; }
   .exsim-noise-toggle-row, .exsim-noise-vol-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.84rem; font-weight: 600; color: var(--ink); }
   .exsim-noise-vol-row input[type="range"] { flex: 1 1 auto; margin-left: 16px; accent-color: var(--green-deep); }
-  .exsim-mode-tabs { display: flex; gap: 8px; }
-  .exsim-mode-btn {
-    flex: 1; font-family: inherit; font-size: 0.86rem; font-weight: 700; color: var(--ink-soft);
-    background: var(--cream); border: 1px solid var(--line); border-radius: 12px; padding: 14px 10px; cursor: pointer;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  .exsim-hub-buttons { display: flex; flex-direction: column; gap: 12px; }
+  .exsim-hub-btn {
+    display: flex; align-items: center; gap: 14px; width: 100%; text-align: left;
+    font-family: inherit; background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
+    padding: 20px 22px; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
   }
-  .exsim-mode-btn.on { background: var(--green-deep); color: #fff; border-color: var(--green-deep); }
-  .exsim-mode-pane { display: flex; flex-direction: column; gap: 16px; }
+  .exsim-hub-btn:hover { transform: translateY(-2px); border-color: var(--green); box-shadow: 0 6px 16px rgba(23,24,26,0.08); }
+  .exsim-hub-ico { flex: none; font-size: 1.3rem; }
+  .exsim-hub-title { flex: 1; font-size: 0.98rem; font-weight: 800; color: var(--ink); }
+  .exsim-hub-arrow { flex: none; font-size: 1.1rem; color: var(--green-deep); }
   .exsim-naeshin-card { border: 1px solid var(--line); border-radius: 14px; background: var(--paper); padding: 22px; display: flex; flex-direction: column; gap: 14px; }
   .exsim-naeshin-start-btn { width: 100%; height: 56px; border-radius: 28px; align-self: stretch; }
+  .exsim-file-label {
+    font-size: 0.78rem; font-weight: 700; color: var(--green-deep); background: var(--green-soft);
+    border-radius: 999px; padding: 5px 12px; cursor: pointer; max-width: 160px; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap; display: inline-block; vertical-align: middle;
+  }
   @media (max-width: 640px) {
     .exsim-selected-card { flex-direction: column; align-items: stretch; }
     .exsim-start-btn { width: 100%; height: 56px; border-radius: 28px; align-self: stretch; }
@@ -3796,6 +3803,7 @@
 
 <!-- ═══ 시험 시뮬레이션: 진행 화면 ═══ -->
 <div class="exlv" id="exsimLive" onclick="exsimBackgroundTap(event)">
+  <audio id="exlvListeningAudio" style="display:none"></audio>
   <button type="button" class="exlv-close" onclick="event.stopPropagation();exsimRequestClose()" aria-label="닫기">&times;</button>
   <div class="exlv-badge" id="exlvBadge">1교시</div>
   <div class="exlv-phase" id="exlvPhase">예비령</div>
@@ -4455,28 +4463,17 @@
       <div class="split"></div>
     </div>
     <div class="exsim-wrap">
-      <div class="exsim-mode-tabs" id="exsimModeTabs">
-        <button type="button" class="exsim-mode-btn on" data-mode="suneung" onclick="exsimSwitchMode('suneung')">🎓 수능 시뮬레이션</button>
-        <button type="button" class="exsim-mode-btn" data-mode="naeshin" onclick="exsimSwitchMode('naeshin')">📖 내신 시뮬레이션</button>
-      </div>
-
-      <div class="exsim-mode-pane" id="exsimSuneungPane">
-        <div class="exsim-period-tabs" id="exsimPeriodTabs"></div>
-        <div class="exsim-selected-card" id="exsimSelectedCard"></div>
-      </div>
-
-      <div class="exsim-mode-pane" id="exsimNaeshinPane" style="display:none;">
-        <div class="exsim-naeshin-card">
-          <div class="mex-field">
-            <label>과목명</label>
-            <input type="text" id="exsimNaeshinSubject" placeholder="예: 수학 내신">
-          </div>
-          <div class="mex-field">
-            <label>시험 시간(분)</label>
-            <input type="number" id="exsimNaeshinMinutes" min="10" max="180" value="50">
-          </div>
-          <button type="button" class="exsim-start-btn exsim-naeshin-start-btn" onclick="exsimStartNaeshin()">시험 시작</button>
-        </div>
+      <div class="exsim-hub-buttons">
+        <button type="button" class="exsim-hub-btn" onclick="go('examSuneung')">
+          <span class="exsim-hub-ico">🎓</span>
+          <span class="exsim-hub-title">수능 시뮬레이션</span>
+          <span class="exsim-hub-arrow">›</span>
+        </button>
+        <button type="button" class="exsim-hub-btn" onclick="go('examNaeshin')">
+          <span class="exsim-hub-ico">📖</span>
+          <span class="exsim-hub-title">내신 시뮬레이션</span>
+          <span class="exsim-hub-arrow">›</span>
+        </button>
       </div>
 
       <div class="exsim-links-row">
@@ -4499,6 +4496,41 @@
           <span>볼륨</span>
           <input type="range" id="exsimNoiseVol" min="0" max="100" value="15" oninput="exsimSaveNoisePref()">
         </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 수능 시뮬레이션 ─── -->
+  <section class="view" id="view-examSuneung">
+    <div class="chat-head">
+      <span class="eyebrow">EXAM</span>
+      <h2>수능 시뮬레이션</h2>
+      <div class="split"></div>
+    </div>
+    <div class="exsim-wrap">
+      <div class="exsim-period-tabs" id="exsimPeriodTabs"></div>
+      <div class="exsim-selected-card" id="exsimSelectedCard"></div>
+    </div>
+  </section>
+
+  <!-- ─── 내신 시뮬레이션 ─── -->
+  <section class="view" id="view-examNaeshin">
+    <div class="chat-head">
+      <span class="eyebrow">EXAM</span>
+      <h2>내신 시뮬레이션</h2>
+      <div class="split"></div>
+    </div>
+    <div class="exsim-wrap">
+      <div class="exsim-naeshin-card">
+        <div class="mex-field">
+          <label>과목명</label>
+          <input type="text" id="exsimNaeshinSubject" placeholder="예: 수학 내신">
+        </div>
+        <div class="mex-field">
+          <label>시험 시간(분)</label>
+          <input type="number" id="exsimNaeshinMinutes" min="10" max="180" value="50">
+        </div>
+        <button type="button" class="exsim-start-btn exsim-naeshin-start-btn" onclick="exsimStartNaeshin()">시험 시작</button>
       </div>
     </div>
   </section>
@@ -6145,13 +6177,14 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 & 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 & 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 & 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "내 플래너 관리하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "시험 시뮬레이션", mockexam: "모의고사·내신 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 & 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 & 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 & 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "내 플래너 관리하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { mathexam: "exam", engexam: "exam" };
   // "← 이전으로"가 상단 흰색 바(topbar)의 제목 오른쪽에 뜨는 페이지들과, 각각이 돌아갈 곳.
   const BACK_TARGET = {
     "consult-1": "consult", "consult-2": "consult", "consult-3": "consult",
     "consult-5": "consult", "consult-6": "consult", "consult-7": "consult", "consult-8": "consult",
     todayrecord: "home", plannerPage: "home", cumulative: "recordhub", reports: "recordhub", dayDetail: "cumulative",
+    examSuneung: "examhub", examNaeshin: "examhub",
   };
   function goBack() {
     const target = BACK_TARGET[currentView];
@@ -6192,6 +6225,8 @@
     if (view === "recordhub") { loadRecordHubStatus(); setRhCumWeekLabel(); loadRhWeekScore(); }
     if (view === "scheduleManage") loadScheduleManage();
     if (view === "examhub") initExamHub();
+    if (view === "examSuneung") initExamSuneung();
+    if (view === "examNaeshin") initExamNaeshin();
     if (view === "mockexam") initMockExam();
     if (view === "ranking") switchRankingTab("today"); // 매번 "오늘의 랭킹" 탭부터 새로 불러온다
   }
@@ -8509,13 +8544,28 @@
   // 기록은 우선 기기(localStorage)에만 저장 — 기기 간 동기화·통계는 '모의고사·내신
   // 관리하기' 페이지를 만들 때 Firestore로 옮길 예정.
   // ══════════════════════════════════════════════════════════════════
+  // 2022 개정 교육과정 기준 수능 시간표(문항 수/배점 포함) — 한국사와 탐구는 공식적으로 둘 다
+  // "4교시"이며, 탐구는 선택한 2과목을 이어서 치른다. 사회탐구/과학탐구는 각각 단독 연습용으로도
+  // 골라 쓸 수 있게 따로 두고, "탐구 연속"은 그 둘을 실제 시험처럼 이어서 치르는 모드.
   const EXAM_PERIODS = [
-    { id: "kor",   periodLabel: "1교시", subject: "국어",         pre: "08:25", ready: "08:35", start: "08:40", end: "10:00" },
-    { id: "math",  periodLabel: "2교시", subject: "수학",         pre: "10:15", ready: "10:25", start: "10:30", end: "12:10" },
-    { id: "eng",   periodLabel: "3교시", subject: "영어",         pre: "12:50", ready: "13:05", start: "13:10", end: "14:20" },
-    { id: "tamgu", periodLabel: "4교시", subject: "한국사·탐구",   pre: "14:35", ready: "14:45", start: "14:50", end: "16:32" },
-    { id: "lang2", periodLabel: "5교시", subject: "제2외국어·한문", pre: "16:45", ready: "17:00", start: "17:05", end: "17:45" },
+    { id: "kor",     periodLabel: "1교시", subject: "국어",          pre: "08:25", ready: "08:35", start: "08:40", end: "10:00", count: 45, points: 100 },
+    { id: "math",    periodLabel: "2교시", subject: "수학",          pre: "10:15", ready: "10:25", start: "10:30", end: "12:10", count: 30, points: 100 },
+    { id: "eng",     periodLabel: "3교시", subject: "영어",          pre: "12:50", ready: "13:05", start: "13:10", end: "14:20", count: 45, points: 100, hasListening: true },
+    { id: "korhist", periodLabel: "4교시", subject: "한국사",        pre: "14:35", ready: "14:45", start: "14:50", end: "15:20", count: 20, points: 50 },
+    { id: "social",  periodLabel: "4교시", subject: "사회탐구",       pre: "15:20", ready: "15:30", start: "15:35", end: "16:15", count: 25, points: 50 },
+    { id: "science", periodLabel: "4교시", subject: "과학탐구",       pre: "16:15", ready: "16:25", start: "16:30", end: "17:10", count: 25, points: 50 },
+    { id: "tamgu2",  periodLabel: "4교시", subject: "탐구 연속",      pre: "15:12", ready: "15:22", start: "15:27", end: "17:10", count: 50, points: 100 },
+    { id: "lang2",   periodLabel: "5교시", subject: "제2외국어·한문", pre: "17:20", ready: "17:30", start: "17:35", end: "18:05", count: 20, points: 50 },
   ];
+  // "전과목" 연속 진행 순서 — 탐구는 개별(social/science) 말고 이어서 치는 tamgu2로 한 번에 커버.
+  const EXAM_ALL_SUBJECTS_QUEUE = ["kor", "math", "eng", "korhist", "tamgu2", "lang2"];
+  function exsimAllSubjectsInfo() {
+    const periods = EXAM_ALL_SUBJECTS_QUEUE.map(id => EXAM_PERIODS.find(p => p.id === id));
+    const totalMin = hmToMin(periods[periods.length - 1].end) - hmToMin(periods[0].pre);
+    const totalCount = periods.reduce((s, p) => s + (p.count || 0), 0);
+    const totalPoints = periods.reduce((s, p) => s + (p.points || 0), 0);
+    return { periods: periods, totalMin: totalMin, totalCount: totalCount, totalPoints: totalPoints, startTime: periods[0].pre, endTime: periods[periods.length - 1].end };
+  }
   function hmToMin(hm) { const p = hm.split(":").map(Number); return p[0] * 60 + p[1]; }
   function minToHM(min) {
     min = Math.round(min);
@@ -8528,16 +8578,20 @@
     return m + "분 " + String(s).padStart(2, "0") + "초";
   }
 
+  // 시험 시뮬레이션 허브(수능/내신 두 페이지로 들어가는 선택 화면) — 별도로 초기화할 건 없고,
+  // 소음 설정/기록 패널은 매번 닫힌 상태로 시작한다.
   function initExamHub() {
-    exsimSwitchMode("suneung");
+    const hist = document.getElementById("exsimHistory");
+    const noise = document.getElementById("exsimNoisePanel");
+    if (hist) hist.style.display = "none";
+    if (noise) noise.style.display = "none";
+  }
+  function initExamSuneung() {
     exsimRenderPeriodTabs();
   }
-
-  // ── 홈 화면: 수능 시뮬레이션 / 내신 시뮬레이션 모드 전환 ──
-  function exsimSwitchMode(mode) {
-    document.querySelectorAll("#exsimModeTabs .exsim-mode-btn").forEach(b => b.classList.toggle("on", b.dataset.mode === mode));
-    document.getElementById("exsimSuneungPane").style.display = mode === "suneung" ? "flex" : "none";
-    document.getElementById("exsimNaeshinPane").style.display = mode === "naeshin" ? "flex" : "none";
+  function initExamNaeshin() {
+    document.getElementById("exsimNaeshinSubject").value = "";
+    document.getElementById("exsimNaeshinMinutes").value = "50";
   }
   // 내신은 국가 공식 시간표가 없어 예비령/준비령 없이, 지금 이 순간을 가상 시작 시각으로 삼아
   // 바로 "진행 중" 상태로 시작한다(exsimIsSimpleMode로 판별해 타임라인/문구만 간소화).
@@ -8550,34 +8604,75 @@
     exsimOpen({ id: "naeshin", periodLabel: "내신", subject: subject, pre: nowHM, ready: nowHM, start: nowHM, end: minToHM(now.getHours() * 60 + now.getMinutes() + minutes) });
   }
 
-  // ── 홈 화면: 교시 선택 탭 + 선택 정보 카드 ──
+  // ── 수능 시뮬레이션: 교시 선택 탭("전과목" + 1~5교시) + 선택 정보 카드 ──
   let exsimSelectedPeriodId = null;
   function exsimRenderPeriodTabs() {
     const el = document.getElementById("exsimPeriodTabs");
     if (!el) return;
-    if (!exsimSelectedPeriodId) exsimSelectedPeriodId = EXAM_PERIODS[0].id;
-    el.innerHTML = EXAM_PERIODS.map(p =>
-      '<button type="button" class="exsim-period-tab-btn' + (p.id === exsimSelectedPeriodId ? " on" : "") + '" onclick="exsimSelectPeriod(\'' + p.id + '\')">' + p.periodLabel + ' ' + p.subject + '</button>'
+    if (!exsimSelectedPeriodId) exsimSelectedPeriodId = "all";
+    const tabs = [{ id: "all", tabLabel: "전과목" }].concat(
+      EXAM_PERIODS.map(p => ({ id: p.id, tabLabel: p.periodLabel + " " + p.subject }))
+    );
+    el.innerHTML = tabs.map(t =>
+      '<button type="button" class="exsim-period-tab-btn' + (t.id === exsimSelectedPeriodId ? " on" : "") + '" data-id="' + t.id + '" onclick="exsimSelectPeriod(\'' + t.id + '\')">' + t.tabLabel + '</button>'
     ).join("");
     exsimRenderSelectedCard();
   }
   function exsimSelectPeriod(id) {
     exsimSelectedPeriodId = id;
-    document.querySelectorAll("#exsimPeriodTabs .exsim-period-tab-btn").forEach((b, i) => b.classList.toggle("on", EXAM_PERIODS[i].id === id));
+    document.querySelectorAll("#exsimPeriodTabs .exsim-period-tab-btn").forEach(b => b.classList.toggle("on", b.dataset.id === id));
     exsimRenderSelectedCard();
   }
   function exsimRenderSelectedCard() {
-    const period = EXAM_PERIODS.find(p => p.id === exsimSelectedPeriodId);
     const el = document.getElementById("exsimSelectedCard");
-    if (!el || !period) return;
+    if (!el) return;
+    if (exsimSelectedPeriodId === "all") {
+      const info = exsimAllSubjectsInfo();
+      const h = Math.floor(info.totalMin / 60), m = info.totalMin % 60;
+      el.innerHTML =
+        '<div class="exsim-selected-info">' +
+          '<div class="exsim-selected-row"><span class="ico">🕐</span><span class="lbl">총 시간</span><span class="val">' + (h ? h + '시간 ' : '') + m + '분 (' + info.startTime + '~' + info.endTime + ')</span></div>' +
+          '<div class="exsim-selected-row"><span class="ico">📘</span><span class="lbl">과목</span><span class="val">' + info.periods.map(p => escapeHtml(p.subject)).join(', ') + '</span></div>' +
+          '<div class="exsim-selected-row"><span class="ico">📝</span><span class="lbl">문제 수 / 만점</span><span class="val">' + info.totalCount + '문제 / ' + info.totalPoints + '점</span></div>' +
+        '</div>' +
+        '<button type="button" class="exsim-start-btn" onclick="exsimStartAllSubjects()">시험 시작</button>';
+      return;
+    }
+    const period = EXAM_PERIODS.find(p => p.id === exsimSelectedPeriodId);
+    if (!period) return;
     const totalMin = hmToMin(period.end) - hmToMin(period.pre);
     const h = Math.floor(totalMin / 60), m = totalMin % 60;
+    const listeningRow = period.hasListening
+      ? '<div class="exsim-selected-row"><span class="ico">🎧</span><span class="lbl">영어 듣기 음원</span><span class="val"><label class="exsim-file-label">' +
+        (exsimListeningFileName ? escapeHtml(exsimListeningFileName) : '파일 선택') +
+        '<input type="file" accept="audio/*" onchange="exsimAttachListening(this)" style="display:none"></label></span></div>'
+      : '';
     el.innerHTML =
       '<div class="exsim-selected-info">' +
-        '<div class="exsim-selected-row"><span class="ico">🕐</span><span class="lbl">총 시간</span><span class="val">' + (h ? h + '시간 ' : '') + m + '분 (' + period.pre + '~' + period.end + ')</span></div>' +
-        '<div class="exsim-selected-row"><span class="ico">📘</span><span class="lbl">과목</span><span class="val">' + period.periodLabel + ' ' + escapeHtml(period.subject) + '</span></div>' +
+        '<div class="exsim-selected-row"><span class="ico">🕐</span><span class="lbl">시험 시간</span><span class="val">' + (h ? h + '시간 ' : '') + m + '분 (' + period.pre + '~' + period.end + ')</span></div>' +
+        '<div class="exsim-selected-row"><span class="ico">📝</span><span class="lbl">문제 수 / 만점</span><span class="val">' + period.count + '문제 / ' + period.points + '점</span></div>' +
+        listeningRow +
       '</div>' +
       '<button type="button" class="exsim-start-btn" onclick="exsimOpen(\'' + period.id + '\')">시험 시작</button>';
+  }
+  // 영어 듣기 음원 첨부 — 별도 서버 업로드 없이, 브라우저 안에서만 재생(새로고침하면 초기화됨).
+  let exsimListeningFileName = null;
+  let exsimListeningObjectUrl = null;
+  function exsimAttachListening(input) {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    if (exsimListeningObjectUrl) URL.revokeObjectURL(exsimListeningObjectUrl);
+    exsimListeningObjectUrl = URL.createObjectURL(file);
+    exsimListeningFileName = file.name;
+    exsimRenderSelectedCard();
+  }
+  // "전과목" 시험 시작 — 국어→수학→영어→한국사→탐구 연속→제2외국어 순서로 자동 이어서 진행.
+  let exsimRunQueue = null;
+  let exsimRunQueueIdx = 0;
+  function exsimStartAllSubjects() {
+    exsimRunQueue = EXAM_ALL_SUBJECTS_QUEUE.slice();
+    exsimRunQueueIdx = 0;
+    exsimOpen(exsimRunQueue[0]);
   }
 
   // ── 홈 화면: 시험장 소음 설정(백색소음 볼륨/기본 On 여부, localStorage에 저장) ──
@@ -8679,7 +8774,7 @@
     exsimState = {
       period: period, preMin: preMin, readyMin: readyMin, startMin: startMin, endMin: endMin,
       totalSec: (endMin - preMin) * 60,
-      elapsedSec: 0, running: false, started: false, laps: [], noiseOn: false,
+      elapsedSec: 0, running: false, started: false, laps: [], noiseOn: false, listeningPlayed: false,
     };
     document.getElementById("exlvBadge").textContent = period.periodLabel;
     document.getElementById("exlvPhase").textContent = exsimPhaseLabel();
@@ -8725,6 +8820,15 @@
     document.querySelectorAll("#exlvTimeline .exlv-tl-pt").forEach(el => {
       el.classList.toggle("done", exsimState.elapsedSec >= Number(el.dataset.at));
     });
+    // 영어 본령 시작 시점에 첨부한 듣기 음원을 한 번만 자동 재생
+    if (exsimState.period.hasListening && exsimListeningObjectUrl && !exsimState.listeningPlayed) {
+      const startAtSec = (exsimState.startMin - exsimState.preMin) * 60;
+      if (exsimState.elapsedSec >= startAtSec) {
+        exsimState.listeningPlayed = true;
+        const audio = document.getElementById("exlvListeningAudio");
+        if (audio) { audio.src = exsimListeningObjectUrl; audio.play().catch(function () {}); }
+      }
+    }
   }
   function exsimRenderTimeline() {
     const el = document.getElementById("exlvTimeline");
@@ -8820,6 +8924,7 @@
     exsimStopNoise();
     document.getElementById("exsimLive").classList.remove("on");
     exsimState = null;
+    exsimRunQueue = null;
   }
   function exsimFinishSession() {
     clearInterval(exsimTimerHandle);
@@ -8850,15 +8955,20 @@
           return '<div class="exend-lap-table-row"><span>' + (i + 1) + '</span><span>' + minToHM(state.preMin + l.sec / 60) + '</span><span>+' + formatDur(gapSec) + '</span><span>' + formatDur(l.sec) + '</span></div>';
         }).join("");
     }
+    // "전과목" 연속 진행 중 + 다음 교시가 남아있으면, 저장 버튼을 "다음 교시로 이어가기"로 바꾼다.
+    const saveBtn = document.getElementById("exendSaveBtn");
+    const hasNext = exsimRunQueue && exsimRunQueueIdx < exsimRunQueue.length - 1;
+    if (saveBtn) {
+      saveBtn.textContent = hasNext ? "저장하고 다음 교시 계속하기 →" : "기록하기 →";
+      saveBtn.onclick = hasNext ? exsimSaveAndContinue : exsimSaveSession;
+    }
     document.getElementById("exsimEnd").classList.add("on");
   }
   function exsimCloseEnd() {
     document.getElementById("exsimEnd").classList.remove("on");
     exsimEndData = null;
   }
-  function exsimSaveSession() {
-    if (!exsimEndData) return;
-    const state = exsimEndData;
+  function exsimPersistCurrentSession(state) {
     const list = exsimLoadHistory();
     list.unshift({
       periodLabel: state.period.periodLabel,
@@ -8868,9 +8978,23 @@
       laps: state.laps.map(l => l.sec),
     });
     localStorage.setItem(exsimHistoryKey(), JSON.stringify(list.slice(0, 100)));
+  }
+  function exsimSaveSession() {
+    if (!exsimEndData) return;
+    exsimPersistCurrentSession(exsimEndData);
+    exsimRunQueue = null;
     showToast("기록이 저장됐어요!");
     exsimCloseEnd();
     exsimRenderHistory();
+  }
+  function exsimSaveAndContinue() {
+    if (!exsimEndData || !exsimRunQueue) return;
+    exsimPersistCurrentSession(exsimEndData);
+    exsimRunQueueIdx++;
+    const nextId = exsimRunQueue[exsimRunQueueIdx];
+    showToast("저장했어요! 다음 교시로 넘어갈게요");
+    exsimCloseEnd();
+    exsimOpen(nextId);
   }
 
   // ══════════════════════════════════════════════════════════════════
