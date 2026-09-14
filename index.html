@@ -1227,7 +1227,9 @@
     border: 1px solid var(--line); border-radius: 14px; background: var(--paper); padding: 20px 22px;
     display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap;
   }
-  .exsim-selected-info { display: flex; flex-direction: column; gap: 12px; flex: 1 1 220px; }
+  .exsim-selected-body { display: flex; flex-direction: column; gap: 12px; flex: 1 1 220px; }
+  .exsim-selected-title { font-size: 0.98rem; font-weight: 800; color: var(--ink); }
+  .exsim-selected-info { display: flex; flex-direction: column; gap: 12px; }
   .exsim-selected-row { display: flex; align-items: center; gap: 10px; font-size: 0.84rem; color: var(--ink); }
   .exsim-selected-row .ico { flex: none; width: 20px; text-align: center; }
   .exsim-selected-row .lbl { color: var(--ink-soft); font-weight: 600; flex: none; }
@@ -8777,10 +8779,13 @@
           '<input type="file" accept="audio/*" onchange="exsimAttachListening(this)" style="display:none"></label></span></div>'
         : '';
       el.innerHTML =
-        '<div class="exsim-selected-info">' +
-          '<div class="exsim-selected-row"><span class="ico">🕐</span><span class="lbl">시험 시간</span><span class="val">' + (h ? h + '시간 ' : '') + m + '분 (' + period.start + '~' + period.end + ')</span></div>' +
-          '<div class="exsim-selected-row"><span class="ico">📝</span><span class="lbl">문제 수 / 만점</span><span class="val">' + period.count + '문제 / ' + period.points + '점</span></div>' +
-          listeningRow +
+        '<div class="exsim-selected-body">' +
+          '<div class="exsim-selected-title">' + period.periodLabel + ' ' + escapeHtml(period.subject) + '</div>' +
+          '<div class="exsim-selected-info">' +
+            '<div class="exsim-selected-row"><span class="ico">🕐</span><span class="lbl">시험 시간</span><span class="val">' + (h ? h + '시간 ' : '') + m + '분 (' + period.start + '~' + period.end + ')</span></div>' +
+            '<div class="exsim-selected-row"><span class="ico">📝</span><span class="lbl">문제 수 / 만점</span><span class="val">' + period.count + '문제 / ' + period.points + '점</span></div>' +
+            listeningRow +
+          '</div>' +
         '</div>' +
         '<button type="button" class="exsim-start-btn" onclick="exsimOpen(\'' + period.id + '\')">시험 시작</button>';
       return;
@@ -8788,11 +8793,15 @@
     // 2개 이상(전과목 포함) — 여러 과목을 순서대로 이어서 진행.
     const info = exsimSelectionInfo(ids);
     const h = Math.floor(info.totalMin / 60), m = info.totalMin % 60;
+    const titleText = ids.length === EXAM_PERIODS.length ? "전과목" : ids.length + "개 과목";
     el.innerHTML =
-      '<div class="exsim-selected-info">' +
-        '<div class="exsim-selected-row"><span class="ico">🕐</span><span class="lbl">총 시간</span><span class="val">' + (h ? h + '시간 ' : '') + m + '분 (' + info.startTime + '~' + info.endTime + ')</span></div>' +
-        '<div class="exsim-selected-row"><span class="ico">📘</span><span class="lbl">과목</span><span class="val">' + info.periods.map(p => escapeHtml(p.subject)).join(', ') + '</span></div>' +
-        '<div class="exsim-selected-row"><span class="ico">📝</span><span class="lbl">문제 수 / 만점</span><span class="val">' + info.totalCount + '문제 / ' + info.totalPoints + '점</span></div>' +
+      '<div class="exsim-selected-body">' +
+        '<div class="exsim-selected-title">' + titleText + '</div>' +
+        '<div class="exsim-selected-info">' +
+          '<div class="exsim-selected-row"><span class="ico">🕐</span><span class="lbl">총 시간</span><span class="val">' + (h ? h + '시간 ' : '') + m + '분 (' + info.startTime + '~' + info.endTime + ')</span></div>' +
+          '<div class="exsim-selected-row"><span class="ico">📘</span><span class="lbl">과목</span><span class="val">' + info.periods.map(p => escapeHtml(p.subject)).join(', ') + '</span></div>' +
+          '<div class="exsim-selected-row"><span class="ico">📝</span><span class="lbl">문제 수 / 만점</span><span class="val">' + info.totalCount + '문제 / ' + info.totalPoints + '점</span></div>' +
+        '</div>' +
       '</div>' +
       '<button type="button" class="exsim-start-btn" onclick="exsimStartSelectedQueue()">시험 시작</button>';
   }
