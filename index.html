@@ -1210,6 +1210,113 @@
     padding: 40px 22px;
   }
 
+  /* ── 시험 시뮬레이션 (실감 앱 벤치마킹): 홈 화면 ── */
+  .exsim-wrap {
+    max-width: 760px; width: 100%; margin: 24px auto 0 auto; padding: 0 20px 40px 20px; box-sizing: border-box;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .exsim-dday-row { display: flex; flex-direction: column; gap: 10px; }
+  .exsim-dday-card { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 14px 18px; }
+  .exsim-dday-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .exsim-dday-date { font-size: 0.72rem; color: var(--ink-soft); font-weight: 600; }
+  .exsim-dday-name { font-size: 0.92rem; font-weight: 800; color: var(--ink); margin-top: 2px; }
+  .exsim-dday-num { font-size: 1.5rem; font-weight: 800; color: var(--green-deep); flex: none; }
+  .exsim-dday-bar { height: 4px; border-radius: 2px; background: var(--line); margin-top: 10px; overflow: hidden; }
+  .exsim-dday-bar-fill { height: 100%; background: var(--green-deep); }
+  .exsim-period-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
+  .exsim-period-tab-btn {
+    flex: none; font-family: inherit; font-size: 0.82rem; font-weight: 700; color: var(--ink-soft);
+    background: var(--cream); border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px;
+    cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .exsim-period-tab-btn.on { background: var(--green); color: #fff; border-color: var(--green); }
+  .exsim-selected-card {
+    border: 1px solid var(--line); border-radius: 14px; background: var(--paper); padding: 20px 22px;
+    display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap;
+  }
+  .exsim-selected-info { display: flex; flex-direction: column; gap: 12px; flex: 1 1 220px; }
+  .exsim-selected-row { display: flex; align-items: center; gap: 10px; font-size: 0.84rem; color: var(--ink); }
+  .exsim-selected-row .ico { flex: none; width: 20px; text-align: center; }
+  .exsim-selected-row .lbl { color: var(--ink-soft); font-weight: 600; flex: none; }
+  .exsim-selected-row .val { font-weight: 700; }
+  .exsim-start-btn {
+    flex: none; width: 120px; height: 120px; border-radius: 50%; background: var(--green-deep); color: #fff;
+    border: none; font-family: inherit; font-size: 1.05rem; font-weight: 800; cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s; box-shadow: 0 8px 20px rgba(21,82,47,0.25);
+  }
+  .exsim-start-btn:hover { transform: translateY(-2px); }
+  .exsim-links-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .exsim-link-btn {
+    flex: 1 1 200px; font-family: inherit; font-size: 0.84rem; font-weight: 700; color: var(--ink);
+    background: var(--cream); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+    cursor: pointer; text-align: center; transition: background 0.15s, border-color 0.15s;
+  }
+  .exsim-link-btn:hover { background: var(--green-soft); border-color: #CFE3D6; }
+  .exsim-history { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 6px; display: flex; flex-direction: column; gap: 8px; }
+  .exsim-history-empty { text-align: center; color: var(--ink-soft); font-size: 0.84rem; padding: 24px; }
+  .exsim-history-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-radius: 8px; }
+  .exsim-history-row:hover { background: var(--cream); }
+  .exsim-history-subject { font-size: 0.86rem; font-weight: 700; color: var(--ink); }
+  .exsim-history-date { font-size: 0.72rem; color: var(--ink-soft); margin-top: 2px; }
+  .exsim-history-duration { font-size: 0.8rem; font-weight: 700; color: var(--green-deep); flex: none; }
+  .exsim-noise-panel { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; }
+  .exsim-noise-panel-head { display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; font-weight: 800; color: var(--ink); }
+  .exsim-noise-panel-close { background: none; border: none; font-size: 1.3rem; color: var(--ink-soft); cursor: pointer; line-height: 1; }
+  .exsim-noise-desc { font-size: 0.78rem; color: var(--ink-soft); line-height: 1.6; }
+  .exsim-noise-toggle-row, .exsim-noise-vol-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.84rem; font-weight: 600; color: var(--ink); }
+  .exsim-noise-vol-row input[type="range"] { flex: 1 1 auto; margin-left: 16px; accent-color: var(--green-deep); }
+  @media (max-width: 640px) {
+    .exsim-selected-card { flex-direction: column; align-items: stretch; }
+    .exsim-start-btn { width: 100%; height: 56px; border-radius: 28px; align-self: stretch; }
+  }
+
+  /* ── 시험 시뮬레이션: 진행 화면(검정 배경 풀스크린) — 실제 시험장 느낌을 내기 위해
+     예외적으로 이 화면만 다크 테마를 쓴다. 아날로그 시계는 "실제 지금 시각"이 아니라,
+     선택한 교시의 예비령 시각부터 실시간 속도로 흘러가는 "가상의 시험 당일 시각"을 보여준다
+     (그래야 저녁에 연습해도 실제 수능 시간표 감각을 느낄 수 있음). */
+  .exlv {
+    display: none; position: fixed; inset: 0; z-index: 300; background: #000;
+    flex-direction: column; align-items: center; justify-content: flex-start;
+    padding: 56px 24px 24px 24px; color: #fff; text-align: center; user-select: none;
+  }
+  .exlv.on { display: flex; }
+  .exlv-close { position: absolute; top: 20px; left: 20px; width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); color: #fff; font-size: 1.4rem; line-height: 1; cursor: pointer; }
+  .exlv-badge { border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 6px 16px; font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.85); margin-bottom: 10px; }
+  .exlv-phase { font-size: 1.3rem; font-weight: 800; color: rgba(255,255,255,0.55); margin-bottom: 30px; }
+  .exlv-clock-wrap { width: 220px; height: 220px; margin-bottom: 28px; }
+  .exlv-clock { width: 100%; height: 100%; }
+  .exlv-hint { font-size: 0.9rem; color: rgba(255,255,255,0.7); font-weight: 600; margin-bottom: 20px; }
+  .exlv-controls { display: flex; align-items: center; gap: 22px; margin-bottom: 18px; }
+  .exlv-controls button { background: none; border: none; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 0.62rem; font-weight: 700; cursor: pointer; }
+  #exlvPlayBtn { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.14); font-size: 1.1rem; }
+  .exlv-lap-row { display: flex; gap: 12px; margin-bottom: auto; flex-wrap: wrap; justify-content: center; }
+  .exlv-noise-btn, .exlv-lap-btn { font-family: inherit; font-size: 0.82rem; font-weight: 700; color: #fff; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 10px 18px; cursor: pointer; }
+  .exlv-noise-btn.on { background: var(--green-deep); border-color: var(--green-deep); }
+  .exlv-timeline { width: 100%; max-width: 520px; display: flex; align-items: flex-start; gap: 0; margin-top: 18px; overflow-x: auto; }
+  .exlv-tl-pt { flex: 1; position: relative; text-align: left; padding-top: 10px; border-top: 2px solid rgba(255,255,255,0.25); font-size: 0.68rem; color: rgba(255,255,255,0.5); }
+  .exlv-tl-pt.done { border-top-color: var(--green); color: rgba(255,255,255,0.85); }
+  .exlv-tl-pt .exlv-tl-time { display: block; font-weight: 700; margin-bottom: 2px; }
+  .exlv-tl-pt button { background: none; border: none; color: inherit; font: inherit; padding: 0; cursor: pointer; }
+
+  /* ── 시험 시뮬레이션: 종료 요약 화면 ── */
+  .exend { display: none; position: fixed; inset: 0; z-index: 301; background: rgba(12,14,18,0.6); align-items: center; justify-content: center; padding: 24px; }
+  .exend.on { display: flex; }
+  .exend-box { position: relative; width: 100%; max-width: 460px; max-height: 86vh; overflow-y: auto; background: var(--paper); border-radius: 18px; padding: 28px 24px 24px 24px; box-shadow: 0 24px 60px rgba(0,0,0,0.3); }
+  .exend-close { position: absolute; top: 14px; right: 16px; background: none; border: none; font-size: 1.4rem; color: var(--ink-soft); cursor: pointer; line-height: 1; }
+  .exend-title { font-size: 1.05rem; font-weight: 800; color: var(--ink); margin-bottom: 20px; padding-right: 20px; line-height: 1.4; }
+  .exend-card { border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
+  .exend-card-label { font-size: 0.72rem; font-weight: 700; color: var(--ink-soft); text-align: center; margin-bottom: 8px; }
+  .exend-card-value { font-size: 1.15rem; font-weight: 800; color: var(--ink); text-align: center; }
+  .exend-lap-bar { position: relative; height: 24px; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+  .exend-lap-bar .flag { position: absolute; bottom: 0; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 10px solid var(--green-deep); transform: translateX(-50%); }
+  .exend-lap-table { display: flex; flex-direction: column; gap: 1px; max-height: 220px; overflow-y: auto; }
+  .exend-lap-table-head, .exend-lap-table-row { display: grid; grid-template-columns: 34px 1fr 1fr 1fr; gap: 6px; font-size: 0.7rem; padding: 6px 4px; }
+  .exend-lap-table-head { color: var(--ink-soft); font-weight: 700; border-bottom: 1px solid var(--line); }
+  .exend-lap-table-row { color: var(--ink); }
+  .exend-lap-table-row:nth-child(odd) { background: var(--cream); }
+  .exend-save-btn { width: 100%; background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 14px; font-family: inherit; font-size: 0.95rem; font-weight: 800; cursor: pointer; margin-top: 6px; }
+  .exend-save-btn:disabled { opacity: 0.6; cursor: default; }
+
   /* 홈 하단 2/3: 안내 */
   .howto-video-slot {
     max-width: 1040px; width: 100%; margin: 14px auto 0 auto; padding: 0 24px;
@@ -3599,6 +3706,60 @@
   </div>
 </div>
 
+<!-- ═══ 시험 시뮬레이션: 진행 화면 ═══ -->
+<div class="exlv" id="exsimLive" onclick="exsimBackgroundTap(event)">
+  <button type="button" class="exlv-close" onclick="event.stopPropagation();exsimRequestClose()" aria-label="닫기">&times;</button>
+  <div class="exlv-badge" id="exlvBadge">1교시</div>
+  <div class="exlv-phase" id="exlvPhase">예비령</div>
+  <div class="exlv-clock-wrap">
+    <svg class="exlv-clock" viewBox="0 0 200 200" id="exlvClockSvg">
+      <circle cx="100" cy="100" r="94" fill="#fff" stroke="#111" stroke-width="4"></circle>
+      <g id="exlvTicks"></g>
+      <g id="exlvNums" font-family="inherit" font-size="15" font-weight="700" fill="#111" text-anchor="middle"></g>
+      <line id="exlvHourHand" x1="100" y1="100" x2="100" y2="58" stroke="#111" stroke-width="5" stroke-linecap="round"></line>
+      <line id="exlvMinHand" x1="100" y1="100" x2="100" y2="38" stroke="#111" stroke-width="3.5" stroke-linecap="round"></line>
+      <circle cx="100" cy="100" r="4.5" fill="#111"></circle>
+    </svg>
+  </div>
+  <div class="exlv-hint" id="exlvHint">화면을 터치하면 시작합니다</div>
+  <div class="exlv-controls" id="exlvControls" style="display:none;">
+    <button type="button" onclick="event.stopPropagation();exsimScrub(-30)" aria-label="30초 뒤로">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>30
+    </button>
+    <button type="button" id="exlvPlayBtn" onclick="event.stopPropagation();exsimTogglePause()" aria-label="일시정지/재생">❚❚</button>
+    <button type="button" onclick="event.stopPropagation();exsimScrub(30)" aria-label="30초 앞으로">30
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+    </button>
+  </div>
+  <div class="exlv-lap-row" id="exlvLapRow" style="display:none;">
+    <button type="button" class="exlv-noise-btn" id="exlvNoiseBtn" onclick="event.stopPropagation();exsimToggleNoise()">🔇 백색소음</button>
+    <button type="button" class="exlv-lap-btn" onclick="event.stopPropagation();exsimRecordLap()">🚩 랩타임 기록</button>
+  </div>
+  <div class="exlv-timeline" id="exlvTimeline"></div>
+</div>
+
+<!-- ═══ 시험 시뮬레이션: 종료 요약 화면 ═══ -->
+<div class="exend" id="exsimEnd">
+  <div class="exend-box">
+    <button type="button" class="exend-close" onclick="exsimCloseEnd()" aria-label="닫기">&times;</button>
+    <div class="exend-title">시험 끝! 오늘도 목표에 한 발짝 더 다가갔어요 😆</div>
+    <div class="exend-card">
+      <div class="exend-card-label">과목</div>
+      <div class="exend-card-value" id="exendSubject">-</div>
+    </div>
+    <div class="exend-card">
+      <div class="exend-card-label">총 응시 시간</div>
+      <div class="exend-card-value" id="exendDuration">-</div>
+    </div>
+    <div class="exend-card" id="exendLapCard">
+      <div class="exend-card-label">랩타임</div>
+      <div class="exend-lap-bar" id="exendLapBar"></div>
+      <div class="exend-lap-table" id="exendLapTable"></div>
+    </div>
+    <button type="button" class="exend-save-btn" id="exendSaveBtn" onclick="exsimSaveSession()">기록하기 →</button>
+  </div>
+</div>
+
 <!-- ═══ 학습 상담 후기 확대 보기 ═══ -->
 <div class="rv-lightbox" id="rvLightbox" onclick="closeReviewLightbox()">
   <img id="rvLightboxImg" src="" alt="학습 상담 후기">
@@ -4205,8 +4366,33 @@
       <h2>시험 시뮬레이션</h2>
       <div class="split"></div>
     </div>
-    <div class="hub-page-wrap">
-      <p class="hub-coming-soon">준비중입니다</p>
+    <div class="exsim-wrap">
+      <div class="exsim-dday-row" id="exsimDdayRow"></div>
+
+      <div class="exsim-period-tabs" id="exsimPeriodTabs"></div>
+      <div class="exsim-selected-card" id="exsimSelectedCard"></div>
+
+      <div class="exsim-links-row">
+        <button type="button" class="exsim-link-btn" id="exsimHistoryToggleBtn" onclick="exsimToggleHistory()">📋 모의고사 기록 보기</button>
+        <button type="button" class="exsim-link-btn" onclick="exsimOpenNoisePanel()">🔊 시험장 소음 설정하기</button>
+      </div>
+      <div class="exsim-history" id="exsimHistory" style="display:none;"></div>
+
+      <div class="exsim-noise-panel" id="exsimNoisePanel" style="display:none;">
+        <div class="exsim-noise-panel-head">
+          <span>🔊 시험장 소음 설정</span>
+          <button type="button" class="exsim-noise-panel-close" onclick="exsimOpenNoisePanel()" aria-label="닫기">×</button>
+        </div>
+        <p class="exsim-noise-desc">시험 중 백색소음을 켜서 시험장 분위기에 익숙해지는 연습을 할 수 있어요. (실제 안내방송·기침소리 등은 준비중이라 우선 백색소음만 제공돼요)</p>
+        <label class="exsim-noise-toggle-row">
+          <span>기본으로 켜기</span>
+          <input type="checkbox" id="exsimNoiseDefaultOn" onchange="exsimSaveNoisePref()">
+        </label>
+        <label class="exsim-noise-vol-row">
+          <span>볼륨</span>
+          <input type="range" id="exsimNoiseVol" min="0" max="100" value="15" oninput="exsimSaveNoisePref()">
+        </label>
+      </div>
     </div>
   </section>
 
@@ -5854,6 +6040,7 @@
     if (view === "home") { syncHomeCardHeights(); loadTodayTileStatus(); loadHomeScheduleToday(); loadHomePlannerToday(); }
     if (view === "recordhub") { loadRecordHubStatus(); setRhCumWeekLabel(); loadRhWeekScore(); }
     if (view === "scheduleManage") loadScheduleManage();
+    if (view === "examhub") initExamHub();
     if (view === "ranking") switchRankingTab("today"); // 매번 "오늘의 랭킹" 탭부터 새로 불러온다
   }
 
@@ -8159,6 +8346,382 @@
   function escapeHtml(s) {
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
+
+  // ══════════════════════════════════════════════════════════════════
+  // ── 시험 시뮬레이션 ('실감' 앱 벤치마킹) ──
+  // 실제 수능 시간표(예비령/준비령/본령)를 기준으로, 아날로그 시계가 실시간 속도로
+  // 흘러가며 교시별 시험 감각을 연습하는 기능. 다만 실제 벽시계 시각이 아니라 "그
+  // 교시의 예비령 시각부터 흐르는 가상의 시각"을 보여준다 — 그래야 저녁에 독서실에서
+  // 연습해도 실제 수능 당일 시간 감각을 그대로 느낄 수 있다.
+  // v1 범위: 백색소음만 제공(실제 안내방송·기침소리 등 ASMR 음원은 추후 추가 예정),
+  // 기록은 우선 기기(localStorage)에만 저장 — 기기 간 동기화·통계는 '모의고사·내신
+  // 관리하기' 페이지를 만들 때 Firestore로 옮길 예정.
+  // ══════════════════════════════════════════════════════════════════
+  const EXAM_PERIODS = [
+    { id: "kor",   periodLabel: "1교시", subject: "국어",         pre: "08:25", ready: "08:35", start: "08:40", end: "10:00" },
+    { id: "math",  periodLabel: "2교시", subject: "수학",         pre: "10:15", ready: "10:25", start: "10:30", end: "12:10" },
+    { id: "eng",   periodLabel: "3교시", subject: "영어",         pre: "12:50", ready: "13:05", start: "13:10", end: "14:20" },
+    { id: "tamgu", periodLabel: "4교시", subject: "한국사·탐구",   pre: "14:35", ready: "14:45", start: "14:50", end: "16:32" },
+    { id: "lang2", periodLabel: "5교시", subject: "제2외국어·한문", pre: "16:45", ready: "17:00", start: "17:05", end: "17:45" },
+  ];
+  const EXSIM_DDAY_EVENTS = [
+    { label: "대학수학능력시험", date: "2026-11-19" },
+    { label: "10월 학력평가", date: "2026-10-20" },
+  ];
+  function hmToMin(hm) { const p = hm.split(":").map(Number); return p[0] * 60 + p[1]; }
+  function minToHM(min) {
+    min = Math.round(min);
+    const h = Math.floor(min / 60) % 24, m = ((min % 60) + 60) % 60;
+    return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
+  }
+  function formatDur(sec) {
+    sec = Math.max(0, Math.round(sec));
+    const m = Math.floor(sec / 60), s = sec % 60;
+    return m + "분 " + String(s).padStart(2, "0") + "초";
+  }
+
+  function initExamHub() {
+    exsimRenderDday();
+    exsimRenderPeriodTabs();
+  }
+
+  // ── 홈 화면: D-day ──
+  function exsimRenderDday() {
+    const el = document.getElementById("exsimDdayRow");
+    if (!el) return;
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    el.innerHTML = EXSIM_DDAY_EVENTS.map(ev => {
+      const target = new Date(ev.date + "T00:00:00");
+      const dday = Math.round((target - today) / 86400000);
+      const num = dday > 0 ? "D-" + dday : (dday === 0 ? "D-DAY" : "D+" + Math.abs(dday));
+      const pct = Math.max(2, Math.min(100, 100 - Math.max(0, dday) / 200 * 100));
+      return '<div class="exsim-dday-card">' +
+        '<div class="exsim-dday-top">' +
+          '<div><div class="exsim-dday-date">' + ev.date.replace(/-/g, ".") + '</div>' +
+          '<div class="exsim-dday-name">' + escapeHtml(ev.label) + '</div></div>' +
+          '<div class="exsim-dday-num">' + num + '</div>' +
+        '</div>' +
+        '<div class="exsim-dday-bar"><div class="exsim-dday-bar-fill" style="width:' + pct + '%"></div></div>' +
+      '</div>';
+    }).join("");
+  }
+
+  // ── 홈 화면: 교시 선택 탭 + 선택 정보 카드 ──
+  let exsimSelectedPeriodId = null;
+  function exsimRenderPeriodTabs() {
+    const el = document.getElementById("exsimPeriodTabs");
+    if (!el) return;
+    if (!exsimSelectedPeriodId) exsimSelectedPeriodId = EXAM_PERIODS[0].id;
+    el.innerHTML = EXAM_PERIODS.map(p =>
+      '<button type="button" class="exsim-period-tab-btn' + (p.id === exsimSelectedPeriodId ? " on" : "") + '" onclick="exsimSelectPeriod(\'' + p.id + '\')">' + p.periodLabel + ' ' + p.subject + '</button>'
+    ).join("");
+    exsimRenderSelectedCard();
+  }
+  function exsimSelectPeriod(id) {
+    exsimSelectedPeriodId = id;
+    document.querySelectorAll("#exsimPeriodTabs .exsim-period-tab-btn").forEach((b, i) => b.classList.toggle("on", EXAM_PERIODS[i].id === id));
+    exsimRenderSelectedCard();
+  }
+  function exsimRenderSelectedCard() {
+    const period = EXAM_PERIODS.find(p => p.id === exsimSelectedPeriodId);
+    const el = document.getElementById("exsimSelectedCard");
+    if (!el || !period) return;
+    const totalMin = hmToMin(period.end) - hmToMin(period.pre);
+    const h = Math.floor(totalMin / 60), m = totalMin % 60;
+    el.innerHTML =
+      '<div class="exsim-selected-info">' +
+        '<div class="exsim-selected-row"><span class="ico">🕐</span><span class="lbl">총 시간</span><span class="val">' + (h ? h + '시간 ' : '') + m + '분 (' + period.pre + '~' + period.end + ')</span></div>' +
+        '<div class="exsim-selected-row"><span class="ico">📘</span><span class="lbl">과목</span><span class="val">' + period.periodLabel + ' ' + escapeHtml(period.subject) + '</span></div>' +
+      '</div>' +
+      '<button type="button" class="exsim-start-btn" onclick="exsimOpen(\'' + period.id + '\')">시험 시작</button>';
+  }
+
+  // ── 홈 화면: 시험장 소음 설정(백색소음 볼륨/기본 On 여부, localStorage에 저장) ──
+  function exsimOpenNoisePanel() {
+    const el = document.getElementById("exsimNoisePanel");
+    if (!el) return;
+    const show = el.style.display === "none";
+    el.style.display = show ? "flex" : "none";
+    if (show) {
+      const cb = document.getElementById("exsimNoiseDefaultOn");
+      const rg = document.getElementById("exsimNoiseVol");
+      if (cb) cb.checked = localStorage.getItem("exsimNoiseDefaultOn") === "1";
+      if (rg) rg.value = localStorage.getItem("exsimNoiseVol") || "15";
+    }
+  }
+  function exsimSaveNoisePref() {
+    const cb = document.getElementById("exsimNoiseDefaultOn");
+    const rg = document.getElementById("exsimNoiseVol");
+    if (cb) localStorage.setItem("exsimNoiseDefaultOn", cb.checked ? "1" : "0");
+    if (rg) localStorage.setItem("exsimNoiseVol", rg.value);
+  }
+
+  // ── 홈 화면: 모의고사 기록(v1은 기기 저장) ──
+  function exsimHistoryKey() {
+    return "exsimHistory_" + (localStorage.getItem("holoStudentId") || "guest");
+  }
+  function exsimLoadHistory() {
+    try { return JSON.parse(localStorage.getItem(exsimHistoryKey()) || "[]"); } catch (e) { return []; }
+  }
+  function exsimToggleHistory() {
+    const el = document.getElementById("exsimHistory");
+    const btn = document.getElementById("exsimHistoryToggleBtn");
+    if (!el) return;
+    const show = el.style.display === "none";
+    el.style.display = show ? "flex" : "none";
+    if (btn) btn.textContent = show ? "📋 기록 접기" : "📋 모의고사 기록 보기";
+    if (show) exsimRenderHistory();
+  }
+  function exsimRenderHistory() {
+    const el = document.getElementById("exsimHistory");
+    if (!el) return;
+    const list = exsimLoadHistory();
+    if (!list.length) {
+      el.innerHTML = '<div class="exsim-history-empty">아직 기록된 모의고사가 없어요. 시험을 시작해서 첫 기록을 남겨보세요!</div>';
+      return;
+    }
+    el.innerHTML = list.map(item =>
+      '<div class="exsim-history-row">' +
+        '<div><div class="exsim-history-subject">' + escapeHtml(item.periodLabel) + ' ' + escapeHtml(item.subject) + '</div><div class="exsim-history-date">' + escapeHtml(item.date) + '</div></div>' +
+        '<div class="exsim-history-duration">' + formatDur(item.durationSec) + '</div>' +
+      '</div>'
+    ).join("");
+  }
+
+  // ── 진행 화면: 아날로그 시계 ──
+  let exsimClockFaceReady = false;
+  function exsimInitClockFaceOnce() {
+    if (exsimClockFaceReady) return;
+    exsimClockFaceReady = true;
+    const ticksG = document.getElementById("exlvTicks");
+    const numsG = document.getElementById("exlvNums");
+    if (!ticksG || !numsG) return;
+    let ticks = "", nums = "";
+    for (let i = 0; i < 60; i++) {
+      const angle = i * 6 * Math.PI / 180;
+      const isHour = i % 5 === 0;
+      const r1 = isHour ? 80 : 88, r2 = 94;
+      const x1 = 100 + r1 * Math.sin(angle), y1 = 100 - r1 * Math.cos(angle);
+      const x2 = 100 + r2 * Math.sin(angle), y2 = 100 - r2 * Math.cos(angle);
+      ticks += '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="#111" stroke-width="' + (isHour ? 2 : 1) + '"/>';
+    }
+    for (let n = 1; n <= 12; n++) {
+      const angle = n * 30 * Math.PI / 180;
+      const x = 100 + 66 * Math.sin(angle), y = 100 - 66 * Math.cos(angle) + 5;
+      nums += '<text x="' + x + '" y="' + y + '">' + n + '</text>';
+    }
+    ticksG.innerHTML = ticks;
+    numsG.innerHTML = nums;
+  }
+  function exsimDrawClock(virtualMinFloat) {
+    const totalMin = ((virtualMinFloat % (24 * 60)) + 24 * 60) % (24 * 60);
+    const hourAngle = (totalMin / 60 % 12) / 12 * 360;
+    const minAngle = (totalMin % 60) / 60 * 360;
+    const hourHand = document.getElementById("exlvHourHand");
+    const minHand = document.getElementById("exlvMinHand");
+    if (hourHand) hourHand.setAttribute("transform", "rotate(" + hourAngle + " 100 100)");
+    if (minHand) minHand.setAttribute("transform", "rotate(" + minAngle + " 100 100)");
+  }
+
+  // ── 진행 화면: 세션 상태/타이머 ──
+  let exsimState = null;
+  let exsimTimerHandle = null;
+
+  function exsimOpen(periodId) {
+    const period = EXAM_PERIODS.find(p => p.id === periodId);
+    if (!period) return;
+    exsimInitClockFaceOnce();
+    const preMin = hmToMin(period.pre), readyMin = hmToMin(period.ready), startMin = hmToMin(period.start), endMin = hmToMin(period.end);
+    exsimState = {
+      period: period, preMin: preMin, readyMin: readyMin, startMin: startMin, endMin: endMin,
+      totalSec: (endMin - preMin) * 60,
+      elapsedSec: 0, running: false, started: false, laps: [], noiseOn: false,
+    };
+    document.getElementById("exlvBadge").textContent = period.periodLabel;
+    document.getElementById("exlvPhase").textContent = "예비령";
+    document.getElementById("exlvHint").style.display = "";
+    document.getElementById("exlvControls").style.display = "none";
+    document.getElementById("exlvLapRow").style.display = "none";
+    const playBtn = document.getElementById("exlvPlayBtn");
+    if (playBtn) playBtn.textContent = "❚❚";
+    exsimRenderTimeline();
+    exsimDrawClock(preMin);
+    document.getElementById("exsimLive").classList.add("on");
+  }
+  function exsimBackgroundTap(e) {
+    if (!exsimState || exsimState.started) return;
+    if (e.target.closest(".exlv-controls") || e.target.closest(".exlv-lap-row") || e.target.closest(".exlv-close") || e.target.closest(".exlv-timeline")) return;
+    exsimState.started = true;
+    exsimState.running = true;
+    document.getElementById("exlvHint").style.display = "none";
+    document.getElementById("exlvControls").style.display = "flex";
+    document.getElementById("exlvLapRow").style.display = "flex";
+    if (localStorage.getItem("exsimNoiseDefaultOn") === "1") exsimToggleNoise();
+    exsimTimerHandle = setInterval(exsimTick, 1000);
+  }
+  function exsimTick() {
+    if (!exsimState || !exsimState.running) return;
+    exsimState.elapsedSec++;
+    exsimUpdateDisplay();
+    if (exsimState.elapsedSec >= exsimState.totalSec) exsimFinishSession();
+  }
+  function exsimUpdateDisplay() {
+    if (!exsimState) return;
+    exsimDrawClock(exsimState.preMin + exsimState.elapsedSec / 60);
+    const phaseEl = document.getElementById("exlvPhase");
+    if (phaseEl) {
+      phaseEl.textContent = exsimState.elapsedSec < (exsimState.readyMin - exsimState.preMin) * 60 ? "예비령"
+        : exsimState.elapsedSec < (exsimState.startMin - exsimState.preMin) * 60 ? "준비령" : "본령";
+    }
+    document.querySelectorAll("#exlvTimeline .exlv-tl-pt").forEach(el => {
+      el.classList.toggle("done", exsimState.elapsedSec >= Number(el.dataset.at));
+    });
+  }
+  function exsimRenderTimeline() {
+    const el = document.getElementById("exlvTimeline");
+    if (!el || !exsimState) return;
+    const p = exsimState.period;
+    const points = [
+      { time: p.pre, label: "예비령", atSec: 0 },
+      { time: p.ready, label: "준비령", atSec: (exsimState.readyMin - exsimState.preMin) * 60 },
+      { time: p.start, label: "본령", atSec: (exsimState.startMin - exsimState.preMin) * 60 },
+    ];
+    el.innerHTML = points.map(pt =>
+      '<div class="exlv-tl-pt" data-at="' + pt.atSec + '">' +
+        '<button type="button" onclick="exsimScrubTo(' + pt.atSec + ')"><span class="exlv-tl-time">' + pt.time + '</span>' + pt.label + '</button>' +
+      '</div>'
+    ).join("");
+  }
+  function exsimScrubTo(sec) {
+    if (!exsimState) return;
+    exsimState.elapsedSec = Math.max(0, Math.min(exsimState.totalSec, sec));
+    exsimUpdateDisplay();
+  }
+  function exsimScrub(deltaSec) {
+    if (!exsimState || !exsimState.started) return;
+    exsimState.elapsedSec = Math.max(0, Math.min(exsimState.totalSec, exsimState.elapsedSec + deltaSec));
+    exsimUpdateDisplay();
+  }
+  function exsimTogglePause() {
+    if (!exsimState || !exsimState.started) return;
+    exsimState.running = !exsimState.running;
+    const btn = document.getElementById("exlvPlayBtn");
+    if (btn) btn.textContent = exsimState.running ? "❚❚" : "▶";
+  }
+  function exsimRecordLap() {
+    if (!exsimState || !exsimState.started) return;
+    exsimState.laps.push({ sec: exsimState.elapsedSec });
+    showToast("랩타임 기록! (" + exsimState.laps.length + "번째)");
+  }
+
+  // ── 진행 화면: 백색소음(Web Audio API로 생성 — 별도 음원 파일 없이 재생) ──
+  let exsimAudioCtx = null, exsimNoiseSrc = null;
+  function exsimToggleNoise() {
+    if (!exsimState) return;
+    exsimState.noiseOn = !exsimState.noiseOn;
+    const btn = document.getElementById("exlvNoiseBtn");
+    if (exsimState.noiseOn) {
+      exsimStartNoise();
+      if (btn) { btn.textContent = "🔊 백색소음"; btn.classList.add("on"); }
+    } else {
+      exsimStopNoise();
+      if (btn) { btn.textContent = "🔇 백색소음"; btn.classList.remove("on"); }
+    }
+  }
+  function exsimStartNoise() {
+    try {
+      if (!exsimAudioCtx) exsimAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (exsimAudioCtx.state === "suspended") exsimAudioCtx.resume();
+      const bufferSize = 2 * exsimAudioCtx.sampleRate;
+      const buffer = exsimAudioCtx.createBuffer(1, bufferSize, exsimAudioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+      const src = exsimAudioCtx.createBufferSource();
+      src.buffer = buffer; src.loop = true;
+      const gain = exsimAudioCtx.createGain();
+      const vol = Number(localStorage.getItem("exsimNoiseVol") || "15") / 100;
+      gain.gain.value = vol * 0.3;
+      src.connect(gain).connect(exsimAudioCtx.destination);
+      src.start(0);
+      exsimNoiseSrc = src;
+    } catch (e) { console.error(e); }
+  }
+  function exsimStopNoise() {
+    if (exsimNoiseSrc) { try { exsimNoiseSrc.stop(); } catch (e) {} exsimNoiseSrc = null; }
+  }
+
+  // ── 진행 화면: 종료(X 버튼 확인 / 자동 종료) → 종료 요약 화면 ──
+  function exsimRequestClose() {
+    if (!exsimState || !exsimState.started) { exsimCloseLiveOnly(); return; }
+    const wasRunning = exsimState.running;
+    exsimState.running = false;
+    const btn = document.getElementById("exlvPlayBtn");
+    if (btn) btn.textContent = "▶";
+    if (confirm("아직 시험이 끝나지 않았어요!\n시험을 종료하실 건가요?")) {
+      exsimFinishSession();
+    } else if (wasRunning) {
+      exsimState.running = true;
+      if (btn) btn.textContent = "❚❚";
+    }
+  }
+  function exsimCloseLiveOnly() {
+    clearInterval(exsimTimerHandle);
+    exsimStopNoise();
+    document.getElementById("exsimLive").classList.remove("on");
+    exsimState = null;
+  }
+  function exsimFinishSession() {
+    clearInterval(exsimTimerHandle);
+    exsimStopNoise();
+    const state = exsimState;
+    document.getElementById("exsimLive").classList.remove("on");
+    exsimState = null;
+    exsimShowEnd(state);
+  }
+
+  // ── 종료 요약 화면 ──
+  let exsimEndData = null;
+  function exsimShowEnd(state) {
+    exsimEndData = state;
+    document.getElementById("exendSubject").textContent = state.period.periodLabel + " " + state.period.subject;
+    document.getElementById("exendDuration").textContent = formatDur(state.elapsedSec);
+    const bar = document.getElementById("exendLapBar");
+    const table = document.getElementById("exendLapTable");
+    if (!state.laps.length) {
+      bar.innerHTML = "";
+      table.innerHTML = '<div style="text-align:center;color:var(--ink-soft);font-size:0.78rem;padding:10px;">기록된 랩타임이 없어요</div>';
+    } else {
+      bar.innerHTML = state.laps.map(l => '<div class="flag" style="left:' + (l.sec / state.totalSec * 100) + '%"></div>').join("");
+      let prevSec = 0;
+      table.innerHTML = '<div class="exend-lap-table-head"><span>번호</span><span>기록 시각</span><span>간격</span><span>경과</span></div>' +
+        state.laps.map((l, i) => {
+          const gapSec = l.sec - prevSec; prevSec = l.sec;
+          return '<div class="exend-lap-table-row"><span>' + (i + 1) + '</span><span>' + minToHM(state.preMin + l.sec / 60) + '</span><span>+' + formatDur(gapSec) + '</span><span>' + formatDur(l.sec) + '</span></div>';
+        }).join("");
+    }
+    document.getElementById("exsimEnd").classList.add("on");
+  }
+  function exsimCloseEnd() {
+    document.getElementById("exsimEnd").classList.remove("on");
+    exsimEndData = null;
+  }
+  function exsimSaveSession() {
+    if (!exsimEndData) return;
+    const state = exsimEndData;
+    const list = exsimLoadHistory();
+    list.unshift({
+      periodLabel: state.period.periodLabel,
+      subject: state.period.subject,
+      date: getLocalDateKey(),
+      durationSec: state.elapsedSec,
+      laps: state.laps.map(l => l.sec),
+    });
+    localStorage.setItem(exsimHistoryKey(), JSON.stringify(list.slice(0, 100)));
+    showToast("기록이 저장됐어요!");
+    exsimCloseEnd();
+    exsimRenderHistory();
+  }
+
   function formatAiAnswer(text) {
     function inline(s) {
       s = escapeHtml(s);
