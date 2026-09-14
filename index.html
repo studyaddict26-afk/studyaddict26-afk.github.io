@@ -8632,9 +8632,6 @@
   // 무관하게 동일). 탐구/제2외국어의 문항수·시험시간만 22개정 기준(과목당 25문항 40분)으로 바뀐
   // 값 — 이 부분의 정확한 종 시각은 아직 평가원 공식 발표 전이라 같은 간격 규칙(예비령→준비령
   // 5분, 준비령→본령 5분)을 그대로 적용해 추정했다.
-  // "탐구 연속"은 별도로 계산한 게 아니라, 사회탐구와 정확히 같은 예비령/준비령/본령으로 시작해서
-  // (사회탐구 40분 + 답안지 교체 2분 + 과학탐구 40분)만큼 이어서 진행하는 것 — 정확히 "사탐 치고
-  // 바로 이어서 과탐 치는" 것과 같다.
   const EXAM_PERIODS = [
     { id: "kor",     periodLabel: "1교시", subject: "국어",          pre: "08:25", ready: "08:35", start: "08:40", end: "10:00", count: 45, points: 100 },
     { id: "math",    periodLabel: "2교시", subject: "수학",          pre: "10:20", ready: "10:25", start: "10:30", end: "12:10", count: 30, points: 100 },
@@ -8642,11 +8639,10 @@
     { id: "korhist", periodLabel: "4교시", subject: "한국사",        pre: "14:40", ready: "14:45", start: "14:50", end: "15:20", count: 20, points: 50 },
     { id: "social",  periodLabel: "4교시", subject: "사회탐구",       pre: "15:25", ready: "15:30", start: "15:35", end: "16:15", count: 25, points: 50 },
     { id: "science", periodLabel: "4교시", subject: "과학탐구",       pre: "16:20", ready: "16:25", start: "16:30", end: "17:10", count: 25, points: 50 },
-    { id: "tamgu2",  periodLabel: "4교시", subject: "탐구 연속",      pre: "15:25", ready: "15:30", start: "15:35", end: "16:57", count: 50, points: 100 },
     { id: "lang2",   periodLabel: "5교시", subject: "제2외국어·한문", pre: "17:20", ready: "17:30", start: "17:35", end: "18:05", count: 20, points: 50 },
   ];
-  // "전과목" 연속 진행 순서 — 탐구는 개별(social/science) 말고 이어서 치는 tamgu2로 한 번에 커버.
-  const EXAM_ALL_SUBJECTS_QUEUE = ["kor", "math", "eng", "korhist", "tamgu2", "lang2"];
+  // "전과목" 연속 진행 순서 — 탐구는 사회탐구 → 과학탐구 순서로 따로 이어서 진행.
+  const EXAM_ALL_SUBJECTS_QUEUE = ["kor", "math", "eng", "korhist", "social", "science", "lang2"];
   function exsimAllSubjectsInfo() {
     const periods = EXAM_ALL_SUBJECTS_QUEUE.map(id => EXAM_PERIODS.find(p => p.id === id));
     const totalMin = hmToMin(periods[periods.length - 1].end) - hmToMin(periods[0].pre);
