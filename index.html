@@ -1280,18 +1280,21 @@
   }
   /* ── 수능 시뮬레이션 상단 버튼(과목 선택/소음 설정) — 늘 펼쳐져 있던 교시 탭을 없애고,
      "시험 과목 선택하기"를 누르면 팝업으로 고르게 해서 기본 화면을 단순하게 유지한다. ── */
-  .exsim-top-btns { display: flex; flex-direction: column; gap: 10px; }
+  .exsim-top-btns { display: flex; gap: 10px; }
   .exsim-top-btn {
-    display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+    flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; text-align: left;
     font-family: inherit; background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
-    padding: 14px 16px; cursor: pointer; transition: border-color 0.15s, background 0.15s;
+    padding: 14px 14px; cursor: pointer; transition: border-color 0.15s, background 0.15s;
   }
   .exsim-top-btn:hover { border-color: var(--green); background: var(--green-soft); }
   .exsim-top-btn-ico { flex: none; font-size: 1.2rem; }
-  .exsim-top-btn-text { flex: 1; display: flex; flex-direction: column; gap: 2px; }
-  .exsim-top-btn-label { font-size: 0.88rem; font-weight: 800; color: var(--ink); }
-  .exsim-top-btn-sub { font-size: 0.74rem; color: var(--green-deep); font-weight: 700; }
+  .exsim-top-btn-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .exsim-top-btn-label { font-size: 0.86rem; font-weight: 800; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .exsim-top-btn-sub { font-size: 0.72rem; color: var(--green-deep); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .exsim-top-btn-arrow { flex: none; font-size: 1.05rem; color: var(--ink-soft); }
+  @media (max-width: 480px) {
+    .exsim-top-btns { flex-direction: column; }
+  }
   .exsim-picker-overlay {
     display: none; position: fixed; inset: 0; z-index: 320; background: rgba(23,24,26,0.55);
     align-items: center; justify-content: center; padding: 20px;
