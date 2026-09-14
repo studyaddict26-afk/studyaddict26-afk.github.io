@@ -1252,9 +1252,7 @@
   .exsim-history-subject { font-size: 0.86rem; font-weight: 700; color: var(--ink); }
   .exsim-history-date { font-size: 0.72rem; color: var(--ink-soft); margin-top: 2px; }
   .exsim-history-duration { font-size: 0.8rem; font-weight: 700; color: var(--green-deep); flex: none; }
-  .exsim-noise-panel { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; }
-  .exsim-noise-panel-head { display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; font-weight: 800; color: var(--ink); }
-  .exsim-noise-panel-close { background: none; border: none; font-size: 1.3rem; color: var(--ink-soft); cursor: pointer; line-height: 1; }
+  .exsim-noise-panel-body { padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; }
   .exsim-noise-desc { font-size: 0.78rem; color: var(--ink-soft); line-height: 1.6; }
   .exsim-noise-toggle-row, .exsim-noise-vol-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.84rem; font-weight: 600; color: var(--ink); }
   .exsim-noise-vol-row input[type="range"] { flex: 1 1 auto; margin-left: 16px; accent-color: var(--green-deep); }
@@ -3898,6 +3896,27 @@
   </div>
 </div>
 
+<!-- ═══ 시험 시뮬레이션: 시험장 소음 설정 팝업 ═══ -->
+<div class="exsim-picker-overlay" id="exsimNoiseOverlay" onclick="if(event.target===this) exsimCloseNoisePanel()">
+  <div class="exsim-picker-box exsim-noise-box">
+    <div class="exsim-picker-head">
+      <span>🔊 시험장 소음 설정</span>
+      <button type="button" class="exsim-picker-close" onclick="exsimCloseNoisePanel()" aria-label="닫기">×</button>
+    </div>
+    <div class="exsim-noise-panel-body">
+      <p class="exsim-noise-desc">시험 중 백색소음을 켜서 시험장 분위기에 익숙해지는 연습을 할 수 있어요. (실제 안내방송·기침소리 등은 준비중이라 우선 백색소음만 제공돼요)</p>
+      <label class="exsim-noise-toggle-row">
+        <span>기본으로 켜기</span>
+        <input type="checkbox" id="exsimNoiseDefaultOn" onchange="exsimSaveNoisePref()">
+      </label>
+      <label class="exsim-noise-vol-row">
+        <span>볼륨</span>
+        <input type="range" id="exsimNoiseVol" min="0" max="100" value="15" oninput="exsimSaveNoisePref()">
+      </label>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ 학습 상담 후기 확대 보기 ═══ -->
 <div class="rv-lightbox" id="rvLightbox" onclick="closeReviewLightbox()">
   <img id="rvLightboxImg" src="" alt="학습 상담 후기">
@@ -4536,7 +4555,7 @@
           <span class="exsim-top-btn-text"><span class="exsim-top-btn-label">시험 과목 선택하기</span><span class="exsim-top-btn-sub" id="exsimTopSelectedLabel">전과목</span></span>
           <span class="exsim-top-btn-arrow">›</span>
         </button>
-        <button type="button" class="exsim-top-btn" onclick="exsimOpenNoisePanel('suneung')">
+        <button type="button" class="exsim-top-btn" onclick="exsimOpenNoisePanel()">
           <span class="exsim-top-btn-ico">🔊</span>
           <span class="exsim-top-btn-text"><span class="exsim-top-btn-label">시험장 소음 설정하기</span></span>
           <span class="exsim-top-btn-arrow">›</span>
@@ -4544,22 +4563,6 @@
       </div>
 
       <div class="exsim-selected-card" id="exsimSelectedCard"></div>
-
-      <div class="exsim-noise-panel" id="exsimNoisePanel-suneung" style="display:none;">
-        <div class="exsim-noise-panel-head">
-          <span>🔊 시험장 소음 설정</span>
-          <button type="button" class="exsim-noise-panel-close" onclick="exsimOpenNoisePanel('suneung')" aria-label="닫기">×</button>
-        </div>
-        <p class="exsim-noise-desc">시험 중 백색소음을 켜서 시험장 분위기에 익숙해지는 연습을 할 수 있어요. (실제 안내방송·기침소리 등은 준비중이라 우선 백색소음만 제공돼요)</p>
-        <label class="exsim-noise-toggle-row">
-          <span>기본으로 켜기</span>
-          <input type="checkbox" id="exsimNoiseDefaultOn-suneung" onchange="exsimSaveNoisePref('suneung')">
-        </label>
-        <label class="exsim-noise-vol-row">
-          <span>볼륨</span>
-          <input type="range" id="exsimNoiseVol-suneung" min="0" max="100" value="15" oninput="exsimSaveNoisePref('suneung')">
-        </label>
-      </div>
     </div>
   </section>
 
@@ -4571,6 +4574,14 @@
       <div class="split"></div>
     </div>
     <div class="exsim-wrap">
+      <div class="exsim-top-btns">
+        <button type="button" class="exsim-top-btn" onclick="exsimOpenNoisePanel()">
+          <span class="exsim-top-btn-ico">🔊</span>
+          <span class="exsim-top-btn-text"><span class="exsim-top-btn-label">시험장 소음 설정하기</span></span>
+          <span class="exsim-top-btn-arrow">›</span>
+        </button>
+      </div>
+
       <div class="exsim-naeshin-card">
         <div class="mex-field">
           <label>과목명</label>
@@ -4581,25 +4592,6 @@
           <input type="number" id="exsimNaeshinMinutes" min="10" max="180" value="50">
         </div>
         <button type="button" class="exsim-start-btn exsim-naeshin-start-btn" onclick="exsimStartNaeshin()">시험 시작</button>
-      </div>
-
-      <div class="exsim-links-row">
-        <button type="button" class="exsim-link-btn" onclick="exsimOpenNoisePanel('naeshin')">🔊 시험장 소음 설정하기</button>
-      </div>
-      <div class="exsim-noise-panel" id="exsimNoisePanel-naeshin" style="display:none;">
-        <div class="exsim-noise-panel-head">
-          <span>🔊 시험장 소음 설정</span>
-          <button type="button" class="exsim-noise-panel-close" onclick="exsimOpenNoisePanel('naeshin')" aria-label="닫기">×</button>
-        </div>
-        <p class="exsim-noise-desc">시험 중 백색소음을 켜서 시험장 분위기에 익숙해지는 연습을 할 수 있어요. (실제 안내방송·기침소리 등은 준비중이라 우선 백색소음만 제공돼요)</p>
-        <label class="exsim-noise-toggle-row">
-          <span>기본으로 켜기</span>
-          <input type="checkbox" id="exsimNoiseDefaultOn-naeshin" onchange="exsimSaveNoisePref('naeshin')">
-        </label>
-        <label class="exsim-noise-vol-row">
-          <span>볼륨</span>
-          <input type="range" id="exsimNoiseVol-naeshin" min="0" max="100" value="15" oninput="exsimSaveNoisePref('naeshin')">
-        </label>
       </div>
     </div>
   </section>
@@ -8652,14 +8644,12 @@
   function initExamSuneung() {
     if (!exsimSelectedPeriodId) exsimSelectedPeriodId = "all";
     exsimRenderSelectedCard();
-    const noise = document.getElementById("exsimNoisePanel-suneung");
-    if (noise) noise.style.display = "none";
+    exsimCloseNoisePanel();
   }
   function initExamNaeshin() {
     document.getElementById("exsimNaeshinSubject").value = "";
     document.getElementById("exsimNaeshinMinutes").value = "50";
-    const noise = document.getElementById("exsimNoisePanel-naeshin");
-    if (noise) noise.style.display = "none";
+    exsimCloseNoisePanel();
   }
   // 내신은 국가 공식 시간표가 없어 예비령/준비령 없이, 지금 이 순간을 가상 시작 시각으로 삼아
   // 바로 "진행 중" 상태로 시작한다(exsimIsSimpleMode로 판별해 타임라인/문구만 간소화).
@@ -8758,23 +8748,22 @@
     exsimOpen(exsimRunQueue[0]);
   }
 
-  // ── 시험장 소음 설정(백색소음 볼륨/기본 On 여부) — 수능/내신 페이지 각각에 버튼이 있지만,
-  // localStorage 키는 공통이라 어느 쪽에서 바꾸든 같은 설정을 공유한다.
-  function exsimOpenNoisePanel(page) {
-    const el = document.getElementById("exsimNoisePanel-" + page);
-    if (!el) return;
-    const show = el.style.display === "none";
-    el.style.display = show ? "flex" : "none";
-    if (show) {
-      const cb = document.getElementById("exsimNoiseDefaultOn-" + page);
-      const rg = document.getElementById("exsimNoiseVol-" + page);
-      if (cb) cb.checked = localStorage.getItem("exsimNoiseDefaultOn") === "1";
-      if (rg) rg.value = localStorage.getItem("exsimNoiseVol") || "15";
-    }
+  // ── 시험장 소음 설정(백색소음 볼륨/기본 On 여부) — 수능/내신 페이지 어디서 열어도 같은
+  // 팝업 하나를 공유한다(설정값도 localStorage로 공통).
+  function exsimOpenNoisePanel() {
+    const cb = document.getElementById("exsimNoiseDefaultOn");
+    const rg = document.getElementById("exsimNoiseVol");
+    if (cb) cb.checked = localStorage.getItem("exsimNoiseDefaultOn") === "1";
+    if (rg) rg.value = localStorage.getItem("exsimNoiseVol") || "15";
+    document.getElementById("exsimNoiseOverlay").classList.add("on");
   }
-  function exsimSaveNoisePref(page) {
-    const cb = document.getElementById("exsimNoiseDefaultOn-" + page);
-    const rg = document.getElementById("exsimNoiseVol-" + page);
+  function exsimCloseNoisePanel() {
+    const el = document.getElementById("exsimNoiseOverlay");
+    if (el) el.classList.remove("on");
+  }
+  function exsimSaveNoisePref() {
+    const cb = document.getElementById("exsimNoiseDefaultOn");
+    const rg = document.getElementById("exsimNoiseVol");
     if (cb) localStorage.setItem("exsimNoiseDefaultOn", cb.checked ? "1" : "0");
     if (rg) localStorage.setItem("exsimNoiseVol", rg.value);
   }
