@@ -1260,6 +1260,9 @@
   .exsim-noise-vol-inline { display: flex; align-items: center; gap: 10px; font-size: 0.84rem; font-weight: 700; color: var(--ink); flex: none; white-space: nowrap; }
   .exsim-noise-vol-inline input[type="range"] { width: 90px; accent-color: var(--green-deep); }
   .exsim-noise-type-list { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px 12px; }
+  .exsim-noise-divider { height: 1px; background: var(--line); margin: 2px 0; }
+  .exsim-noise-done-btn { width: 100%; background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 12px; font-family: inherit; font-size: 0.88rem; font-weight: 800; cursor: pointer; }
+  .exsim-noise-hint { font-size: 0.7rem; color: var(--ink-soft); text-align: center; line-height: 1.5; margin: 0; }
   .exsim-noise-type-row { display: flex; align-items: center; gap: 10px; padding: 9px 2px; font-size: 0.86rem; font-weight: 600; color: var(--ink); cursor: pointer; }
   .exsim-noise-type-row input[type="checkbox"] { accent-color: var(--green-deep); width: 17px; height: 17px; }
   .exsim-hub-buttons { display: flex; gap: 12px; }
@@ -3923,6 +3926,9 @@
         </label>
       </div>
       <div class="exsim-noise-type-list" id="exsimNoiseTypeList"></div>
+      <div class="exsim-noise-divider"></div>
+      <button type="button" class="exsim-noise-done-btn" onclick="exsimCloseNoisePanel()">선택 완료</button>
+      <p class="exsim-noise-hint">*소음 기능을 사용할 때는 양쪽 이어폰을 모두 착용하는 것을 권장해요</p>
     </div>
   </div>
 </div>
