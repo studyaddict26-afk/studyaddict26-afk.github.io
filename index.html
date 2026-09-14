@@ -7436,7 +7436,8 @@
   }
 
   // ── 공부중독 소개 캐러셀 + 확대 보기 (여러 곳에 재사용 가능한 팩토리) ──
-  function makeWhoCarousel(rootId, boxId, stageId, dotsId, closeFnName, dotGoFnName, lbGoFnName) {
+  function makeWhoCarousel(rootId, boxId, stageId, dotsId, closeFnName, dotGoFnName, lbGoFnName, opts) {
+    opts = opts || {};
     const slides = document.querySelectorAll("#" + rootId + " .wc-slide");
     const dots = document.querySelectorAll("#" + rootId + " .wc-dot");
     if (!slides.length) return;
@@ -7462,9 +7463,19 @@
 
     // ── 확대 보기 ──
     function paint() {
-      // 캐러셀 원본과 동일한 크기로 복제한 뒤 통째로 확대
-      const w = track.offsetWidth || 264;
-      const h = track.offsetHeight || 300;
+      // 캐러셀 원본과 동일한 크기로 복제한 뒤 통째로 확대 — 다만 원본 썸네일 박스 자체가
+      // (시간표처럼) 아주 작게 디자인된 경우엔, 그 작은 박스 크기를 기준으로 확대해봤자
+      // 여전히 작고 흐릿하게 나온다. useNaturalSize가 켜져 있으면 썸네일 박스 크기 대신
+      // 사진의 실제 원본 비율/해상도를 기준으로 확대 기준 크기를 잡는다.
+      let w = track.offsetWidth || 264;
+      let h = track.offsetHeight || 300;
+      if (opts.useNaturalSize) {
+        const img = slides[idx].querySelector("img");
+        if (img && img.naturalWidth && img.naturalHeight) {
+          h = Math.min(img.naturalHeight, 760);
+          w = h * (img.naturalWidth / img.naturalHeight);
+        }
+      }
       stage.style.width = w + "px";
       stage.style.height = h + "px";
       stage.innerHTML = "";
@@ -7476,7 +7487,7 @@
     function fit(w, h) {
       const availW = window.innerWidth - 80;
       const availH = window.innerHeight - 170;
-      const scale = Math.min(availW / w, availH / h, 3);
+      const scale = Math.min(availW / w, availH / h, opts.maxScale || 3);
       stage.style.transform = "scale(" + scale + ")";
       // 확대된 실제 크기만큼 자리를 차지하도록 여백 보정
       stage.style.margin = ((h * scale - h) / 2) + "px " + ((w * scale - w) / 2) + "px";
@@ -7518,7 +7529,7 @@
   }
   makeWhoCarousel("whoCarousel", "wcLightbox", "wclStage", "wclDots", "wclClose", "wcGo", "wclGo");
   makeWhoCarousel("whoCarousel2", "wcLightbox2", "wclStage2", "wclDots2", "wclClose2", "wcGo2", "wclGo2");
-  makeWhoCarousel("scheduleCarousel", "wcLightbox3", "wclStage3", "wclDots3", "wclClose3", "wcGo3", "wclGo3");
+  makeWhoCarousel("scheduleCarousel", "wcLightbox3", "wclStage3", "wclDots3", "wclClose3", "wcGo3", "wclGo3", { useNaturalSize: true });
 
   // ── 사이드바 ──
   const sidebar = document.getElementById("sidebar");
