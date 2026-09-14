@@ -2790,22 +2790,6 @@
   .admin-link-card-title { font-size: 0.92rem; font-weight: 800; color: var(--ink); }
   .admin-link-card-url { font-size: 0.76rem; color: var(--ink-soft); margin-top: 2px; }
 
-  .admin-listening-upload {
-    border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 20px 22px;
-    display: flex; flex-direction: column; gap: 12px; max-width: 420px; margin-bottom: 24px;
-  }
-  .admin-listening-list { display: flex; flex-direction: column; gap: 10px; max-width: 480px; }
-  .admin-listening-row {
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px;
-  }
-  .admin-listening-row-title { font-size: 0.88rem; font-weight: 700; color: var(--ink); }
-  .admin-listening-row-meta { font-size: 0.72rem; color: var(--ink-soft); margin-top: 2px; }
-  .admin-listening-del-btn {
-    flex: none; background: #FBEAEA; color: #A32D2D; border: 1px solid #F0CFCF; border-radius: 8px;
-    padding: 7px 12px; font-family: inherit; font-size: 0.76rem; font-weight: 700; cursor: pointer;
-  }
-  .admin-listening-del-btn:hover { background: #F5D9D9; }
 
   .admin-home-wrap { text-align: center; max-width: 1240px; margin: 22px auto 0 auto; }
   .admin-home-band {
@@ -3875,6 +3859,7 @@
 <!-- ═══ 시험 시뮬레이션: 진행 화면 ═══ -->
 <div class="exlv" id="exsimLive" onclick="exsimBackgroundTap(event)">
   <audio id="exlvListeningAudio" style="display:none"></audio>
+  <audio id="exlvEffectAudio" style="display:none"></audio>
   <button type="button" class="exlv-close" onclick="event.stopPropagation();exsimRequestClose()" aria-label="닫기">&times;</button>
   <div class="exlv-badge" id="exlvBadge">1교시</div>
   <div class="exlv-phase" id="exlvPhase">예비령</div>
@@ -3900,7 +3885,7 @@
     </button>
   </div>
   <div class="exlv-lap-row" id="exlvLapRow" style="display:none;">
-    <button type="button" class="exlv-noise-btn" id="exlvNoiseBtn" onclick="event.stopPropagation();exsimToggleNoise()">🔇 시험장 소음</button>
+    <button type="button" class="exlv-noise-btn" id="exlvNoiseBtn" onclick="event.stopPropagation();exsimToggleNoise()">🔇 시험장 소음 켜기</button>
     <button type="button" class="exlv-lap-btn" onclick="event.stopPropagation();exsimRecordLap()">🚩 랩타임 기록</button>
   </div>
   <div class="exlv-timeline" id="exlvTimeline"></div>
@@ -5885,14 +5870,6 @@
             </div>
           </div>
 
-          <div class="admin-nav-group">
-            <div class="admin-nav-group-title">시험 시뮬레이션</div>
-            <div class="admin-nav-group-items">
-              <button class="admin-nav-item" type="button" onclick="showAdminPanel('listening', this)">
-                <span class="admin-nav-ico">🎧</span> 영어 듣기 음원 관리
-              </button>
-            </div>
-          </div>
         </nav>
         <div class="admin-sidebar-bottom">
           <button type="button" class="admin-side-logout" onclick="adminLogout()">로그아웃</button>
@@ -5977,32 +5954,6 @@
                 <div class="admin-link-card-url">studyaddict26-afk.github.io/#form</div>
               </div>
             </a>
-          </div>
-        </div>
-
-        <div class="admin-panel" id="adminPanelListening" style="display:none;">
-          <div class="admin-page-head">
-            <span class="admin-page-ico">🎧</span>
-            <div>
-              <h2>영어 듣기 음원 관리</h2>
-              <div class="split"></div>
-              <p class="admin-page-sub">여기 올린 음원은 학생들이 '수능 시뮬레이션 › 영어' 화면에서 바로 골라 쓸 수 있어요.</p>
-            </div>
-          </div>
-          <div class="admin-listening-upload">
-            <div class="apply-field">
-              <label>음원 이름</label>
-              <input type="text" id="listeningUploadTitle" placeholder="예: 9월 모의평가 듣기">
-            </div>
-            <div class="apply-field">
-              <label>음원 파일</label>
-              <input type="file" id="listeningUploadFile" accept="audio/*">
-            </div>
-            <button type="button" class="apply-submit-btn" id="listeningUploadBtn" onclick="adminUploadListeningAudio()">업로드</button>
-            <div class="apply-status-msg" id="listeningUploadMsg"></div>
-          </div>
-          <div class="admin-listening-list" id="adminListeningList">
-            <div class="reports-empty">불러오는 중...</div>
           </div>
         </div>
 
@@ -6309,7 +6260,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 <script>
   const firebaseConfig = {
     apiKey: "AIzaSyDrzz2Qe65JRcb9DyUStIO3TqUNxXcIrbg",
@@ -6322,7 +6272,6 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
   const auth = firebase.auth();
-  const storage = firebase.storage();
 </script>
 
 <script>
@@ -8856,35 +8805,27 @@
       '</div>' +
       '<button type="button" class="exsim-start-btn" onclick="exsimStartSelectedQueue()">시험 시작</button>';
   }
-  // ── 영어 듣기 음원: 관리자가 미리 올려둔 목록에서 학생이 골라 쓰는 방식(로컬 파일 첨부 아님) ──
-  let exsimListeningAudios = null; // null=아직 안 불러옴, []=불러왔지만 없음
+  // ── 영어 듣기 음원: Firebase Storage는 유료(Blaze) 요금제부터라, 대신 다른 사진/영상처럼
+  // 파일을 프로젝트에 직접 넣고 아래 목록에 등록하는 방식을 쓴다(관리자 업로드 UI 없음 —
+  // 새 음원이 생기면 파일을 받아서 이 배열에 한 줄 추가 + 파일 커밋으로 반영).
+  const LISTENING_AUDIOS = [
+    // { id: "202609-mock", title: "9월 모의평가 듣기", url: "listening/202609-mock.mp3" },
+  ];
   let exsimSelectedListeningId = "";
   let exsimListeningFileName = null;
   let exsimListeningObjectUrl = null;
-  function exsimLoadListeningAudios() {
-    if (exsimListeningAudios !== null) return;
-    exsimListeningAudios = []; // 중복 로드 방지(로딩 중 표시)
-    db.collection("listeningAudios").orderBy("uploadedAt", "desc").get()
-      .then(snap => {
-        exsimListeningAudios = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
-        exsimRenderSelectedCard();
-      })
-      .catch(err => { console.error(err); exsimListeningAudios = []; });
-  }
   function exsimListeningRowHtml() {
-    if (exsimListeningAudios === null) { exsimLoadListeningAudios(); }
-    if (!exsimListeningAudios || !exsimListeningAudios.length) {
-      return '<div class="exsim-selected-row"><span class="ico">🎧</span><span class="lbl">영어 듣기 음원</span><span class="val" style="color:var(--ink-soft);font-weight:600;">' +
-        (exsimListeningAudios === null ? '불러오는 중…' : '등록된 음원 없음') + '</span></div>';
+    if (!LISTENING_AUDIOS.length) {
+      return '<div class="exsim-selected-row"><span class="ico">🎧</span><span class="lbl">영어 듣기 음원</span><span class="val" style="color:var(--ink-soft);font-weight:600;">등록된 음원 없음</span></div>';
     }
-    const options = '<option value="">선택 안 함</option>' + exsimListeningAudios.map(a =>
+    const options = '<option value="">선택 안 함</option>' + LISTENING_AUDIOS.map(a =>
       '<option value="' + a.id + '"' + (a.id === exsimSelectedListeningId ? ' selected' : '') + '>' + escapeHtml(a.title) + '</option>'
     ).join("");
     return '<div class="exsim-selected-row"><span class="ico">🎧</span><span class="lbl">영어 듣기 음원</span><span class="val"><select class="exsim-listening-select" onchange="exsimSelectListeningAudio(this.value)">' + options + '</select></span></div>';
   }
   function exsimSelectListeningAudio(id) {
     exsimSelectedListeningId = id;
-    const audio = (exsimListeningAudios || []).find(a => a.id === id);
+    const audio = LISTENING_AUDIOS.find(a => a.id === id);
     exsimListeningObjectUrl = audio ? audio.url : null;
     exsimListeningFileName = audio ? audio.title : null;
   }
@@ -9039,6 +8980,8 @@
     document.getElementById("exlvLapRow").style.display = "none";
     const playBtn = document.getElementById("exlvPlayBtn");
     if (playBtn) playBtn.textContent = "❚❚";
+    const noiseBtn = document.getElementById("exlvNoiseBtn");
+    if (noiseBtn) { noiseBtn.textContent = "🔇 시험장 소음 켜기"; noiseBtn.classList.remove("on"); }
     exsimRenderTimeline();
     exsimDrawClock(preMin);
     document.getElementById("exsimLive").classList.add("on");
@@ -9138,10 +9081,10 @@
     const btn = document.getElementById("exlvNoiseBtn");
     if (exsimState.noiseOn) {
       exsimStartNoise();
-      if (btn) { btn.textContent = "🔊 시험장 소음"; btn.classList.add("on"); }
+      if (btn) { btn.textContent = "🔊 시험장 소음 끄기"; btn.classList.add("on"); }
     } else {
       exsimStopNoise();
-      if (btn) { btn.textContent = "🔇 시험장 소음"; btn.classList.remove("on"); }
+      if (btn) { btn.textContent = "🔇 시험장 소음 켜기"; btn.classList.remove("on"); }
     }
   }
   function exsimStartNoise() {
@@ -9180,7 +9123,31 @@
       exsimScheduleEffectNoise(effectTypes);
     }, gap);
   }
+  // 관리자가 실제 효과음 mp3(기침, 의자 끌기 소리 등)를 영어 듣기 음원과 같은 방식으로
+  // 프로젝트에 넣어주면 이 배열에 파일 경로를 등록한다 — 등록된 종류는 진짜 소리로,
+  // 아직 비어있는 종류는 아래 exsimPlaySynthEffectBurst()로 합성해서 흉내낸 소리로 재생된다.
+  const NOISE_EFFECT_FILES = {
+    cough: [],
+    sniffle: [],
+    legshake: [],
+    chairdrag: [],
+    desk: [],
+  };
   function exsimPlayEffectBurst(type) {
+    const files = NOISE_EFFECT_FILES[type];
+    if (files && files.length) {
+      const url = files[Math.floor(Math.random() * files.length)];
+      const audio = document.getElementById("exlvEffectAudio");
+      if (audio) {
+        audio.src = url;
+        audio.volume = Number(localStorage.getItem("exsimNoiseVol") || "15") / 100;
+        audio.play().catch(function () {});
+        return;
+      }
+    }
+    exsimPlaySynthEffectBurst(type);
+  }
+  function exsimPlaySynthEffectBurst(type) {
     if (!exsimAudioCtx) return;
     try {
       const durMap = { cough: 0.35, sniffle: 0.25, legshake: 0.6, chairdrag: 0.8, desk: 0.15 };
@@ -10015,76 +9982,6 @@
     db.collection("stats").doc("public").set({ studentCount: approvedCount }, { merge: true })
       .catch(err => console.error(err));
   }
-  // ── 영어 듣기 음원 관리(관리자) — Storage에 파일 업로드 후, Firestore에 제목/URL만 기록.
-  // 학생 쪽(exsimListeningAudios)은 이 컬렉션을 읽기 전용으로 불러와 드롭다운으로 보여준다.
-  function renderAdminListeningList() {
-    const wrap = document.getElementById("adminListeningList");
-    if (!wrap) return;
-    wrap.innerHTML = '<div class="reports-empty">불러오는 중...</div>';
-    db.collection("listeningAudios").orderBy("uploadedAt", "desc").get()
-      .then(snap => {
-        if (snap.empty) {
-          wrap.innerHTML = '<div class="reports-empty">아직 올린 음원이 없어요.</div>';
-          return;
-        }
-        wrap.innerHTML = snap.docs.map(doc => {
-          const d = doc.data();
-          const sizeMb = d.sizeBytes ? (d.sizeBytes / 1024 / 1024).toFixed(1) + "MB" : "";
-          return '<div class="admin-listening-row">' +
-            '<div><div class="admin-listening-row-title">' + escapeHtml(d.title || "(제목 없음)") + '</div>' +
-            '<div class="admin-listening-row-meta">' + escapeHtml(d.fileName || "") + (sizeMb ? " · " + sizeMb : "") + '</div></div>' +
-            '<button type="button" class="admin-listening-del-btn" onclick="adminDeleteListeningAudio(\'' + doc.id + '\',\'' + (d.storagePath || "").replace(/'/g, "\\'") + '\')">삭제</button>' +
-          '</div>';
-        }).join("");
-      })
-      .catch(err => {
-        console.error(err);
-        wrap.innerHTML = '<div class="reports-empty">불러오지 못했어요.</div>';
-      });
-  }
-  function adminUploadListeningAudio() {
-    const titleInput = document.getElementById("listeningUploadTitle");
-    const fileInput = document.getElementById("listeningUploadFile");
-    const btn = document.getElementById("listeningUploadBtn");
-    const msg = document.getElementById("listeningUploadMsg");
-    const title = titleInput.value.trim();
-    const file = fileInput.files && fileInput.files[0];
-    if (!title) { msg.textContent = "음원 이름을 입력해주세요."; msg.className = "apply-status-msg error"; return; }
-    if (!file) { msg.textContent = "파일을 선택해주세요."; msg.className = "apply-status-msg error"; return; }
-    btn.disabled = true;
-    msg.textContent = "업로드 중...";
-    msg.className = "apply-status-msg";
-    const storagePath = "listening/" + Date.now() + "_" + file.name;
-    const ref = storage.ref(storagePath);
-    ref.put(file)
-      .then(() => ref.getDownloadURL())
-      .then(url => db.collection("listeningAudios").add({
-        title: title, url: url, storagePath: storagePath, fileName: file.name,
-        sizeBytes: file.size, uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      }))
-      .then(() => {
-        msg.textContent = "업로드 완료!";
-        msg.className = "apply-status-msg success";
-        titleInput.value = "";
-        fileInput.value = "";
-        renderAdminListeningList();
-      })
-      .catch(err => {
-        console.error(err);
-        msg.textContent = "업로드 실패: " + err.message;
-        msg.className = "apply-status-msg error";
-      })
-      .finally(() => { btn.disabled = false; });
-  }
-  function adminDeleteListeningAudio(id, storagePath) {
-    if (!confirm("이 음원을 삭제할까요? 학생들이 더 이상 선택할 수 없게 돼요.")) return;
-    const tasks = [db.collection("listeningAudios").doc(id).delete()];
-    if (storagePath) tasks.push(storage.ref(storagePath).delete().catch(err => console.error(err)));
-    Promise.all(tasks).then(renderAdminListeningList).catch(err => {
-      console.error(err);
-      alert("삭제 중 문제가 발생했어요: " + err.message);
-    });
-  }
 
   function renderStudents() {
     const body = document.getElementById("adminStudentsBody");
@@ -10344,12 +10241,10 @@
     document.getElementById("adminPanelForms").style.display = name === "forms" ? "block" : "none";
     document.getElementById("adminPanelStudents").style.display = name === "students" ? "block" : "none";
     document.getElementById("adminPanelLinks").style.display = name === "links" ? "block" : "none";
-    document.getElementById("adminPanelListening").style.display = name === "listening" ? "block" : "none";
     if (name === "schedule") renderAdminSchedule();
     if (name === "availability") renderAvailability();
     if (name === "forms") renderForms();
     if (name === "students") renderStudents();
-    if (name === "listening") renderAdminListeningList();
   }
   function renderAdminTable() {
     const body = document.getElementById("adminTableBody");
