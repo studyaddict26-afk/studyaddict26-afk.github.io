@@ -1223,13 +1223,6 @@
   .mex-dday-num { font-size: 1.5rem; font-weight: 800; color: var(--green-deep); flex: none; }
   .mex-dday-bar { height: 4px; border-radius: 2px; background: var(--line); margin-top: 10px; overflow: hidden; }
   .mex-dday-bar-fill { height: 100%; background: var(--green-deep); }
-  .exsim-period-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
-  .exsim-period-tab-btn {
-    flex: none; font-family: inherit; font-size: 0.82rem; font-weight: 700; color: var(--ink-soft);
-    background: var(--cream); border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px;
-    cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s, border-color 0.15s;
-  }
-  .exsim-period-tab-btn.on { background: var(--green); color: #fff; border-color: var(--green); }
   .exsim-selected-card {
     border: 1px solid var(--line); border-radius: 14px; background: var(--paper); padding: 20px 22px;
     display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap;
@@ -1285,6 +1278,38 @@
     border-radius: 999px; padding: 5px 12px; cursor: pointer; max-width: 160px; overflow: hidden;
     text-overflow: ellipsis; white-space: nowrap; display: inline-block; vertical-align: middle;
   }
+  /* ── 수능 시뮬레이션 상단 버튼(과목 선택/소음 설정) — 늘 펼쳐져 있던 교시 탭을 없애고,
+     "시험 과목 선택하기"를 누르면 팝업으로 고르게 해서 기본 화면을 단순하게 유지한다. ── */
+  .exsim-top-btns { display: flex; flex-direction: column; gap: 10px; }
+  .exsim-top-btn {
+    display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+    font-family: inherit; background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 16px; cursor: pointer; transition: border-color 0.15s, background 0.15s;
+  }
+  .exsim-top-btn:hover { border-color: var(--green); background: var(--green-soft); }
+  .exsim-top-btn-ico { flex: none; font-size: 1.2rem; }
+  .exsim-top-btn-text { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .exsim-top-btn-label { font-size: 0.88rem; font-weight: 800; color: var(--ink); }
+  .exsim-top-btn-sub { font-size: 0.74rem; color: var(--green-deep); font-weight: 700; }
+  .exsim-top-btn-arrow { flex: none; font-size: 1.05rem; color: var(--ink-soft); }
+  .exsim-picker-overlay {
+    display: none; position: fixed; inset: 0; z-index: 320; background: rgba(23,24,26,0.55);
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .exsim-picker-overlay.on { display: flex; }
+  .exsim-picker-box { background: var(--paper); border-radius: 16px; max-width: 440px; width: 100%; max-height: 82vh; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,0.25); overflow: hidden; }
+  .exsim-picker-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; font-size: 0.98rem; font-weight: 800; color: var(--ink); border-bottom: 1px solid var(--line); flex: none; }
+  .exsim-picker-close { background: none; border: none; font-size: 1.4rem; color: var(--ink-soft); cursor: pointer; line-height: 1; }
+  .exsim-picker-list { overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 2px; }
+  .exsim-picker-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; text-align: left;
+    font-family: inherit; background: none; border: none; border-radius: 10px; padding: 13px 12px; cursor: pointer;
+  }
+  .exsim-picker-row:hover { background: var(--cream); }
+  .exsim-picker-row.on { background: var(--green-soft); }
+  .exsim-picker-row-label { font-size: 0.86rem; font-weight: 700; color: var(--ink); }
+  .exsim-picker-row-sub { font-size: 0.74rem; color: var(--ink-soft); flex: none; }
+  .exsim-picker-row.on .exsim-picker-row-label { color: var(--green-deep); }
   @media (max-width: 640px) {
     .exsim-selected-card { flex-direction: column; align-items: stretch; }
     .exsim-start-btn { width: 100%; height: 56px; border-radius: 28px; align-self: stretch; }
@@ -3859,6 +3884,17 @@
   </div>
 </div>
 
+<!-- ═══ 시험 시뮬레이션: 시험 과목 선택 팝업 ═══ -->
+<div class="exsim-picker-overlay" id="exsimSubjectPickerOverlay" onclick="if(event.target===this) exsimCloseSubjectPicker()">
+  <div class="exsim-picker-box">
+    <div class="exsim-picker-head">
+      <span>시험 과목 선택</span>
+      <button type="button" class="exsim-picker-close" onclick="exsimCloseSubjectPicker()" aria-label="닫기">×</button>
+    </div>
+    <div class="exsim-picker-list" id="exsimSubjectPickerList"></div>
+  </div>
+</div>
+
 <!-- ═══ 학습 상담 후기 확대 보기 ═══ -->
 <div class="rv-lightbox" id="rvLightbox" onclick="closeReviewLightbox()">
   <img id="rvLightboxImg" src="" alt="학습 상담 후기">
@@ -4491,12 +4527,21 @@
       <div class="split"></div>
     </div>
     <div class="exsim-wrap">
-      <div class="exsim-period-tabs" id="exsimPeriodTabs"></div>
+      <div class="exsim-top-btns">
+        <button type="button" class="exsim-top-btn" onclick="exsimOpenSubjectPicker()">
+          <span class="exsim-top-btn-ico">📚</span>
+          <span class="exsim-top-btn-text"><span class="exsim-top-btn-label">시험 과목 선택하기</span><span class="exsim-top-btn-sub" id="exsimTopSelectedLabel">전과목</span></span>
+          <span class="exsim-top-btn-arrow">›</span>
+        </button>
+        <button type="button" class="exsim-top-btn" onclick="exsimOpenNoisePanel('suneung')">
+          <span class="exsim-top-btn-ico">🔊</span>
+          <span class="exsim-top-btn-text"><span class="exsim-top-btn-label">시험장 소음 설정하기</span></span>
+          <span class="exsim-top-btn-arrow">›</span>
+        </button>
+      </div>
+
       <div class="exsim-selected-card" id="exsimSelectedCard"></div>
 
-      <div class="exsim-links-row">
-        <button type="button" class="exsim-link-btn" onclick="exsimOpenNoisePanel('suneung')">🔊 시험장 소음 설정하기</button>
-      </div>
       <div class="exsim-noise-panel" id="exsimNoisePanel-suneung" style="display:none;">
         <div class="exsim-noise-panel-head">
           <span>🔊 시험장 소음 설정</span>
@@ -8602,7 +8647,8 @@
   // 시험 시뮬레이션 허브 — 수능/내신/누적된 기록 세 페이지로 들어가는 선택 화면, 별도 초기화 없음.
   function initExamHub() {}
   function initExamSuneung() {
-    exsimRenderPeriodTabs();
+    if (!exsimSelectedPeriodId) exsimSelectedPeriodId = "all";
+    exsimRenderSelectedCard();
     const noise = document.getElementById("exsimNoisePanel-suneung");
     if (noise) noise.style.display = "none";
   }
@@ -8623,28 +8669,42 @@
     exsimOpen({ id: "naeshin", periodLabel: "내신", subject: subject, pre: nowHM, ready: nowHM, start: nowHM, end: minToHM(now.getHours() * 60 + now.getMinutes() + minutes) });
   }
 
-  // ── 수능 시뮬레이션: 교시 선택 탭("전과목" + 1~5교시) + 선택 정보 카드 ──
+  // ── 수능 시뮬레이션: 시험 과목 선택 팝업("전과목" + 1~5교시) + 선택 정보 카드 ──
+  // 예전엔 교시 탭이 화면에 항상 쭉 펼쳐져 있어 복잡해 보였다 — 이제 "시험 과목 선택하기"
+  // 버튼을 눌러야 팝업으로 고르게 하고, 기본 화면은 선택된 과목 카드 하나만 보여준다.
   let exsimSelectedPeriodId = null;
-  function exsimRenderPeriodTabs() {
-    const el = document.getElementById("exsimPeriodTabs");
-    if (!el) return;
-    if (!exsimSelectedPeriodId) exsimSelectedPeriodId = "all";
-    const tabs = [{ id: "all", tabLabel: "전과목" }].concat(
-      EXAM_PERIODS.map(p => ({ id: p.id, tabLabel: p.periodLabel + " " + p.subject }))
+  function exsimSubjectTabList() {
+    return [{ id: "all", tabLabel: "전과목", sub: "전 과목 이어서 진행" }].concat(
+      EXAM_PERIODS.map(p => ({ id: p.id, tabLabel: p.periodLabel + " " + p.subject, sub: p.start + "~" + p.end }))
     );
-    el.innerHTML = tabs.map(t =>
-      '<button type="button" class="exsim-period-tab-btn' + (t.id === exsimSelectedPeriodId ? " on" : "") + '" data-id="' + t.id + '" onclick="exsimSelectPeriod(\'' + t.id + '\')">' + t.tabLabel + '</button>'
-    ).join("");
-    exsimRenderSelectedCard();
+  }
+  function exsimOpenSubjectPicker() {
+    const list = document.getElementById("exsimSubjectPickerList");
+    if (list) {
+      list.innerHTML = exsimSubjectTabList().map(t =>
+        '<button type="button" class="exsim-picker-row' + (t.id === exsimSelectedPeriodId ? " on" : "") + '" onclick="exsimSelectPeriod(\'' + t.id + '\')">' +
+          '<span class="exsim-picker-row-label">' + t.tabLabel + '</span><span class="exsim-picker-row-sub">' + t.sub + '</span>' +
+        '</button>'
+      ).join("");
+    }
+    document.getElementById("exsimSubjectPickerOverlay").classList.add("on");
+  }
+  function exsimCloseSubjectPicker() {
+    document.getElementById("exsimSubjectPickerOverlay").classList.remove("on");
   }
   function exsimSelectPeriod(id) {
     exsimSelectedPeriodId = id;
-    document.querySelectorAll("#exsimPeriodTabs .exsim-period-tab-btn").forEach(b => b.classList.toggle("on", b.dataset.id === id));
+    exsimCloseSubjectPicker();
     exsimRenderSelectedCard();
   }
   function exsimRenderSelectedCard() {
     const el = document.getElementById("exsimSelectedCard");
     if (!el) return;
+    const topLabelEl = document.getElementById("exsimTopSelectedLabel");
+    if (topLabelEl) {
+      const tab = exsimSubjectTabList().find(t => t.id === exsimSelectedPeriodId);
+      topLabelEl.textContent = tab ? tab.tabLabel : "전과목";
+    }
     if (exsimSelectedPeriodId === "all") {
       const info = exsimAllSubjectsInfo();
       const h = Math.floor(info.totalMin / 60), m = info.totalMin % 60;
