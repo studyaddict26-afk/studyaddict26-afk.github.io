@@ -8640,7 +8640,8 @@
     }
     const period = EXAM_PERIODS.find(p => p.id === exsimSelectedPeriodId);
     if (!period) return;
-    const totalMin = hmToMin(period.end) - hmToMin(period.pre);
+    // "시험 시간"은 본령(실제 시험 진행) 구간만 보여준다 — 예비령·준비령은 대기 시간이라 제외.
+    const totalMin = hmToMin(period.end) - hmToMin(period.start);
     const h = Math.floor(totalMin / 60), m = totalMin % 60;
     const listeningRow = period.hasListening
       ? '<div class="exsim-selected-row"><span class="ico">🎧</span><span class="lbl">영어 듣기 음원</span><span class="val"><label class="exsim-file-label">' +
@@ -8649,7 +8650,7 @@
       : '';
     el.innerHTML =
       '<div class="exsim-selected-info">' +
-        '<div class="exsim-selected-row"><span class="ico">🕐</span><span class="lbl">시험 시간</span><span class="val">' + (h ? h + '시간 ' : '') + m + '분 (' + period.pre + '~' + period.end + ')</span></div>' +
+        '<div class="exsim-selected-row"><span class="ico">🕐</span><span class="lbl">시험 시간</span><span class="val">' + (h ? h + '시간 ' : '') + m + '분 (' + period.start + '~' + period.end + ')</span></div>' +
         '<div class="exsim-selected-row"><span class="ico">📝</span><span class="lbl">문제 수 / 만점</span><span class="val">' + period.count + '문제 / ' + period.points + '점</span></div>' +
         listeningRow +
       '</div>' +
