@@ -1215,14 +1215,14 @@
     max-width: 760px; width: 100%; margin: 24px auto 0 auto; padding: 0 20px 40px 20px; box-sizing: border-box;
     display: flex; flex-direction: column; gap: 16px;
   }
-  .exsim-dday-row { display: flex; flex-direction: column; gap: 10px; }
-  .exsim-dday-card { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 14px 18px; }
-  .exsim-dday-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .exsim-dday-date { font-size: 0.72rem; color: var(--ink-soft); font-weight: 600; }
-  .exsim-dday-name { font-size: 0.92rem; font-weight: 800; color: var(--ink); margin-top: 2px; }
-  .exsim-dday-num { font-size: 1.5rem; font-weight: 800; color: var(--green-deep); flex: none; }
-  .exsim-dday-bar { height: 4px; border-radius: 2px; background: var(--line); margin-top: 10px; overflow: hidden; }
-  .exsim-dday-bar-fill { height: 100%; background: var(--green-deep); }
+  .mex-dday-row { display: flex; flex-direction: column; gap: 10px; }
+  .mex-dday-card { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 14px 18px; }
+  .mex-dday-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .mex-dday-date { font-size: 0.72rem; color: var(--ink-soft); font-weight: 600; }
+  .mex-dday-name { font-size: 0.92rem; font-weight: 800; color: var(--ink); margin-top: 2px; }
+  .mex-dday-num { font-size: 1.5rem; font-weight: 800; color: var(--green-deep); flex: none; }
+  .mex-dday-bar { height: 4px; border-radius: 2px; background: var(--line); margin-top: 10px; overflow: hidden; }
+  .mex-dday-bar-fill { height: 100%; background: var(--green-deep); }
   .exsim-period-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
   .exsim-period-tab-btn {
     flex: none; font-family: inherit; font-size: 0.82rem; font-weight: 700; color: var(--ink-soft);
@@ -1265,6 +1265,16 @@
   .exsim-noise-desc { font-size: 0.78rem; color: var(--ink-soft); line-height: 1.6; }
   .exsim-noise-toggle-row, .exsim-noise-vol-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.84rem; font-weight: 600; color: var(--ink); }
   .exsim-noise-vol-row input[type="range"] { flex: 1 1 auto; margin-left: 16px; accent-color: var(--green-deep); }
+  .exsim-mode-tabs { display: flex; gap: 8px; }
+  .exsim-mode-btn {
+    flex: 1; font-family: inherit; font-size: 0.86rem; font-weight: 700; color: var(--ink-soft);
+    background: var(--cream); border: 1px solid var(--line); border-radius: 12px; padding: 14px 10px; cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .exsim-mode-btn.on { background: var(--green-deep); color: #fff; border-color: var(--green-deep); }
+  .exsim-mode-pane { display: flex; flex-direction: column; gap: 16px; }
+  .exsim-naeshin-card { border: 1px solid var(--line); border-radius: 14px; background: var(--paper); padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+  .exsim-naeshin-start-btn { width: 100%; height: 56px; border-radius: 28px; align-self: stretch; }
   @media (max-width: 640px) {
     .exsim-selected-card { flex-direction: column; align-items: stretch; }
     .exsim-start-btn { width: 100%; height: 56px; border-radius: 28px; align-self: stretch; }
@@ -4445,10 +4455,29 @@
       <div class="split"></div>
     </div>
     <div class="exsim-wrap">
-      <div class="exsim-dday-row" id="exsimDdayRow"></div>
+      <div class="exsim-mode-tabs" id="exsimModeTabs">
+        <button type="button" class="exsim-mode-btn on" data-mode="suneung" onclick="exsimSwitchMode('suneung')">🎓 수능 시뮬레이션</button>
+        <button type="button" class="exsim-mode-btn" data-mode="naeshin" onclick="exsimSwitchMode('naeshin')">📖 내신 시뮬레이션</button>
+      </div>
 
-      <div class="exsim-period-tabs" id="exsimPeriodTabs"></div>
-      <div class="exsim-selected-card" id="exsimSelectedCard"></div>
+      <div class="exsim-mode-pane" id="exsimSuneungPane">
+        <div class="exsim-period-tabs" id="exsimPeriodTabs"></div>
+        <div class="exsim-selected-card" id="exsimSelectedCard"></div>
+      </div>
+
+      <div class="exsim-mode-pane" id="exsimNaeshinPane" style="display:none;">
+        <div class="exsim-naeshin-card">
+          <div class="mex-field">
+            <label>과목명</label>
+            <input type="text" id="exsimNaeshinSubject" placeholder="예: 수학 내신">
+          </div>
+          <div class="mex-field">
+            <label>시험 시간(분)</label>
+            <input type="number" id="exsimNaeshinMinutes" min="10" max="180" value="50">
+          </div>
+          <button type="button" class="exsim-start-btn exsim-naeshin-start-btn" onclick="exsimStartNaeshin()">시험 시작</button>
+        </div>
+      </div>
 
       <div class="exsim-links-row">
         <button type="button" class="exsim-link-btn" id="exsimHistoryToggleBtn" onclick="exsimToggleHistory()">📋 모의고사 기록 보기</button>
@@ -4483,6 +4512,7 @@
     </div>
 
     <div class="mex-wrap" id="mexHomeWrap">
+      <div class="mex-dday-row" id="mexDdayRow"></div>
       <button type="button" class="mex-new-btn" onclick="mexToggleNewForm()">+ 새 모의고사·내신 기록하기</button>
       <div class="mex-new-form" id="mexNewForm" style="display:none;">
         <div class="mex-field">
@@ -8486,10 +8516,6 @@
     { id: "tamgu", periodLabel: "4교시", subject: "한국사·탐구",   pre: "14:35", ready: "14:45", start: "14:50", end: "16:32" },
     { id: "lang2", periodLabel: "5교시", subject: "제2외국어·한문", pre: "16:45", ready: "17:00", start: "17:05", end: "17:45" },
   ];
-  const EXSIM_DDAY_EVENTS = [
-    { label: "대학수학능력시험", date: "2026-11-19" },
-    { label: "10월 학력평가", date: "2026-10-20" },
-  ];
   function hmToMin(hm) { const p = hm.split(":").map(Number); return p[0] * 60 + p[1]; }
   function minToHM(min) {
     min = Math.round(min);
@@ -8503,29 +8529,25 @@
   }
 
   function initExamHub() {
-    exsimRenderDday();
+    exsimSwitchMode("suneung");
     exsimRenderPeriodTabs();
   }
 
-  // ── 홈 화면: D-day ──
-  function exsimRenderDday() {
-    const el = document.getElementById("exsimDdayRow");
-    if (!el) return;
-    const today = new Date(); today.setHours(0, 0, 0, 0);
-    el.innerHTML = EXSIM_DDAY_EVENTS.map(ev => {
-      const target = new Date(ev.date + "T00:00:00");
-      const dday = Math.round((target - today) / 86400000);
-      const num = dday > 0 ? "D-" + dday : (dday === 0 ? "D-DAY" : "D+" + Math.abs(dday));
-      const pct = Math.max(2, Math.min(100, 100 - Math.max(0, dday) / 200 * 100));
-      return '<div class="exsim-dday-card">' +
-        '<div class="exsim-dday-top">' +
-          '<div><div class="exsim-dday-date">' + ev.date.replace(/-/g, ".") + '</div>' +
-          '<div class="exsim-dday-name">' + escapeHtml(ev.label) + '</div></div>' +
-          '<div class="exsim-dday-num">' + num + '</div>' +
-        '</div>' +
-        '<div class="exsim-dday-bar"><div class="exsim-dday-bar-fill" style="width:' + pct + '%"></div></div>' +
-      '</div>';
-    }).join("");
+  // ── 홈 화면: 수능 시뮬레이션 / 내신 시뮬레이션 모드 전환 ──
+  function exsimSwitchMode(mode) {
+    document.querySelectorAll("#exsimModeTabs .exsim-mode-btn").forEach(b => b.classList.toggle("on", b.dataset.mode === mode));
+    document.getElementById("exsimSuneungPane").style.display = mode === "suneung" ? "flex" : "none";
+    document.getElementById("exsimNaeshinPane").style.display = mode === "naeshin" ? "flex" : "none";
+  }
+  // 내신은 국가 공식 시간표가 없어 예비령/준비령 없이, 지금 이 순간을 가상 시작 시각으로 삼아
+  // 바로 "진행 중" 상태로 시작한다(exsimIsSimpleMode로 판별해 타임라인/문구만 간소화).
+  function exsimIsSimpleMode(period) { return period.pre === period.ready && period.ready === period.start; }
+  function exsimStartNaeshin() {
+    const subject = document.getElementById("exsimNaeshinSubject").value.trim() || "내신";
+    const minutes = Math.max(1, Math.min(300, Number(document.getElementById("exsimNaeshinMinutes").value) || 50));
+    const now = new Date();
+    const nowHM = minToHM(now.getHours() * 60 + now.getMinutes());
+    exsimOpen({ id: "naeshin", periodLabel: "내신", subject: subject, pre: nowHM, ready: nowHM, start: nowHM, end: minToHM(now.getHours() * 60 + now.getMinutes() + minutes) });
   }
 
   // ── 홈 화면: 교시 선택 탭 + 선택 정보 카드 ──
@@ -8649,8 +8671,8 @@
   let exsimState = null;
   let exsimTimerHandle = null;
 
-  function exsimOpen(periodId) {
-    const period = EXAM_PERIODS.find(p => p.id === periodId);
+  function exsimOpen(periodOrId) {
+    const period = typeof periodOrId === "string" ? EXAM_PERIODS.find(p => p.id === periodOrId) : periodOrId;
     if (!period) return;
     exsimInitClockFaceOnce();
     const preMin = hmToMin(period.pre), readyMin = hmToMin(period.ready), startMin = hmToMin(period.start), endMin = hmToMin(period.end);
@@ -8660,7 +8682,7 @@
       elapsedSec: 0, running: false, started: false, laps: [], noiseOn: false,
     };
     document.getElementById("exlvBadge").textContent = period.periodLabel;
-    document.getElementById("exlvPhase").textContent = "예비령";
+    document.getElementById("exlvPhase").textContent = exsimPhaseLabel();
     document.getElementById("exlvHint").style.display = "";
     document.getElementById("exlvControls").style.display = "none";
     document.getElementById("exlvLapRow").style.display = "none";
@@ -8679,6 +8701,7 @@
     document.getElementById("exlvControls").style.display = "flex";
     document.getElementById("exlvLapRow").style.display = "flex";
     if (localStorage.getItem("exsimNoiseDefaultOn") === "1") exsimToggleNoise();
+    exsimUpdateDisplay();
     exsimTimerHandle = setInterval(exsimTick, 1000);
   }
   function exsimTick() {
@@ -8687,14 +8710,18 @@
     exsimUpdateDisplay();
     if (exsimState.elapsedSec >= exsimState.totalSec) exsimFinishSession();
   }
+  function exsimPhaseLabel() {
+    const s = exsimState;
+    if (!s) return "";
+    if (exsimIsSimpleMode(s.period)) return s.started ? "진행 중" : "대기 중";
+    return s.elapsedSec < (s.readyMin - s.preMin) * 60 ? "예비령"
+      : s.elapsedSec < (s.startMin - s.preMin) * 60 ? "준비령" : "본령";
+  }
   function exsimUpdateDisplay() {
     if (!exsimState) return;
     exsimDrawClock(exsimState.preMin + exsimState.elapsedSec / 60);
     const phaseEl = document.getElementById("exlvPhase");
-    if (phaseEl) {
-      phaseEl.textContent = exsimState.elapsedSec < (exsimState.readyMin - exsimState.preMin) * 60 ? "예비령"
-        : exsimState.elapsedSec < (exsimState.startMin - exsimState.preMin) * 60 ? "준비령" : "본령";
-    }
+    if (phaseEl) phaseEl.textContent = exsimPhaseLabel();
     document.querySelectorAll("#exlvTimeline .exlv-tl-pt").forEach(el => {
       el.classList.toggle("done", exsimState.elapsedSec >= Number(el.dataset.at));
     });
@@ -8703,11 +8730,13 @@
     const el = document.getElementById("exlvTimeline");
     if (!el || !exsimState) return;
     const p = exsimState.period;
-    const points = [
-      { time: p.pre, label: "예비령", atSec: 0 },
-      { time: p.ready, label: "준비령", atSec: (exsimState.readyMin - exsimState.preMin) * 60 },
-      { time: p.start, label: "본령", atSec: (exsimState.startMin - exsimState.preMin) * 60 },
-    ];
+    const points = exsimIsSimpleMode(p)
+      ? [ { time: p.start, label: "시작", atSec: 0 }, { time: p.end, label: "종료", atSec: exsimState.totalSec } ]
+      : [
+          { time: p.pre, label: "예비령", atSec: 0 },
+          { time: p.ready, label: "준비령", atSec: (exsimState.readyMin - exsimState.preMin) * 60 },
+          { time: p.start, label: "본령", atSec: (exsimState.startMin - exsimState.preMin) * 60 },
+        ];
     el.innerHTML = points.map(pt =>
       '<div class="exlv-tl-pt" data-at="' + pt.atSec + '">' +
         '<button type="button" onclick="exsimScrubTo(' + pt.atSec + ')"><span class="exlv-tl-time">' + pt.time + '</span>' + pt.label + '</button>' +
@@ -8865,7 +8894,33 @@
     document.getElementById("mexDetailWrap").style.display = "none";
     document.getElementById("mexHomeWrap").style.display = "flex";
     document.getElementById("mexNewForm").style.display = "none";
+    mexRenderDday();
     mexRenderList();
+  }
+
+  // ── D-day (원래 시험 시뮬레이션 홈에 있었으나 이 페이지로 이동) ──
+  const MEX_DDAY_EVENTS = [
+    { label: "대학수학능력시험", date: "2026-11-19" },
+    { label: "10월 학력평가", date: "2026-10-20" },
+  ];
+  function mexRenderDday() {
+    const el = document.getElementById("mexDdayRow");
+    if (!el) return;
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    el.innerHTML = MEX_DDAY_EVENTS.map(ev => {
+      const target = new Date(ev.date + "T00:00:00");
+      const dday = Math.round((target - today) / 86400000);
+      const num = dday > 0 ? "D-" + dday : (dday === 0 ? "D-DAY" : "D+" + Math.abs(dday));
+      const pct = Math.max(2, Math.min(100, 100 - Math.max(0, dday) / 200 * 100));
+      return '<div class="mex-dday-card">' +
+        '<div class="mex-dday-top">' +
+          '<div><div class="mex-dday-date">' + ev.date.replace(/-/g, ".") + '</div>' +
+          '<div class="mex-dday-name">' + escapeHtml(ev.label) + '</div></div>' +
+          '<div class="mex-dday-num">' + num + '</div>' +
+        '</div>' +
+        '<div class="mex-dday-bar"><div class="mex-dday-bar-fill" style="width:' + pct + '%"></div></div>' +
+      '</div>';
+    }).join("");
   }
 
   function mexToggleNewForm() {
