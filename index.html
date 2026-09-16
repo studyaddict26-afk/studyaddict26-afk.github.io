@@ -4696,14 +4696,6 @@
       <div class="split"></div>
     </div>
     <div class="exsim-wrap">
-      <div class="exsim-top-btns">
-        <button type="button" class="exsim-top-btn" onclick="exsimOpenNoisePanel()">
-          <span class="exsim-top-btn-ico">🔊</span>
-          <span class="exsim-top-btn-text"><span class="exsim-top-btn-label">시험장 소음 설정하기</span><span class="exsim-top-btn-sub">설정 완료</span></span>
-          <span class="exsim-top-btn-arrow">›</span>
-        </button>
-      </div>
-
       <div class="exsim-naeshin-card">
         <div class="mex-field">
           <label>과목명</label>
@@ -4713,6 +4705,15 @@
           <label>시험 시간(분)</label>
           <input type="number" id="exsimNaeshinMinutes" min="10" max="180" value="50">
         </div>
+        <div class="mex-field">
+          <label>문항 개수</label>
+          <input type="number" id="exsimNaeshinCount" min="1" max="100" value="20">
+        </div>
+        <button type="button" class="exsim-top-btn" onclick="exsimOpenNoisePanel()">
+          <span class="exsim-top-btn-ico">🔊</span>
+          <span class="exsim-top-btn-text"><span class="exsim-top-btn-label">시험장 소음 설정하기</span><span class="exsim-top-btn-sub">설정 완료</span></span>
+          <span class="exsim-top-btn-arrow">›</span>
+        </button>
         <button type="button" class="exsim-start-btn exsim-naeshin-start-btn" onclick="exsimStartNaeshin()">시험 시작</button>
       </div>
     </div>
@@ -8765,6 +8766,7 @@
   function initExamNaeshin() {
     document.getElementById("exsimNaeshinSubject").value = "";
     document.getElementById("exsimNaeshinMinutes").value = "50";
+    document.getElementById("exsimNaeshinCount").value = "20";
     exsimCloseNoisePanel();
   }
   // 내신은 국가 공식 시간표가 없어 예비령/준비령 없이, 지금 이 순간을 가상 시작 시각으로 삼아
@@ -8773,9 +8775,10 @@
   function exsimStartNaeshin() {
     const subject = document.getElementById("exsimNaeshinSubject").value.trim() || "내신";
     const minutes = Math.max(1, Math.min(300, Number(document.getElementById("exsimNaeshinMinutes").value) || 50));
+    const count = Math.max(1, Math.min(100, Number(document.getElementById("exsimNaeshinCount").value) || 20));
     const now = new Date();
     const nowHM = minToHM(now.getHours() * 60 + now.getMinutes());
-    exsimOpen({ id: "naeshin", periodLabel: "내신", subject: subject, pre: nowHM, ready: nowHM, start: nowHM, end: minToHM(now.getHours() * 60 + now.getMinutes() + minutes) });
+    exsimOpen({ id: "naeshin", periodLabel: "내신", subject: subject, pre: nowHM, ready: nowHM, start: nowHM, end: minToHM(now.getHours() * 60 + now.getMinutes() + minutes), count: count });
   }
 
   // ── 수능 시뮬레이션: 시험 과목 선택 팝업(라디오 버튼, 한 번에 한 과목만 선택 가능) + 선택 정보 카드 ──
