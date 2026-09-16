@@ -1286,7 +1286,7 @@
     .exsim-hub-btn { padding: 16px 6px; }
   }
   .exsim-naeshin-card { border: 1px solid var(--line); border-radius: 14px; background: var(--paper); padding: 22px; display: flex; flex-direction: column; gap: 14px; }
-  .exsim-naeshin-start-btn { width: 100%; height: 46px; border-radius: 23px; align-self: stretch; font-size: 0.86rem; }
+  .exsim-naeshin-start-btn { width: 66%; height: 46px; border-radius: 23px; align-self: center; font-size: 0.86rem; }
   .exsim-listening-select {
     font-family: inherit; font-size: 0.78rem; font-weight: 700; color: var(--green-deep); background: var(--green-soft);
     border: none; border-radius: 999px; padding: 5px 10px; cursor: pointer; max-width: 170px;
@@ -9005,7 +9005,11 @@
     const period = typeof periodOrId === "string" ? EXAM_PERIODS.find(p => p.id === periodOrId) : periodOrId;
     if (!period) return;
     exsimInitClockFaceOnce();
-    const preMin = hmToMin(period.pre), readyMin = hmToMin(period.ready), startMin = hmToMin(period.start), endMin = hmToMin(period.end);
+    const preMin = hmToMin(period.pre), readyMin = hmToMin(period.ready), startMin = hmToMin(period.start);
+    // 내신은 "지금 시각 + N분"으로 끝나는 시각을 잡다 보니 밤 늦게 시작하면 자정을 넘어갈 수 있다
+    // (예: 23:57 시작 + 50분 = 00:47) — 이때 endMin이 preMin보다 작아 보이는 걸 막기 위해 하루를 더해준다.
+    let endMin = hmToMin(period.end);
+    if (endMin <= preMin) endMin += 1440;
     const passageGroups = exsimPassageGroupsFor(period);
     const flatPassageLabels = [];
     passageGroups.forEach(g => g.items.forEach(label => flatPassageLabels.push(label)));
