@@ -1373,6 +1373,18 @@
   .exlv-timeline { width: 100%; max-width: 347px; margin-top: 8px; }
   .exlv-end-btn { margin-top: 22px; font-family: inherit; font-size: 0.74rem; font-weight: 700; color: rgba(255,255,255,0.6); background: none; border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 8px 18px; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, color 0.15s, border-color 0.15s; }
   .exlv-end-btn:hover { transform: translateY(-2px); color: #fff; border-color: rgba(255,255,255,0.5); box-shadow: 0 6px 14px rgba(0,0,0,0.4); }
+  /* ── 스톱워치/타이머 시작 전, 타이머 분 설정 단계 ── */
+  .gentimer-setup { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .gentimer-setup label { font-size: 0.82rem; font-weight: 700; color: rgba(255,255,255,0.8); }
+  .gentimer-setup input {
+    font-family: inherit; font-size: 1rem; font-weight: 700; color: #fff; text-align: center; width: 120px;
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; padding: 10px 14px;
+  }
+  .gentimer-setup-btn {
+    background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 10px 28px;
+    font-family: inherit; font-size: 0.86rem; font-weight: 800; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .gentimer-setup-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(21,82,47,0.35); }
   .exlv-tl-track { position: relative; height: 2px; background: rgba(255,255,255,0.25); border-radius: 1px; overflow: hidden; }
   .exlv-tl-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--green); }
   .exlv-tl-labels { display: flex; align-items: flex-start; gap: 0; margin-top: 10px; overflow-x: auto; }
@@ -3985,6 +3997,34 @@
   </div>
 </div>
 
+<!-- ═══ 스톱워치 / 타이머 (시험 시뮬레이션과 별개 — 랩타임/과목 개념 없음) ═══ -->
+<div class="exlv" id="genTimerLive">
+  <button type="button" class="exlv-close" onclick="genTimerClose()" aria-label="닫기">&times;</button>
+  <div class="exlv-main">
+    <div class="exlv-badge" id="genTimerBadge">스톱워치</div>
+    <div class="exlv-clock-wrap">
+      <svg class="exlv-clock timer-mode" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="94" fill="#fff" stroke="#111" stroke-width="4"></circle>
+        <text id="genTimerText" x="100" y="100" text-anchor="middle" dominant-baseline="middle" font-family="inherit" font-weight="800" font-size="34" fill="#111">00:00</text>
+      </svg>
+    </div>
+    <div class="gentimer-setup" id="genTimerSetup" style="display:none;">
+      <label for="genTimerMinutesInput">몇 분 타이머를 맞출까요?</label>
+      <input type="number" id="genTimerMinutesInput" min="1" max="300" value="10">
+      <button type="button" class="gentimer-setup-btn" onclick="genTimerConfirmMinutes()">시작</button>
+    </div>
+    <div class="exlv-controls" id="genTimerControls" style="display:none;">
+      <button type="button" onclick="genTimerScrub(-30)" aria-label="30초 뒤로">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>30
+      </button>
+      <button type="button" id="genTimerPlayBtn" onclick="genTimerTogglePause()" aria-label="일시정지/재생">❚❚</button>
+      <button type="button" onclick="genTimerScrub(30)" aria-label="30초 앞으로">30
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ 시험 시뮬레이션: 종료 요약 화면 ═══ -->
 <div class="exend" id="exsimEnd">
   <div class="exend-box">
@@ -4670,6 +4710,16 @@
         <button type="button" class="exsim-hub-btn" onclick="go('mockexam')">
           <span class="exsim-hub-ico">📊</span>
           <span class="exsim-hub-title">누적된 기록 확인하기</span>
+        </button>
+      </div>
+      <div class="exsim-hub-buttons" style="margin-top:12px;">
+        <button type="button" class="exsim-hub-btn" onclick="genTimerOpen('stopwatch')">
+          <span class="exsim-hub-ico">⏱️</span>
+          <span class="exsim-hub-title">스톱워치</span>
+        </button>
+        <button type="button" class="exsim-hub-btn" onclick="genTimerOpen('timer')">
+          <span class="exsim-hub-ico">⏲️</span>
+          <span class="exsim-hub-title">타이머</span>
         </button>
       </div>
     </div>
@@ -9545,6 +9595,73 @@
     showToast("기록이 저장됐어요!");
     exsimCloseEnd();
     exsimRenderHistory();
+  }
+
+  // ── 시험 시뮬레이션 허브: 스톱워치/타이머 (과목·랩타임 없는 독립 기능) ──
+  // 시험 진행 화면(.exlv)과 같은 검은 전체화면 + 원형 타이머 디자인을 그대로 재사용하되,
+  // exsimState/EXAM_PERIODS 등 시험 전용 로직과는 완전히 분리된 별도의 작은 상태로 동작한다.
+  let genTimerState = null;
+  let genTimerHandle = null;
+  function genTimerOpen(mode) {
+    genTimerState = { mode: mode, totalSec: 0, elapsedSec: 0, running: false };
+    document.getElementById("genTimerBadge").textContent = mode === "timer" ? "타이머" : "스톱워치";
+    document.getElementById("genTimerControls").style.display = "none";
+    document.getElementById("genTimerSetup").style.display = mode === "timer" ? "flex" : "none";
+    document.getElementById("genTimerPlayBtn").textContent = "❚❚";
+    document.getElementById("genTimerText").textContent = "00:00";
+    document.getElementById("genTimerLive").classList.add("on");
+    if (mode === "stopwatch") genTimerRun();
+  }
+  function genTimerConfirmMinutes() {
+    const minutes = Math.max(1, Math.min(300, Number(document.getElementById("genTimerMinutesInput").value) || 10));
+    genTimerState.totalSec = minutes * 60;
+    document.getElementById("genTimerSetup").style.display = "none";
+    genTimerUpdateText();
+    genTimerRun();
+  }
+  function genTimerRun() {
+    document.getElementById("genTimerControls").style.display = "flex";
+    genTimerState.running = true;
+    genTimerHandle = setInterval(genTimerTick, 1000);
+  }
+  function genTimerTick() {
+    if (!genTimerState || !genTimerState.running) return;
+    genTimerState.elapsedSec++;
+    if (genTimerState.mode === "timer" && genTimerState.elapsedSec >= genTimerState.totalSec) {
+      genTimerState.elapsedSec = genTimerState.totalSec;
+      genTimerPause();
+    }
+    genTimerUpdateText();
+  }
+  function genTimerUpdateText() {
+    const el = document.getElementById("genTimerText");
+    if (!el || !genTimerState) return;
+    const displaySec = genTimerState.mode === "timer" ? (genTimerState.totalSec - genTimerState.elapsedSec) : genTimerState.elapsedSec;
+    el.textContent = exsimFormatTimer(displaySec);
+  }
+  function genTimerPause() {
+    genTimerState.running = false;
+    clearInterval(genTimerHandle);
+    document.getElementById("genTimerPlayBtn").textContent = "▶";
+  }
+  function genTimerTogglePause() {
+    if (!genTimerState) return;
+    if (genTimerState.running) { genTimerPause(); return; }
+    genTimerRun();
+    document.getElementById("genTimerPlayBtn").textContent = "❚❚";
+  }
+  // ±30초 — "앞으로"는 항상 시간이 흐르는 방향(스톱워치는 늘어나고, 타이머는 남은 시간이 줄어듦).
+  function genTimerScrub(delta) {
+    if (!genTimerState) return;
+    const max = genTimerState.mode === "timer" ? genTimerState.totalSec : Infinity;
+    genTimerState.elapsedSec = Math.max(0, Math.min(max, genTimerState.elapsedSec + delta));
+    if (genTimerState.mode === "timer" && genTimerState.elapsedSec >= genTimerState.totalSec) genTimerPause();
+    genTimerUpdateText();
+  }
+  function genTimerClose() {
+    clearInterval(genTimerHandle);
+    document.getElementById("genTimerLive").classList.remove("on");
+    genTimerState = null;
   }
 
   // ══════════════════════════════════════════════════════════════════
