@@ -1378,20 +1378,16 @@
   /* ── 진행 화면: 오른쪽 지문별 랩타임 기록 패널 — 과목마다 지문 구성이 달라서(국어는
      예시문항 기준 15개 지문/자료 세트) EXAM_PASSAGE_SETS에 과목별 목록을 따로 정의해 쓴다. ── */
   .exlv-passages { display: none; flex-direction: column; flex: none; width: 264px; max-height: 640px; text-align: left; }
-  .exlv-passages-title { flex: none; font-size: 0.8rem; font-weight: 800; color: rgba(255,255,255,0.85); text-align: center; letter-spacing: 0.02em; margin-bottom: 14px; }
-  .exlv-passages-list { display: flex; flex-direction: column; gap: 16px; overflow-y: auto; }
-  .exlv-passage-group { display: flex; flex-direction: column; gap: 8px; }
-  .exlv-passage-group-title { font-size: 0.74rem; font-weight: 800; color: rgba(255,255,255,0.85); }
-  .exlv-passage-single { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
-  .exlv-passage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .exlv-passage-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; padding: 9px 10px 9px 14px; }
-  .exlv-passage-row.compact { flex-direction: column; align-items: center; gap: 6px; padding: 10px; }
-  .exlv-passage-row.compact .exlv-passage-text { align-items: center; text-align: center; }
-  .exlv-passage-row.compact .exlv-passage-btn { width: auto; padding: 6px 14px; font-size: 0.68rem; }
-  .exlv-passage-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .exlv-passage-label { font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.85); }
-  .exlv-passage-dur { font-size: 0.68rem; font-weight: 700; color: var(--green); }
-  .exlv-passage-btn { flex: none; font-family: inherit; font-size: 0.72rem; font-weight: 800; color: #fff; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 7px 13px; cursor: pointer; white-space: nowrap; }
+  .exlv-passages-title { flex: none; font-size: 0.74rem; font-weight: 700; color: rgba(255,255,255,0.8); text-align: center; letter-spacing: 0.04em; margin-bottom: 14px; }
+  .exlv-passages-list { display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }
+  .exlv-passage-group { display: flex; flex-direction: column; gap: 7px; }
+  .exlv-passage-group-title { font-size: 0.66rem; font-weight: 700; color: rgba(255,255,255,0.72); letter-spacing: 0.02em; }
+  .exlv-passage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+  .exlv-passage-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 9px; padding: 7px 8px 7px 11px; }
+  .exlv-passage-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .exlv-passage-label { font-size: 0.66rem; font-weight: 600; color: rgba(255,255,255,0.78); }
+  .exlv-passage-dur { font-size: 0.58rem; font-weight: 600; color: var(--green); }
+  .exlv-passage-btn { flex: none; font-family: inherit; font-size: 0.58rem; font-weight: 700; color: #fff; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22); border-radius: 999px; padding: 5px 9px; cursor: pointer; white-space: nowrap; letter-spacing: 0.01em; }
   .exlv-passage-btn.running { background: var(--green-deep); border-color: var(--green-deep); }
   @media (max-width: 760px) {
     .exlv { flex-direction: column; gap: 22px; padding-top: 64px; }
@@ -9014,7 +9010,7 @@
       totalSec: (endMin - preMin) * 60,
       elapsedSec: 0, examSec: 0, running: false, started: false, laps: [], noiseOn: false, listeningPlayed: false,
       passageGroups: passageGroups,
-      passages: flatPassageLabels.map(label => ({ label: label, startSec: null, endSec: null, running: false })),
+      passages: flatPassageLabels.map(label => ({ label: label, startCount: 0, running: false, segStartSec: null, totalSec: 0 })),
     };
     document.getElementById("exlvBadge").textContent = period.periodLabel + " " + period.subject;
     document.getElementById("exlvPhase").textContent = exsimPhaseLabel();
@@ -9155,7 +9151,7 @@
   // 아직 정의하지 않은 과목(국어 외)은 소제목 없이 "전체" 한 칸짜리 기본값으로 동작한다.
   const EXAM_PASSAGE_SETS = {
     kor: [
-      { title: null, items: ["화법과 언어 (10문항)"] },
+      { title: "화법과 언어 (10문항)", items: ["지문 1", "지문 2", "지문 3", "지문 4", "지문 5", "지문 6"] },
       { title: "독서와 작문 (20문항)", items: ["지문 1", "지문 2", "지문 3", "지문 4", "지문 5"] },
       { title: "문학 (15문항)", items: ["지문 1", "지문 2", "지문 3", "지문 4"] },
     ],
@@ -9168,22 +9164,24 @@
     if (!list || !exsimState || !exsimState.passages) return;
     let idx = 0;
     list.innerHTML = (exsimState.passageGroups || []).map(group => {
-      const isGrid = group.items.length > 1;
       const titleHtml = group.title ? '<div class="exlv-passage-group-title">' + escapeHtml(group.title) + '</div>' : '';
       const rowsHtml = group.items.map(() => {
         const p = exsimState.passages[idx];
         const myIdx = idx;
         idx++;
-        const durSec = p.endSec !== null ? p.endSec - p.startSec : (p.running ? exsimState.elapsedSec - p.startSec : null);
-        const durHtml = durSec !== null ? '<span class="exlv-passage-dur">' + formatDur(durSec) + '</span>' : '';
-        return '<div class="exlv-passage-row' + (isGrid ? ' compact' : '') + '">' +
+        // 잠깐 나갔다 다시 풀 수도 있으니 여러 번의 풀이 구간을 모두 더해서 누적 시간으로 표시한다.
+        const liveSec = p.running ? p.totalSec + (exsimState.elapsedSec - p.segStartSec) : p.totalSec;
+        const durHtml = liveSec > 0 ? '<span class="exlv-passage-dur">' + formatDur(liveSec) + '</span>' : '';
+        // 처음 한 번만 "풀이 시작/끝"이고, 이후 재풀이부터는 계속 "재풀이 시작/끝"으로 표시한다.
+        const btnLabel = p.running ? (p.startCount > 1 ? '재풀이 끝' : '풀이 끝') : (p.startCount > 0 ? '재풀이 시작' : '풀이 시작');
+        return '<div class="exlv-passage-row">' +
           '<span class="exlv-passage-text"><span class="exlv-passage-label">' + escapeHtml(p.label) + '</span>' + durHtml + '</span>' +
-          '<button type="button" class="exlv-passage-btn' + (p.running ? ' running' : '') + '" onclick="event.stopPropagation();exsimTogglePassage(' + myIdx + ')">' + (p.running ? '풀이 끝' : '풀이 시작') + '</button>' +
+          '<button type="button" class="exlv-passage-btn' + (p.running ? ' running' : '') + '" onclick="event.stopPropagation();exsimTogglePassage(' + myIdx + ')">' + btnLabel + '</button>' +
         '</div>';
       }).join("");
-      // 소제목은 그리드 바깥에 따로 두고, 실제 항목들만 그리드(또는 단일 줄) 컨테이너에 담는다
+      // 소제목은 그리드 바깥에 따로 두고, 실제 항목들만 그리드 컨테이너에 담는다
       // — 그래야 소제목이 2열 그리드의 한 칸으로 끼어들지 않고 항목들 위에 통으로 걸린다.
-      return '<div class="exlv-passage-group">' + titleHtml + '<div class="' + (isGrid ? 'exlv-passage-grid' : 'exlv-passage-single') + '">' + rowsHtml + '</div></div>';
+      return '<div class="exlv-passage-group">' + titleHtml + '<div class="exlv-passage-grid">' + rowsHtml + '</div></div>';
     }).join("");
   }
   function exsimTogglePassage(idx) {
@@ -9192,13 +9190,14 @@
     if (!p) return;
     if (!p.running) {
       p.running = true;
-      p.startSec = exsimState.elapsedSec;
-      p.endSec = null;
+      p.startCount++;
+      p.segStartSec = exsimState.elapsedSec;
     } else {
       p.running = false;
-      p.endSec = exsimState.elapsedSec;
+      p.totalSec += exsimState.elapsedSec - p.segStartSec;
+      p.segStartSec = null;
       // 기존 "모의고사 기록에 시험 시뮬레이션 랩타임 연결" 기능과의 호환을 위해 laps에도 함께 기록.
-      exsimState.laps.push({ sec: p.endSec });
+      exsimState.laps.push({ sec: exsimState.elapsedSec });
     }
     exsimRenderPassages();
   }
