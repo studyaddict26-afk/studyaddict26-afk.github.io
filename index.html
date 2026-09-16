@@ -8781,9 +8781,17 @@
   // 바로 "진행 중" 상태로 시작한다(exsimIsSimpleMode로 판별해 타임라인/문구만 간소화).
   function exsimIsSimpleMode(period) { return period.pre === period.ready && period.ready === period.start; }
   function exsimStartNaeshin() {
-    const subject = document.getElementById("exsimNaeshinSubject").value.trim() || "내신";
-    const minutes = Math.max(1, Math.min(300, Number(document.getElementById("exsimNaeshinMinutes").value) || 50));
-    const count = Math.max(1, Math.min(100, Number(document.getElementById("exsimNaeshinCount").value) || 20));
+    const subjectInput = document.getElementById("exsimNaeshinSubject");
+    const minutesInput = document.getElementById("exsimNaeshinMinutes");
+    const countInput = document.getElementById("exsimNaeshinCount");
+    // 과목명/시험 시간/문항 개수를 전부 입력해야만 시작 가능 — 하나라도 비어있으면 막고 어떤 칸이
+    // 비었는지 토스트로 알려준다.
+    if (!subjectInput.value.trim()) { showToast("과목명을 입력해주세요"); subjectInput.focus(); return; }
+    if (!minutesInput.value.trim()) { showToast("시험 시간(분)을 입력해주세요"); minutesInput.focus(); return; }
+    if (!countInput.value.trim()) { showToast("문항 개수를 입력해주세요"); countInput.focus(); return; }
+    const subject = subjectInput.value.trim();
+    const minutes = Math.max(1, Math.min(300, Number(minutesInput.value) || 50));
+    const count = Math.max(1, Math.min(100, Number(countInput.value) || 20));
     const now = new Date();
     const nowHM = minToHM(now.getHours() * 60 + now.getMinutes());
     exsimOpen({ id: "naeshin", periodLabel: "내신", subject: subject, pre: nowHM, ready: nowHM, start: nowHM, end: minToHM(now.getHours() * 60 + now.getMinutes() + minutes), count: count });
