@@ -1377,10 +1377,17 @@
 
   /* ── 진행 화면: 오른쪽 지문별 랩타임 기록 패널 — 과목마다 지문 구성이 달라서(국어는
      예시문항 기준 15개 지문/자료 세트) EXAM_PASSAGE_SETS에 과목별 목록을 따로 정의해 쓴다. ── */
-  .exlv-passages { display: none; flex-direction: column; flex: none; width: 260px; max-height: 640px; text-align: left; }
+  .exlv-passages { display: none; flex-direction: column; flex: none; width: 320px; max-height: 640px; text-align: left; }
   .exlv-passages-title { flex: none; font-size: 0.8rem; font-weight: 800; color: rgba(255,255,255,0.6); text-align: center; letter-spacing: 0.02em; margin-bottom: 14px; }
-  .exlv-passages-list { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
+  .exlv-passages-list { display: flex; flex-direction: column; gap: 16px; overflow-y: auto; }
+  .exlv-passage-group { display: flex; flex-direction: column; gap: 8px; }
+  .exlv-passage-group-title { font-size: 0.74rem; font-weight: 800; color: rgba(255,255,255,0.55); }
+  .exlv-passage-single { display: flex; flex-direction: column; gap: 8px; }
+  .exlv-passage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .exlv-passage-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; padding: 9px 10px 9px 14px; }
+  .exlv-passage-row.compact { flex-direction: column; align-items: stretch; gap: 6px; padding: 10px; }
+  .exlv-passage-row.compact .exlv-passage-text { align-items: center; text-align: center; }
+  .exlv-passage-row.compact .exlv-passage-btn { width: 100%; }
   .exlv-passage-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
   .exlv-passage-label { font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.85); }
   .exlv-passage-dur { font-size: 0.68rem; font-weight: 700; color: var(--green); }
@@ -1389,7 +1396,7 @@
   @media (max-width: 760px) {
     .exlv { flex-direction: column; gap: 22px; padding-top: 64px; }
     .exlv-passages { width: 100%; max-width: 360px; }
-    .exlv-passages-list { max-height: 240px; }
+    .exlv-passages-list { max-height: 260px; }
   }
 
   /* ── 시험 시뮬레이션: 종료 요약 화면 ── */
@@ -8714,7 +8721,7 @@
   // 시험 시뮬레이션 허브 — 수능/내신/누적된 기록 세 페이지로 들어가는 선택 화면, 별도 초기화 없음.
   function initExamHub() {}
   function initExamSuneung() {
-    if (!exsimCheckedIds.length) exsimCheckedIds = EXAM_PERIODS.map(p => p.id);
+    if (!exsimCheckedIds.length) exsimCheckedIds = ["kor"];
     exsimRenderSelectedCard();
     exsimCloseNoisePanel();
   }
@@ -8999,12 +9006,15 @@
     if (!period) return;
     exsimInitClockFaceOnce();
     const preMin = hmToMin(period.pre), readyMin = hmToMin(period.ready), startMin = hmToMin(period.start), endMin = hmToMin(period.end);
-    const passageLabels = exsimPassageLabelsFor(period);
+    const passageGroups = exsimPassageGroupsFor(period);
+    const flatPassageLabels = [];
+    passageGroups.forEach(g => g.items.forEach(label => flatPassageLabels.push(label)));
     exsimState = {
       period: period, preMin: preMin, readyMin: readyMin, startMin: startMin, endMin: endMin,
       totalSec: (endMin - preMin) * 60,
-      elapsedSec: 0, running: false, started: false, laps: [], noiseOn: false, listeningPlayed: false,
-      passages: passageLabels.map(label => ({ label: label, startSec: null, endSec: null, running: false })),
+      elapsedSec: 0, examSec: 0, running: false, started: false, laps: [], noiseOn: false, listeningPlayed: false,
+      passageGroups: passageGroups,
+      passages: flatPassageLabels.map(label => ({ label: label, startSec: null, endSec: null, running: false })),
     };
     document.getElementById("exlvBadge").textContent = period.periodLabel + " " + period.subject;
     document.getElementById("exlvPhase").textContent = exsimPhaseLabel();
@@ -9039,6 +9049,12 @@
   function exsimTick() {
     if (!exsimState || !exsimState.running) return;
     exsimState.elapsedSec++;
+    // examSec = 실제로 "본령(진행 중)" 상태로 1초씩 흘러간 시간만 누적한 것.
+    // 예비령/준비령 구간이나, 타임라인 지점을 눌러 순간이동한 시간은 포함되지 않는다
+    // (스크럽은 exsimTick을 거치지 않고 elapsedSec을 직접 바꾸기 때문) — 그래서
+    // "총 응시 시간"이 실제로 화면을 보며 문제를 푼 시간과 일치한다.
+    const phaseNow = exsimPhaseLabel();
+    if (phaseNow === "본령" || phaseNow === "진행 중") exsimState.examSec++;
     exsimUpdateDisplay();
     if (exsimState.elapsedSec >= exsimState.totalSec) exsimFinishSession();
   }
@@ -9134,24 +9150,40 @@
     if (btn) btn.textContent = exsimState.running ? "❚❚" : "▶";
   }
   // ── 진행 화면: 지문별 랩타임 기록(오른쪽 패널) ──
-  // 과목마다 지문 구성이 달라서 EXAM_PASSAGE_SETS에 과목 id별로 목록을 따로 정의해 둔다.
-  // 아직 정의하지 않은 과목(국어 외)은 "전체" 한 칸짜리 기본값으로 동작한다.
+  // 과목마다 지문 구성이 달라서 EXAM_PASSAGE_SETS에 과목 id별로 "그룹(소제목)+항목" 목록을
+  // 따로 정의해 둔다. 그룹 안 항목이 1개면 단독 줄로, 2개 이상이면 2열 그리드로 배치된다.
+  // 아직 정의하지 않은 과목(국어 외)은 소제목 없이 "전체" 한 칸짜리 기본값으로 동작한다.
   const EXAM_PASSAGE_SETS = {
-    kor: Array.from({ length: 15 }, (_, i) => "지문 " + (i + 1)),
+    kor: [
+      { title: null, items: ["화법과 언어 (10문항)"] },
+      { title: "독서와 작문", items: ["지문 1", "지문 2", "지문 3", "지문 4", "지문 5"] },
+      { title: "문학", items: ["지문 1", "지문 2", "지문 3", "지문 4"] },
+    ],
   };
-  function exsimPassageLabelsFor(period) {
-    return (period && EXAM_PASSAGE_SETS[period.id]) || ["전체"];
+  function exsimPassageGroupsFor(period) {
+    return (period && EXAM_PASSAGE_SETS[period.id]) || [{ title: null, items: ["전체"] }];
   }
   function exsimRenderPassages() {
     const list = document.getElementById("exlvPassagesList");
     if (!list || !exsimState || !exsimState.passages) return;
-    list.innerHTML = exsimState.passages.map((p, i) => {
-      const durSec = p.endSec !== null ? p.endSec - p.startSec : (p.running ? exsimState.elapsedSec - p.startSec : null);
-      const durHtml = durSec !== null ? '<span class="exlv-passage-dur">' + formatDur(durSec) + '</span>' : '';
-      return '<div class="exlv-passage-row">' +
-        '<span class="exlv-passage-text"><span class="exlv-passage-label">' + escapeHtml(p.label) + '</span>' + durHtml + '</span>' +
-        '<button type="button" class="exlv-passage-btn' + (p.running ? ' running' : '') + '" onclick="event.stopPropagation();exsimTogglePassage(' + i + ')">' + (p.running ? '풀이 끝' : '풀이 시작') + '</button>' +
-      '</div>';
+    let idx = 0;
+    list.innerHTML = (exsimState.passageGroups || []).map(group => {
+      const isGrid = group.items.length > 1;
+      const titleHtml = group.title ? '<div class="exlv-passage-group-title">' + escapeHtml(group.title) + '</div>' : '';
+      const rowsHtml = group.items.map(() => {
+        const p = exsimState.passages[idx];
+        const myIdx = idx;
+        idx++;
+        const durSec = p.endSec !== null ? p.endSec - p.startSec : (p.running ? exsimState.elapsedSec - p.startSec : null);
+        const durHtml = durSec !== null ? '<span class="exlv-passage-dur">' + formatDur(durSec) + '</span>' : '';
+        return '<div class="exlv-passage-row' + (isGrid ? ' compact' : '') + '">' +
+          '<span class="exlv-passage-text"><span class="exlv-passage-label">' + escapeHtml(p.label) + '</span>' + durHtml + '</span>' +
+          '<button type="button" class="exlv-passage-btn' + (p.running ? ' running' : '') + '" onclick="event.stopPropagation();exsimTogglePassage(' + myIdx + ')">' + (p.running ? '풀이 끝' : '풀이 시작') + '</button>' +
+        '</div>';
+      }).join("");
+      // 소제목은 그리드 바깥에 따로 두고, 실제 항목들만 그리드(또는 단일 줄) 컨테이너에 담는다
+      // — 그래야 소제목이 2열 그리드의 한 칸으로 끼어들지 않고 항목들 위에 통으로 걸린다.
+      return '<div class="exlv-passage-group">' + titleHtml + '<div class="' + (isGrid ? 'exlv-passage-grid' : 'exlv-passage-single') + '">' + rowsHtml + '</div></div>';
     }).join("");
   }
   function exsimTogglePassage(idx) {
@@ -9324,7 +9356,7 @@
   function exsimShowEnd(state) {
     exsimEndData = state;
     document.getElementById("exendSubject").textContent = state.period.periodLabel + " " + state.period.subject;
-    document.getElementById("exendDuration").textContent = formatDur(state.elapsedSec);
+    document.getElementById("exendDuration").textContent = formatDur(state.examSec || 0);
     const bar = document.getElementById("exendLapBar");
     const table = document.getElementById("exendLapTable");
     if (!state.laps.length) {
