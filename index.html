@@ -1356,7 +1356,6 @@
   .exlv-phase { font-size: 1.3rem; font-weight: 800; color: rgba(255,255,255,0.55); margin-bottom: 30px; }
   .exlv-clock-wrap { width: 220px; height: 220px; margin-bottom: 28px; }
   .exlv-clock { width: 100%; height: 100%; }
-  .exlv-hint { font-size: 0.9rem; color: rgba(255,255,255,0.7); font-weight: 600; margin-bottom: 20px; }
   .exlv-controls { display: flex; align-items: center; gap: 22px; margin-bottom: 18px; }
   .exlv-controls button { background: none; border: none; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 0.62rem; font-weight: 700; cursor: pointer; }
   #exlvPlayBtn { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.14); font-size: 1.1rem; display: flex; align-items: center; justify-content: center; padding-left: 2px; }
@@ -1404,6 +1403,23 @@
     .exlv { flex-direction: column; gap: 22px; padding-top: 64px; }
     .exlv-passages { width: 100%; max-width: 360px; }
     .exlv-passages-list { max-height: 260px; }
+  }
+
+  /* ── 시험 시뮬레이션: 처음 화면을 켰을 때(처음 한 번만) 주요 요소를 하나씩 짚어주는 튜토리얼.
+     스포트라이트는 대상 요소 위치에 딱 맞춘 빈 박스에 화면 전체를 덮는 초대형 box-shadow를
+     둘러서, 그 박스 안(대상 요소)만 뚫려 보이게 하는 방식 — 대상 요소 자체는 그대로 두고
+     z-index를 건드릴 필요가 없다. 안내 카드는 위치를 매번 계산하지 않도록 화면 하단에 고정. ── */
+  .exsim-tut { position: fixed; inset: 0; z-index: 320; }
+  .exsim-tut-spot { position: fixed; z-index: 321; border-radius: 14px; box-shadow: 0 0 0 9999px rgba(0,0,0,0.76); border: 2px solid rgba(255,255,255,0.9); pointer-events: none; transition: left 0.35s ease, top 0.35s ease, width 0.35s ease, height 0.35s ease; }
+  .exsim-tut-card { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); width: calc(100% - 40px); max-width: 380px; background: var(--paper); color: var(--ink); border-radius: 16px; padding: 18px 20px 16px; z-index: 322; box-shadow: 0 16px 44px rgba(0,0,0,0.5); }
+  .exsim-tut-text { font-size: 0.86rem; font-weight: 600; line-height: 1.55; margin-bottom: 14px; }
+  .exsim-tut-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .exsim-tut-step { font-size: 0.72rem; font-weight: 700; color: var(--ink-soft); }
+  .exsim-tut-btns { display: flex; align-items: center; gap: 4px; }
+  .exsim-tut-skip { background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.76rem; font-weight: 700; cursor: pointer; padding: 8px 10px; }
+  .exsim-tut-next { background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 8px 18px; font-family: inherit; font-size: 0.78rem; font-weight: 800; cursor: pointer; }
+  @media (max-width: 420px) {
+    .exsim-tut-card { bottom: 16px; padding: 16px 16px 14px; }
   }
 
   /* ── 시험 시뮬레이션: 종료 요약 화면 ── */
@@ -3900,7 +3916,7 @@
 </div>
 
 <!-- ═══ 시험 시뮬레이션: 진행 화면 ═══ -->
-<div class="exlv" id="exsimLive" onclick="exsimBackgroundTap(event)">
+<div class="exlv" id="exsimLive">
   <audio id="exlvListeningAudio" style="display:none"></audio>
   <audio id="exlvEffectAudio" style="display:none"></audio>
   <button type="button" class="exlv-close" onclick="event.stopPropagation();exsimRequestClose()" aria-label="닫기">&times;</button>
@@ -3918,7 +3934,6 @@
         <circle cx="100" cy="100" r="4" fill="#C23B3B"></circle>
       </svg>
     </div>
-    <div class="exlv-hint" id="exlvHint">화면을 터치하면 시작합니다</div>
     <div class="exlv-controls" id="exlvControls" style="display:none;">
       <button type="button" onclick="event.stopPropagation();exsimScrub(-30)" aria-label="30초 뒤로">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>30
@@ -3940,6 +3955,19 @@
   <div class="exlv-passages" id="exlvPassages" style="display:none;">
     <div class="exlv-passages-title">🚩 랩타임 기록</div>
     <div class="exlv-passages-list" id="exlvPassagesList"></div>
+  </div>
+  <div class="exsim-tut" id="exsimTut" style="display:none;">
+    <div class="exsim-tut-spot" id="exsimTutSpot"></div>
+    <div class="exsim-tut-card">
+      <div class="exsim-tut-text" id="exsimTutText"></div>
+      <div class="exsim-tut-footer">
+        <span class="exsim-tut-step" id="exsimTutStepLabel"></span>
+        <div class="exsim-tut-btns">
+          <button type="button" class="exsim-tut-skip" onclick="exsimTutSkip()">건너뛰기</button>
+          <button type="button" class="exsim-tut-next" id="exsimTutNextBtn" onclick="exsimTutNext()">다음</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -8977,35 +9005,99 @@
     };
     document.getElementById("exlvBadge").textContent = period.periodLabel + " " + period.subject;
     document.getElementById("exlvPhase").textContent = exsimPhaseLabel();
-    document.getElementById("exlvHint").style.display = "";
-    document.getElementById("exlvControls").style.display = "none";
-    document.getElementById("exlvLapRow").style.display = "none";
-    document.getElementById("exlvPassages").style.display = "none";
-    document.getElementById("exlvEndBtn").style.display = "none";
+    // 예전엔 "화면을 터치하면 시작합니다" 안내만 보여주고 탭해야 나머지가 드러났는데, 이제는
+    // 처음부터 실제 화면 그대로 다 보여주면서(진행 중처럼 보이지만 아직 타이머는 안 돎)
+    // 그 위에 튜토리얼을 띄운다 — 튜토리얼이 끝나야 exsimActuallyStartExam()으로 진짜 시작된다.
+    document.getElementById("exlvControls").style.display = "flex";
+    document.getElementById("exlvLapRow").style.display = "flex";
+    document.getElementById("exlvPassages").style.display = "flex";
+    document.getElementById("exlvEndBtn").style.display = "block";
     const playBtn = document.getElementById("exlvPlayBtn");
-    if (playBtn) playBtn.textContent = "❚❚";
+    if (playBtn) playBtn.textContent = "▶";
     const noiseBtn = document.getElementById("exlvNoiseBtn");
     if (noiseBtn) { noiseBtn.textContent = "🔇 시험장 소음 켜기"; noiseBtn.classList.remove("on"); }
     exsimRenderTimeline();
     exsimRenderPassages();
     exsimDrawClock(preMin);
     document.getElementById("exsimLive").classList.add("on");
+    if (localStorage.getItem("exsimTutorialSeen") === "1") exsimActuallyStartExam();
+    else exsimTutStart();
   }
-  function exsimBackgroundTap(e) {
+  // 튜토리얼(처음 한 번만) 또는 그냥 바로 — 실제로 가상 시계가 흐르기 시작하는 지점.
+  function exsimActuallyStartExam() {
     if (!exsimState || exsimState.started) return;
-    if (e.target.closest(".exlv-controls") || e.target.closest(".exlv-lap-row") || e.target.closest(".exlv-close") || e.target.closest(".exlv-timeline") || e.target.closest(".exlv-end-btn")) return;
     exsimState.started = true;
     exsimState.running = true;
-    document.getElementById("exlvHint").style.display = "none";
-    document.getElementById("exlvControls").style.display = "flex";
-    document.getElementById("exlvLapRow").style.display = "flex";
-    document.getElementById("exlvPassages").style.display = "flex";
-    document.getElementById("exlvEndBtn").style.display = "block";
+    const playBtn = document.getElementById("exlvPlayBtn");
+    if (playBtn) playBtn.textContent = "❚❚";
     if (localStorage.getItem("exsimNoiseDefaultOn") === "1") exsimToggleNoise();
     exsimState.lastPhase = exsimPhaseLabel();
     exsimPlayPhaseAnnouncement(exsimIsSimpleMode(exsimState.period) ? "start" : "pre");
     exsimUpdateDisplay();
     exsimTimerHandle = setInterval(exsimTick, 1000);
+  }
+
+  // ── 진행 화면: 처음 켰을 때 한 번만 보여주는 튜토리얼(주요 요소를 순서대로 스포트라이트) ──
+  // 각 단계는 4초 뒤 자동으로 다음으로 넘어가지만, "다음"을 눌러 바로 넘길 수도 있다.
+  const EXSIM_TUTORIAL_STEPS = [
+    { target: () => document.querySelector("#exsimLive .exlv-clock-wrap"), text: "실제 수능장에서 사용하는 시계를 활용하여, 현장감을 느낄 수 있습니다." },
+    { target: () => document.getElementById("exlvPlayBtn"), text: "불가피한 상황이 발생할 시, 잠시 시간을 멈출 수 있습니다." },
+    { target: () => document.getElementById("exlvNoiseBtn"), text: "이 버튼을 누르면, 미리 설정한 소음이 랜덤으로 재생됩니다. 이어폰 착용을 권장합니다." },
+    { target: () => document.getElementById("exlvTimeline"), text: "준비령, 본령을 누르면 그 시각으로 시간이 변경됩니다." },
+    { target: () => document.getElementById("exlvEndBtn"), text: "시험을 끝내고 싶으시면, 이 버튼을 눌러주세요." },
+  ];
+  let exsimTutStepIdx = 0;
+  let exsimTutAutoHandle = null;
+  function exsimTutStart() {
+    exsimTutStepIdx = 0;
+    document.getElementById("exsimTut").style.display = "block";
+    exsimTutShowStep();
+    window.addEventListener("resize", exsimTutReposition);
+  }
+  function exsimTutReposition() {
+    if (document.getElementById("exsimTut").style.display === "block") exsimTutShowStep(true);
+  }
+  function exsimTutShowStep(repositionOnly) {
+    const step = EXSIM_TUTORIAL_STEPS[exsimTutStepIdx];
+    const spot = document.getElementById("exsimTutSpot");
+    const targetEl = step.target();
+    if (targetEl) {
+      const r = targetEl.getBoundingClientRect();
+      const pad = 8;
+      spot.style.display = "block";
+      spot.style.left = (r.left - pad) + "px";
+      spot.style.top = (r.top - pad) + "px";
+      spot.style.width = (r.width + pad * 2) + "px";
+      spot.style.height = (r.height + pad * 2) + "px";
+    } else {
+      spot.style.display = "none";
+    }
+    if (repositionOnly) return;
+    document.getElementById("exsimTutText").textContent = step.text;
+    document.getElementById("exsimTutStepLabel").textContent = (exsimTutStepIdx + 1) + " / " + EXSIM_TUTORIAL_STEPS.length;
+    document.getElementById("exsimTutNextBtn").textContent = exsimTutStepIdx === EXSIM_TUTORIAL_STEPS.length - 1 ? "시작하기" : "다음";
+    clearTimeout(exsimTutAutoHandle);
+    exsimTutAutoHandle = setTimeout(exsimTutNext, 4000);
+  }
+  function exsimTutNext() {
+    clearTimeout(exsimTutAutoHandle);
+    exsimTutStepIdx++;
+    if (exsimTutStepIdx >= EXSIM_TUTORIAL_STEPS.length) { exsimTutFinish(); return; }
+    exsimTutShowStep();
+  }
+  function exsimTutSkip() {
+    exsimTutFinish();
+  }
+  function exsimTutFinish() {
+    exsimTutCancel();
+    localStorage.setItem("exsimTutorialSeen", "1");
+    exsimActuallyStartExam();
+  }
+  // 튜토리얼 도중 화면을 그냥 닫아버린 경우(× 버튼) — "봤다"고 기록하지 않고 타이머만 정리한다.
+  function exsimTutCancel() {
+    clearTimeout(exsimTutAutoHandle);
+    window.removeEventListener("resize", exsimTutReposition);
+    document.getElementById("exsimTut").style.display = "none";
   }
   function exsimTick() {
     if (!exsimState || !exsimState.running) return;
@@ -9327,6 +9419,7 @@
   function exsimCloseLiveOnly() {
     clearInterval(exsimTimerHandle);
     exsimStopNoise();
+    exsimTutCancel();
     document.getElementById("exsimLive").classList.remove("on");
     exsimState = null;
   }
