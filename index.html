@@ -1412,8 +1412,8 @@
   .exend-lap-group { display: flex; flex-direction: column; gap: 1px; }
   .exend-lap-group-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.74rem; font-weight: 700; color: var(--ink); padding: 4px 4px 6px; border-bottom: 1px solid var(--line); margin-bottom: 2px; }
   .exend-lap-group-total { color: var(--green-deep); font-weight: 800; }
-  .exend-lap-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.74rem; padding: 6px 4px; color: var(--ink); }
-  .exend-lap-row:nth-child(odd) { background: var(--cream); }
+  .exend-lap-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
+  .exend-lap-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; font-size: 0.74rem; padding: 7px 10px; color: var(--ink); background: var(--cream); border-radius: 8px; }
   .exend-lap-row-dur { color: var(--ink-soft); font-weight: 700; }
   .exend-save-btn { width: 100%; background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 14px; font-family: inherit; font-size: 0.95rem; font-weight: 800; cursor: pointer; margin-top: 6px; }
   .exend-save-btn:disabled { opacity: 0.6; cursor: default; }
@@ -9380,7 +9380,7 @@
           return '<div class="exend-lap-row"><span>' + escapeHtml(p.label) + '</span><span class="exend-lap-row-dur">' + (p.totalSec > 0 ? formatDur(p.totalSec) : "-") + '</span></div>';
         }).join("");
         const headHtml = group.title ? '<div class="exend-lap-group-head"><span>' + escapeHtml(group.title) + '</span><span class="exend-lap-group-total">' + (groupTotalSec > 0 ? formatDur(groupTotalSec) : "-") + '</span></div>' : "";
-        return '<div class="exend-lap-group">' + headHtml + rowsHtml + '</div>';
+        return '<div class="exend-lap-group">' + headHtml + '<div class="exend-lap-rows">' + rowsHtml + '</div></div>';
       }).join("");
     }
     // "전과목" 연속 진행 중 + 다음 교시가 남아있으면, 저장 버튼을 "다음 교시로 이어가기"로 바꾼다.
