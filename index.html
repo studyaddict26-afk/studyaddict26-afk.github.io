@@ -1391,6 +1391,7 @@
   .exlv-passage-dur { font-size: 0.58rem; font-weight: 600; color: var(--green); }
   .exlv-passage-btn { flex: none; font-family: inherit; font-size: 0.58rem; font-weight: 700; color: #fff; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22); border-radius: 999px; padding: 5px 9px; cursor: pointer; white-space: nowrap; letter-spacing: 0.01em; }
   .exlv-passage-btn.running { background: var(--green-deep); border-color: var(--green-deep); }
+  .exlv-passage-btn.locked { opacity: 0.4; }
   @media (max-width: 760px) {
     .exlv { flex-direction: column; gap: 22px; padding-top: 64px; }
     .exlv-passages { width: 100%; max-width: 360px; }
@@ -9073,14 +9074,16 @@
     const currentPhase = exsimPhaseLabel();
     if (phaseEl) phaseEl.textContent = currentPhase;
     // 단계가 바뀌는 순간(예비령→준비령→본령)에 안내방송을 한 번만 재생.
-    if (exsimState.started && currentPhase !== exsimState.lastPhase) {
+    const phaseChanged = exsimState.started && currentPhase !== exsimState.lastPhase;
+    if (phaseChanged) {
       exsimState.lastPhase = currentPhase;
       const key = currentPhase === "준비령" ? "ready" : currentPhase === "본령" ? "start" : null;
       if (key) exsimPlayPhaseAnnouncement(key);
     }
     exsimUpdateTimelineFill();
-    // 현재 풀이 중(진행 중)인 지문이 있으면 오른쪽 패널의 경과 시간 표시를 매초 갱신
-    if (exsimState.passages && exsimState.passages.some(p => p.running)) exsimRenderPassages();
+    // 현재 풀이 중(진행 중)인 지문이 있으면 매초 경과 시간을 갱신하고, 본령 진입 등 단계가
+    // 바뀌는 순간에도 다시 그려서 랩타임 버튼의 잠금(잠금 해제) 표시를 즉시 반영한다.
+    if (phaseChanged || (exsimState.passages && exsimState.passages.some(p => p.running))) exsimRenderPassages();
     // 영어 본령 시작 시점에 첨부한 듣기 음원을 한 번만 자동 재생
     if (exsimState.period.hasListening && exsimListeningObjectUrl && !exsimState.listeningPlayed) {
       const startAtSec = (exsimState.startMin - exsimState.preMin) * 60;
@@ -9164,9 +9167,16 @@
   function exsimPassageGroupsFor(period) {
     return (period && EXAM_PASSAGE_SETS[period.id]) || [{ title: null, items: ["전체"] }];
   }
+  // 본령(내신은 "진행 중")이 시작되기 전에는 랩타임 기록을 막는다 — 예비령/준비령 단계에서
+  // 미리 눌러 시간이 잘못 기록되는 것을 방지하기 위함.
+  function exsimPassagesLocked() {
+    const phase = exsimPhaseLabel();
+    return phase !== "본령" && phase !== "진행 중";
+  }
   function exsimRenderPassages() {
     const list = document.getElementById("exlvPassagesList");
     if (!list || !exsimState || !exsimState.passages) return;
+    const locked = exsimPassagesLocked();
     let idx = 0;
     list.innerHTML = (exsimState.passageGroups || []).map(group => {
       let groupTotalSec = 0;
@@ -9182,7 +9192,7 @@
         const btnLabel = p.running ? (p.startCount > 1 ? '재풀이 끝' : '풀이 끝') : (p.startCount > 0 ? '재풀이 시작' : '풀이 시작');
         return '<div class="exlv-passage-row">' +
           '<span class="exlv-passage-text"><span class="exlv-passage-label">' + escapeHtml(p.label) + '</span>' + durHtml + '</span>' +
-          '<button type="button" class="exlv-passage-btn' + (p.running ? ' running' : '') + '" onclick="event.stopPropagation();exsimTogglePassage(' + myIdx + ')">' + btnLabel + '</button>' +
+          '<button type="button" class="exlv-passage-btn' + (p.running ? ' running' : '') + (locked ? ' locked' : '') + '" onclick="event.stopPropagation();exsimTogglePassage(' + myIdx + ')">' + btnLabel + '</button>' +
         '</div>';
       }).join("");
       // 소제목은 그리드 바깥에 따로 두고, 실제 항목들만 그리드 컨테이너에 담는다
@@ -9194,6 +9204,7 @@
   }
   function exsimTogglePassage(idx) {
     if (!exsimState || !exsimState.passages) return;
+    if (exsimPassagesLocked()) { showToast("본령을 눌러 시험을 시작해주세요"); return; }
     const p = exsimState.passages[idx];
     if (!p) return;
     if (!p.running) {
