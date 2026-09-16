@@ -1347,10 +1347,11 @@
      (그래야 저녁에 연습해도 실제 수능 시간표 감각을 느낄 수 있음). */
   .exlv {
     display: none; position: fixed; inset: 0; z-index: 300; background: #000;
-    flex-direction: column; align-items: center; justify-content: center;
-    padding: 56px 24px 24px 24px; color: #fff; text-align: center; user-select: none;
+    flex-direction: row; align-items: center; justify-content: center; gap: 56px;
+    padding: 56px 24px 24px 24px; color: #fff; user-select: none; overflow-y: auto;
   }
   .exlv.on { display: flex; }
+  .exlv-main { display: flex; flex-direction: column; align-items: center; flex: none; text-align: center; }
   .exlv-close { position: absolute; top: 20px; left: 20px; width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); color: #fff; font-size: 1.4rem; line-height: 1; cursor: pointer; }
   .exlv-badge { border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 6px 16px; font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.85); margin-bottom: 10px; }
   .exlv-phase { font-size: 1.3rem; font-weight: 800; color: rgba(255,255,255,0.55); margin-bottom: 30px; }
@@ -1360,8 +1361,8 @@
   .exlv-controls { display: flex; align-items: center; gap: 22px; margin-bottom: 18px; }
   .exlv-controls button { background: none; border: none; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 0.62rem; font-weight: 700; cursor: pointer; }
   #exlvPlayBtn { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.14); font-size: 1.1rem; display: flex; align-items: center; justify-content: center; padding-left: 2px; }
-  .exlv-lap-row { display: flex; gap: 12px; margin-bottom: 36px; flex-wrap: wrap; justify-content: center; }
-  .exlv-noise-btn, .exlv-lap-btn { font-family: inherit; font-size: 0.82rem; font-weight: 700; color: #fff; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 10px 18px; cursor: pointer; }
+  .exlv-noise-row { display: flex; gap: 12px; margin-bottom: 36px; flex-wrap: wrap; justify-content: center; }
+  .exlv-noise-btn { font-family: inherit; font-size: 0.82rem; font-weight: 700; color: #fff; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 10px 18px; cursor: pointer; }
   .exlv-noise-btn.on { background: var(--green-deep); border-color: var(--green-deep); }
   .exlv-timeline { width: 100%; max-width: 347px; margin-top: 18px; }
   .exlv-tl-track { position: relative; height: 2px; background: rgba(255,255,255,0.25); border-radius: 1px; overflow: hidden; }
@@ -1373,6 +1374,23 @@
   .exlv-tl-pt.done { color: rgba(255,255,255,0.85); }
   .exlv-tl-pt .exlv-tl-time { display: block; font-weight: 700; margin-bottom: 2px; }
   .exlv-tl-pt button { background: none; border: none; color: inherit; font: inherit; padding: 0; cursor: pointer; }
+
+  /* ── 진행 화면: 오른쪽 지문별 랩타임 기록 패널 — 과목마다 지문 구성이 달라서(국어는
+     예시문항 기준 15개 지문/자료 세트) EXAM_PASSAGE_SETS에 과목별 목록을 따로 정의해 쓴다. ── */
+  .exlv-passages { display: none; flex-direction: column; flex: none; width: 260px; max-height: 640px; text-align: left; }
+  .exlv-passages-title { flex: none; font-size: 0.8rem; font-weight: 800; color: rgba(255,255,255,0.6); text-align: center; letter-spacing: 0.02em; margin-bottom: 14px; }
+  .exlv-passages-list { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
+  .exlv-passage-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; padding: 9px 10px 9px 14px; }
+  .exlv-passage-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .exlv-passage-label { font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.85); }
+  .exlv-passage-dur { font-size: 0.68rem; font-weight: 700; color: var(--green); }
+  .exlv-passage-btn { flex: none; font-family: inherit; font-size: 0.72rem; font-weight: 800; color: #fff; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 7px 13px; cursor: pointer; white-space: nowrap; }
+  .exlv-passage-btn.running { background: var(--green-deep); border-color: var(--green-deep); }
+  @media (max-width: 760px) {
+    .exlv { flex-direction: column; gap: 22px; padding-top: 64px; }
+    .exlv-passages { width: 100%; max-width: 360px; }
+    .exlv-passages-list { max-height: 240px; }
+  }
 
   /* ── 시험 시뮬레이션: 종료 요약 화면 ── */
   .exend { display: none; position: fixed; inset: 0; z-index: 301; background: rgba(12,14,18,0.6); align-items: center; justify-content: center; padding: 24px; }
@@ -3866,36 +3884,41 @@
   <audio id="exlvListeningAudio" style="display:none"></audio>
   <audio id="exlvEffectAudio" style="display:none"></audio>
   <button type="button" class="exlv-close" onclick="event.stopPropagation();exsimRequestClose()" aria-label="닫기">&times;</button>
-  <div class="exlv-badge" id="exlvBadge">1교시</div>
-  <div class="exlv-phase" id="exlvPhase">예비령</div>
-  <div class="exlv-clock-wrap">
-    <svg class="exlv-clock" viewBox="0 0 200 200" id="exlvClockSvg">
-      <circle cx="100" cy="100" r="94" fill="#fff" stroke="#111" stroke-width="4"></circle>
-      <g id="exlvTicks"></g>
-      <g id="exlvNums" font-family="inherit" font-size="15" font-weight="700" fill="#111" text-anchor="middle"></g>
-      <line id="exlvHourHand" x1="100" y1="100" x2="100" y2="58" stroke="#111" stroke-width="5" stroke-linecap="round"></line>
-      <line id="exlvMinHand" x1="100" y1="100" x2="100" y2="38" stroke="#111" stroke-width="3.5" stroke-linecap="round"></line>
-      <line id="exlvSecHand" x1="100" y1="112" x2="100" y2="30" stroke="#C23B3B" stroke-width="1.5" stroke-linecap="round"></line>
-      <circle cx="100" cy="100" r="4" fill="#C23B3B"></circle>
-    </svg>
+  <div class="exlv-main">
+    <div class="exlv-badge" id="exlvBadge">1교시</div>
+    <div class="exlv-phase" id="exlvPhase">예비령</div>
+    <div class="exlv-clock-wrap">
+      <svg class="exlv-clock" viewBox="0 0 200 200" id="exlvClockSvg">
+        <circle cx="100" cy="100" r="94" fill="#fff" stroke="#111" stroke-width="4"></circle>
+        <g id="exlvTicks"></g>
+        <g id="exlvNums" font-family="inherit" font-size="15" font-weight="700" fill="#111" text-anchor="middle"></g>
+        <line id="exlvHourHand" x1="100" y1="100" x2="100" y2="58" stroke="#111" stroke-width="5" stroke-linecap="round"></line>
+        <line id="exlvMinHand" x1="100" y1="100" x2="100" y2="38" stroke="#111" stroke-width="3.5" stroke-linecap="round"></line>
+        <line id="exlvSecHand" x1="100" y1="112" x2="100" y2="30" stroke="#C23B3B" stroke-width="1.5" stroke-linecap="round"></line>
+        <circle cx="100" cy="100" r="4" fill="#C23B3B"></circle>
+      </svg>
+    </div>
+    <div class="exlv-hint" id="exlvHint">화면을 터치하면 시작합니다</div>
+    <div class="exlv-controls" id="exlvControls" style="display:none;">
+      <button type="button" onclick="event.stopPropagation();exsimScrub(-30)" aria-label="30초 뒤로">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>30
+      </button>
+      <button type="button" id="exlvPlayBtn" onclick="event.stopPropagation();exsimTogglePause()" aria-label="일시정지/재생">❚❚</button>
+      <button type="button" onclick="event.stopPropagation();exsimScrub(30)" aria-label="30초 앞으로">30
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      </button>
+    </div>
+    <div class="exlv-noise-row" id="exlvLapRow" style="display:none;">
+      <button type="button" class="exlv-noise-btn" id="exlvNoiseBtn" onclick="event.stopPropagation();exsimToggleNoise()">🔇 시험장 소음 켜기</button>
+    </div>
+    <div class="exlv-timeline" id="exlvTimeline">
+      <div class="exlv-tl-track"><div class="exlv-tl-fill" id="exlvTlFill"></div></div>
+      <div class="exlv-tl-labels" id="exlvTlLabels"></div>
+    </div>
   </div>
-  <div class="exlv-hint" id="exlvHint">화면을 터치하면 시작합니다</div>
-  <div class="exlv-controls" id="exlvControls" style="display:none;">
-    <button type="button" onclick="event.stopPropagation();exsimScrub(-30)" aria-label="30초 뒤로">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>30
-    </button>
-    <button type="button" id="exlvPlayBtn" onclick="event.stopPropagation();exsimTogglePause()" aria-label="일시정지/재생">❚❚</button>
-    <button type="button" onclick="event.stopPropagation();exsimScrub(30)" aria-label="30초 앞으로">30
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-    </button>
-  </div>
-  <div class="exlv-lap-row" id="exlvLapRow" style="display:none;">
-    <button type="button" class="exlv-noise-btn" id="exlvNoiseBtn" onclick="event.stopPropagation();exsimToggleNoise()">🔇 시험장 소음 켜기</button>
-    <button type="button" class="exlv-lap-btn" onclick="event.stopPropagation();exsimRecordLap()">🚩 랩타임 기록</button>
-  </div>
-  <div class="exlv-timeline" id="exlvTimeline">
-    <div class="exlv-tl-track"><div class="exlv-tl-fill" id="exlvTlFill"></div></div>
-    <div class="exlv-tl-labels" id="exlvTlLabels"></div>
+  <div class="exlv-passages" id="exlvPassages" style="display:none;">
+    <div class="exlv-passages-title">🚩 랩타임 기록</div>
+    <div class="exlv-passages-list" id="exlvPassagesList"></div>
   </div>
 </div>
 
@@ -8976,21 +8999,25 @@
     if (!period) return;
     exsimInitClockFaceOnce();
     const preMin = hmToMin(period.pre), readyMin = hmToMin(period.ready), startMin = hmToMin(period.start), endMin = hmToMin(period.end);
+    const passageLabels = exsimPassageLabelsFor(period);
     exsimState = {
       period: period, preMin: preMin, readyMin: readyMin, startMin: startMin, endMin: endMin,
       totalSec: (endMin - preMin) * 60,
       elapsedSec: 0, running: false, started: false, laps: [], noiseOn: false, listeningPlayed: false,
+      passages: passageLabels.map(label => ({ label: label, startSec: null, endSec: null, running: false })),
     };
     document.getElementById("exlvBadge").textContent = period.periodLabel + " " + period.subject;
     document.getElementById("exlvPhase").textContent = exsimPhaseLabel();
     document.getElementById("exlvHint").style.display = "";
     document.getElementById("exlvControls").style.display = "none";
     document.getElementById("exlvLapRow").style.display = "none";
+    document.getElementById("exlvPassages").style.display = "none";
     const playBtn = document.getElementById("exlvPlayBtn");
     if (playBtn) playBtn.textContent = "❚❚";
     const noiseBtn = document.getElementById("exlvNoiseBtn");
     if (noiseBtn) { noiseBtn.textContent = "🔇 시험장 소음 켜기"; noiseBtn.classList.remove("on"); }
     exsimRenderTimeline();
+    exsimRenderPassages();
     exsimDrawClock(preMin);
     document.getElementById("exsimLive").classList.add("on");
   }
@@ -9002,6 +9029,7 @@
     document.getElementById("exlvHint").style.display = "none";
     document.getElementById("exlvControls").style.display = "flex";
     document.getElementById("exlvLapRow").style.display = "flex";
+    document.getElementById("exlvPassages").style.display = "flex";
     if (localStorage.getItem("exsimNoiseDefaultOn") === "1") exsimToggleNoise();
     exsimState.lastPhase = exsimPhaseLabel();
     exsimPlayPhaseAnnouncement(exsimIsSimpleMode(exsimState.period) ? "start" : "pre");
@@ -9034,6 +9062,8 @@
       if (key) exsimPlayPhaseAnnouncement(key);
     }
     exsimUpdateTimelineFill();
+    // 현재 풀이 중(진행 중)인 지문이 있으면 오른쪽 패널의 경과 시간 표시를 매초 갱신
+    if (exsimState.passages && exsimState.passages.some(p => p.running)) exsimRenderPassages();
     // 영어 본령 시작 시점에 첨부한 듣기 음원을 한 번만 자동 재생
     if (exsimState.period.hasListening && exsimListeningObjectUrl && !exsimState.listeningPlayed) {
       const startAtSec = (exsimState.startMin - exsimState.preMin) * 60;
@@ -9103,10 +9133,42 @@
     const btn = document.getElementById("exlvPlayBtn");
     if (btn) btn.textContent = exsimState.running ? "❚❚" : "▶";
   }
-  function exsimRecordLap() {
-    if (!exsimState || !exsimState.started) return;
-    exsimState.laps.push({ sec: exsimState.elapsedSec });
-    showToast("랩타임 기록! (" + exsimState.laps.length + "번째)");
+  // ── 진행 화면: 지문별 랩타임 기록(오른쪽 패널) ──
+  // 과목마다 지문 구성이 달라서 EXAM_PASSAGE_SETS에 과목 id별로 목록을 따로 정의해 둔다.
+  // 아직 정의하지 않은 과목(국어 외)은 "전체" 한 칸짜리 기본값으로 동작한다.
+  const EXAM_PASSAGE_SETS = {
+    kor: Array.from({ length: 15 }, (_, i) => "지문 " + (i + 1)),
+  };
+  function exsimPassageLabelsFor(period) {
+    return (period && EXAM_PASSAGE_SETS[period.id]) || ["전체"];
+  }
+  function exsimRenderPassages() {
+    const list = document.getElementById("exlvPassagesList");
+    if (!list || !exsimState || !exsimState.passages) return;
+    list.innerHTML = exsimState.passages.map((p, i) => {
+      const durSec = p.endSec !== null ? p.endSec - p.startSec : (p.running ? exsimState.elapsedSec - p.startSec : null);
+      const durHtml = durSec !== null ? '<span class="exlv-passage-dur">' + formatDur(durSec) + '</span>' : '';
+      return '<div class="exlv-passage-row">' +
+        '<span class="exlv-passage-text"><span class="exlv-passage-label">' + escapeHtml(p.label) + '</span>' + durHtml + '</span>' +
+        '<button type="button" class="exlv-passage-btn' + (p.running ? ' running' : '') + '" onclick="event.stopPropagation();exsimTogglePassage(' + i + ')">' + (p.running ? '풀이 끝' : '풀이 시작') + '</button>' +
+      '</div>';
+    }).join("");
+  }
+  function exsimTogglePassage(idx) {
+    if (!exsimState || !exsimState.passages) return;
+    const p = exsimState.passages[idx];
+    if (!p) return;
+    if (!p.running) {
+      p.running = true;
+      p.startSec = exsimState.elapsedSec;
+      p.endSec = null;
+    } else {
+      p.running = false;
+      p.endSec = exsimState.elapsedSec;
+      // 기존 "모의고사 기록에 시험 시뮬레이션 랩타임 연결" 기능과의 호환을 위해 laps에도 함께 기록.
+      exsimState.laps.push({ sec: p.endSec });
+    }
+    exsimRenderPassages();
   }
 
   // ── 진행 화면: 시험장 소음(Web Audio API로 생성 — 별도 음원 파일 없이 재생) ──
