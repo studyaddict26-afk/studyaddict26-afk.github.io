@@ -1356,6 +1356,13 @@
   .exlv-phase { font-size: 1.3rem; font-weight: 800; color: rgba(255,255,255,0.55); margin-bottom: 30px; }
   .exlv-clock-wrap { width: 220px; height: 220px; margin-bottom: 28px; }
   .exlv-clock { width: 100%; height: 100%; }
+  #exlvTimerText { display: none; }
+  /* 내신(수능처럼 정해진 실제 시각이 없는 자유 타이머 모드)에서는 시계 테두리 디자인은 그대로
+     두고 안쪽 눈금/숫자/바늘만 숫자 타이머로 바꿔치기한다. */
+  .exlv-clock.timer-mode #exlvTicks, .exlv-clock.timer-mode #exlvNums,
+  .exlv-clock.timer-mode #exlvHourHand, .exlv-clock.timer-mode #exlvMinHand,
+  .exlv-clock.timer-mode #exlvSecHand, .exlv-clock.timer-mode #exlvCenterDot { display: none; }
+  .exlv-clock.timer-mode #exlvTimerText { display: block; }
   .exlv-controls { display: flex; align-items: center; gap: 22px; margin-bottom: 18px; }
   .exlv-controls button { background: none; border: none; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 0.62rem; font-weight: 700; cursor: pointer; }
   #exlvPlayBtn { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.14); font-size: 1.1rem; display: flex; align-items: center; justify-content: center; padding-left: 2px; }
@@ -3937,7 +3944,8 @@
         <line id="exlvHourHand" x1="100" y1="100" x2="100" y2="58" stroke="#111" stroke-width="5" stroke-linecap="round"></line>
         <line id="exlvMinHand" x1="100" y1="100" x2="100" y2="38" stroke="#111" stroke-width="3.5" stroke-linecap="round"></line>
         <line id="exlvSecHand" x1="100" y1="112" x2="100" y2="30" stroke="#C23B3B" stroke-width="1.5" stroke-linecap="round"></line>
-        <circle cx="100" cy="100" r="4" fill="#C23B3B"></circle>
+        <circle id="exlvCenterDot" cx="100" cy="100" r="4" fill="#C23B3B"></circle>
+        <text id="exlvTimerText" x="100" y="100" text-anchor="middle" dominant-baseline="middle" font-family="inherit" font-weight="800" font-size="34" fill="#111"></text>
       </svg>
     </div>
     <div class="exlv-controls" id="exlvControls" style="display:none;">
@@ -9004,6 +9012,17 @@
     if (minHand) minHand.setAttribute("transform", "rotate(" + minAngle + " 100 100)");
     if (secHand) secHand.setAttribute("transform", "rotate(" + secAngle + " 100 100)");
   }
+  // 내신 타이머 모드 표시용 — "분:초"(1시간 넘으면 "시:분:초") 형식의 숫자 타이머.
+  function exsimFormatTimer(sec) {
+    sec = Math.max(0, Math.round(sec));
+    const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+    return (h > 0 ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(s).padStart(2, "0");
+  }
+  function exsimUpdateTimerText() {
+    const el = document.getElementById("exlvTimerText");
+    if (!el || !exsimState) return;
+    el.textContent = exsimFormatTimer(exsimState.totalSec - exsimState.elapsedSec);
+  }
 
   // ── 진행 화면: 세션 상태/타이머 ──
   let exsimState = null;
@@ -9030,6 +9049,10 @@
     };
     document.getElementById("exlvBadge").textContent = period.periodLabel + " " + period.subject;
     document.getElementById("exlvPhase").textContent = exsimPhaseLabel();
+    // 수능처럼 정해진 실제 시각이 있는 과목은 아날로그 시계, 내신처럼 학생이 직접 시간만
+    // 정하는 경우는 시계 테두리 안쪽을 숫자 타이머로 바꿔서 보여준다.
+    const clockSvg = document.getElementById("exlvClockSvg");
+    if (clockSvg) clockSvg.classList.toggle("timer-mode", exsimIsSimpleMode(period));
     // 예전엔 "화면을 터치하면 시작합니다" 안내만 보여주고 탭해야 나머지가 드러났는데, 이제는
     // 처음부터 실제 화면 그대로 다 보여주면서(진행 중처럼 보이지만 아직 타이머는 안 돎)
     // 그 위에 튜토리얼을 띄운다 — 튜토리얼이 끝나야 exsimActuallyStartExam()으로 진짜 시작된다.
@@ -9044,6 +9067,7 @@
     exsimRenderTimeline();
     exsimRenderPassages();
     exsimDrawClock(preMin);
+    exsimUpdateTimerText();
     document.getElementById("exsimLive").classList.add("on");
     if (localStorage.getItem(exsimTutorialSeenKey()) === "1") exsimActuallyStartExam();
     else exsimTutStart();
@@ -9150,6 +9174,7 @@
   function exsimUpdateDisplay() {
     if (!exsimState) return;
     exsimDrawClock(exsimState.preMin + exsimState.elapsedSec / 60);
+    exsimUpdateTimerText();
     const phaseEl = document.getElementById("exlvPhase");
     const currentPhase = exsimPhaseLabel();
     if (phaseEl) phaseEl.textContent = currentPhase;
