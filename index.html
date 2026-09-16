@@ -9251,6 +9251,12 @@
     ],
   };
   function exsimPassageGroupsFor(period) {
+    // 내신은 과목마다 지문 구성이 고정돼 있지 않고, 학생이 시작 전에 직접 입력한 문항 개수만큼
+    // "문제 1"~"문제 N"을 4열로 채운다 — 소제목은 따로 두지 않는다.
+    if (period && period.id === "naeshin") {
+      const n = Math.max(1, period.count || 20);
+      return [{ title: null, cols: 4, items: Array.from({ length: n }, (_, i) => "문제 " + (i + 1)) }];
+    }
     return (period && EXAM_PASSAGE_SETS[period.id]) || [{ title: null, items: ["전체"] }];
   }
   // 본령(내신은 "진행 중")이 시작되기 전에는 랩타임 기록을 막는다 — 예비령/준비령 단계에서
