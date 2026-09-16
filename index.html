@@ -4697,23 +4697,27 @@
     </div>
     <div class="exsim-wrap">
       <div class="exsim-naeshin-card">
-        <div class="mex-field">
-          <label>과목명</label>
-          <input type="text" id="exsimNaeshinSubject" placeholder="예: 수학 내신">
+        <div class="mex-field-row">
+          <div class="mex-field">
+            <label>과목명</label>
+            <input type="text" id="exsimNaeshinSubject" placeholder="예: 수학 내신">
+          </div>
+          <button type="button" class="exsim-top-btn" onclick="exsimOpenNoisePanel()">
+            <span class="exsim-top-btn-ico">🔊</span>
+            <span class="exsim-top-btn-text"><span class="exsim-top-btn-label">시험장 소음 설정하기</span><span class="exsim-top-btn-sub">설정 완료</span></span>
+            <span class="exsim-top-btn-arrow">›</span>
+          </button>
         </div>
-        <div class="mex-field">
-          <label>시험 시간(분)</label>
-          <input type="number" id="exsimNaeshinMinutes" min="10" max="180" value="50">
+        <div class="mex-field-row">
+          <div class="mex-field">
+            <label>시험 시간(분)</label>
+            <input type="number" id="exsimNaeshinMinutes" min="10" max="180" value="50">
+          </div>
+          <div class="mex-field">
+            <label>문항 개수</label>
+            <input type="number" id="exsimNaeshinCount" min="1" max="100" value="20">
+          </div>
         </div>
-        <div class="mex-field">
-          <label>문항 개수</label>
-          <input type="number" id="exsimNaeshinCount" min="1" max="100" value="20">
-        </div>
-        <button type="button" class="exsim-top-btn" onclick="exsimOpenNoisePanel()">
-          <span class="exsim-top-btn-ico">🔊</span>
-          <span class="exsim-top-btn-text"><span class="exsim-top-btn-label">시험장 소음 설정하기</span><span class="exsim-top-btn-sub">설정 완료</span></span>
-          <span class="exsim-top-btn-arrow">›</span>
-        </button>
         <button type="button" class="exsim-start-btn exsim-naeshin-start-btn" onclick="exsimStartNaeshin()">시험 시작</button>
       </div>
     </div>
