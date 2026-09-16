@@ -1406,13 +1406,13 @@
   .exend-card { border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
   .exend-card-label { font-size: 0.72rem; font-weight: 700; color: var(--ink-soft); text-align: center; margin-bottom: 8px; }
   .exend-card-value { font-size: 1.15rem; font-weight: 800; color: var(--ink); text-align: center; }
-  .exend-lap-bar { position: relative; height: 24px; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
-  .exend-lap-bar .flag { position: absolute; bottom: 0; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 10px solid var(--green-deep); transform: translateX(-50%); }
-  .exend-lap-table { display: flex; flex-direction: column; gap: 1px; max-height: 220px; overflow-y: auto; }
-  .exend-lap-table-head, .exend-lap-table-row { display: grid; grid-template-columns: 34px 1fr 1fr 1fr; gap: 6px; font-size: 0.7rem; padding: 6px 4px; }
-  .exend-lap-table-head { color: var(--ink-soft); font-weight: 700; border-bottom: 1px solid var(--line); }
-  .exend-lap-table-row { color: var(--ink); }
-  .exend-lap-table-row:nth-child(odd) { background: var(--cream); }
+  .exend-lap-table { display: flex; flex-direction: column; gap: 14px; max-height: 280px; overflow-y: auto; }
+  .exend-lap-group { display: flex; flex-direction: column; gap: 1px; }
+  .exend-lap-group-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.74rem; font-weight: 700; color: var(--ink); padding: 4px 4px 6px; border-bottom: 1px solid var(--line); margin-bottom: 2px; }
+  .exend-lap-group-total { color: var(--green-deep); font-weight: 800; }
+  .exend-lap-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.74rem; padding: 6px 4px; color: var(--ink); }
+  .exend-lap-row:nth-child(odd) { background: var(--cream); }
+  .exend-lap-row-dur { color: var(--ink-soft); font-weight: 700; }
   .exend-save-btn { width: 100%; background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 14px; font-family: inherit; font-size: 0.95rem; font-weight: 800; cursor: pointer; margin-top: 6px; }
   .exend-save-btn:disabled { opacity: 0.6; cursor: default; }
 
@@ -3942,7 +3942,6 @@
     </div>
     <div class="exend-card" id="exendLapCard">
       <div class="exend-card-label">랩타임</div>
-      <div class="exend-lap-bar" id="exendLapBar"></div>
       <div class="exend-lap-table" id="exendLapTable"></div>
     </div>
     <button type="button" class="exend-save-btn" id="exendSaveBtn" onclick="exsimSaveSession()">기록하기 →</button>
@@ -9361,19 +9360,24 @@
     exsimEndData = state;
     document.getElementById("exendSubject").textContent = state.period.periodLabel + " " + state.period.subject;
     document.getElementById("exendDuration").textContent = formatDur(state.examSec || 0);
-    const bar = document.getElementById("exendLapBar");
     const table = document.getElementById("exendLapTable");
-    if (!state.laps.length) {
-      bar.innerHTML = "";
+    const passages = state.passages || [];
+    const anyRecorded = passages.some(p => p.totalSec > 0);
+    if (!anyRecorded) {
       table.innerHTML = '<div style="text-align:center;color:var(--ink-soft);font-size:0.78rem;padding:10px;">기록된 랩타임이 없어요</div>';
     } else {
-      bar.innerHTML = state.laps.map(l => '<div class="flag" style="left:' + (l.sec / state.totalSec * 100) + '%"></div>').join("");
-      let prevSec = 0;
-      table.innerHTML = '<div class="exend-lap-table-head"><span>번호</span><span>기록 시각</span><span>간격</span><span>경과</span></div>' +
-        state.laps.map((l, i) => {
-          const gapSec = l.sec - prevSec; prevSec = l.sec;
-          return '<div class="exend-lap-table-row"><span>' + (i + 1) + '</span><span>' + minToHM(state.preMin + l.sec / 60) + '</span><span>+' + formatDur(gapSec) + '</span><span>' + formatDur(l.sec) + '</span></div>';
+      let idx = 0;
+      // 진행 화면 오른쪽 패널과 같은 제재별 그룹 구조로, 지문별 누적 시간을 그대로 보여준다.
+      table.innerHTML = (state.passageGroups || []).map(group => {
+        let groupTotalSec = 0;
+        const rowsHtml = group.items.map(() => {
+          const p = passages[idx]; idx++;
+          groupTotalSec += p.totalSec;
+          return '<div class="exend-lap-row"><span>' + escapeHtml(p.label) + '</span><span class="exend-lap-row-dur">' + (p.totalSec > 0 ? formatDur(p.totalSec) : "-") + '</span></div>';
         }).join("");
+        const headHtml = group.title ? '<div class="exend-lap-group-head"><span>' + escapeHtml(group.title) + '</span><span class="exend-lap-group-total">' + (groupTotalSec > 0 ? formatDur(groupTotalSec) : "-") + '</span></div>' : "";
+        return '<div class="exend-lap-group">' + headHtml + rowsHtml + '</div>';
+      }).join("");
     }
     // "전과목" 연속 진행 중 + 다음 교시가 남아있으면, 저장 버튼을 "다음 교시로 이어가기"로 바꾼다.
     const saveBtn = document.getElementById("exendSaveBtn");
