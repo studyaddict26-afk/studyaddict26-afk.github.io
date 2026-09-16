@@ -1406,7 +1406,9 @@
   .exend-card { border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
   .exend-card-label { font-size: 0.72rem; font-weight: 700; color: var(--ink-soft); text-align: center; margin-bottom: 8px; }
   .exend-card-value { font-size: 1.15rem; font-weight: 800; color: var(--ink); text-align: center; }
-  .exend-lap-table { display: flex; flex-direction: column; gap: 14px; max-height: 280px; overflow-y: auto; }
+  .exend-card-row { display: flex; gap: 12px; margin-bottom: 14px; }
+  .exend-card-row .exend-card { flex: 1; margin-bottom: 0; min-width: 0; }
+  .exend-lap-table { display: flex; flex-direction: column; gap: 14px; max-height: 440px; overflow-y: auto; }
   .exend-lap-group { display: flex; flex-direction: column; gap: 1px; }
   .exend-lap-group-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.74rem; font-weight: 700; color: var(--ink); padding: 4px 4px 6px; border-bottom: 1px solid var(--line); margin-bottom: 2px; }
   .exend-lap-group-total { color: var(--green-deep); font-weight: 800; }
@@ -3932,13 +3934,15 @@
   <div class="exend-box">
     <button type="button" class="exend-close" onclick="exsimCloseEnd()" aria-label="닫기">&times;</button>
     <div class="exend-title">시험 끝! 오늘도 목표에 한 발짝 더 다가갔어요 😆</div>
-    <div class="exend-card">
-      <div class="exend-card-label">과목</div>
-      <div class="exend-card-value" id="exendSubject">-</div>
-    </div>
-    <div class="exend-card">
-      <div class="exend-card-label">총 응시 시간</div>
-      <div class="exend-card-value" id="exendDuration">-</div>
+    <div class="exend-card-row">
+      <div class="exend-card">
+        <div class="exend-card-label">과목</div>
+        <div class="exend-card-value" id="exendSubject">-</div>
+      </div>
+      <div class="exend-card">
+        <div class="exend-card-label">총 응시 시간</div>
+        <div class="exend-card-value" id="exendDuration">-</div>
+      </div>
     </div>
     <div class="exend-card" id="exendLapCard">
       <div class="exend-card-label">랩타임</div>
