@@ -1377,17 +1377,17 @@
 
   /* ── 진행 화면: 오른쪽 지문별 랩타임 기록 패널 — 과목마다 지문 구성이 달라서(국어는
      예시문항 기준 15개 지문/자료 세트) EXAM_PASSAGE_SETS에 과목별 목록을 따로 정의해 쓴다. ── */
-  .exlv-passages { display: none; flex-direction: column; flex: none; width: 320px; max-height: 640px; text-align: left; }
-  .exlv-passages-title { flex: none; font-size: 0.8rem; font-weight: 800; color: rgba(255,255,255,0.6); text-align: center; letter-spacing: 0.02em; margin-bottom: 14px; }
+  .exlv-passages { display: none; flex-direction: column; flex: none; width: 264px; max-height: 640px; text-align: left; }
+  .exlv-passages-title { flex: none; font-size: 0.8rem; font-weight: 800; color: rgba(255,255,255,0.85); text-align: center; letter-spacing: 0.02em; margin-bottom: 14px; }
   .exlv-passages-list { display: flex; flex-direction: column; gap: 16px; overflow-y: auto; }
   .exlv-passage-group { display: flex; flex-direction: column; gap: 8px; }
-  .exlv-passage-group-title { font-size: 0.74rem; font-weight: 800; color: rgba(255,255,255,0.55); }
-  .exlv-passage-single { display: flex; flex-direction: column; gap: 8px; }
+  .exlv-passage-group-title { font-size: 0.74rem; font-weight: 800; color: rgba(255,255,255,0.85); }
+  .exlv-passage-single { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
   .exlv-passage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .exlv-passage-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; padding: 9px 10px 9px 14px; }
-  .exlv-passage-row.compact { flex-direction: column; align-items: stretch; gap: 6px; padding: 10px; }
+  .exlv-passage-row.compact { flex-direction: column; align-items: center; gap: 6px; padding: 10px; }
   .exlv-passage-row.compact .exlv-passage-text { align-items: center; text-align: center; }
-  .exlv-passage-row.compact .exlv-passage-btn { width: 100%; }
+  .exlv-passage-row.compact .exlv-passage-btn { width: auto; padding: 6px 14px; font-size: 0.68rem; }
   .exlv-passage-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
   .exlv-passage-label { font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.85); }
   .exlv-passage-dur { font-size: 0.68rem; font-weight: 700; color: var(--green); }
@@ -9156,8 +9156,8 @@
   const EXAM_PASSAGE_SETS = {
     kor: [
       { title: null, items: ["화법과 언어 (10문항)"] },
-      { title: "독서와 작문", items: ["지문 1", "지문 2", "지문 3", "지문 4", "지문 5"] },
-      { title: "문학", items: ["지문 1", "지문 2", "지문 3", "지문 4"] },
+      { title: "독서와 작문 (20문항)", items: ["지문 1", "지문 2", "지문 3", "지문 4", "지문 5"] },
+      { title: "문학 (15문항)", items: ["지문 1", "지문 2", "지문 3", "지문 4"] },
     ],
   };
   function exsimPassageGroupsFor(period) {
