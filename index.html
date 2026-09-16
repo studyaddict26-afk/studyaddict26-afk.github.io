@@ -1396,9 +1396,11 @@
   .exlv-passage-btn.locked { opacity: 0.4; }
   /* 수학처럼 30문항을 3열로 채우는 경우 칸이 좁아지므로, 가로 배치 대신 라벨/버튼을 세로로
      쌓아서 폭이 좁아도 잘리지 않게 한다. */
-  .exlv-passage-grid.cols-3 .exlv-passage-row { flex-direction: column; align-items: center; gap: 4px; padding: 8px 4px; }
-  .exlv-passage-grid.cols-3 .exlv-passage-text { align-items: center; text-align: center; }
-  .exlv-passage-grid.cols-3 .exlv-passage-btn { padding: 4px 9px; font-size: 0.54rem; }
+  .exlv-passage-grid.cols-3 .exlv-passage-row, .exlv-passage-grid.cols-4 .exlv-passage-row { flex-direction: column; align-items: center; gap: 4px; padding: 8px 4px; }
+  .exlv-passage-grid.cols-3 .exlv-passage-text, .exlv-passage-grid.cols-4 .exlv-passage-text { align-items: center; text-align: center; }
+  .exlv-passage-grid.cols-3 .exlv-passage-btn, .exlv-passage-grid.cols-4 .exlv-passage-btn { padding: 4px 9px; font-size: 0.54rem; }
+  .exlv-passage-grid.cols-4 .exlv-passage-row { padding: 7px 2px; }
+  .exlv-passage-grid.cols-4 .exlv-passage-btn { padding: 3px 6px; font-size: 0.48rem; }
   @media (max-width: 760px) {
     .exlv { flex-direction: column; gap: 22px; padding-top: 64px; }
     .exlv-passages { width: 100%; max-width: 360px; }
@@ -9219,7 +9221,7 @@
       { title: "문학 (15문항)", items: ["지문 1", "지문 2", "지문 3", "지문 4"] },
     ],
     math: [
-      { title: "수학 (30문항)", cols: 3, items: Array.from({ length: 30 }, (_, i) => "문제 " + (i + 1)) },
+      { title: "수학 (30문항)", cols: 4, items: Array.from({ length: 30 }, (_, i) => "문제 " + (i + 1)) },
     ],
   };
   function exsimPassageGroupsFor(period) {
