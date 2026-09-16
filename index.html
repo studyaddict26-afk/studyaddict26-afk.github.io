@@ -9223,6 +9223,9 @@
     math: [
       { title: "수학 (30문항)", cols: 4, items: Array.from({ length: 30 }, (_, i) => "문제 " + (i + 1)) },
     ],
+    eng: [
+      { title: "독해 (28문항)", cols: 4, items: Array.from({ length: 28 }, (_, i) => "문제 " + (i + 1)) },
+    ],
   };
   function exsimPassageGroupsFor(period) {
     return (period && EXAM_PASSAGE_SETS[period.id]) || [{ title: null, items: ["전체"] }];
