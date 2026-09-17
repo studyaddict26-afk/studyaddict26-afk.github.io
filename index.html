@@ -1484,10 +1484,14 @@
   }
   .mex-field-row { display: flex; gap: 12px; align-items: flex-end; }
   .mex-field-row .mex-field { flex: 1; }
-  .mex-field-row .exsim-top-btn { padding: 8px 10px; }
-  .mex-field-row .exsim-top-btn-ico { font-size: 1rem; }
-  .mex-field-row .exsim-top-btn-label { font-size: 0.78rem; }
-  .mex-field-row .exsim-top-btn-sub { font-size: 0.64rem; }
+  /* 내신 카드 전용 — 과목명/소음버튼/시험시간/문항개수 네 칸을 진짜 2열 그리드로 묶어서,
+     두 행의 왼쪽·오른쪽 칸 너비가 내용과 무관하게 항상 정확히 일치하도록 한다
+     (독립된 flex row 두 개로 나누면 버튼 내용 때문에 폭이 미묘하게 어긋날 수 있었음). */
+  .mex-field-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px; row-gap: 14px; align-items: end; }
+  .mex-field-grid .exsim-top-btn { padding: 8px 10px; }
+  .mex-field-grid .exsim-top-btn-ico { font-size: 1rem; }
+  .mex-field-grid .exsim-top-btn-label { font-size: 0.78rem; }
+  .mex-field-grid .exsim-top-btn-sub { font-size: 0.64rem; }
   .mex-form-btns { display: flex; gap: 10px; margin-top: 4px; }
   .mex-form-cancel-btn, .mex-form-save-btn {
     flex: 1; font-family: inherit; font-size: 0.86rem; font-weight: 700; border-radius: 999px; padding: 11px; cursor: pointer; border: none;
@@ -4022,6 +4026,7 @@
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
       </button>
     </div>
+    <button type="button" class="exlv-end-btn" id="genTimerStartBtn" style="display:none;" onclick="genTimerStartStopwatch()">시작</button>
   </div>
 </div>
 
@@ -4759,7 +4764,7 @@
     </div>
     <div class="exsim-wrap">
       <div class="exsim-naeshin-card">
-        <div class="mex-field-row">
+        <div class="mex-field-grid">
           <div class="mex-field">
             <label>과목명</label>
             <input type="text" id="exsimNaeshinSubject" placeholder="예: 수학 내신">
@@ -4769,8 +4774,6 @@
             <span class="exsim-top-btn-text"><span class="exsim-top-btn-label">시험장 소음 설정하기</span><span class="exsim-top-btn-sub">설정 완료</span></span>
             <span class="exsim-top-btn-arrow">›</span>
           </button>
-        </div>
-        <div class="mex-field-row">
           <div class="mex-field">
             <label>시험 시간(분)</label>
             <input type="number" id="exsimNaeshinMinutes" min="10" max="180" value="50">
@@ -9605,12 +9608,18 @@
   function genTimerOpen(mode) {
     genTimerState = { mode: mode, totalSec: 0, elapsedSec: 0, running: false };
     document.getElementById("genTimerBadge").textContent = mode === "timer" ? "타이머" : "스톱워치";
-    document.getElementById("genTimerControls").style.display = "none";
+    // 스톱워치는 들어오자마자 자동으로 흐르지 않고, 컨트롤(일시정지/±30초)은 미리 보여준 채
+    // 그 아래 "시작" 버튼을 눌러야 진짜로 시작된다. 타이머는 분을 먼저 입력하는 단계가 그 역할을 한다.
+    document.getElementById("genTimerControls").style.display = mode === "timer" ? "none" : "flex";
     document.getElementById("genTimerSetup").style.display = mode === "timer" ? "flex" : "none";
-    document.getElementById("genTimerPlayBtn").textContent = "❚❚";
+    document.getElementById("genTimerStartBtn").style.display = mode === "stopwatch" ? "block" : "none";
+    document.getElementById("genTimerPlayBtn").textContent = "▶";
     document.getElementById("genTimerText").textContent = "00:00";
     document.getElementById("genTimerLive").classList.add("on");
-    if (mode === "stopwatch") genTimerRun();
+  }
+  function genTimerStartStopwatch() {
+    document.getElementById("genTimerStartBtn").style.display = "none";
+    genTimerRun();
   }
   function genTimerConfirmMinutes() {
     const minutes = Math.max(1, Math.min(300, Number(document.getElementById("genTimerMinutesInput").value) || 10));
@@ -9621,6 +9630,7 @@
   }
   function genTimerRun() {
     document.getElementById("genTimerControls").style.display = "flex";
+    document.getElementById("genTimerPlayBtn").textContent = "❚❚";
     genTimerState.running = true;
     genTimerHandle = setInterval(genTimerTick, 1000);
   }
@@ -9648,7 +9658,6 @@
     if (!genTimerState) return;
     if (genTimerState.running) { genTimerPause(); return; }
     genTimerRun();
-    document.getElementById("genTimerPlayBtn").textContent = "❚❚";
   }
   // ±30초 — "앞으로"는 항상 시간이 흐르는 방향(스톱워치는 늘어나고, 타이머는 남은 시간이 줄어듦).
   function genTimerScrub(delta) {
