@@ -4826,7 +4826,7 @@
 
   <!-- ─── 모의고사 관리하기 / 내신 관리하기: mexCategory로 같은 화면을 구분해서 사용 ─── -->
   <section class="view" id="view-mexlist">
-    <div class="chat-head">
+    <div class="chat-head" id="mexlistHead">
       <span class="eyebrow">MOCK EXAM</span>
       <h2 id="mexlistTitle">모의고사 관리하기</h2>
       <div class="split"></div>
@@ -9860,6 +9860,7 @@
     document.getElementById("mexlistHint").textContent = mexCategory === "naeshin"
       ? "직접 입력해서 내신 시험을 기록할 수 있습니다."
       : "수능 시뮬레이션을 통해 기록하거나, 직접 입력할 수 있습니다.";
+    document.getElementById("mexlistHead").style.display = "";
     document.getElementById("mexDetailWrap").style.display = "none";
     document.getElementById("mexHomeWrap").style.display = "flex";
     document.getElementById("mexNewForm").style.display = "none";
@@ -9946,6 +9947,7 @@
     const exam = mexLoadExams().find(e => e.id === examId);
     if (!exam) return;
     mexCurrentExam = exam;
+    document.getElementById("mexlistHead").style.display = "none";
     document.getElementById("mexHomeWrap").style.display = "none";
     document.getElementById("mexDetailWrap").style.display = "flex";
     document.getElementById("mexDetailTitle").textContent = exam.title;
@@ -9954,6 +9956,7 @@
   }
   function mexBackToList() {
     mexCurrentExam = null;
+    document.getElementById("mexlistHead").style.display = "";
     document.getElementById("mexDetailWrap").style.display = "none";
     document.getElementById("mexHomeWrap").style.display = "flex";
     mexRenderList();
