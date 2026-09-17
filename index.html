@@ -1510,6 +1510,7 @@
   .mex-form-save-btn { background: var(--green-deep); color: #fff; }
   .mex-list { display: flex; flex-direction: column; gap: 10px; }
   .mex-list-empty { text-align: center; color: var(--ink-soft); font-size: 0.84rem; padding: 32px; border: 1px dashed var(--line); border-radius: 12px; }
+  .mex-hint { font-size: 0.8rem; font-weight: 600; color: var(--ink-soft); margin-top: 10px; }
   .mex-list-row {
     display: flex; align-items: center; justify-content: space-between; gap: 10px;
     border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 14px 18px; cursor: pointer; text-align: left;
@@ -4826,6 +4827,7 @@
       <span class="eyebrow">MOCK EXAM</span>
       <h2 id="mexlistTitle">모의고사 관리하기</h2>
       <div class="split"></div>
+      <p class="mex-hint" id="mexlistHint">수능 시뮬레이션을 통해 기록하거나, 직접 입력할 수 있습니다.</p>
     </div>
 
     <div class="mex-wrap" id="mexHomeWrap">
@@ -9641,9 +9643,35 @@
     });
     localStorage.setItem(exsimHistoryKey(), JSON.stringify(list.slice(0, 100)));
   }
+  // 수능 시뮬레이션(내신 제외)을 "기록하기"로 저장하면, "모의고사 관리하기" 목록에도
+  // 자동으로 시험 기록 하나가 생기도록 한다 — 랩타임(문항 간격)도 그대로 문항별 소요시간으로 연결.
+  function mexAutoRecordFromExam(state) {
+    if (!state || !state.period || state.period.id === "naeshin") return;
+    const period = state.period;
+    const count = period.count || 1;
+    let questionTimes = null;
+    if (state.laps && state.laps.length) {
+      questionTimes = [];
+      let prev = 0;
+      state.laps.forEach(l => { questionTimes.push(Math.max(0, l.sec - prev)); prev = l.sec; });
+      while (questionTimes.length < count) questionTimes.push(null);
+      questionTimes = questionTimes.slice(0, count);
+    }
+    const exam = {
+      id: "mex_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7),
+      title: period.periodLabel + " " + period.subject, subject: period.subject, count: count, date: getLocalDateKey(),
+      category: "mock",
+      answers: new Array(count).fill("unrated"),
+      questionTimes: questionTimes,
+    };
+    const list = mexLoadExams();
+    list.unshift(exam);
+    mexSaveExams(list);
+  }
   function exsimSaveSession() {
     if (!exsimEndData) return;
     exsimPersistCurrentSession(exsimEndData);
+    mexAutoRecordFromExam(exsimEndData);
     showToast("기록이 저장됐어요!");
     exsimCloseEnd();
     exsimRenderHistory();
@@ -9768,7 +9796,22 @@
   }
   function mexNaeshinDdayCardHtml() {
     const saved = localStorage.getItem(mexNaeshinDdayKey());
-    if (saved) return mexDdayCardHtml("내신 디데이", saved);
+    if (saved) {
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const target = new Date(saved + "T00:00:00");
+      const dday = Math.round((target - today) / 86400000);
+      const num = dday > 0 ? "D-" + dday : (dday === 0 ? "D-DAY" : "D+" + Math.abs(dday));
+      const pct = Math.max(2, Math.min(100, 100 - Math.max(0, dday) / 200 * 100));
+      return '<div class="mex-dday-card">' +
+        '<div class="mex-dday-top">' +
+          '<div class="mex-dday-date">' + saved.replace(/-/g, ".") + '</div>' +
+          '<div class="mex-dday-name-row"><span class="mex-dday-name">내신 디데이</span>' +
+            '<button type="button" class="mex-dday-edit-btn" onclick="mexOpenNaeshinDdaySetup()">수정</button></div>' +
+          '<div class="mex-dday-num">' + num + '</div>' +
+        '</div>' +
+        '<div class="mex-dday-bar"><div class="mex-dday-bar-fill" style="width:' + pct + '%"></div></div>' +
+      '</div>';
+    }
     return '<div class="mex-dday-card mex-dday-setup">' +
       '<div class="mex-dday-name">내신 디데이</div>' +
       '<div class="mex-dday-setup-desc">학교마다 일정이 달라요</div>' +
@@ -9811,6 +9854,9 @@
     document.getElementById("mexlistTitle").textContent = label + " 관리하기";
     document.getElementById("viewTitle").textContent = label + " 관리하기";
     document.getElementById("mexNewBtn").textContent = "+ 새 " + label + " 기록하기";
+    document.getElementById("mexlistHint").textContent = mexCategory === "naeshin"
+      ? "직접 입력해서 내신 시험을 기록할 수 있습니다."
+      : "수능 시뮬레이션을 통해 기록하거나, 직접 입력할 수 있습니다.";
     document.getElementById("mexDetailWrap").style.display = "none";
     document.getElementById("mexHomeWrap").style.display = "flex";
     document.getElementById("mexNewForm").style.display = "none";
