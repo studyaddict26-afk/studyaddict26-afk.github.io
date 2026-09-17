@@ -4055,7 +4055,8 @@
     </div>
     <div class="mex-field" id="exendNameField" style="margin-bottom:14px;">
       <label>모의고사 이름</label>
-      <input type="text" id="exendExamNameInput" placeholder="예: 9월 학력평가">
+      <input type="text" id="exendExamNameInput" placeholder="예: 9월 학력평가" list="exendExamNameList">
+      <datalist id="exendExamNameList"></datalist>
     </div>
     <div class="exend-card-row">
       <div class="exend-card">
@@ -9612,6 +9613,15 @@
 
   // ── 종료 요약 화면 ──
   let exsimEndData = null;
+  // 과목이 달라도 같은 모의고사 응시(예: 9월 학력평가)일 수 있으니, 이미 썼던 모의고사 이름들을
+  // datalist로 보여줘서 다른 과목 볼 때도 똑같은 이름을 골라 쓸 수 있게 한다.
+  function exsimPopulateExamNameHistory() {
+    const dl = document.getElementById("exendExamNameList");
+    if (!dl) return;
+    const names = mexLoadExams().filter(e => e.category === "mock" && e.title).map(e => e.title);
+    const unique = [...new Set(names)];
+    dl.innerHTML = unique.map(n => '<option value="' + escapeHtml(n) + '"></option>').join("");
+  }
   function exsimShowEnd(state) {
     exsimEndData = state;
     document.getElementById("exendSubject").textContent = state.period.periodLabel + " " + state.period.subject;
@@ -9621,6 +9631,7 @@
     const isNaeshin = state.period.id === "naeshin";
     document.getElementById("exendNameField").style.display = isNaeshin ? "none" : "flex";
     document.getElementById("exendExamNameInput").value = "";
+    if (!isNaeshin) exsimPopulateExamNameHistory();
     const table = document.getElementById("exendLapTable");
     const passages = state.passages || [];
     const anyRecorded = passages.some(p => p.totalSec > 0);
@@ -9682,6 +9693,7 @@
     const list = mexLoadExams();
     list.unshift(exam);
     mexSaveExams(list);
+    return exam.id;
   }
   function exsimSaveSession() {
     if (!exsimEndData) return;
@@ -9690,10 +9702,17 @@
     const examName = nameInput.value.trim();
     if (!isNaeshin && !examName) { showToast("모의고사 이름을 입력해주세요"); nameInput.focus(); return; }
     exsimPersistCurrentSession(exsimEndData);
-    mexAutoRecordFromExam(exsimEndData, examName);
-    showToast("기록이 저장됐어요!");
+    if (isNaeshin) {
+      showToast("기록이 저장됐어요!");
+      exsimCloseEnd();
+      exsimRenderHistory();
+      return;
+    }
+    // 수능 시뮬레이션은 저장만 하고 닫는 대신, 방금 기록된 모의고사의 채점 화면으로 바로 이동시킨다.
+    const examId = mexAutoRecordFromExam(exsimEndData, examName);
     exsimCloseEnd();
-    exsimRenderHistory();
+    mexGoList("mock");
+    mexOpenDetail(examId);
   }
 
   // ── 시험 시뮬레이션 허브: 스톱워치/타이머 (과목·랩타임 없는 독립 기능) ──
