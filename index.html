@@ -1527,45 +1527,46 @@
   .mex-detail-wrap { max-width: 760px; width: 100%; margin: 20px auto 0 auto; padding: 0 20px 40px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; }
   .mex-back-link { align-self: flex-start; background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.82rem; font-weight: 700; cursor: pointer; padding: 0; }
   .mex-back-link:hover { color: var(--ink); }
-  .mex-detail-head { text-align: center; }
-  .mex-detail-title { font-size: 1.05rem; font-weight: 800; color: var(--ink); }
-  .mex-detail-subject { font-size: 0.8rem; color: var(--ink-soft); margin-top: 4px; }
-  .mex-detail-stats { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 16px 18px; }
-  .mex-detail-progress-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; color: var(--ink-soft); font-weight: 600; margin-bottom: 8px; }
-  .mex-detail-progress-bar { height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; margin-bottom: 12px; }
-  .mex-detail-progress-fill { height: 100%; background: var(--green); }
-  .mex-detail-counts { display: flex; justify-content: space-around; text-align: center; }
-  .mex-detail-count-num { font-size: 1.1rem; font-weight: 800; }
-  .mex-detail-count-num.correct { color: var(--green-deep); }
-  .mex-detail-count-num.wrong { color: #C23B3B; }
-  .mex-detail-count-num.unrated { color: var(--ink-soft); }
-  .mex-detail-count-label { font-size: 0.7rem; color: var(--ink-soft); margin-top: 2px; }
+  .mex-detail-box-row { display: flex; gap: 10px; }
+  .mex-detail-box { flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 12px 14px; }
+  .mex-detail-box-label { font-size: 0.66rem; color: var(--ink-soft); font-weight: 600; margin-bottom: 4px; }
+  .mex-detail-box-value { font-size: 0.86rem; font-weight: 800; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  @media (max-width: 560px) {
+    .mex-detail-box-row { flex-wrap: wrap; }
+    .mex-detail-box { flex: 1 1 calc(50% - 5px); }
+  }
 
   .mex-time-chart { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 16px 18px; }
-  .mex-time-chart-desc { font-size: 0.76rem; color: var(--ink-soft); margin-bottom: 12px; line-height: 1.6; }
+  .mex-time-chart-desc { font-size: 0.76rem; color: var(--ink-soft); margin-bottom: 8px; line-height: 1.6; }
+  .mex-time-chart-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
+  .mex-time-legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.68rem; color: var(--ink-soft); font-weight: 600; }
+  .mex-time-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--line); }
+  .mex-time-legend-dot.low { background: #6FA8DC; }
+  .mex-time-legend-dot.high { background: #C77B3D; }
   .mex-time-chart-bars { display: flex; align-items: flex-end; gap: 3px; height: 90px; }
   .mex-time-bar-col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; cursor: pointer; min-width: 4px; }
   .mex-time-bar { width: 100%; border-radius: 2px 2px 0 0; background: var(--line); transition: opacity .15s; }
-  .mex-time-bar.correct { background: var(--green); }
-  .mex-time-bar.wrong { background: #E07A7A; }
+  .mex-time-bar.low { background: #6FA8DC; }
+  .mex-time-bar.high { background: #C77B3D; }
   .mex-time-bar-col:hover .mex-time-bar { opacity: 0.7; }
   .mex-time-chart-detail { font-size: 0.78rem; color: var(--ink); font-weight: 600; text-align: center; margin-top: 10px; min-height: 1.4em; }
 
-  .mex-question-list { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); overflow: hidden; }
-  .mex-q-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--line); }
-  .mex-q-row:last-child { border-bottom: none; }
-  .mex-q-num { font-size: 0.82rem; font-weight: 700; color: var(--ink); flex: none; width: 44px; }
-  .mex-q-toggle { display: flex; gap: 6px; flex: 1; justify-content: flex-end; }
+  .mex-question-list-title { font-size: 0.92rem; font-weight: 800; color: var(--ink); margin-top: 4px; }
+  .mex-question-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .mex-q-row { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 6px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); }
+  .mex-q-num { font-size: 0.78rem; font-weight: 700; color: var(--ink); }
+  .mex-q-toggle { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; }
   .mex-q-btn {
-    font-family: inherit; font-size: 0.74rem; font-weight: 700; color: var(--ink-soft); background: var(--cream);
-    border: 1px solid var(--line); border-radius: 8px; padding: 7px 12px; cursor: pointer; min-width: 56px;
+    font-family: inherit; font-size: 0.62rem; font-weight: 700; color: var(--ink-soft); background: var(--cream);
+    border: 1px solid var(--line); border-radius: 7px; padding: 5px 7px; cursor: pointer; min-width: 38px;
   }
   .mex-q-btn.on.correct { background: var(--green-soft); color: var(--green-deep); border-color: #CFE3D6; }
   .mex-q-btn.on.wrong { background: #FBEAEA; color: #A32D2D; border-color: #F0CFCF; }
   .mex-q-btn.on.unrated { background: var(--line); color: var(--ink); }
   .mex-save-btn { width: 100%; background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 14px; font-family: inherit; font-size: 0.95rem; font-weight: 800; cursor: pointer; }
   @media (max-width: 480px) {
-    .mex-q-btn { padding: 7px 8px; min-width: 44px; font-size: 0.68rem; }
+    .mex-question-list { grid-template-columns: repeat(2, 1fr); }
+    .mex-q-btn { padding: 5px 6px; min-width: 34px; font-size: 0.6rem; }
   }
 
   /* 홈 하단 2/3: 안내 */
@@ -2183,7 +2184,7 @@
   }
 
   /* ═══════════ 상담 안내 ═══════════ */
-  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3, #view-consult-5, #view-consult-6, #view-consult-7, #view-consult-8, #view-howto, #view-recordhub, #view-scheduleManage { overflow-y: auto; }
+  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3, #view-consult-5, #view-consult-6, #view-consult-7, #view-consult-8, #view-howto, #view-recordhub, #view-scheduleManage, #view-examhub, #view-examSuneung, #view-examNaeshin, #view-mockexam, #view-mexlist { overflow-y: auto; }
   .consult-page {
     max-width: 1040px; width: 100%; margin: 0 auto;
     padding: 32px 24px 56px 24px;
@@ -4052,6 +4053,10 @@
       <div class="exend-title">시험 끝!</div>
       <button type="button" class="exend-save-btn" id="exendSaveBtn" onclick="exsimSaveSession()">기록하기 →</button>
     </div>
+    <div class="mex-field" id="exendNameField" style="margin-bottom:14px;">
+      <label>모의고사 이름</label>
+      <input type="text" id="exendExamNameInput" placeholder="예: 9월 학력평가">
+    </div>
     <div class="exend-card-row">
       <div class="exend-card">
         <div class="exend-card-label">과목</div>
@@ -4869,12 +4874,14 @@
 
     <div class="mex-detail-wrap" id="mexDetailWrap" style="display:none;">
       <button type="button" class="mex-back-link" onclick="mexBackToList()">‹ 목록으로</button>
-      <div class="mex-detail-head">
-        <div class="mex-detail-title" id="mexDetailTitle">-</div>
-        <div class="mex-detail-subject" id="mexDetailSubject">-</div>
+      <div class="mex-detail-box-row">
+        <div class="mex-detail-box"><div class="mex-detail-box-label">날짜</div><div class="mex-detail-box-value" id="mexDetailBoxDate">-</div></div>
+        <div class="mex-detail-box"><div class="mex-detail-box-label">시험</div><div class="mex-detail-box-value" id="mexDetailBoxSubject">-</div></div>
+        <div class="mex-detail-box"><div class="mex-detail-box-label">모의고사 이름</div><div class="mex-detail-box-value" id="mexDetailBoxName">-</div></div>
+        <div class="mex-detail-box"><div class="mex-detail-box-label">점수</div><div class="mex-detail-box-value" id="mexDetailBoxScore">-</div></div>
       </div>
-      <div class="mex-detail-stats" id="mexDetailStats"></div>
       <div class="mex-time-chart" id="mexTimeChart" style="display:none;"></div>
+      <div class="mex-question-list-title">채점하기</div>
       <div class="mex-question-list" id="mexQuestionList"></div>
       <button type="button" class="mex-save-btn" onclick="mexSaveGrading()">채점 저장</button>
     </div>
@@ -9609,6 +9616,11 @@
     exsimEndData = state;
     document.getElementById("exendSubject").textContent = state.period.periodLabel + " " + state.period.subject;
     document.getElementById("exendDuration").textContent = formatDur(state.examSec || 0);
+    // "모의고사 관리하기"에 자동 기록되는 건 내신이 아닌 경우뿐이라, 내신 세션에서는 이름
+    // 입력칸 자체를 숨기고 필수 검증도 건너뛴다.
+    const isNaeshin = state.period.id === "naeshin";
+    document.getElementById("exendNameField").style.display = isNaeshin ? "none" : "flex";
+    document.getElementById("exendExamNameInput").value = "";
     const table = document.getElementById("exendLapTable");
     const passages = state.passages || [];
     const anyRecorded = passages.some(p => p.totalSec > 0);
@@ -9648,7 +9660,7 @@
   }
   // 수능 시뮬레이션(내신 제외)을 "기록하기"로 저장하면, "모의고사 관리하기" 목록에도
   // 자동으로 시험 기록 하나가 생기도록 한다 — 랩타임(문항 간격)도 그대로 문항별 소요시간으로 연결.
-  function mexAutoRecordFromExam(state) {
+  function mexAutoRecordFromExam(state, examName) {
     if (!state || !state.period || state.period.id === "naeshin") return;
     const period = state.period;
     const count = period.count || 1;
@@ -9662,7 +9674,7 @@
     }
     const exam = {
       id: "mex_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7),
-      title: period.periodLabel + " " + period.subject, subject: period.subject, count: count, date: getLocalDateKey(),
+      title: examName, periodLabel: period.periodLabel, subject: period.subject, count: count, date: getLocalDateKey(),
       category: "mock",
       answers: new Array(count).fill("unrated"),
       questionTimes: questionTimes,
@@ -9673,8 +9685,12 @@
   }
   function exsimSaveSession() {
     if (!exsimEndData) return;
+    const isNaeshin = exsimEndData.period.id === "naeshin";
+    const nameInput = document.getElementById("exendExamNameInput");
+    const examName = nameInput.value.trim();
+    if (!isNaeshin && !examName) { showToast("모의고사 이름을 입력해주세요"); nameInput.focus(); return; }
     exsimPersistCurrentSession(exsimEndData);
-    mexAutoRecordFromExam(exsimEndData);
+    mexAutoRecordFromExam(exsimEndData, examName);
     showToast("기록이 저장됐어요!");
     exsimCloseEnd();
     exsimRenderHistory();
@@ -9950,8 +9966,6 @@
     document.getElementById("mexlistHead").style.display = "none";
     document.getElementById("mexHomeWrap").style.display = "none";
     document.getElementById("mexDetailWrap").style.display = "flex";
-    document.getElementById("mexDetailTitle").textContent = exam.title;
-    document.getElementById("mexDetailSubject").textContent = exam.subject + " · " + exam.date + " · " + exam.count + "문항";
     mexRenderDetail();
   }
   function mexBackToList() {
@@ -9962,27 +9976,34 @@
     mexRenderList();
   }
   function mexRenderDetail() {
-    mexRenderDetailStats();
+    mexRenderDetailBoxes();
     mexRenderTimeChart();
     mexRenderQuestionList();
   }
-  function mexRenderDetailStats() {
+  // 날짜 / 교시·과목 / 모의고사 이름 / 점수(전부 채점했을 때만, 아니면 "미채점") — 4개 박스.
+  function mexRenderDetailBoxes() {
     const exam = mexCurrentExam;
-    const el = document.getElementById("mexDetailStats");
-    if (!exam || !el) return;
+    if (!exam) return;
+    document.getElementById("mexDetailBoxDate").textContent = exam.date;
+    document.getElementById("mexDetailBoxSubject").textContent = (exam.periodLabel ? exam.periodLabel + " " : "") + exam.subject;
+    document.getElementById("mexDetailBoxName").textContent = exam.title;
     const correct = exam.answers.filter(a => a === "correct").length;
-    const wrong = exam.answers.filter(a => a === "wrong").length;
-    const unrated = exam.count - correct - wrong;
-    const graded = exam.count - unrated;
-    const pct = exam.count ? Math.round(graded / exam.count * 100) : 0;
-    el.innerHTML =
-      '<div class="mex-detail-progress-row"><span>' + graded + '/' + exam.count + '문항 채점</span><span>' + unrated + '문항 남음</span></div>' +
-      '<div class="mex-detail-progress-bar"><div class="mex-detail-progress-fill" style="width:' + pct + '%"></div></div>' +
-      '<div class="mex-detail-counts">' +
-        '<div><div class="mex-detail-count-num correct">' + correct + '</div><div class="mex-detail-count-label">정답</div></div>' +
-        '<div><div class="mex-detail-count-num wrong">' + wrong + '</div><div class="mex-detail-count-label">오답</div></div>' +
-        '<div><div class="mex-detail-count-num unrated">' + unrated + '</div><div class="mex-detail-count-label">미채점</div></div>' +
-      '</div>';
+    const unrated = exam.answers.filter(a => a === "unrated").length;
+    document.getElementById("mexDetailBoxScore").textContent = unrated === 0 ? correct + "/" + exam.count + "점" : "미채점";
+  }
+  // 시간이 기록된 문항들을 소요시간 기준으로 줄세워, 하위 10%(빠름)/상위 10%(느림)/나머지 80%로
+  // 나눈다 — { 문항index: "low"|"high"|"mid" } 형태로 반환(시간 기록이 없는 문항은 포함 안 함).
+  function mexTimeTiers(times) {
+    const recorded = times.map((t, i) => ({ t: t, i: i })).filter(x => x.t != null);
+    const n = recorded.length;
+    const sorted = recorded.slice().sort((a, b) => a.t - b.t);
+    const lowCount = Math.round(n * 0.1);
+    const highCount = Math.round(n * 0.1);
+    const tiers = {};
+    sorted.forEach((item, rank) => {
+      tiers[item.i] = rank < lowCount ? "low" : rank >= n - highCount ? "high" : "mid";
+    });
+    return tiers;
   }
   function mexRenderTimeChart() {
     const exam = mexCurrentExam;
@@ -9996,9 +10017,9 @@
     const times = exam.questionTimes;
     const maxT = Math.max(1, ...times.map(t => t || 0));
     const answeredCount = times.filter(t => t != null).length;
+    const tiers = mexTimeTiers(times);
     const bars = times.map((t, i) => {
-      const status = exam.answers[i];
-      const cls = status === "correct" ? "correct" : status === "wrong" ? "wrong" : "";
+      const cls = tiers[i] || "";
       const h = t == null ? 4 : Math.max(4, Math.round(t / maxT * 86));
       return '<div class="mex-time-bar-col" onclick="mexShowBarDetail(' + i + ')" title="' + (i + 1) + '번 문항">' +
         '<div class="mex-time-bar ' + cls + '" style="height:' + h + 'px"></div>' +
@@ -10006,6 +10027,11 @@
     }).join("");
     el.innerHTML =
       '<div class="mex-time-chart-desc">문항별 시간 분포 · ' + exam.count + '문항 중 ' + answeredCount + '문항 시간 기록됨 (연결된 시험 시뮬레이션 랩타임 기준)</div>' +
+      '<div class="mex-time-chart-legend">' +
+        '<span class="mex-time-legend-item"><span class="mex-time-legend-dot low"></span>하위 10% (빠름)</span>' +
+        '<span class="mex-time-legend-item"><span class="mex-time-legend-dot high"></span>상위 10% (느림)</span>' +
+        '<span class="mex-time-legend-item"><span class="mex-time-legend-dot"></span>나머지 80%</span>' +
+      '</div>' +
       '<div class="mex-time-chart-bars">' + bars + '</div>' +
       '<div class="mex-time-chart-detail" id="mexTimeChartDetail">문항을 눌러 소요시간을 확인해보세요</div>';
   }
@@ -10034,7 +10060,7 @@
   function mexSetAnswer(i, status) {
     if (!mexCurrentExam) return;
     mexCurrentExam.answers[i] = status;
-    mexRenderDetailStats();
+    mexRenderDetailBoxes();
     mexRenderTimeChart();
     mexRenderQuestionList();
   }
