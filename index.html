@@ -1501,7 +1501,7 @@
      두 행의 왼쪽·오른쪽 칸 너비가 내용과 무관하게 항상 정확히 일치하도록 한다
      (독립된 flex row 두 개로 나누면 버튼 내용 때문에 폭이 미묘하게 어긋날 수 있었음). */
   .mex-field-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px; row-gap: 14px; align-items: end; }
-  .mex-field-grid .exsim-top-btn { padding: 8px 10px; }
+  .mex-field-grid .exsim-top-btn { width: 66%; justify-self: center; padding: 8px 10px; }
   .mex-field-grid .exsim-top-btn-ico { font-size: 1rem; }
   .mex-field-grid .exsim-top-btn-label { font-size: 0.78rem; }
   .mex-field-grid .exsim-top-btn-sub { font-size: 0.64rem; }
@@ -4866,6 +4866,12 @@
         </div>
       </div>
 
+      <div class="mex-field" id="mexSubjectFilterWrap">
+        <label>과목</label>
+        <select id="mexSubjectFilterSelect" onchange="mexSetSubjectFilter(this.value)">
+          <option value="all">전체</option>
+        </select>
+      </div>
       <div class="mex-list" id="mexList"></div>
     </div>
 
@@ -4898,13 +4904,19 @@
         </span>
       </div>
       <div class="mex-grading-modal-body">
-        <div class="mex-field">
-          <label>점수</label>
-          <input type="text" id="mexGradeScoreInput" placeholder="예: 88">
+        <div class="mex-field-row">
+          <div class="mex-field">
+            <label>만점 점수</label>
+            <input type="text" id="mexGradeMaxScoreInput" placeholder="예: 100">
+          </div>
+          <div class="mex-field">
+            <label>내가 맞은 점수</label>
+            <input type="text" id="mexGradeMyScoreInput" placeholder="예: 88">
+          </div>
         </div>
         <div class="mex-field">
-          <label>틀린 문항 (번호를 쉼표로 구분, 없으면 비워두세요)</label>
-          <input type="text" id="mexGradeWrongInput" placeholder="예: 3, 7, 15">
+          <label>틀린 문항</label>
+          <input type="text" id="mexGradeWrongInput" placeholder="번호를 쉼표로 구분, 없으면 비워두세요">
         </div>
       </div>
     </div>
@@ -9729,29 +9741,26 @@
       date: getLocalDateKey(),
       durationSec: state.elapsedSec,
       laps: state.laps.map(l => l.sec),
+      // 지문/문항 라벨별 누적 시간도 함께 남겨서, 나중에 모의고사 기록에 연결할 때 국어처럼
+      // "문항 수 ≠ 지문 수"인 과목도 지문 단위 그대로 정확히 가져올 수 있게 한다.
+      passageTimes: (state.passages || []).map(p => ({ label: p.label, sec: p.totalSec > 0 ? p.totalSec : null })),
     });
     localStorage.setItem(exsimHistoryKey(), JSON.stringify(list.slice(0, 100)));
   }
   // 수능 시뮬레이션(내신 제외)을 "기록하기"로 저장하면, "모의고사 관리하기" 목록에도
-  // 자동으로 시험 기록 하나가 생기도록 한다 — 랩타임(문항 간격)도 그대로 문항별 소요시간으로 연결.
+  // 자동으로 시험 기록 하나가 생기도록 한다 — 랩타임 오른쪽 패널에 기록된 지문/문항별 시간을
+  // 그대로 가져온다(국어는 지문 단위, 수학·영어 등은 문항 단위 — 과목마다 EXAM_PASSAGE_SETS 구성 그대로).
   function mexAutoRecordFromExam(state, examName) {
     if (!state || !state.period || state.period.id === "naeshin") return;
     const period = state.period;
     const count = period.count || 1;
-    let questionTimes = null;
-    if (state.laps && state.laps.length) {
-      questionTimes = [];
-      let prev = 0;
-      state.laps.forEach(l => { questionTimes.push(Math.max(0, l.sec - prev)); prev = l.sec; });
-      while (questionTimes.length < count) questionTimes.push(null);
-      questionTimes = questionTimes.slice(0, count);
-    }
+    const passageTimes = (state.passages || []).map(p => ({ label: p.label, sec: p.totalSec > 0 ? p.totalSec : null }));
     const exam = {
       id: "mex_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7),
       title: examName, periodLabel: period.periodLabel, subject: period.subject, count: count, date: getLocalDateKey(),
       category: "mock",
       answers: new Array(count).fill("unrated"),
-      questionTimes: questionTimes,
+      passageTimes: passageTimes.length ? passageTimes : null,
     };
     const list = mexLoadExams();
     list.unshift(exam);
@@ -9946,8 +9955,10 @@
 
   // ── 모의고사 관리하기 / 내신 관리하기: 같은 목록·상세·채점 화면을 mexCategory로 구분해서 쓴다 ──
   let mexCategory = "mock";
+  let mexSubjectFilter = "all";
   function mexGoList(category) {
     mexCategory = category;
+    mexSubjectFilter = "all";
     go("mexlist");
   }
   function initMexlist() {
@@ -9955,14 +9966,26 @@
     document.getElementById("mexlistTitle").textContent = label + " 관리하기";
     document.getElementById("viewTitle").textContent = label + " 관리하기";
     document.getElementById("mexNewBtn").textContent = "+ 새 " + label + " 기록하기";
-    document.getElementById("mexlistHint").textContent = mexCategory === "naeshin"
-      ? "직접 입력해서 내신 시험을 기록할 수 있습니다."
-      : "수능 시뮬레이션을 통해 기록하거나, 직접 입력할 수 있습니다.";
+    document.getElementById("mexlistHint").textContent = "수능 시뮬레이션을 통해 기록하거나, 직접 입력할 수 있습니다.";
     document.getElementById("mexlistHead").style.display = "";
     document.getElementById("mexDetailWrap").style.display = "none";
     document.getElementById("mexHomeWrap").style.display = "flex";
     document.getElementById("mexNewForm").style.display = "none";
     mexRenderList();
+  }
+  // 목록 위 "과목" 필터 — 카테고리(모의고사/내신) 안에 실제로 기록된 과목들만 옵션으로 보여준다.
+  function mexSetSubjectFilter(subject) {
+    mexSubjectFilter = subject;
+    mexRenderList();
+  }
+  function mexRenderSubjectFilterOptions() {
+    const sel = document.getElementById("mexSubjectFilterSelect");
+    if (!sel) return;
+    const subjects = [...new Set(mexLoadExams().filter(e => (e.category || "mock") === mexCategory).map(e => e.subject))];
+    if (mexSubjectFilter !== "all" && !subjects.includes(mexSubjectFilter)) mexSubjectFilter = "all";
+    sel.innerHTML = '<option value="all">전체</option>' + subjects.map(s =>
+      '<option value="' + escapeHtml(s) + '"' + (s === mexSubjectFilter ? " selected" : "") + '>' + escapeHtml(s) + '</option>'
+    ).join("");
   }
 
   function mexToggleNewForm() {
@@ -9989,24 +10012,17 @@
     const date = document.getElementById("mexFormDate").value || getLocalDateKey();
     if (!title) { showToast("시험명을 입력해주세요"); return; }
     const linkIdx = document.getElementById("mexFormLinkSim").value;
-    let questionTimes = null;
+    let passageTimes = null;
     if (linkIdx !== "") {
       const sim = exsimLoadHistory()[Number(linkIdx)];
-      if (sim && sim.laps && sim.laps.length) {
-        // 랩타임 간격(직전 랩과의 시간 차)을 그 문항에 쓴 소요시간으로 변환
-        questionTimes = [];
-        let prev = 0;
-        sim.laps.forEach(sec => { questionTimes.push(Math.max(0, sec - prev)); prev = sec; });
-        while (questionTimes.length < count) questionTimes.push(null);
-        questionTimes = questionTimes.slice(0, count);
-      }
+      if (sim && sim.passageTimes && sim.passageTimes.length) passageTimes = sim.passageTimes;
     }
     const exam = {
       id: "mex_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7),
       title: title, subject: subject || "기타", count: count, date: date,
       category: mexCategory,
       answers: new Array(count).fill("unrated"),
-      questionTimes: questionTimes,
+      passageTimes: passageTimes,
     };
     const list = mexLoadExams();
     list.unshift(exam);
@@ -10019,14 +10035,19 @@
   function mexRenderList() {
     const el = document.getElementById("mexList");
     if (!el) return;
-    const list = mexLoadExams().filter(exam => (exam.category || "mock") === mexCategory);
+    mexRenderSubjectFilterOptions();
+    let list = mexLoadExams().filter(exam => (exam.category || "mock") === mexCategory);
+    if (mexSubjectFilter !== "all") list = list.filter(exam => exam.subject === mexSubjectFilter);
+    document.getElementById("mexSubjectFilterWrap").style.display = list.length || mexSubjectFilter !== "all" ? "flex" : "none";
     if (!list.length) {
       const label = mexCategory === "naeshin" ? "내신" : "모의고사";
-      el.innerHTML = '<div class="mex-list-empty">아직 기록된 ' + label + ' 시험이 없어요. 위 버튼으로 첫 기록을 시작해보세요!</div>';
+      el.innerHTML = mexSubjectFilter !== "all"
+        ? '<div class="mex-list-empty">' + escapeHtml(mexSubjectFilter) + ' 과목으로 기록된 ' + label + ' 시험이 없어요.</div>'
+        : '<div class="mex-list-empty">아직 기록된 ' + label + ' 시험이 없어요. 위 버튼으로 첫 기록을 시작해보세요!</div>';
       return;
     }
     el.innerHTML = list.map(exam => {
-      const badge = exam.score ? '<span class="mex-list-badge">' + escapeHtml(exam.score) + '점</span>' : '<span class="mex-list-badge partial">채점 전</span>';
+      const badge = exam.scoreMine ? '<span class="mex-list-badge">' + escapeHtml(exam.scoreMine) + '/' + escapeHtml(exam.scoreMax) + '점</span>' : '<span class="mex-list-badge partial">채점 전</span>';
       return '<div class="mex-list-row">' +
         '<button type="button" class="mex-list-row-main" onclick="mexOpenDetail(\'' + exam.id + '\')">' +
           '<div><div class="mex-list-title">' + escapeHtml(exam.title) + '</div>' +
@@ -10072,8 +10093,8 @@
     document.getElementById("mexDetailBoxDate").textContent = exam.date;
     document.getElementById("mexDetailBoxSubject").textContent = (exam.periodLabel ? exam.periodLabel + " " : "") + exam.subject;
     document.getElementById("mexDetailBoxName").textContent = exam.title;
-    document.getElementById("mexDetailBoxScore").textContent = exam.score ? exam.score + "점" : "미채점";
-    document.getElementById("mexScoreGradeBtn").textContent = exam.score ? "수정하기" : "채점하기";
+    document.getElementById("mexDetailBoxScore").textContent = exam.scoreMine ? exam.scoreMine + "/" + exam.scoreMax + "점" : "미채점";
+    document.getElementById("mexScoreGradeBtn").textContent = exam.scoreMine ? "수정하기" : "채점하기";
   }
   // 시간이 기록된 문항들을 소요시간 기준으로 줄세워, 하위 10%(빠름)/상위 10%(느림)/나머지 80%로
   // 나눈다 — { 문항index: "low"|"high"|"mid" } 형태로 반환(시간 기록이 없는 문항은 포함 안 함).
@@ -10089,51 +10110,55 @@
     });
     return tiers;
   }
+  // 국어처럼 "문항 수 ≠ 지문 수"인 과목도 정확히 보이도록, 문항 번호가 아니라 시험 시뮬레이션이
+  // 남긴 지문/문항 라벨(exam.passageTimes) 그대로를 막대로 그린다.
   function mexRenderTimeChart() {
     const exam = mexCurrentExam;
     const el = document.getElementById("mexTimeChart");
     if (!exam || !el) return;
-    if (!exam.questionTimes || !exam.questionTimes.some(t => t != null)) {
+    const items = exam.passageTimes;
+    if (!items || !items.length || !items.some(p => p.sec != null)) {
       el.style.display = "none";
       return;
     }
     el.style.display = "block";
-    const times = exam.questionTimes;
+    const times = items.map(p => p.sec);
     const maxT = Math.max(1, ...times.map(t => t || 0));
     const answeredCount = times.filter(t => t != null).length;
     const tiers = mexTimeTiers(times);
-    const bars = times.map((t, i) => {
+    const bars = items.map((p, i) => {
       const cls = tiers[i] || "";
-      const h = t == null ? 4 : Math.max(4, Math.round(t / maxT * 51));
-      return '<div class="mex-time-bar-col" onclick="mexShowBarDetail(' + i + ')" title="' + (i + 1) + '번 문항">' +
+      const h = p.sec == null ? 4 : Math.max(4, Math.round(p.sec / maxT * 51));
+      return '<div class="mex-time-bar-col" onclick="mexShowBarDetail(' + i + ')" title="' + escapeHtml(p.label) + '">' +
         '<div class="mex-time-bar ' + cls + '" style="height:' + h + 'px"></div>' +
       '</div>';
     }).join("");
     el.innerHTML =
-      '<div class="mex-time-chart-desc">문항별 시간 분포 · ' + exam.count + '문항 중 ' + answeredCount + '문항 시간 기록됨 (연결된 시험 시뮬레이션 랩타임 기준)</div>' +
+      '<div class="mex-time-chart-desc">지문·문항별 시간 분포 · ' + items.length + '개 중 ' + answeredCount + '개 시간 기록됨 (연결된 시험 시뮬레이션 랩타임 기준)</div>' +
       '<div class="mex-time-chart-legend">' +
         '<span class="mex-time-legend-item"><span class="mex-time-legend-dot low"></span>하위 10% (빠름)</span>' +
         '<span class="mex-time-legend-item"><span class="mex-time-legend-dot high"></span>상위 10% (느림)</span>' +
         '<span class="mex-time-legend-item"><span class="mex-time-legend-dot"></span>나머지 80%</span>' +
       '</div>' +
       '<div class="mex-time-chart-bars">' + bars + '</div>' +
-      '<div class="mex-time-chart-detail" id="mexTimeChartDetail">문항을 눌러 소요시간을 확인해보세요</div>';
+      '<div class="mex-time-chart-detail" id="mexTimeChartDetail">눌러서 소요시간을 확인해보세요</div>';
   }
   function mexShowBarDetail(i) {
     const exam = mexCurrentExam;
-    if (!exam) return;
-    const t = exam.questionTimes[i];
+    if (!exam || !exam.passageTimes) return;
+    const p = exam.passageTimes[i];
     const el = document.getElementById("mexTimeChartDetail");
-    if (el) el.textContent = (i + 1) + "번 문항 · 소요 시간 " + (t == null ? "기록 없음" : formatDur(t));
+    if (el) el.textContent = p.label + " · 소요 시간 " + (p.sec == null ? "기록 없음" : formatDur(p.sec));
   }
   // 채점 팝업 — 문항 하나하나 누르는 대신 "점수"와 "틀린 문항 번호"만 입력하면, 나머지는
   // 전부 정답으로 자동 계산한다.
   function mexOpenGradingModal() {
     const exam = mexCurrentExam;
     if (!exam) return;
-    document.getElementById("mexGradeScoreInput").value = exam.score || "";
-    const wrongNums = (exam.answers || []).map((a, i) => a === "wrong" ? (i + 1) : null).filter(n => n !== null);
-    document.getElementById("mexGradeWrongInput").value = wrongNums.join(", ");
+    document.getElementById("mexGradeMaxScoreInput").value = exam.scoreMax || "";
+    document.getElementById("mexGradeMyScoreInput").value = exam.scoreMine || "";
+    // 틀린 문항 칸은 예전 문항별 클릭 채점 데이터가 남아있어도 매번 빈 칸으로 시작한다.
+    document.getElementById("mexGradeWrongInput").value = "";
     document.getElementById("mexGradingOverlay").classList.add("on");
   }
   function mexCloseGradingModal() {
@@ -10141,12 +10166,14 @@
   }
   function mexSaveGrading() {
     if (!mexCurrentExam) return;
-    const score = document.getElementById("mexGradeScoreInput").value.trim();
-    if (!score) { showToast("점수를 입력해주세요"); return; }
+    const scoreMax = document.getElementById("mexGradeMaxScoreInput").value.trim();
+    const scoreMine = document.getElementById("mexGradeMyScoreInput").value.trim();
+    if (!scoreMax || !scoreMine) { showToast("만점 점수와 내가 맞은 점수를 모두 입력해주세요"); return; }
     const wrongRaw = document.getElementById("mexGradeWrongInput").value.trim();
     const wrongNums = wrongRaw ? wrongRaw.split(/[,\s]+/).map(Number).filter(n => n >= 1 && n <= mexCurrentExam.count) : [];
     const wrongSet = new Set(wrongNums);
-    mexCurrentExam.score = score;
+    mexCurrentExam.scoreMax = scoreMax;
+    mexCurrentExam.scoreMine = scoreMine;
     mexCurrentExam.answers = Array.from({ length: mexCurrentExam.count }, (_, i) => wrongSet.has(i + 1) ? "wrong" : "correct");
     const list = mexLoadExams();
     const idx = list.findIndex(e => e.id === mexCurrentExam.id);
