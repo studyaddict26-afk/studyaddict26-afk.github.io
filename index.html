@@ -10367,7 +10367,10 @@
     const exam = mexCurrentExam;
     if (!exam) return;
     if (exam.manualEntry) {
-      showToast("직접 입력한 시험은 랩타임 기능을 제공하지 않아요");
+      document.getElementById("mexLapPopupBody").innerHTML =
+        '<div style="text-align:center;color:var(--ink-soft);font-size:0.78rem;padding:10px;">직접 입력한 시험은 랩타임 기능을 제공하지 않습니다.</div>';
+      document.getElementById("mexLapPopupTotal").textContent = "";
+      document.getElementById("mexLapPopupOverlay").classList.add("on");
       return;
     }
     const groups = (exam.passageTimeGroups && exam.passageTimeGroups.length)
