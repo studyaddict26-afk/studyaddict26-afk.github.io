@@ -1535,7 +1535,7 @@
   .mex-list-del-btn { flex: none; background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.72rem; font-weight: 700; cursor: pointer; padding: 6px 4px; }
   .mex-list-del-btn:hover { color: #C23B3B; }
 
-  .mex-detail-wrap { max-width: 1100px; width: 100%; margin: 20px auto 0 auto; padding: 0 20px 40px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; }
+  .mex-detail-wrap { max-width: 1100px; width: 100%; margin: 20px auto 0 auto; padding: 0 20px 40px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; flex: 1; min-height: 0; }
   .mex-back-link { align-self: flex-start; background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.82rem; font-weight: 700; cursor: pointer; padding: 0; }
   .mex-back-link:hover { color: var(--ink); }
   .mex-detail-box-row { display: flex; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); overflow: hidden; }
@@ -4925,10 +4925,7 @@
         <div class="record-plan-diary-row">
           <div class="record-planner-pane">
             <div class="today-title-row">
-              <h3 class="record-pane-title">
-                <span class="diary-required-badge">필수</span>
-                피드백
-              </h3>
+              <h3 class="record-pane-title">피드백</h3>
               <span class="record-submit-status" id="mexFeedbackSubmitStatus">미제출</span>
               <button type="button" class="record-mini-submit-btn" id="mexFeedbackSubmitBtn" onclick="mexSubmitReview(this,'mexFeedbackSubmitStatus')">제출하기</button>
             </div>
@@ -4939,10 +4936,7 @@
           <div class="record-diary-col" id="mexReflectionCard">
             <div class="record-note-box">
               <div class="today-title-row">
-                <h3 class="record-pane-title">
-                  <span class="diary-required-badge">필수</span>
-                  성찰 노트
-                </h3>
+                <h3 class="record-pane-title">성찰 노트</h3>
                 <span class="record-submit-status" id="mexReflectionSubmitStatus">미제출</span>
                 <button type="button" class="record-mini-submit-btn" id="mexReflectionSubmitBtn" onclick="mexSubmitReview(this,'mexReflectionSubmitStatus')">제출하기</button>
               </div>
@@ -10258,20 +10252,24 @@
   }
   // 옛 기록 호환용 — 라벨이 "그룹명 + 항목라벨 + 번호"로 이어붙여져 있다는 점을 이용해(예:
   // "화법과 언어 지문 1"), 번호를 뗀 나머지가 같은 동안은 같은 그룹으로 묶는다. 그룹명만 쓰고
-  // "(N문항)" 같은 원래 문항 수 표기는 복원할 수 없어 생략한다.
+  // "(N문항)" 같은 원래 문항 수 표기는 복원할 수 없어 생략한다. 그룹 헤더에 이미 그룹명이
+  // 나오니, 각 행의 라벨에서는 그룹명을 다시 반복하지 않고 항목라벨+번호만 남긴다.
   function mexInferPassageGroups(times) {
     const groups = [];
     let lastPrefix = null;
     times.forEach(t => {
       const m = t.label.match(/^(.*?)\s*(\d+)$/);
       const prefix = m ? m[1].trim() : t.label;
+      const number = m ? m[2] : "";
+      const tokens = prefix.split(/\s+/).filter(Boolean);
+      const itemWord = tokens.length ? tokens[tokens.length - 1] : prefix;
+      const itemLabel = number ? (itemWord + " " + number) : t.label;
       if (prefix !== lastPrefix) {
-        const tokens = prefix.split(/\s+/).filter(Boolean);
         const groupName = tokens.length > 1 ? tokens.slice(0, -1).join(" ") : "";
         groups.push({ title: groupName || null, cols: 2, items: [] });
         lastPrefix = prefix;
       }
-      groups[groups.length - 1].items.push({ label: t.label, sec: t.sec });
+      groups[groups.length - 1].items.push({ label: itemLabel, sec: t.sec });
     });
     return groups;
   }
@@ -10388,6 +10386,20 @@
     const exam = mexCurrentExam;
     if (!exam) return;
     mexCaptureReflectionForm();
+    if (statusId === "mexFeedbackSubmitStatus" && !document.getElementById("mexFeedbackInput").value.trim()) {
+      showToast("피드백을 입력해주세요");
+      return;
+    }
+    if (statusId === "mexReflectionSubmitStatus") {
+      const hasContent = Object.keys(mexReflectionDraft).some(k => {
+        const note = mexReflectionDraft[k];
+        return note && (note.reason || note.memo);
+      });
+      if (!hasContent) {
+        showToast("성찰 노트를 작성해주세요");
+        return;
+      }
+    }
     const wrongNums = mexReflectionWrongNums();
     const wrongNotes = {};
     Object.keys(mexReflectionDraft).forEach(k => {
