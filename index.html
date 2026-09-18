@@ -1585,6 +1585,8 @@
     font-family: inherit; font-size: 0.66rem; font-weight: 800; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
   }
   .mex-score-grade-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(21,82,47,0.3); }
+  .mex-score-grade-btn.ungraded { background: #D63B3B; }
+  .mex-score-grade-btn.ungraded:hover { box-shadow: 0 4px 10px rgba(214,59,59,0.3); }
   .mex-grading-modal-body { display: flex; flex-direction: column; gap: 14px; max-height: 68vh; overflow-y: auto; padding: 20px; }
 
   /* 홈 하단 2/3: 안내 */
@@ -4911,7 +4913,7 @@
           <div class="mex-detail-box-label">점수</div>
           <div class="mex-detail-box-score-row">
             <div class="mex-detail-box-value" id="mexDetailBoxScore">-</div>
-            <button type="button" class="mex-score-grade-btn" id="mexScoreGradeBtn" onclick="mexOpenGradingModal()">채점하기</button>
+            <button type="button" class="mex-score-grade-btn ungraded" id="mexScoreGradeBtn" onclick="mexOpenGradingModal()">채점하기 →</button>
           </div>
         </div>
         <div class="mex-detail-box mex-detail-box-clickable" onclick="mexOpenLapPopup()">
@@ -10218,7 +10220,9 @@
     document.getElementById("mexDetailBoxSubject").textContent = (exam.periodLabel ? exam.periodLabel + " " : "") + exam.subject;
     document.getElementById("mexDetailBoxName").textContent = exam.title;
     document.getElementById("mexDetailBoxScore").textContent = exam.scoreMine ? exam.scoreMine + "/" + exam.scoreMax + "점" : "미채점";
-    document.getElementById("mexScoreGradeBtn").textContent = exam.scoreMine ? "수정하기" : "채점하기";
+    const gradeBtn = document.getElementById("mexScoreGradeBtn");
+    gradeBtn.textContent = exam.scoreMine ? "수정하기" : "채점하기 →";
+    gradeBtn.classList.toggle("ungraded", !exam.scoreMine);
     const hasLap = (exam.passageTimes || []).some(t => t.sec > 0);
     document.getElementById("mexDetailBoxLap").textContent = hasLap ? "풀이 시간 확인하기" : "기록 없음";
   }
