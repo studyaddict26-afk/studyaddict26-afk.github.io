@@ -1532,7 +1532,7 @@
   .mex-list-del-btn { flex: none; background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.72rem; font-weight: 700; cursor: pointer; padding: 6px 4px; }
   .mex-list-del-btn:hover { color: #C23B3B; }
 
-  .mex-detail-wrap { max-width: 900px; width: 100%; margin: 20px auto 0 auto; padding: 0 20px 40px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; }
+  .mex-detail-wrap { max-width: 1100px; width: 100%; margin: 20px auto 0 auto; padding: 0 20px 40px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; }
   .mex-back-link { align-self: flex-start; background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.82rem; font-weight: 700; cursor: pointer; padding: 0; }
   .mex-back-link:hover { color: var(--ink); }
   .mex-detail-box-row { display: flex; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); overflow: hidden; }
@@ -1548,10 +1548,13 @@
     .mex-detail-box { flex: 1 1 calc(50% - 1px); border-bottom: 1px solid var(--line); }
     .mex-detail-box:nth-child(2n+1) { border-left: none; }
   }
-  .mex-review-split { display: flex; gap: 18px; align-items: flex-start; }
-  .mex-review-split .mex-review-card { flex: 1 1 0; min-width: 0; }
+  .mex-review-merged { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 18px; }
+  .mex-review-split { display: flex; gap: 18px; align-items: stretch; }
+  .mex-review-pane { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+  .mex-review-pane-right { border-left: 1px solid var(--line); padding-left: 18px; margin-top: -18px; padding-top: 18px; }
   @media (max-width: 700px) {
     .mex-review-split { flex-direction: column; }
+    .mex-review-pane-right { border-left: none; padding-left: 0; margin-top: 0; padding-top: 14px; border-top: 1px solid var(--line); }
   }
 
   .mex-time-chart { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 16px 18px; }
@@ -1570,7 +1573,6 @@
   .mex-time-chart-detail { font-size: 0.78rem; color: var(--ink); font-weight: 600; text-align: center; margin-top: 10px; min-height: 1.4em; }
 
   /* ── 성찰 노트 / 피드백 ── */
-  .mex-review-card { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
   .mex-review-title { font-size: 0.92rem; font-weight: 800; color: var(--ink); }
   .mex-review-desc { font-size: 0.74rem; color: var(--ink-soft); line-height: 1.55; margin-top: -6px; }
   .mex-feedback-textarea {
@@ -4943,29 +4945,31 @@
       </div>
       <div class="mex-time-chart" id="mexTimeChart" style="display:none;"></div>
 
-      <div class="mex-review-split">
-        <div class="mex-review-card">
-          <div class="mex-review-title">피드백</div>
-          <div class="mex-review-desc">오늘 시험에 대한 총평, 시간 배분은 어땠는지, 다음 시험까지의 목표를 자유롭게 적어보세요.</div>
-          <textarea id="mexFeedbackInput" class="mex-feedback-textarea" placeholder="예) 독서 지문에서 시간을 너무 많이 써서 마지막 문학 문제를 못 풀었다. 다음엔 독서 지문 읽는 속도를 늘리는 연습이 필요하다."></textarea>
-        </div>
-
-        <div class="mex-review-card" id="mexReflectionCard">
-          <div class="mex-review-title">성찰 노트</div>
-          <div class="mex-review-desc">틀린 문제는 자동으로 추가되고, 맞았지만 다시 짚고 싶은 문제는 번호를 직접 추가할 수 있어요. 번호를 누르면 그 문제의 성찰 노트가 아래 나와요.</div>
-          <div class="mex-reflection-add-row">
-            <button type="button" class="mex-reflection-add-btn" onclick="mexOpenReflectionAddPopup()">+ 추가</button>
+      <div class="mex-review-merged">
+        <div class="mex-review-split">
+          <div class="mex-review-pane">
+            <div class="mex-review-title">피드백</div>
+            <div class="mex-review-desc">오늘 시험에 대한 총평, 시간 배분은 어땠는지, 다음 시험까지의 목표를 자유롭게 적어보세요.</div>
+            <textarea id="mexFeedbackInput" class="mex-feedback-textarea" placeholder="예) 독서 지문에서 시간을 너무 많이 써서 마지막 문학 문제를 못 풀었다. 다음엔 독서 지문 읽는 속도를 늘리는 연습이 필요하다."></textarea>
           </div>
-          <div class="mex-reflection-chips" id="mexReflectionChips"></div>
-          <div class="mex-reflection-form" id="mexReflectionForm" style="display:none;">
-            <div class="mex-reflection-form-head">
-              <span class="mex-reflection-form-num" id="mexReflectionFormNum">-</span>
-              <button type="button" class="mex-reflection-remove-btn" id="mexReflectionRemoveBtn" onclick="mexRemoveReflectionQuestion()">이 번호 빼기</button>
+
+          <div class="mex-review-pane mex-review-pane-right" id="mexReflectionCard">
+            <div class="mex-review-title">성찰 노트</div>
+            <div class="mex-review-desc">틀린 문제는 자동으로 추가되고, 맞았지만 다시 짚고 싶은 문제는 번호를 직접 추가할 수 있어요. 번호를 누르면 그 문제의 성찰 노트가 아래 나와요.</div>
+            <div class="mex-reflection-add-row">
+              <button type="button" class="mex-reflection-add-btn" onclick="mexOpenReflectionAddPopup()">+ 추가</button>
             </div>
-            <select class="mex-wrongnote-reason" id="mexReflectionReason">
-              <option value="">오답 원인 선택</option>
-            </select>
-            <textarea class="mex-wrongnote-memo" id="mexReflectionMemo" placeholder="어떤 개념을 몰랐는지, 정답 풀이는 무엇인지, 다음엔 어떻게 접근할지 적어보세요."></textarea>
+            <div class="mex-reflection-chips" id="mexReflectionChips"></div>
+            <div class="mex-reflection-form" id="mexReflectionForm" style="display:none;">
+              <div class="mex-reflection-form-head">
+                <span class="mex-reflection-form-num" id="mexReflectionFormNum">-</span>
+                <button type="button" class="mex-reflection-remove-btn" id="mexReflectionRemoveBtn" onclick="mexRemoveReflectionQuestion()">이 번호 빼기</button>
+              </div>
+              <select class="mex-wrongnote-reason" id="mexReflectionReason">
+                <option value="">오답 원인 선택</option>
+              </select>
+              <textarea class="mex-wrongnote-memo" id="mexReflectionMemo" placeholder="어떤 개념을 몰랐는지, 정답 풀이는 무엇인지, 다음엔 어떻게 접근할지 적어보세요."></textarea>
+            </div>
           </div>
         </div>
       </div>
