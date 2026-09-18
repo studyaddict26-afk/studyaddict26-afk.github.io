@@ -4797,7 +4797,7 @@
         <div class="mex-field-grid">
           <div class="mex-field">
             <label>과목명</label>
-            <input type="text" id="exsimNaeshinSubject" placeholder="예: 수학 내신">
+            <input type="text" id="exsimNaeshinSubject" placeholder="예: 킬링캠프 파이널 2회차">
           </div>
           <button type="button" class="exsim-top-btn" onclick="exsimOpenNoisePanel()">
             <span class="exsim-top-btn-ico">🔊</span>
@@ -4813,7 +4813,7 @@
             <input type="number" id="exsimNaeshinCount" min="1" max="100" value="20">
           </div>
         </div>
-        <button type="button" class="exsim-start-btn exsim-naeshin-start-btn" onclick="exsimStartNaeshin()">시험 시작</button>
+        <button type="button" class="exsim-start-btn exsim-naeshin-start-btn" onclick="exsimStartNaeshin()">시험 준비</button>
       </div>
     </div>
   </section>
@@ -9210,8 +9210,13 @@
     exsimUpdateTimerText();
     exsimUpdateEndBtn();
     document.getElementById("exsimLive").classList.add("on");
-    if (localStorage.getItem(exsimTutorialSeenKey()) === "1") exsimActuallyStartExam();
-    else exsimTutStart();
+    if (localStorage.getItem(exsimTutorialSeenKey()) === "1") {
+      // 내신은 화면만 미리 보여주고, 학생이 "시험 시작하기"를 직접 눌러야 카운트가 시작된다
+      // (수능은 예비령부터 자연스럽게 흘러가야 하니 기존처럼 자동 시작).
+      if (!exsimIsSimpleMode(period)) exsimActuallyStartExam();
+    } else {
+      exsimTutStart();
+    }
   }
   // 계정(학생 ID)별로 "이 튜토리얼을 봤는지"를 따로 기억 — 같은 기기라도 계정이 다르면 다시 뜬다.
   function exsimTutorialSeenKey() {
@@ -9285,7 +9290,8 @@
   function exsimTutFinish() {
     exsimTutCancel();
     localStorage.setItem(exsimTutorialSeenKey(), "1");
-    exsimActuallyStartExam();
+    if (exsimState && exsimIsSimpleMode(exsimState.period)) exsimUpdateEndBtn();
+    else exsimActuallyStartExam();
   }
   // 튜토리얼 도중 화면을 그냥 닫아버린 경우(× 버튼) — "봤다"고 기록하지 않고 타이머만 정리한다.
   function exsimTutCancel() {
@@ -9389,18 +9395,25 @@
     exsimState.elapsedSec = Math.max(0, Math.min(exsimState.totalSec, sec));
     exsimUpdateDisplay();
   }
-  // 본령 전까지는 "시험 바로 시작하기"(눌러서 본령으로 바로 건너뛰기), 본령이 시작되면
-  // "시험 종료하기"로 바뀌는 하단 버튼 — 내신(예비령/준비령 없이 바로 진행)은 항상 종료 버튼만.
+  // 내신: "시험 시작하기"(눌러야 카운트가 진짜 시작) → 시작되면 "시험 종료하기".
+  // 수능: "시험 바로 시작하기"(눌러서 본령으로 바로 건너뛰기) → 본령이 시작되면 "시험 종료하기".
   function exsimUpdateEndBtn() {
     const btn = document.getElementById("exlvEndBtn");
     if (!btn || !exsimState) return;
-    const inHonryeong = exsimIsSimpleMode(exsimState.period) || exsimPhaseLabel() === "본령";
-    btn.textContent = inHonryeong ? "시험 종료하기" : "시험 바로 시작하기";
+    if (exsimIsSimpleMode(exsimState.period)) {
+      btn.textContent = exsimState.started ? "시험 종료하기" : "시험 시작하기";
+    } else {
+      btn.textContent = exsimPhaseLabel() === "본령" ? "시험 종료하기" : "시험 바로 시작하기";
+    }
   }
   function exsimEndBtnClick() {
     if (!exsimState) return;
-    const inHonryeong = exsimIsSimpleMode(exsimState.period) || exsimPhaseLabel() === "본령";
-    if (inHonryeong) { exsimRequestClose(); return; }
+    if (exsimIsSimpleMode(exsimState.period)) {
+      if (!exsimState.started) { exsimActuallyStartExam(); exsimUpdateEndBtn(); return; }
+      exsimRequestClose();
+      return;
+    }
+    if (exsimPhaseLabel() === "본령") { exsimRequestClose(); return; }
     exsimScrubTo((exsimState.startMin - exsimState.preMin) * 60);
   }
   function exsimScrub(deltaSec) {
