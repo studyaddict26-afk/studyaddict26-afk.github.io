@@ -10305,7 +10305,7 @@
       return;
     }
     el.innerHTML = list.map(exam => {
-      const scoreText = exam.scoreMine ? escapeHtml(exam.scoreMine) + '/' + escapeHtml(exam.scoreMax) + '점' : '채점 전';
+      const scoreText = exam.scoreMine ? escapeHtml(exam.scoreMine) + '점' : '채점 전';
       const rowText = escapeHtml(exam.subject) + ' · ' + escapeHtml(exam.date) + ' / <span class="mex-list-row-gray">' + escapeHtml(exam.title) + ' · ' + scoreText + '</span>';
       return '<div class="mex-list-row">' +
         '<button type="button" class="mex-list-row-main" onclick="mexOpenDetail(\'' + exam.id + '\')">' + rowText + '</button>' +
