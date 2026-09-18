@@ -1478,6 +1478,8 @@
   .exend-lap-row { display: flex; align-items: center; justify-content: space-between; gap: 4px; font-size: 0.64rem; padding: 6px 7px; color: var(--ink); background: var(--cream); border-radius: 8px; white-space: nowrap; }
   .exend-lap-row-dur { color: var(--ink-soft); font-weight: 700; flex: none; }
   #mexLapPopupBody .exend-lap-row { background: #fff; }
+  .mex-lap-popup-title-row { display: flex; align-items: baseline; gap: 8px; }
+  .mex-lap-total-time { font-size: 0.72rem; font-weight: 700; color: var(--ink-soft); }
   .exend-save-btn { flex: none; background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 6px 12px; font-family: inherit; font-size: 0.68rem; font-weight: 800; cursor: pointer; white-space: nowrap; transition: transform 0.15s, box-shadow 0.15s; }
   .exend-save-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(21,82,47,0.35); }
   .exend-save-btn:disabled { opacity: 0.6; cursor: default; }
@@ -1555,7 +1557,6 @@
     font-family: inherit; font-size: 0.84rem; color: var(--ink); border: 1px solid var(--line); border-radius: 10px;
     padding: 12px 14px; background: var(--cream); resize: vertical; min-height: 90px; line-height: 1.6; width: 100%; box-sizing: border-box;
   }
-  .mex-review-save-btn { width: 100%; background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 13px; font-family: inherit; font-size: 0.9rem; font-weight: 800; cursor: pointer; }
   /* 성찰 노트: 위쪽 번호 추가/선택 → 고른 번호 하나의 작성란만 아래 보여주는 방식 */
   .mex-reflection-add-row { display: flex; justify-content: flex-end; }
   .mex-reflection-add-btn { flex: none; background: var(--green-deep); color: #fff; border: none; border-radius: 8px; padding: 8px 14px; font-family: inherit; font-size: 0.78rem; font-weight: 800; cursor: pointer; }
@@ -4925,7 +4926,12 @@
         <div class="record-plan-diary-row">
           <div class="record-planner-pane">
             <div class="today-title-row">
-              <h3 class="record-pane-title">피드백</h3>
+              <h3 class="record-pane-title">
+                <span class="diary-required-badge">필수</span>
+                피드백
+              </h3>
+              <span class="record-submit-status" id="mexFeedbackSubmitStatus">미제출</span>
+              <button type="button" class="record-mini-submit-btn" id="mexFeedbackSubmitBtn" onclick="mexSubmitReview(this,'mexFeedbackSubmitStatus')">제출하기</button>
             </div>
             <div class="mex-review-desc">오늘 시험에 대한 총평, 시간 배분은 어땠는지, 다음 시험까지의 목표를 자유롭게 적어보세요.</div>
             <textarea id="mexFeedbackInput" class="mex-feedback-textarea" placeholder="예) 독서 지문에서 시간을 너무 많이 써서 마지막 문학 문제를 못 풀었다. 다음엔 독서 지문 읽는 속도를 늘리는 연습이 필요하다."></textarea>
@@ -4934,7 +4940,12 @@
           <div class="record-diary-col" id="mexReflectionCard">
             <div class="record-note-box">
               <div class="today-title-row">
-                <h3 class="record-pane-title">성찰 노트</h3>
+                <h3 class="record-pane-title">
+                  <span class="diary-required-badge">필수</span>
+                  성찰 노트
+                </h3>
+                <span class="record-submit-status" id="mexReflectionSubmitStatus">미제출</span>
+                <button type="button" class="record-mini-submit-btn" id="mexReflectionSubmitBtn" onclick="mexSubmitReview(this,'mexReflectionSubmitStatus')">제출하기</button>
               </div>
               <div class="mex-review-desc">틀린 문제는 자동으로 추가되고, 맞았지만 다시 짚고 싶은 문제는 번호를 직접 추가할 수 있어요. 번호를 누르면 그 문제의 성찰 노트가 아래 나와요.</div>
               <div class="mex-reflection-add-row">
@@ -4955,8 +4966,6 @@
           </div>
         </div>
       </div>
-
-      <button type="button" class="mex-review-save-btn" onclick="mexSaveReview()">성찰 노트·피드백 저장</button>
     </div>
   </section>
 
@@ -4993,7 +5002,10 @@
   <div class="exsim-picker-overlay" id="mexLapPopupOverlay" onclick="if(event.target===this) mexCloseLapPopup()">
     <div class="exsim-picker-box" style="max-width:440px;">
       <div class="exsim-picker-head">
-        <span>랩타임</span>
+        <span class="mex-lap-popup-title-row">
+          <span>랩타임</span>
+          <span class="mex-lap-total-time" id="mexLapPopupTotal"></span>
+        </span>
         <button type="button" class="exsim-picker-close" onclick="mexCloseLapPopup()" aria-label="닫기">&times;</button>
       </div>
       <div class="exend-lap-table" id="mexLapPopupBody" style="padding:18px;"></div>
@@ -10237,6 +10249,9 @@
       ? exam.passageTimeGroups
       : mexInferPassageGroups(exam.passageTimes || []);
     document.getElementById("mexLapPopupBody").innerHTML = exsimBuildLapTableHtml(groups);
+    let totalSec = 0;
+    groups.forEach(g => g.items.forEach(it => { if (it.sec > 0) totalSec += it.sec; }));
+    document.getElementById("mexLapPopupTotal").textContent = totalSec > 0 ? "총 응시 시간 " + formatDur(totalSec) : "";
     document.getElementById("mexLapPopupOverlay").classList.add("on");
   }
   function mexCloseLapPopup() {
@@ -10291,6 +10306,14 @@
     document.getElementById("mexReflectionForm").style.display = "none";
     mexRenderReflectionChips();
     document.getElementById("mexFeedbackInput").value = exam.feedback || "";
+    [["mexFeedbackSubmitStatus", "mexFeedbackSubmitBtn"], ["mexReflectionSubmitStatus", "mexReflectionSubmitBtn"]].forEach(([statusId, btnId]) => {
+      const statusEl = document.getElementById(statusId);
+      const btn = document.getElementById(btnId);
+      statusEl.textContent = "미제출";
+      statusEl.classList.remove("done");
+      btn.textContent = "제출하기";
+      btn.disabled = false;
+    });
   }
   function mexRenderReflectionChips() {
     const wrongNums = mexReflectionWrongNums();
@@ -10358,7 +10381,11 @@
     document.getElementById("mexReflectionForm").style.display = "none";
     mexRenderReflectionChips();
   }
-  function mexSaveReview() {
+  // "오늘의 공부" 페이지의 미제출/제출하기(quickSubmit)와 같은 방식 — 누르면 저장하고 버튼이
+  // 잠깐 "제출완료 ✓"로 바뀌었다가 다시 눌러 고칠 수 있게 풀린다. 피드백·성찰노트는 같은 시험
+  // 기록 하나에 함께 저장되므로, 둘 중 어느 버튼을 눌러도 현재 화면의 내용을 전부 저장한다.
+  function mexSubmitReview(btn, statusId) {
+    if (btn.disabled) return;
     const exam = mexCurrentExam;
     if (!exam) return;
     mexCaptureReflectionForm();
@@ -10375,8 +10402,18 @@
     const idx = list.findIndex(e => e.id === exam.id);
     if (idx !== -1) list[idx] = exam;
     mexSaveExams(list);
-    showToast("성찰 노트·피드백이 저장됐어요!");
     mexRenderReflectionChips();
+    const statusEl = statusId ? document.getElementById(statusId) : null;
+    if (statusEl) {
+      statusEl.textContent = "제출완료";
+      statusEl.classList.add("done");
+    }
+    btn.textContent = "제출완료 ✓";
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.textContent = "다시 제출하기";
+      btn.disabled = false;
+    }, 1200);
   }
   // 채점 팝업 — 문항 하나하나 누르는 대신 "점수"와 "틀린 문항 번호"만 입력하면, 나머지는
   // 전부 정답으로 자동 계산한다.
