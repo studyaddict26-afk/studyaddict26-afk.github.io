@@ -1572,11 +1572,7 @@
   }
   .mex-review-save-btn { width: 100%; background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 13px; font-family: inherit; font-size: 0.9rem; font-weight: 800; cursor: pointer; }
   /* 성찰 노트: 위쪽 번호 추가/선택 → 고른 번호 하나의 작성란만 아래 보여주는 방식 */
-  .mex-reflection-add-row { display: flex; gap: 8px; }
-  .mex-reflection-add-row input {
-    flex: 1; min-width: 0; font-family: inherit; font-size: 0.8rem; color: var(--ink); border: 1px solid var(--line);
-    border-radius: 8px; padding: 8px 10px; background: var(--cream); box-sizing: border-box;
-  }
+  .mex-reflection-add-row { display: flex; justify-content: flex-end; }
   .mex-reflection-add-btn { flex: none; background: var(--green-deep); color: #fff; border: none; border-radius: 8px; padding: 8px 14px; font-family: inherit; font-size: 0.78rem; font-weight: 800; cursor: pointer; }
   .mex-reflection-chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .mex-reflection-empty { font-size: 0.78rem; color: var(--ink-soft); }
@@ -4946,8 +4942,7 @@
         <div class="mex-review-title">성찰 노트</div>
         <div class="mex-review-desc">틀린 문제는 자동으로 추가되고, 맞았지만 다시 짚고 싶은 문제는 번호를 직접 추가할 수 있어요. 번호를 누르면 그 문제의 성찰 노트가 아래 나와요.</div>
         <div class="mex-reflection-add-row">
-          <input type="number" id="mexReflectionAddInput" min="1" placeholder="문제 번호를 입력하세요">
-          <button type="button" class="mex-reflection-add-btn" onclick="mexAddReflectionQuestion()">+ 추가</button>
+          <button type="button" class="mex-reflection-add-btn" onclick="mexOpenReflectionAddPopup()">+ 추가</button>
         </div>
         <div class="mex-reflection-chips" id="mexReflectionChips"></div>
         <div class="mex-reflection-form" id="mexReflectionForm" style="display:none;">
@@ -5008,6 +5003,23 @@
           <input type="date" id="mexNaeshinDdayInput">
         </div>
         <button type="button" class="exsim-picker-submit-btn" style="width:100%; padding:12px; font-size:0.86rem;" onclick="mexSaveNaeshinDday()">저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 성찰 노트 번호 추가 팝업 ─── -->
+  <div class="exsim-picker-overlay" id="mexReflectionAddOverlay" onclick="if(event.target===this) mexCloseReflectionAddPopup()">
+    <div class="exsim-picker-box" style="max-width:360px;">
+      <div class="exsim-picker-head">
+        <span>문제 번호 추가</span>
+        <button type="button" class="exsim-picker-close" onclick="mexCloseReflectionAddPopup()" aria-label="닫기">&times;</button>
+      </div>
+      <div style="padding:20px; display:flex; flex-direction:column; gap:14px;">
+        <div class="mex-field">
+          <label>문제 번호</label>
+          <input type="number" id="mexReflectionAddInput" min="1" placeholder="문제 번호를 입력하세요" onkeydown="if(event.key==='Enter'){event.preventDefault();mexAddReflectionQuestion();}">
+        </div>
+        <button type="button" class="exsim-picker-submit-btn" style="width:100%; padding:12px; font-size:0.86rem;" onclick="mexAddReflectionQuestion()">추가</button>
       </div>
     </div>
   </div>
@@ -10250,6 +10262,15 @@
     document.getElementById("mexReflectionRemoveBtn").style.display = mexReflectionWrongNums().includes(n) ? "none" : "inline";
     document.getElementById("mexReflectionForm").style.display = "flex";
   }
+  function mexOpenReflectionAddPopup() {
+    const input = document.getElementById("mexReflectionAddInput");
+    input.value = "";
+    document.getElementById("mexReflectionAddOverlay").classList.add("on");
+    input.focus();
+  }
+  function mexCloseReflectionAddPopup() {
+    document.getElementById("mexReflectionAddOverlay").classList.remove("on");
+  }
   function mexAddReflectionQuestion() {
     const exam = mexCurrentExam;
     const input = document.getElementById("mexReflectionAddInput");
@@ -10260,6 +10281,7 @@
       mexReflectionNums.push(n);
       mexReflectionNums.sort((a, b) => a - b);
     }
+    mexCloseReflectionAddPopup();
     mexSelectReflectionNum(n);
   }
   function mexRemoveReflectionQuestion() {
