@@ -5053,7 +5053,7 @@
         </div>
         <div class="mex-field">
           <label>틀린 문항</label>
-          <input type="text" id="mexGradeWrongInput" placeholder="번호를 쉼표로 구분, 없으면 비워두세요">
+          <input type="text" id="mexGradeWrongInput" placeholder="번호를 쉼표로 구분해서 입력해주세요 (예: 1,4,7)" oninput="this.value = this.value.replace(/[^0-9,]/g, '')">
         </div>
       </div>
     </div>
@@ -10620,8 +10620,9 @@
     const scoreMax = document.getElementById("mexGradeMaxScoreInput").value.trim();
     const scoreMine = document.getElementById("mexGradeMyScoreInput").value.trim();
     if (!scoreMax || !scoreMine) { showToast("만점 점수와 내가 맞은 점수를 모두 입력해주세요"); return; }
-    const wrongRaw = document.getElementById("mexGradeWrongInput").value.trim();
-    const wrongNums = wrongRaw ? wrongRaw.split(/[,\s]+/).map(Number).filter(n => n >= 1 && n <= mexCurrentExam.count) : [];
+    const wrongRaw = document.getElementById("mexGradeWrongInput").value.trim().replace(/^,+|,+$/g, "");
+    if (!wrongRaw) { showToast("틀린 문항 번호를 입력해주세요"); return; }
+    const wrongNums = wrongRaw.split(",").filter(Boolean).map(Number).filter(n => n >= 1 && n <= mexCurrentExam.count);
     const wrongSet = new Set(wrongNums);
     mexCurrentExam.scoreMax = scoreMax;
     mexCurrentExam.scoreMine = scoreMine;
