@@ -9735,6 +9735,21 @@
     document.getElementById("exsimEnd").classList.remove("on");
     exsimEndData = null;
   }
+  // 국어처럼 그룹(화법과 언어/독서와 작문/문학)이 여러 개면 "지문 1"이 어느 그룹인지 알 수
+  // 없어 헷갈리니, 그룹 제목("(N문항)"은 떼고)을 앞에 붙여 "문학 지문 1"처럼 구분되게 한다.
+  function exsimPassageTimesWithGroupLabels(state) {
+    const passages = state.passages || [];
+    const groups = state.passageGroups || [];
+    const labels = [];
+    groups.forEach(g => {
+      const groupName = g.title ? g.title.replace(/\s*\(\d+문항\)\s*$/, "").trim() : "";
+      g.items.forEach(() => labels.push(groupName));
+    });
+    return passages.map((p, i) => ({
+      label: labels[i] ? labels[i] + " " + p.label : p.label,
+      sec: p.totalSec > 0 ? p.totalSec : null,
+    }));
+  }
   function exsimPersistCurrentSession(state) {
     const list = exsimLoadHistory();
     list.unshift({
@@ -9745,7 +9760,7 @@
       laps: state.laps.map(l => l.sec),
       // 지문/문항 라벨별 누적 시간도 함께 남겨서, 나중에 모의고사 기록에 연결할 때 국어처럼
       // "문항 수 ≠ 지문 수"인 과목도 지문 단위 그대로 정확히 가져올 수 있게 한다.
-      passageTimes: (state.passages || []).map(p => ({ label: p.label, sec: p.totalSec > 0 ? p.totalSec : null })),
+      passageTimes: exsimPassageTimesWithGroupLabels(state),
     });
     localStorage.setItem(exsimHistoryKey(), JSON.stringify(list.slice(0, 100)));
   }
@@ -9756,7 +9771,7 @@
     if (!state || !state.period || state.period.id === "naeshin") return;
     const period = state.period;
     const count = period.count || 1;
-    const passageTimes = (state.passages || []).map(p => ({ label: p.label, sec: p.totalSec > 0 ? p.totalSec : null }));
+    const passageTimes = exsimPassageTimesWithGroupLabels(state);
     const exam = {
       id: "mex_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7),
       title: examName, periodLabel: period.periodLabel, subject: period.subject, count: count, date: getLocalDateKey(),
