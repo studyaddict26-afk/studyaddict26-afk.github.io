@@ -5100,7 +5100,7 @@
       <div style="padding:20px; display:flex; flex-direction:column; gap:14px;">
         <div class="mex-field">
           <label>문제 번호</label>
-          <input type="number" id="mexReflectionAddInput" min="1" placeholder="문제 번호를 입력하세요" onkeydown="if(event.key==='Enter'){event.preventDefault();mexAddReflectionQuestion();}">
+          <input type="text" id="mexReflectionAddInput" placeholder="문제 번호를 입력하세요 (여러 개는 쉼표로 구분)" oninput="this.value = this.value.replace(/[^0-9,]/g, '')" onkeydown="if(event.key==='Enter'){event.preventDefault();mexAddReflectionQuestion();}">
         </div>
         <button type="button" class="exsim-picker-submit-btn" style="width:100%; padding:12px; font-size:0.86rem;" onclick="mexAddReflectionQuestion()">추가</button>
       </div>
@@ -10527,15 +10527,17 @@
   function mexAddReflectionQuestion() {
     const exam = mexCurrentExam;
     const input = document.getElementById("mexReflectionAddInput");
-    const n = Number(input.value);
-    if (!exam || !n || n < 1 || n > exam.count) { showToast("올바른 문제 번호를 입력해주세요"); return; }
+    const raw = input.value.trim().replace(/^,+|,+$/g, "");
+    if (!exam || !raw) { showToast("문제 번호를 입력해주세요"); return; }
+    const validNums = raw.split(",").filter(Boolean).map(Number).filter(n => n >= 1 && n <= exam.count);
+    if (!validNums.length) { showToast("올바른 문제 번호를 입력해주세요"); return; }
     input.value = "";
-    if (!mexReflectionNums.includes(n)) {
-      mexReflectionNums.push(n);
-      mexReflectionNums.sort((a, b) => a - b);
-    }
+    validNums.forEach(n => {
+      if (!mexReflectionNums.includes(n)) mexReflectionNums.push(n);
+    });
+    mexReflectionNums.sort((a, b) => a - b);
     mexCloseReflectionAddPopup();
-    mexSelectReflectionNum(n);
+    mexSelectReflectionNum(validNums[0]);
   }
   function mexRemoveReflectionQuestion() {
     if (mexReflectionCurrentNum == null) return;
