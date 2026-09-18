@@ -1536,8 +1536,6 @@
   .mex-list-del-btn:hover { color: #C23B3B; }
 
   .mex-detail-wrap { max-width: 1100px; width: 100%; margin: 20px auto 0 auto; padding: 0 20px 40px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; flex: 1; min-height: 0; }
-  .mex-back-link { align-self: flex-start; background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.82rem; font-weight: 700; cursor: pointer; padding: 0; }
-  .mex-back-link:hover { color: var(--ink); }
   .mex-detail-box-row { display: flex; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); overflow: hidden; }
   .mex-detail-box { flex: 1; min-width: 0; padding: 8px 12px; border-left: 1px solid var(--line); }
   .mex-detail-box:first-child { border-left: none; }
@@ -1554,10 +1552,6 @@
   }
   /* ── 성찰 노트 / 피드백 (오늘의 공부 페이지의 플래너·일기 좌우 분할 카드 재사용: record-plan-diary-card 등) ── */
   .mex-review-desc { font-size: 0.74rem; color: var(--ink-soft); line-height: 1.55; }
-  .mex-feedback-textarea {
-    font-family: inherit; font-size: 0.84rem; color: var(--ink); border: 1px solid var(--line); border-radius: 10px;
-    padding: 12px 14px; background: var(--cream); resize: vertical; min-height: 90px; line-height: 1.6; width: 100%; box-sizing: border-box;
-  }
   /* 성찰 노트: 위쪽 번호 추가/선택 → 고른 번호 하나의 작성란만 아래 보여주는 방식 */
   .mex-reflection-add-row { display: flex; justify-content: flex-end; }
   .mex-reflection-add-btn { flex: none; background: var(--green-deep); color: #fff; border: none; border-radius: 8px; padding: 8px 14px; font-family: inherit; font-size: 0.78rem; font-weight: 800; cursor: pointer; }
@@ -4905,7 +4899,6 @@
     </div>
 
     <div class="mex-detail-wrap" id="mexDetailWrap" style="display:none;">
-      <button type="button" class="mex-back-link" onclick="mexBackToList()">‹ 목록으로</button>
       <div class="mex-detail-box-row">
         <div class="mex-detail-box"><div class="mex-detail-box-label">날짜</div><div class="mex-detail-box-value" id="mexDetailBoxDate">-</div></div>
         <div class="mex-detail-box"><div class="mex-detail-box-label">시험</div><div class="mex-detail-box-value" id="mexDetailBoxSubject">-</div></div>
@@ -4930,8 +4923,26 @@
               <span class="record-submit-status" id="mexFeedbackSubmitStatus">미제출</span>
               <button type="button" class="record-mini-submit-btn" id="mexFeedbackSubmitBtn" onclick="mexSubmitReview(this,'mexFeedbackSubmitStatus')">제출하기</button>
             </div>
-            <div class="mex-review-desc">오늘 시험에 대한 총평, 시간 배분은 어땠는지, 다음 시험까지의 목표를 자유롭게 적어보세요.</div>
-            <textarea id="mexFeedbackInput" class="mex-feedback-textarea" placeholder="예) 독서 지문에서 시간을 너무 많이 써서 마지막 문학 문제를 못 풀었다. 다음엔 독서 지문 읽는 속도를 늘리는 연습이 필요하다."></textarea>
+            <div class="diary-q-field">
+              <label>1. 오늘 시험 전체적으로 어땠나요? (시간 배분, 컨디션도 편하게 적어주세요)</label>
+              <textarea id="mexFeedbackQ1"></textarea>
+            </div>
+            <div class="diary-q-field">
+              <label>2. 시간이 가장 부족했거나 힘들었던 부분은 어디였고, 왜 그랬나요?</label>
+              <textarea id="mexFeedbackQ2"></textarea>
+            </div>
+            <div class="diary-q-field">
+              <label>3. 이번 시험에서 잘 풀렸던 부분이나 전략은 무엇인가요?</label>
+              <textarea id="mexFeedbackQ3"></textarea>
+            </div>
+            <div class="diary-q-field">
+              <label>4. 다음 시험까지 개선하고 싶은 부분은 무엇인가요? (구체적인 목표로 적어보세요)</label>
+              <textarea id="mexFeedbackQ4"></textarea>
+            </div>
+            <div class="diary-q-field">
+              <label>자유롭게 기록하고 싶은 내용이 있다면 남겨주세요 (선택)</label>
+              <textarea id="mexFeedbackFree"></textarea>
+            </div>
           </div>
 
           <div class="record-diary-col" id="mexReflectionCard">
@@ -6637,6 +6648,10 @@
     examSuneung: "examhub", examNaeshin: "examhub", mexlist: "mockexam",
   };
   function goBack() {
+    if (currentView === "mexlist" && mexCurrentExam) {
+      mexBackToList();
+      return;
+    }
     const target = BACK_TARGET[currentView];
     if (target) go(target);
   }
@@ -10278,6 +10293,21 @@
   // 문제를 다시 베끼는 게 아니라 "왜 틀렸는지·어떻게 풀었어야 했는지"를 남기는 게 핵심이라는
   // 오답노트 작성법 리서치를 참고해 설계함. 한 번에 한 문제씩만 작성란을 보여주고(위쪽 번호
   // 칩에서 고르는 방식), 맞은 문제도 번호를 직접 추가해 성찰을 남길 수 있게 확장함.
+  // 피드백도 공부일기와 같은 구조화된 질문 방식 — 자유 서술(free)만 선택, 나머지 4문항은 필수.
+  const MEX_FEEDBACK_REQUIRED_FIELDS = [
+    { id: "mexFeedbackQ1", num: "1" },
+    { id: "mexFeedbackQ2", num: "2" },
+    { id: "mexFeedbackQ3", num: "3" },
+    { id: "mexFeedbackQ4", num: "4" },
+  ];
+  function mexLoadFeedbackFields(exam) {
+    const fb = (exam.feedback && typeof exam.feedback === "object") ? exam.feedback : {};
+    document.getElementById("mexFeedbackQ1").value = fb.q1 || "";
+    document.getElementById("mexFeedbackQ2").value = fb.q2 || "";
+    document.getElementById("mexFeedbackQ3").value = fb.q3 || "";
+    document.getElementById("mexFeedbackQ4").value = fb.q4 || "";
+    document.getElementById("mexFeedbackFree").value = fb.free || "";
+  }
   const MEX_WRONGNOTE_REASONS = [
     { value: "concept", label: "개념 부족" },
     { value: "mistake", label: "실수 (계산·표시 등)" },
@@ -10303,7 +10333,7 @@
     mexReflectionCurrentNum = null;
     document.getElementById("mexReflectionForm").style.display = "none";
     mexRenderReflectionChips();
-    document.getElementById("mexFeedbackInput").value = exam.feedback || "";
+    mexLoadFeedbackFields(exam);
     [["mexFeedbackSubmitStatus", "mexFeedbackSubmitBtn"], ["mexReflectionSubmitStatus", "mexReflectionSubmitBtn"]].forEach(([statusId, btnId]) => {
       const statusEl = document.getElementById(statusId);
       const btn = document.getElementById(btnId);
@@ -10387,9 +10417,14 @@
     const exam = mexCurrentExam;
     if (!exam) return;
     mexCaptureReflectionForm();
-    if (statusId === "mexFeedbackSubmitStatus" && !document.getElementById("mexFeedbackInput").value.trim()) {
-      showToast("피드백을 입력해주세요");
-      return;
+    if (statusId === "mexFeedbackSubmitStatus") {
+      for (const field of MEX_FEEDBACK_REQUIRED_FIELDS) {
+        const el = document.getElementById(field.id);
+        if (!el.value.trim()) {
+          showToast(field.num + "번 질문에 대한 답변을 입력해주세요");
+          return;
+        }
+      }
     }
     if (statusId === "mexReflectionSubmitStatus") {
       const hasContent = Object.keys(mexReflectionDraft).some(k => {
@@ -10409,7 +10444,13 @@
     });
     exam.wrongNotes = wrongNotes;
     exam.reflectionExtraNums = mexReflectionNums.filter(n => !wrongNums.includes(n));
-    exam.feedback = document.getElementById("mexFeedbackInput").value.trim();
+    exam.feedback = {
+      q1: document.getElementById("mexFeedbackQ1").value.trim(),
+      q2: document.getElementById("mexFeedbackQ2").value.trim(),
+      q3: document.getElementById("mexFeedbackQ3").value.trim(),
+      q4: document.getElementById("mexFeedbackQ4").value.trim(),
+      free: document.getElementById("mexFeedbackFree").value.trim(),
+    };
     const list = mexLoadExams();
     const idx = list.findIndex(e => e.id === exam.id);
     if (idx !== -1) list[idx] = exam;
