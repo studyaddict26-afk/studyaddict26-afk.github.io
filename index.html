@@ -4005,7 +4005,7 @@
       <div class="exlv-tl-track"><div class="exlv-tl-fill" id="exlvTlFill"></div></div>
       <div class="exlv-tl-labels" id="exlvTlLabels"></div>
     </div>
-    <button type="button" class="exlv-end-btn" id="exlvEndBtn" style="display:none;" onclick="event.stopPropagation();exsimRequestClose()">시험 종료하기</button>
+    <button type="button" class="exlv-end-btn" id="exlvEndBtn" style="display:none;" onclick="event.stopPropagation();exsimEndBtnClick()">시험 종료하기</button>
   </div>
   <div class="exlv-passages" id="exlvPassages" style="display:none;">
     <div class="exlv-passages-title">🚩 랩타임 기록</div>
@@ -9208,6 +9208,7 @@
     exsimRenderPassages();
     exsimDrawClock(preMin);
     exsimUpdateTimerText();
+    exsimUpdateEndBtn();
     document.getElementById("exsimLive").classList.add("on");
     if (localStorage.getItem(exsimTutorialSeenKey()) === "1") exsimActuallyStartExam();
     else exsimTutStart();
@@ -9237,7 +9238,7 @@
     { target: () => document.getElementById("exlvPlayBtn"), text: "불가피한 상황이 발생할 시, 잠시 시간을 멈출 수 있습니다." },
     { target: () => document.getElementById("exlvNoiseBtn"), text: "이 버튼을 누르면, 미리 설정한 소음이 랜덤으로 재생됩니다. 이어폰 착용을 권장합니다." },
     { target: () => document.getElementById("exlvTimeline"), text: "준비령, 본령을 누르면 그 시각으로 시간이 변경됩니다." },
-    { target: () => document.getElementById("exlvEndBtn"), text: "시험을 끝내고 싶으시면, 이 버튼을 눌러주세요." },
+    { target: () => document.getElementById("exlvEndBtn"), text: "본령 전에는 눌러서 바로 본령을 시작할 수 있고, 본령이 시작된 후에는 시험을 종료하는 버튼으로 바뀌어요." },
   ];
   let exsimTutStepIdx = 0;
   let exsimTutAutoHandle = null;
@@ -9329,6 +9330,7 @@
     // 현재 풀이 중(진행 중)인 지문이 있으면 매초 경과 시간을 갱신하고, 본령 진입 등 단계가
     // 바뀌는 순간에도 다시 그려서 랩타임 버튼의 잠금(잠금 해제) 표시를 즉시 반영한다.
     if (phaseChanged || (exsimState.passages && exsimState.passages.some(p => p.running))) exsimRenderPassages();
+    if (phaseChanged) exsimUpdateEndBtn();
     // 영어 본령 시작 시점에 첨부한 듣기 음원을 한 번만 자동 재생
     if (exsimState.period.hasListening && exsimListeningObjectUrl && !exsimState.listeningPlayed) {
       const startAtSec = (exsimState.startMin - exsimState.preMin) * 60;
@@ -9386,6 +9388,20 @@
     if (!exsimState) return;
     exsimState.elapsedSec = Math.max(0, Math.min(exsimState.totalSec, sec));
     exsimUpdateDisplay();
+  }
+  // 본령 전까지는 "시험 바로 시작하기"(눌러서 본령으로 바로 건너뛰기), 본령이 시작되면
+  // "시험 종료하기"로 바뀌는 하단 버튼 — 내신(예비령/준비령 없이 바로 진행)은 항상 종료 버튼만.
+  function exsimUpdateEndBtn() {
+    const btn = document.getElementById("exlvEndBtn");
+    if (!btn || !exsimState) return;
+    const inHonryeong = exsimIsSimpleMode(exsimState.period) || exsimPhaseLabel() === "본령";
+    btn.textContent = inHonryeong ? "시험 종료하기" : "시험 바로 시작하기";
+  }
+  function exsimEndBtnClick() {
+    if (!exsimState) return;
+    const inHonryeong = exsimIsSimpleMode(exsimState.period) || exsimPhaseLabel() === "본령";
+    if (inHonryeong) { exsimRequestClose(); return; }
+    exsimScrubTo((exsimState.startMin - exsimState.preMin) * 60);
   }
   function exsimScrub(deltaSec) {
     if (!exsimState || !exsimState.started) return;
