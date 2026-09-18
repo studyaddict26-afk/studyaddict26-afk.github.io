@@ -1558,25 +1558,20 @@
   }
   /* ── 성찰 노트 / 피드백 (오늘의 공부 페이지의 플래너·일기 좌우 분할 카드 재사용: record-plan-diary-card 등) ── */
   .mex-review-desc { font-size: 0.74rem; color: var(--ink-soft); line-height: 1.55; }
-  /* 성찰 노트: 위쪽 번호 추가/선택 → 고른 번호 하나의 작성란만 아래 보여주는 방식. "틀린 문제"와
-     "직접 추가한 문제"를 소제목으로 나눠 보여줘서, 별도 설명 문구 없이도 자동/수동 추가 구분이
-     되도록 한다. */
-  .mex-reflection-add-row { display: flex; align-items: center; justify-content: flex-start; gap: 10px; }
-  .mex-reflection-add-row-label { font-size: 0.78rem; font-weight: 700; color: var(--ink); }
+  /* 성찰 노트: "+ 문제 추가" 버튼과 번호 칩들이 한 줄에 나란히 — 고른 번호 하나의 작성란만
+     아래 보여주는 방식. 칩은 배경 없는 텍스트 버튼(채점하기/수정하기와 같은 스타일)으로,
+     지금 보고 있는 번호만 초록색으로 구분한다. */
+  .mex-reflection-add-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 14px; }
   .mex-reflection-add-btn { flex: none; background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 4px 12px; font-family: inherit; font-size: 0.72rem; font-weight: 800; cursor: pointer; }
-  .mex-reflection-chips { display: flex; flex-direction: column; gap: 10px; }
-  .mex-reflection-chip-group { display: flex; flex-direction: column; gap: 6px; }
-  .mex-reflection-chip-group-label { font-size: 0.68rem; font-weight: 700; color: var(--ink-soft); }
-  .mex-reflection-chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .mex-reflection-chips { display: flex; flex-wrap: wrap; gap: 4px 12px; }
   .mex-reflection-empty { font-size: 0.78rem; color: var(--ink-soft); }
   .mex-reflection-chip {
-    font-family: inherit; font-size: 0.8rem; font-weight: 700; color: var(--ink); background: var(--cream);
-    border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; cursor: pointer;
+    font-family: inherit; font-size: 0.82rem; font-weight: 700; color: var(--ink); background: none;
+    border: none; padding: 4px 2px; cursor: pointer; transition: transform 0.15s;
   }
-  .mex-reflection-chip.wrong { border-color: #E8B4B4; background: #FBEFEF; color: #A32D2D; }
-  .mex-reflection-chip.active { background: var(--green-deep); border-color: var(--green-deep); color: #fff; }
-  .mex-reflection-chip.filled::after { content: "●"; font-size: 0.5rem; margin-left: 5px; vertical-align: middle; color: var(--green-deep); }
-  .mex-reflection-chip.active.filled::after { color: #fff; }
+  .mex-reflection-chip:hover { transform: translateY(-1px); }
+  .mex-reflection-chip.active { color: var(--green-deep); }
+  .mex-reflection-chip.filled::after { content: "●"; font-size: 0.5rem; margin-left: 4px; vertical-align: middle; color: var(--green-deep); }
   .mex-reflection-form { display: flex; flex-direction: column; gap: 10px; padding-top: 12px; border-top: 1px solid var(--line); }
   .mex-reflection-form-head { display: flex; align-items: center; justify-content: space-between; }
   .mex-reflection-form-num { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
@@ -4998,10 +4993,9 @@
                 <button type="button" class="record-mini-submit-btn" id="mexReflectionSubmitBtn" onclick="mexSubmitReview(this,'mexReflectionSubmitStatus')">제출하기</button>
               </div>
               <div class="mex-reflection-add-row">
-                <span class="mex-reflection-add-row-label">문제를 선택하세요</span>
                 <button type="button" class="mex-reflection-add-btn" onclick="mexOpenReflectionAddPopup()">+ 문제 추가</button>
+                <div class="mex-reflection-chips" id="mexReflectionChips"></div>
               </div>
-              <div class="mex-reflection-chips" id="mexReflectionChips"></div>
               <div class="mex-reflection-form" id="mexReflectionForm" style="display:none;">
                 <div class="mex-reflection-form-head">
                   <span class="mex-reflection-form-num" id="mexReflectionFormNum">-</span>
@@ -10467,27 +10461,16 @@
   }
   // 별도 설명 문구 없이도 바로 알 수 있도록, 틀린 문제(자동)와 직접 추가한 문제를 소제목으로 나눠 보여준다.
   function mexRenderReflectionChips() {
-    const wrongNums = mexReflectionWrongNums();
     const el = document.getElementById("mexReflectionChips");
     if (!mexReflectionNums.length) {
-      el.innerHTML = '<div class="mex-reflection-empty">위에서 번호를 추가해 성찰 노트를 시작해보세요.</div>';
+      el.innerHTML = '<div class="mex-reflection-empty">번호를 추가해 성찰 노트를 시작해보세요.</div>';
       return;
     }
-    const chipHtml = n => {
+    el.innerHTML = mexReflectionNums.map(n => {
       const filled = mexReflectionNoteFilled(mexReflectionDraft[n]);
-      const cls = (n === mexReflectionCurrentNum ? " active" : "") + (wrongNums.includes(n) ? " wrong" : "") + (filled ? " filled" : "");
+      const cls = (n === mexReflectionCurrentNum ? " active" : "") + (filled ? " filled" : "");
       return '<button type="button" class="mex-reflection-chip' + cls + '" onclick="mexSelectReflectionNum(' + n + ')">' + n + '번</button>';
-    };
-    const wrongOnes = mexReflectionNums.filter(n => wrongNums.includes(n));
-    const extraOnes = mexReflectionNums.filter(n => !wrongNums.includes(n));
-    let html = "";
-    if (wrongOnes.length) {
-      html += '<div class="mex-reflection-chip-row">' + wrongOnes.map(chipHtml).join("") + '</div>';
-    }
-    if (extraOnes.length) {
-      html += '<div class="mex-reflection-chip-group"><div class="mex-reflection-chip-group-label">직접 추가한 문제</div><div class="mex-reflection-chip-row">' + extraOnes.map(chipHtml).join("") + '</div></div>';
-    }
-    el.innerHTML = html;
+    }).join("");
   }
   // 칩을 바꾸기 전에, 지금 보고 있던 번호의 입력값을 먼저 mexReflectionDraft에 담아둔다
   // (한 번에 한 문제의 작성란만 DOM에 떠 있는 방식이라, 안 담아두면 전환할 때 내용이 날아간다).
