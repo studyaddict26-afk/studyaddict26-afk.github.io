@@ -1534,9 +1534,10 @@
   .mex-back-link { align-self: flex-start; background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.82rem; font-weight: 700; cursor: pointer; padding: 0; }
   .mex-back-link:hover { color: var(--ink); }
   .mex-detail-box-row { display: flex; gap: 10px; }
-  .mex-detail-box { flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 12px 14px; }
-  .mex-detail-box-label { font-size: 0.66rem; color: var(--ink-soft); font-weight: 600; margin-bottom: 4px; }
+  .mex-detail-box { flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 8px 12px; }
+  .mex-detail-box-label { font-size: 0.66rem; color: var(--ink-soft); font-weight: 600; margin-bottom: 3px; }
   .mex-detail-box-value { font-size: 0.86rem; font-weight: 800; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mex-detail-box-score-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   @media (max-width: 560px) {
     .mex-detail-box-row { flex-wrap: wrap; }
     .mex-detail-box { flex: 1 1 calc(50% - 5px); }
@@ -1558,26 +1559,11 @@
   .mex-time-chart-detail { font-size: 0.78rem; color: var(--ink); font-weight: 600; text-align: center; margin-top: 10px; min-height: 1.4em; }
 
   .mex-score-grade-btn {
-    margin-top: 6px; background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 5px 12px;
+    flex: none; background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 5px 12px;
     font-family: inherit; font-size: 0.66rem; font-weight: 800; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
   }
   .mex-score-grade-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(21,82,47,0.3); }
-  .mex-question-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .mex-grading-modal-body { max-height: 68vh; overflow-y: auto; padding: 16px; }
-  .mex-q-row { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 6px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); }
-  .mex-q-num { font-size: 0.78rem; font-weight: 700; color: var(--ink); }
-  .mex-q-toggle { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; }
-  .mex-q-btn {
-    font-family: inherit; font-size: 0.62rem; font-weight: 700; color: var(--ink-soft); background: var(--cream);
-    border: 1px solid var(--line); border-radius: 7px; padding: 5px 7px; cursor: pointer; min-width: 38px;
-  }
-  .mex-q-btn.on.correct { background: var(--green-soft); color: var(--green-deep); border-color: #CFE3D6; }
-  .mex-q-btn.on.wrong { background: #FBEAEA; color: #A32D2D; border-color: #F0CFCF; }
-  .mex-q-btn.on.unrated { background: var(--line); color: var(--ink); }
-  @media (max-width: 480px) {
-    .mex-question-list { grid-template-columns: repeat(2, 1fr); }
-    .mex-q-btn { padding: 5px 6px; min-width: 34px; font-size: 0.6rem; }
-  }
+  .mex-grading-modal-body { display: flex; flex-direction: column; gap: 14px; max-height: 68vh; overflow-y: auto; padding: 20px; }
 
   /* 홈 하단 2/3: 안내 */
   .howto-video-slot {
@@ -4891,8 +4877,10 @@
         <div class="mex-detail-box"><div class="mex-detail-box-label">모의고사 이름</div><div class="mex-detail-box-value" id="mexDetailBoxName">-</div></div>
         <div class="mex-detail-box">
           <div class="mex-detail-box-label">점수</div>
-          <div class="mex-detail-box-value" id="mexDetailBoxScore">-</div>
-          <button type="button" class="mex-score-grade-btn" id="mexScoreGradeBtn" onclick="mexOpenGradingModal()">채점하기</button>
+          <div class="mex-detail-box-score-row">
+            <div class="mex-detail-box-value" id="mexDetailBoxScore">-</div>
+            <button type="button" class="mex-score-grade-btn" id="mexScoreGradeBtn" onclick="mexOpenGradingModal()">채점하기</button>
+          </div>
         </div>
       </div>
       <div class="mex-time-chart" id="mexTimeChart" style="display:none;"></div>
@@ -4909,7 +4897,16 @@
           <button type="button" class="exsim-picker-close" onclick="mexCloseGradingModal()" aria-label="닫기">×</button>
         </span>
       </div>
-      <div class="mex-question-list mex-grading-modal-body" id="mexQuestionList"></div>
+      <div class="mex-grading-modal-body">
+        <div class="mex-field">
+          <label>점수</label>
+          <input type="text" id="mexGradeScoreInput" placeholder="예: 88">
+        </div>
+        <div class="mex-field">
+          <label>틀린 문항 (번호를 쉼표로 구분, 없으면 비워두세요)</label>
+          <input type="text" id="mexGradeWrongInput" placeholder="예: 3, 7, 15">
+        </div>
+      </div>
     </div>
   </div>
 
@@ -10029,12 +10026,7 @@
       return;
     }
     el.innerHTML = list.map(exam => {
-      const correct = exam.answers.filter(a => a === "correct").length;
-      const graded = exam.answers.filter(a => a !== "unrated").length;
-      let badge;
-      if (graded === 0) badge = '<span class="mex-list-badge partial">채점 전</span>';
-      else if (graded < exam.count) badge = '<span class="mex-list-badge partial">' + graded + '/' + exam.count + '문항</span>';
-      else badge = '<span class="mex-list-badge">' + correct + '/' + exam.count + '점</span>';
+      const badge = exam.score ? '<span class="mex-list-badge">' + escapeHtml(exam.score) + '점</span>' : '<span class="mex-list-badge partial">채점 전</span>';
       return '<div class="mex-list-row">' +
         '<button type="button" class="mex-list-row-main" onclick="mexOpenDetail(\'' + exam.id + '\')">' +
           '<div><div class="mex-list-title">' + escapeHtml(exam.title) + '</div>' +
@@ -10072,20 +10064,16 @@
   function mexRenderDetail() {
     mexRenderDetailBoxes();
     mexRenderTimeChart();
-    mexRenderQuestionList();
   }
-  // 날짜 / 교시·과목 / 모의고사 이름 / 점수(전부 채점했을 때만, 아니면 "미채점") — 4개 박스.
+  // 날짜 / 교시·과목 / 모의고사 이름 / 점수(채점 저장 전엔 "미채점") — 4개 박스.
   function mexRenderDetailBoxes() {
     const exam = mexCurrentExam;
     if (!exam) return;
     document.getElementById("mexDetailBoxDate").textContent = exam.date;
     document.getElementById("mexDetailBoxSubject").textContent = (exam.periodLabel ? exam.periodLabel + " " : "") + exam.subject;
     document.getElementById("mexDetailBoxName").textContent = exam.title;
-    const correct = exam.answers.filter(a => a === "correct").length;
-    const unrated = exam.answers.filter(a => a === "unrated").length;
-    const fullyGraded = unrated === 0;
-    document.getElementById("mexDetailBoxScore").textContent = fullyGraded ? correct + "/" + exam.count + "점" : "미채점";
-    document.getElementById("mexScoreGradeBtn").textContent = fullyGraded ? "수정하기" : "채점하기";
+    document.getElementById("mexDetailBoxScore").textContent = exam.score ? exam.score + "점" : "미채점";
+    document.getElementById("mexScoreGradeBtn").textContent = exam.score ? "수정하기" : "채점하기";
   }
   // 시간이 기록된 문항들을 소요시간 기준으로 줄세워, 하위 10%(빠름)/상위 10%(느림)/나머지 80%로
   // 나눈다 — { 문항index: "low"|"high"|"mid" } 형태로 반환(시간 기록이 없는 문항은 포함 안 함).
@@ -10138,29 +10126,14 @@
     const el = document.getElementById("mexTimeChartDetail");
     if (el) el.textContent = (i + 1) + "번 문항 · 소요 시간 " + (t == null ? "기록 없음" : formatDur(t));
   }
-  function mexRenderQuestionList() {
-    const exam = mexCurrentExam;
-    const el = document.getElementById("mexQuestionList");
-    if (!exam || !el) return;
-    el.innerHTML = Array.from({ length: exam.count }, function (_, i) {
-      const status = exam.answers[i];
-      return '<div class="mex-q-row"><span class="mex-q-num">' + (i + 1) + '번</span>' +
-        '<div class="mex-q-toggle">' +
-          '<button type="button" class="mex-q-btn' + (status === "unrated" ? " on unrated" : "") + '" onclick="mexSetAnswer(' + i + ',\'unrated\')">미채점</button>' +
-          '<button type="button" class="mex-q-btn' + (status === "correct" ? " on correct" : "") + '" onclick="mexSetAnswer(' + i + ',\'correct\')">정답</button>' +
-          '<button type="button" class="mex-q-btn' + (status === "wrong" ? " on wrong" : "") + '" onclick="mexSetAnswer(' + i + ',\'wrong\')">오답</button>' +
-        '</div>' +
-      '</div>';
-    }).join("");
-  }
-  function mexSetAnswer(i, status) {
-    if (!mexCurrentExam) return;
-    mexCurrentExam.answers[i] = status;
-    mexRenderDetailBoxes();
-    mexRenderTimeChart();
-    mexRenderQuestionList();
-  }
+  // 채점 팝업 — 문항 하나하나 누르는 대신 "점수"와 "틀린 문항 번호"만 입력하면, 나머지는
+  // 전부 정답으로 자동 계산한다.
   function mexOpenGradingModal() {
+    const exam = mexCurrentExam;
+    if (!exam) return;
+    document.getElementById("mexGradeScoreInput").value = exam.score || "";
+    const wrongNums = (exam.answers || []).map((a, i) => a === "wrong" ? (i + 1) : null).filter(n => n !== null);
+    document.getElementById("mexGradeWrongInput").value = wrongNums.join(", ");
     document.getElementById("mexGradingOverlay").classList.add("on");
   }
   function mexCloseGradingModal() {
@@ -10168,6 +10141,13 @@
   }
   function mexSaveGrading() {
     if (!mexCurrentExam) return;
+    const score = document.getElementById("mexGradeScoreInput").value.trim();
+    if (!score) { showToast("점수를 입력해주세요"); return; }
+    const wrongRaw = document.getElementById("mexGradeWrongInput").value.trim();
+    const wrongNums = wrongRaw ? wrongRaw.split(/[,\s]+/).map(Number).filter(n => n >= 1 && n <= mexCurrentExam.count) : [];
+    const wrongSet = new Set(wrongNums);
+    mexCurrentExam.score = score;
+    mexCurrentExam.answers = Array.from({ length: mexCurrentExam.count }, (_, i) => wrongSet.has(i + 1) ? "wrong" : "correct");
     const list = mexLoadExams();
     const idx = list.findIndex(e => e.id === mexCurrentExam.id);
     if (idx !== -1) list[idx] = mexCurrentExam;
@@ -10175,6 +10155,7 @@
     showToast("채점 결과가 저장됐어요!");
     mexCloseGradingModal();
     mexRenderDetailBoxes();
+    mexRenderTimeChart();
   }
 
   function formatAiAnswer(text) {
