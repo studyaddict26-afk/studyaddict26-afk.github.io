@@ -1503,6 +1503,7 @@
   .mex-field input, .mex-field select {
     font-family: inherit; font-size: 0.86rem; color: var(--ink); border: 1px solid var(--line);
     border-radius: 8px; padding: 10px 12px; background: var(--cream); box-sizing: border-box;
+    width: 100%; max-width: 100%; min-width: 0;
   }
   .mex-field-row { display: flex; gap: 12px; align-items: flex-end; }
   .mex-field-row .mex-field { flex: 1; }
@@ -1577,8 +1578,7 @@
   .mex-reflection-chip.active { color: var(--green-deep); }
   .mex-reflection-chip.filled::after { content: "●"; font-size: 0.5rem; margin-left: 4px; vertical-align: middle; color: var(--green-deep); }
   .mex-reflection-form { display: flex; flex-direction: column; gap: 10px; padding-top: 12px; border-top: 1px solid var(--line); }
-  .mex-reflection-form-head { display: flex; align-items: center; justify-content: space-between; }
-  .mex-reflection-form-num { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
+  .mex-reflection-form-head { display: flex; align-items: center; justify-content: flex-end; }
   .mex-reflection-remove-btn { background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.72rem; font-weight: 700; cursor: pointer; padding: 0; }
   .mex-reflection-remove-btn:hover { color: #C23B3B; }
   .mex-wrongnote-reason {
@@ -1592,7 +1592,7 @@
   }
   .mex-score-grade-btn:hover { transform: translateY(-1px); }
   .mex-score-grade-btn.ungraded { color: #D63B3B; }
-  .mex-grading-modal-body { display: flex; flex-direction: column; gap: 14px; max-height: 68vh; overflow-y: auto; padding: 20px; }
+  .mex-grading-modal-body { display: flex; flex-direction: column; gap: 14px; max-height: 68vh; overflow-y: auto; overflow-x: hidden; padding: 20px; box-sizing: border-box; }
 
   /* 홈 하단 2/3: 안내 */
   .howto-video-slot {
@@ -4879,41 +4879,41 @@
         <div class="exsim-picker-head">
           <span>새 모의고사 기록하기</span>
           <span class="exsim-picker-head-actions">
-            <button type="button" class="exsim-picker-submit-btn" id="mexNewExamSubmitBtn" onclick="mexCreateExam()" disabled>기록하기</button>
+            <button type="button" class="exsim-picker-submit-btn" id="mexNewExamSubmitBtn" onclick="mexCreateExam()">기록하기</button>
             <button type="button" class="exsim-picker-close" onclick="mexCloseNewExamPopup()" aria-label="닫기">×</button>
           </span>
         </div>
         <div class="mex-grading-modal-body">
           <div class="mex-field">
-            <label>날짜</label>
-            <input type="date" id="mexFormDate" oninput="mexUpdateNewExamSubmitState()">
+            <label>응시 날짜</label>
+            <input type="date" id="mexFormDate">
           </div>
           <div class="mex-field" id="mexFormExamFieldMock">
-            <label>시험</label>
+            <label>과목명</label>
             <button type="button" class="mex-form-period-btn" id="mexFormPeriodLabel" onclick="mexOpenExamPeriodPicker()">선택해주세요</button>
           </div>
           <div class="mex-field-row" id="mexFormExamFieldNaeshin" style="display:none;">
             <div class="mex-field">
               <label>과목명</label>
-              <input type="text" id="mexFormNaeshinSubject" placeholder="예: 수학 내신" oninput="mexUpdateNewExamSubmitState()">
+              <input type="text" id="mexFormNaeshinSubject" placeholder="예: 수학 내신">
             </div>
             <div class="mex-field">
               <label>문항 수</label>
-              <input type="number" id="mexFormCount" min="1" max="60" value="20" oninput="mexUpdateNewExamSubmitState()">
+              <input type="number" id="mexFormCount" min="1" max="60" value="20">
             </div>
           </div>
           <div class="mex-field">
             <label id="mexFormTitleLabel">모의고사 이름</label>
-            <input type="text" id="mexFormTitle" placeholder="예: 2027학년도 9월 모의평가" oninput="mexUpdateNewExamSubmitState()">
+            <input type="text" id="mexFormTitle" placeholder="예: 2027학년도 9월 모의평가">
           </div>
           <div class="mex-field-row">
             <div class="mex-field">
               <label>만점 점수</label>
-              <input type="text" id="mexFormScoreMax" placeholder="예: 100" oninput="mexUpdateNewExamSubmitState()">
+              <input type="text" id="mexFormScoreMax" placeholder="예: 100">
             </div>
             <div class="mex-field">
               <label>내가 맞은 점수</label>
-              <input type="text" id="mexFormScoreMine" placeholder="예: 88" oninput="mexUpdateNewExamSubmitState()">
+              <input type="text" id="mexFormScoreMine" placeholder="예: 88">
             </div>
           </div>
         </div>
@@ -5002,7 +5002,6 @@
               </div>
               <div class="mex-reflection-form" id="mexReflectionForm" style="display:none;">
                 <div class="mex-reflection-form-head">
-                  <span class="mex-reflection-form-num" id="mexReflectionFormNum">-</span>
                   <button type="button" class="mex-reflection-remove-btn" id="mexReflectionRemoveBtn" onclick="mexRemoveReflectionQuestion()">이 번호 빼기</button>
                 </div>
                 <select class="mex-wrongnote-reason" id="mexReflectionReason">
@@ -10219,7 +10218,6 @@
     document.getElementById("mexFormExamFieldMock").style.display = isNaeshin ? "none" : "flex";
     document.getElementById("mexFormExamFieldNaeshin").style.display = isNaeshin ? "flex" : "none";
     document.getElementById("mexFormTitleLabel").textContent = isNaeshin ? "내신 이름" : "모의고사 이름";
-    mexUpdateNewExamSubmitState();
     document.getElementById("mexNewExamOverlay").classList.add("on");
   }
   function mexCloseNewExamPopup() {
@@ -10243,18 +10241,6 @@
     mexNewFormPeriod = p;
     document.getElementById("mexFormPeriodLabel").textContent = p.periodLabel + " " + p.subject;
     mexCloseExamPeriodPicker();
-    mexUpdateNewExamSubmitState();
-  }
-  function mexUpdateNewExamSubmitState() {
-    const isNaeshin = mexCategory === "naeshin";
-    const date = document.getElementById("mexFormDate").value;
-    const title = document.getElementById("mexFormTitle").value.trim();
-    const scoreMax = document.getElementById("mexFormScoreMax").value.trim();
-    const scoreMine = document.getElementById("mexFormScoreMine").value.trim();
-    const examOk = isNaeshin
-      ? (document.getElementById("mexFormNaeshinSubject").value.trim() && Number(document.getElementById("mexFormCount").value) > 0)
-      : !!mexNewFormPeriod;
-    document.getElementById("mexNewExamSubmitBtn").disabled = !(date && examOk && title && scoreMax && scoreMine);
   }
   function mexCreateExam() {
     const isNaeshin = mexCategory === "naeshin";
@@ -10262,14 +10248,16 @@
     const title = document.getElementById("mexFormTitle").value.trim();
     const scoreMax = document.getElementById("mexFormScoreMax").value.trim();
     const scoreMine = document.getElementById("mexFormScoreMine").value.trim();
-    if (!date || !title || !scoreMax || !scoreMine) return;
+    if (!date) { showToast("날짜를 입력해주세요"); return; }
+    if (!isNaeshin && !mexNewFormPeriod) { showToast("시험을 선택해주세요"); return; }
+    if (isNaeshin && !document.getElementById("mexFormNaeshinSubject").value.trim()) { showToast("과목명을 입력해주세요"); return; }
+    if (!title) { showToast(isNaeshin ? "내신 이름을 입력해주세요" : "모의고사 이름을 입력해주세요"); return; }
+    if (!scoreMax || !scoreMine) { showToast("만점 점수와 내가 맞은 점수를 모두 입력해주세요"); return; }
     let periodLabel = "", subject = "", count = 0;
     if (isNaeshin) {
       subject = document.getElementById("mexFormNaeshinSubject").value.trim();
       count = Math.max(1, Math.min(60, Number(document.getElementById("mexFormCount").value) || 1));
-      if (!subject) return;
     } else {
-      if (!mexNewFormPeriod) return;
       periodLabel = mexNewFormPeriod.periodLabel;
       subject = mexNewFormPeriod.subject;
       count = mexNewFormPeriod.count;
@@ -10494,7 +10482,6 @@
     mexReflectionCurrentNum = n;
     mexRenderReflectionChips();
     const note = mexReflectionDraft[n] || {};
-    document.getElementById("mexReflectionFormNum").textContent = n + "번";
     document.getElementById("mexReflectionReason").innerHTML =
       '<option value="">오답 원인 선택</option>' +
       MEX_WRONGNOTE_REASONS.map(r => '<option value="' + r.value + '"' + (note.reason === r.value ? " selected" : "") + '>' + r.label + '</option>').join("");
