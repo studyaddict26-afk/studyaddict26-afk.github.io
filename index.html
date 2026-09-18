@@ -1485,7 +1485,7 @@
   .mex-wrap { max-width: 760px; width: 100%; margin: 24px auto 0 auto; padding: 0 20px 40px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; }
   .mex-new-btn {
     width: 100%; font-family: inherit; font-size: 0.88rem; font-weight: 700; color: var(--green-deep);
-    background: var(--green-soft); border: 1.5px dashed #B9D6C2; border-radius: 12px; padding: 14px; cursor: pointer;
+    background: var(--green-soft); border: 1.5px solid #B9D6C2; border-radius: 12px; padding: 14px; cursor: pointer;
   }
   .mex-new-btn:hover { background: #E2EFE6; }
   .mex-top-row { display: flex; gap: 10px; }
@@ -1562,23 +1562,42 @@
   .mex-time-bar-col:hover .mex-time-bar { opacity: 0.7; }
   .mex-time-chart-detail { font-size: 0.78rem; color: var(--ink); font-weight: 600; text-align: center; margin-top: 10px; min-height: 1.4em; }
 
-  /* ── 오답노트 / 피드백 ── */
+  /* ── 성찰 노트 / 피드백 ── */
   .mex-review-card { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
   .mex-review-title { font-size: 0.92rem; font-weight: 800; color: var(--ink); }
   .mex-review-desc { font-size: 0.74rem; color: var(--ink-soft); line-height: 1.55; margin-top: -6px; }
-  #mexWrongNoteList { display: flex; flex-direction: column; gap: 10px; }
-  .mex-wrongnote-row { display: flex; flex-direction: column; gap: 7px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--cream); }
-  .mex-wrongnote-num { font-size: 0.8rem; font-weight: 800; color: var(--ink); }
-  .mex-wrongnote-reason, .mex-wrongnote-memo {
-    font-family: inherit; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; background: var(--paper); box-sizing: border-box;
-  }
-  .mex-wrongnote-reason { font-size: 0.78rem; padding: 7px 10px; }
-  .mex-wrongnote-memo { font-size: 0.8rem; padding: 8px 10px; resize: vertical; min-height: 52px; line-height: 1.5; width: 100%; }
   .mex-feedback-textarea {
     font-family: inherit; font-size: 0.84rem; color: var(--ink); border: 1px solid var(--line); border-radius: 10px;
     padding: 12px 14px; background: var(--cream); resize: vertical; min-height: 90px; line-height: 1.6; width: 100%; box-sizing: border-box;
   }
   .mex-review-save-btn { width: 100%; background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 13px; font-family: inherit; font-size: 0.9rem; font-weight: 800; cursor: pointer; }
+  /* 성찰 노트: 위쪽 번호 추가/선택 → 고른 번호 하나의 작성란만 아래 보여주는 방식 */
+  .mex-reflection-add-row { display: flex; gap: 8px; }
+  .mex-reflection-add-row input {
+    flex: 1; min-width: 0; font-family: inherit; font-size: 0.8rem; color: var(--ink); border: 1px solid var(--line);
+    border-radius: 8px; padding: 8px 10px; background: var(--cream); box-sizing: border-box;
+  }
+  .mex-reflection-add-btn { flex: none; background: var(--green-deep); color: #fff; border: none; border-radius: 8px; padding: 8px 14px; font-family: inherit; font-size: 0.78rem; font-weight: 800; cursor: pointer; }
+  .mex-reflection-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .mex-reflection-empty { font-size: 0.78rem; color: var(--ink-soft); }
+  .mex-reflection-chip {
+    font-family: inherit; font-size: 0.8rem; font-weight: 700; color: var(--ink); background: var(--cream);
+    border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; cursor: pointer;
+  }
+  .mex-reflection-chip.wrong { border-color: #E8B4B4; background: #FBEFEF; color: #A32D2D; }
+  .mex-reflection-chip.active { background: var(--green-deep); border-color: var(--green-deep); color: #fff; }
+  .mex-reflection-chip.filled::after { content: "●"; font-size: 0.5rem; margin-left: 5px; vertical-align: middle; color: var(--green-deep); }
+  .mex-reflection-chip.active.filled::after { color: #fff; }
+  .mex-reflection-form { display: flex; flex-direction: column; gap: 10px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .mex-reflection-form-head { display: flex; align-items: center; justify-content: space-between; }
+  .mex-reflection-form-num { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
+  .mex-reflection-remove-btn { background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.72rem; font-weight: 700; cursor: pointer; padding: 0; }
+  .mex-reflection-remove-btn:hover { color: #C23B3B; }
+  .mex-wrongnote-reason, .mex-wrongnote-memo {
+    font-family: inherit; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; background: var(--cream); box-sizing: border-box;
+  }
+  .mex-wrongnote-reason { font-size: 0.78rem; padding: 8px 10px; }
+  .mex-wrongnote-memo { font-size: 0.8rem; padding: 9px 10px; resize: vertical; min-height: 70px; line-height: 1.5; width: 100%; }
 
   .mex-score-grade-btn {
     flex: none; background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 5px 12px;
@@ -4921,19 +4940,33 @@
       </div>
       <div class="mex-time-chart" id="mexTimeChart" style="display:none;"></div>
 
-      <div class="mex-review-card" id="mexWrongNoteCard" style="display:none;">
-        <div class="mex-review-title">오답노트</div>
-        <div class="mex-review-desc">틀린 이유를 "개념/실수/시간/이해 부족" 중 골라보고, 정답 풀이와 다음엔 어떻게 다르게 풀지를 적어두면 같은 실수를 줄일 수 있어요.</div>
-        <div id="mexWrongNoteList"></div>
-      </div>
-
       <div class="mex-review-card">
         <div class="mex-review-title">피드백</div>
         <div class="mex-review-desc">오늘 시험에 대한 총평, 시간 배분은 어땠는지, 다음 시험까지의 목표를 자유롭게 적어보세요.</div>
         <textarea id="mexFeedbackInput" class="mex-feedback-textarea" placeholder="예) 독서 지문에서 시간을 너무 많이 써서 마지막 문학 문제를 못 풀었다. 다음엔 독서 지문 읽는 속도를 늘리는 연습이 필요하다."></textarea>
       </div>
 
-      <button type="button" class="mex-review-save-btn" onclick="mexSaveReview()">오답노트·피드백 저장</button>
+      <div class="mex-review-card" id="mexReflectionCard">
+        <div class="mex-review-title">성찰 노트</div>
+        <div class="mex-review-desc">틀린 문제는 자동으로 추가되고, 맞았지만 다시 짚고 싶은 문제는 번호를 직접 추가할 수 있어요. 번호를 누르면 그 문제의 성찰 노트가 아래 나와요.</div>
+        <div class="mex-reflection-add-row">
+          <input type="number" id="mexReflectionAddInput" min="1" placeholder="문제 번호를 입력하세요">
+          <button type="button" class="mex-reflection-add-btn" onclick="mexAddReflectionQuestion()">+ 추가</button>
+        </div>
+        <div class="mex-reflection-chips" id="mexReflectionChips"></div>
+        <div class="mex-reflection-form" id="mexReflectionForm" style="display:none;">
+          <div class="mex-reflection-form-head">
+            <span class="mex-reflection-form-num" id="mexReflectionFormNum">-</span>
+            <button type="button" class="mex-reflection-remove-btn" id="mexReflectionRemoveBtn" onclick="mexRemoveReflectionQuestion()">이 번호 빼기</button>
+          </div>
+          <select class="mex-wrongnote-reason" id="mexReflectionReason">
+            <option value="">오답 원인 선택</option>
+          </select>
+          <textarea class="mex-wrongnote-memo" id="mexReflectionMemo" placeholder="어떤 개념을 몰랐는지, 정답 풀이는 무엇인지, 다음엔 어떻게 접근할지 적어보세요."></textarea>
+        </div>
+      </div>
+
+      <button type="button" class="mex-review-save-btn" onclick="mexSaveReview()">성찰 노트·피드백 저장</button>
     </div>
   </section>
 
@@ -10040,7 +10073,11 @@
     mexRenderList();
   }
   function mexOpenSubjectFilterPopup() {
-    const subjects = [...new Set(mexLoadExams().filter(e => (e.category || "mock") === mexCategory).map(e => e.subject))];
+    // 모의고사는 수능 시뮬레이션에 있는 과목 그대로(아직 기록이 없어도 미리 고를 수 있게),
+    // 내신은 과목명을 학생이 직접 자유롭게 적으니 실제로 기록된 과목만 보여준다.
+    const subjects = mexCategory === "mock"
+      ? [...new Set(EXAM_PERIODS.map(p => p.subject))]
+      : [...new Set(mexLoadExams().filter(e => (e.category || "mock") === mexCategory).map(e => e.subject))];
     if (mexSubjectFilter !== "all" && !subjects.includes(mexSubjectFilter)) mexSetSubjectFilter("all");
     const options = [{ value: "all", label: "전체" }].concat(subjects.map(s => ({ value: s, label: s })));
     document.getElementById("mexSubjectFilterList").innerHTML = options.map(o =>
@@ -10161,9 +10198,10 @@
     document.getElementById("mexDetailBoxScore").textContent = exam.scoreMine ? exam.scoreMine + "/" + exam.scoreMax + "점" : "미채점";
     document.getElementById("mexScoreGradeBtn").textContent = exam.scoreMine ? "수정하기" : "채점하기";
   }
-  // 오답노트: 틀린 문항마다 "오답 원인"(개념/실수/시간/이해 부족 등)을 고르고 메모를 남긴다 —
+  // 성찰 노트: 틀린 문항마다 "오답 원인"(개념/실수/시간/이해 부족 등)을 고르고 메모를 남긴다 —
   // 문제를 다시 베끼는 게 아니라 "왜 틀렸는지·어떻게 풀었어야 했는지"를 남기는 게 핵심이라는
-  // 오답노트 작성법 리서치를 참고해 설계함.
+  // 오답노트 작성법 리서치를 참고해 설계함. 한 번에 한 문제씩만 작성란을 보여주고(위쪽 번호
+  // 칩에서 고르는 방식), 맞은 문제도 번호를 직접 추가해 성찰을 남길 수 있게 확장함.
   const MEX_WRONGNOTE_REASONS = [
     { value: "concept", label: "개념 부족" },
     { value: "mistake", label: "실수 (계산·표시 등)" },
@@ -10171,47 +10209,101 @@
     { value: "comprehension", label: "지문·조건 이해 부족" },
     { value: "etc", label: "기타" },
   ];
+  let mexReflectionNums = [];    // 현재 보여줄 번호 칩 목록(틀린 문항 ∪ 직접 추가한 문항)
+  let mexReflectionDraft = {};   // 작업 중인 메모 — { 번호: {reason, memo} }, 저장 전까지는 여기서만 갱신
+  let mexReflectionCurrentNum = null;
+  function mexReflectionWrongNums() {
+    const exam = mexCurrentExam;
+    if (!exam) return [];
+    return (exam.answers || []).map((a, i) => a === "wrong" ? (i + 1) : null).filter(n => n !== null);
+  }
   function mexRenderReview() {
     const exam = mexCurrentExam;
     if (!exam) return;
-    const card = document.getElementById("mexWrongNoteCard");
-    const wrongNums = (exam.answers || []).map((a, i) => a === "wrong" ? (i + 1) : null).filter(n => n !== null);
-    if (!wrongNums.length) {
-      card.style.display = "none";
-    } else {
-      card.style.display = "block";
-      const notes = exam.wrongNotes || {};
-      document.getElementById("mexWrongNoteList").innerHTML = wrongNums.map(n => {
-        const note = notes[n] || {};
-        return '<div class="mex-wrongnote-row">' +
-          '<div class="mex-wrongnote-num">' + n + '번</div>' +
-          '<select class="mex-wrongnote-reason" data-q="' + n + '">' +
-            '<option value="">오답 원인 선택</option>' +
-            MEX_WRONGNOTE_REASONS.map(r => '<option value="' + r.value + '"' + (note.reason === r.value ? " selected" : "") + '>' + r.label + '</option>').join("") +
-          '</select>' +
-          '<textarea class="mex-wrongnote-memo" data-q="' + n + '" placeholder="어떤 개념을 몰랐는지, 정답 풀이는 무엇인지, 다음엔 어떻게 접근할지 적어보세요.">' + escapeHtml(note.memo || "") + '</textarea>' +
-        '</div>';
-      }).join("");
-    }
+    const wrongNums = mexReflectionWrongNums();
+    const extraNums = (exam.reflectionExtraNums || []).filter(n => !wrongNums.includes(n));
+    mexReflectionNums = wrongNums.concat(extraNums).sort((a, b) => a - b);
+    mexReflectionDraft = JSON.parse(JSON.stringify(exam.wrongNotes || {}));
+    mexReflectionCurrentNum = null;
+    document.getElementById("mexReflectionForm").style.display = "none";
+    mexRenderReflectionChips();
     document.getElementById("mexFeedbackInput").value = exam.feedback || "";
+  }
+  function mexRenderReflectionChips() {
+    const wrongNums = mexReflectionWrongNums();
+    const el = document.getElementById("mexReflectionChips");
+    if (!mexReflectionNums.length) {
+      el.innerHTML = '<div class="mex-reflection-empty">위에서 번호를 추가해 성찰 노트를 시작해보세요.</div>';
+      return;
+    }
+    el.innerHTML = mexReflectionNums.map(n => {
+      const note = mexReflectionDraft[n];
+      const filled = note && (note.reason || note.memo);
+      const cls = (n === mexReflectionCurrentNum ? " active" : "") + (wrongNums.includes(n) ? " wrong" : "") + (filled ? " filled" : "");
+      return '<button type="button" class="mex-reflection-chip' + cls + '" onclick="mexSelectReflectionNum(' + n + ')">' + n + '번</button>';
+    }).join("");
+  }
+  // 칩을 바꾸기 전에, 지금 보고 있던 번호의 입력값을 먼저 mexReflectionDraft에 담아둔다
+  // (한 번에 한 문제의 작성란만 DOM에 떠 있는 방식이라, 안 담아두면 전환할 때 내용이 날아간다).
+  function mexCaptureReflectionForm() {
+    if (mexReflectionCurrentNum == null) return;
+    mexReflectionDraft[mexReflectionCurrentNum] = {
+      reason: document.getElementById("mexReflectionReason").value,
+      memo: document.getElementById("mexReflectionMemo").value.trim(),
+    };
+  }
+  function mexSelectReflectionNum(n) {
+    mexCaptureReflectionForm();
+    mexReflectionCurrentNum = n;
+    mexRenderReflectionChips();
+    const note = mexReflectionDraft[n] || {};
+    document.getElementById("mexReflectionFormNum").textContent = n + "번";
+    document.getElementById("mexReflectionReason").innerHTML =
+      '<option value="">오답 원인 선택</option>' +
+      MEX_WRONGNOTE_REASONS.map(r => '<option value="' + r.value + '"' + (note.reason === r.value ? " selected" : "") + '>' + r.label + '</option>').join("");
+    document.getElementById("mexReflectionMemo").value = note.memo || "";
+    document.getElementById("mexReflectionRemoveBtn").style.display = mexReflectionWrongNums().includes(n) ? "none" : "inline";
+    document.getElementById("mexReflectionForm").style.display = "flex";
+  }
+  function mexAddReflectionQuestion() {
+    const exam = mexCurrentExam;
+    const input = document.getElementById("mexReflectionAddInput");
+    const n = Number(input.value);
+    if (!exam || !n || n < 1 || n > exam.count) { showToast("올바른 문제 번호를 입력해주세요"); return; }
+    input.value = "";
+    if (!mexReflectionNums.includes(n)) {
+      mexReflectionNums.push(n);
+      mexReflectionNums.sort((a, b) => a - b);
+    }
+    mexSelectReflectionNum(n);
+  }
+  function mexRemoveReflectionQuestion() {
+    if (mexReflectionCurrentNum == null) return;
+    mexReflectionNums = mexReflectionNums.filter(n => n !== mexReflectionCurrentNum);
+    delete mexReflectionDraft[mexReflectionCurrentNum];
+    mexReflectionCurrentNum = null;
+    document.getElementById("mexReflectionForm").style.display = "none";
+    mexRenderReflectionChips();
   }
   function mexSaveReview() {
     const exam = mexCurrentExam;
     if (!exam) return;
+    mexCaptureReflectionForm();
+    const wrongNums = mexReflectionWrongNums();
     const wrongNotes = {};
-    document.querySelectorAll("#mexWrongNoteList .mex-wrongnote-row").forEach(row => {
-      const q = row.querySelector(".mex-wrongnote-reason").dataset.q;
-      const reason = row.querySelector(".mex-wrongnote-reason").value;
-      const memo = row.querySelector(".mex-wrongnote-memo").value.trim();
-      if (reason || memo) wrongNotes[q] = { reason: reason, memo: memo };
+    Object.keys(mexReflectionDraft).forEach(k => {
+      const note = mexReflectionDraft[k];
+      if (note && (note.reason || note.memo)) wrongNotes[k] = note;
     });
     exam.wrongNotes = wrongNotes;
+    exam.reflectionExtraNums = mexReflectionNums.filter(n => !wrongNums.includes(n));
     exam.feedback = document.getElementById("mexFeedbackInput").value.trim();
     const list = mexLoadExams();
     const idx = list.findIndex(e => e.id === exam.id);
     if (idx !== -1) list[idx] = exam;
     mexSaveExams(list);
-    showToast("오답노트·피드백이 저장됐어요!");
+    showToast("성찰 노트·피드백이 저장됐어요!");
+    mexRenderReflectionChips();
   }
   // 시간이 기록된 문항들을 소요시간 기준으로 줄세워, 하위 10%(빠름)/상위 10%(느림)/나머지 80%로
   // 나눈다 — { 문항index: "low"|"high"|"mid" } 형태로 반환(시간 기록이 없는 문항은 포함 안 함).
