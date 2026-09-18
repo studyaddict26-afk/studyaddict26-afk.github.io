@@ -1477,6 +1477,7 @@
   .exend-lap-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
   .exend-lap-row { display: flex; align-items: center; justify-content: space-between; gap: 4px; font-size: 0.64rem; padding: 6px 7px; color: var(--ink); background: var(--cream); border-radius: 8px; white-space: nowrap; }
   .exend-lap-row-dur { color: var(--ink-soft); font-weight: 700; flex: none; }
+  #mexLapPopupBody .exend-lap-row { background: #fff; }
   .exend-save-btn { flex: none; background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 6px 12px; font-family: inherit; font-size: 0.68rem; font-weight: 800; cursor: pointer; white-space: nowrap; transition: transform 0.15s, box-shadow 0.15s; }
   .exend-save-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(21,82,47,0.35); }
   .exend-save-btn:disabled { opacity: 0.6; cursor: default; }
@@ -1548,33 +1549,8 @@
     .mex-detail-box { flex: 1 1 calc(50% - 1px); border-bottom: 1px solid var(--line); }
     .mex-detail-box:nth-child(2n+1) { border-left: none; }
   }
-  .mex-review-merged { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 18px; }
-  .mex-review-split { display: flex; gap: 18px; align-items: stretch; }
-  .mex-review-pane { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
-  .mex-review-pane-right { border-left: 1px solid var(--line); padding-left: 18px; margin-top: -18px; padding-top: 18px; }
-  @media (max-width: 700px) {
-    .mex-review-split { flex-direction: column; }
-    .mex-review-pane-right { border-left: none; padding-left: 0; margin-top: 0; padding-top: 14px; border-top: 1px solid var(--line); }
-  }
-
-  .mex-time-chart { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 16px 18px; }
-  .mex-time-chart-desc { font-size: 0.76rem; color: var(--ink-soft); margin-bottom: 8px; line-height: 1.6; }
-  .mex-time-chart-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
-  .mex-time-legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.68rem; color: var(--ink-soft); font-weight: 600; }
-  .mex-time-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--line); }
-  .mex-time-legend-dot.low { background: #6FA8DC; }
-  .mex-time-legend-dot.high { background: #C77B3D; }
-  .mex-time-chart-bars { display: flex; align-items: flex-end; gap: 3px; height: 55px; }
-  .mex-time-bar-col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; cursor: pointer; min-width: 4px; }
-  .mex-time-bar { width: 100%; border-radius: 2px 2px 0 0; background: var(--line); transition: opacity .15s; }
-  .mex-time-bar.low { background: #6FA8DC; }
-  .mex-time-bar.high { background: #C77B3D; }
-  .mex-time-bar-col:hover .mex-time-bar { opacity: 0.7; }
-  .mex-time-chart-detail { font-size: 0.78rem; color: var(--ink); font-weight: 600; text-align: center; margin-top: 10px; min-height: 1.4em; }
-
-  /* ── 성찰 노트 / 피드백 ── */
-  .mex-review-title { font-size: 0.92rem; font-weight: 800; color: var(--ink); }
-  .mex-review-desc { font-size: 0.74rem; color: var(--ink-soft); line-height: 1.55; margin-top: -6px; }
+  /* ── 성찰 노트 / 피드백 (오늘의 공부 페이지의 플래너·일기 좌우 분할 카드 재사용: record-plan-diary-card 등) ── */
+  .mex-review-desc { font-size: 0.74rem; color: var(--ink-soft); line-height: 1.55; }
   .mex-feedback-textarea {
     font-family: inherit; font-size: 0.84rem; color: var(--ink); border: 1px solid var(--line); border-radius: 10px;
     padding: 12px 14px; background: var(--cream); resize: vertical; min-height: 90px; line-height: 1.6; width: 100%; box-sizing: border-box;
@@ -4943,32 +4919,36 @@
           <div class="mex-detail-box-value" id="mexDetailBoxLap">보기 ›</div>
         </div>
       </div>
-      <div class="mex-time-chart" id="mexTimeChart" style="display:none;"></div>
-
-      <div class="mex-review-merged">
-        <div class="mex-review-split">
-          <div class="mex-review-pane">
-            <div class="mex-review-title">피드백</div>
+      <div class="record-plan-diary-card">
+        <div class="record-plan-diary-row">
+          <div class="record-planner-pane">
+            <div class="today-title-row">
+              <h3 class="record-pane-title">피드백</h3>
+            </div>
             <div class="mex-review-desc">오늘 시험에 대한 총평, 시간 배분은 어땠는지, 다음 시험까지의 목표를 자유롭게 적어보세요.</div>
             <textarea id="mexFeedbackInput" class="mex-feedback-textarea" placeholder="예) 독서 지문에서 시간을 너무 많이 써서 마지막 문학 문제를 못 풀었다. 다음엔 독서 지문 읽는 속도를 늘리는 연습이 필요하다."></textarea>
           </div>
 
-          <div class="mex-review-pane mex-review-pane-right" id="mexReflectionCard">
-            <div class="mex-review-title">성찰 노트</div>
-            <div class="mex-review-desc">틀린 문제는 자동으로 추가되고, 맞았지만 다시 짚고 싶은 문제는 번호를 직접 추가할 수 있어요. 번호를 누르면 그 문제의 성찰 노트가 아래 나와요.</div>
-            <div class="mex-reflection-add-row">
-              <button type="button" class="mex-reflection-add-btn" onclick="mexOpenReflectionAddPopup()">+ 추가</button>
-            </div>
-            <div class="mex-reflection-chips" id="mexReflectionChips"></div>
-            <div class="mex-reflection-form" id="mexReflectionForm" style="display:none;">
-              <div class="mex-reflection-form-head">
-                <span class="mex-reflection-form-num" id="mexReflectionFormNum">-</span>
-                <button type="button" class="mex-reflection-remove-btn" id="mexReflectionRemoveBtn" onclick="mexRemoveReflectionQuestion()">이 번호 빼기</button>
+          <div class="record-diary-col" id="mexReflectionCard">
+            <div class="record-note-box">
+              <div class="today-title-row">
+                <h3 class="record-pane-title">성찰 노트</h3>
               </div>
-              <select class="mex-wrongnote-reason" id="mexReflectionReason">
-                <option value="">오답 원인 선택</option>
-              </select>
-              <textarea class="mex-wrongnote-memo" id="mexReflectionMemo" placeholder="어떤 개념을 몰랐는지, 정답 풀이는 무엇인지, 다음엔 어떻게 접근할지 적어보세요."></textarea>
+              <div class="mex-review-desc">틀린 문제는 자동으로 추가되고, 맞았지만 다시 짚고 싶은 문제는 번호를 직접 추가할 수 있어요. 번호를 누르면 그 문제의 성찰 노트가 아래 나와요.</div>
+              <div class="mex-reflection-add-row">
+                <button type="button" class="mex-reflection-add-btn" onclick="mexOpenReflectionAddPopup()">+ 추가</button>
+              </div>
+              <div class="mex-reflection-chips" id="mexReflectionChips"></div>
+              <div class="mex-reflection-form" id="mexReflectionForm" style="display:none;">
+                <div class="mex-reflection-form-head">
+                  <span class="mex-reflection-form-num" id="mexReflectionFormNum">-</span>
+                  <button type="button" class="mex-reflection-remove-btn" id="mexReflectionRemoveBtn" onclick="mexRemoveReflectionQuestion()">이 번호 빼기</button>
+                </div>
+                <select class="mex-wrongnote-reason" id="mexReflectionReason">
+                  <option value="">오답 원인 선택</option>
+                </select>
+                <textarea class="mex-wrongnote-memo" id="mexReflectionMemo" placeholder="어떤 개념을 몰랐는지, 정답 풀이는 무엇인지, 다음엔 어떻게 접근할지 적어보세요."></textarea>
+              </div>
             </div>
           </div>
         </div>
@@ -9821,26 +9801,42 @@
     document.getElementById("exendExamNameInput").value = "";
     if (!isNaeshin) exsimPopulateExamNameHistory();
     const table = document.getElementById("exendLapTable");
-    const passages = state.passages || [];
-    const anyRecorded = passages.some(p => p.totalSec > 0);
-    if (!anyRecorded) {
-      table.innerHTML = '<div style="text-align:center;color:var(--ink-soft);font-size:0.78rem;padding:10px;">기록된 랩타임이 없어요</div>';
-    } else {
-      let idx = 0;
-      // 진행 화면 오른쪽 패널과 같은 제재별 그룹 구조로, 지문별 누적 시간을 그대로 보여준다.
-      table.innerHTML = (state.passageGroups || []).map(group => {
-        let groupTotalSec = 0;
-        const rowsHtml = group.items.map(() => {
-          const p = passages[idx]; idx++;
-          groupTotalSec += p.totalSec;
-          return '<div class="exend-lap-row"><span>' + escapeHtml(p.label) + '</span><span class="exend-lap-row-dur">' + (p.totalSec > 0 ? formatDur(p.totalSec) : "-") + '</span></div>';
-        }).join("");
-        const headHtml = group.title ? '<div class="exend-lap-group-head"><span>' + escapeHtml(group.title) + '</span><span class="exend-lap-group-total">' + (groupTotalSec > 0 ? formatDur(groupTotalSec) : "-") + '</span></div>' : "";
-        const gridStyle = ' style="grid-template-columns:repeat(' + (group.cols || 2) + ',1fr)"';
-        return '<div class="exend-lap-group">' + headHtml + '<div class="exend-lap-rows"' + gridStyle + '>' + rowsHtml + '</div></div>';
-      }).join("");
-    }
+    table.innerHTML = exsimBuildLapTableHtml(exsimPassageGroupTimes(state));
     document.getElementById("exsimEnd").classList.add("on");
+  }
+  // 진행 화면 오른쪽 패널과 같은 제재별 그룹 구조([{title,cols,items:[{label,sec}]}])를 그대로
+  // 표로 그린다 — 시험 종료 화면과 모의고사 기록의 "랩타임 보기" 팝업이 이 함수를 함께 써서
+  // 똑같은 마크업을 보장한다.
+  function exsimBuildLapTableHtml(groups) {
+    const anyRecorded = (groups || []).some(g => g.items.some(it => it.sec > 0));
+    if (!groups || !groups.length || !anyRecorded) {
+      return '<div style="text-align:center;color:var(--ink-soft);font-size:0.78rem;padding:10px;">기록된 랩타임이 없어요</div>';
+    }
+    return groups.map(group => {
+      let groupTotalSec = 0;
+      const rowsHtml = group.items.map(it => {
+        if (it.sec > 0) groupTotalSec += it.sec;
+        return '<div class="exend-lap-row"><span>' + escapeHtml(it.label) + '</span><span class="exend-lap-row-dur">' + (it.sec > 0 ? formatDur(it.sec) : "-") + '</span></div>';
+      }).join("");
+      const headHtml = group.title ? '<div class="exend-lap-group-head"><span>' + escapeHtml(group.title) + '</span><span class="exend-lap-group-total">' + (groupTotalSec > 0 ? formatDur(groupTotalSec) : "-") + '</span></div>' : "";
+      const gridStyle = ' style="grid-template-columns:repeat(' + (group.cols || 2) + ',1fr)"';
+      return '<div class="exend-lap-group">' + headHtml + '<div class="exend-lap-rows"' + gridStyle + '>' + rowsHtml + '</div></div>';
+    }).join("");
+  }
+  // state.passageGroups(제목만 있는 뼈대) + state.passages(누적 시간, 평탄화된 배열)를 합쳐
+  // [{title,cols,items:[{label,sec}]}] 형태로 만든다 — 모의고사 기록에 저장해두면 나중에
+  // "랩타임 보기" 팝업에서 시험 종료 화면과 완전히 같은 표를 다시 그릴 수 있다.
+  function exsimPassageGroupTimes(state) {
+    const passages = state.passages || [];
+    const groups = state.passageGroups || [];
+    let idx = 0;
+    return groups.map(g => {
+      const items = g.items.map(() => {
+        const p = passages[idx]; idx++;
+        return { label: p.label, sec: p.totalSec > 0 ? p.totalSec : null };
+      });
+      return { title: g.title || null, cols: g.cols || 2, items: items };
+    });
   }
   function exsimCloseEnd() {
     document.getElementById("exsimEnd").classList.remove("on");
@@ -9883,12 +9879,14 @@
     const period = state.period;
     const count = period.count || 1;
     const passageTimes = exsimPassageTimesWithGroupLabels(state);
+    const passageTimeGroups = exsimPassageGroupTimes(state);
     const exam = {
       id: "mex_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7),
       title: examName, periodLabel: period.periodLabel, subject: period.subject, count: count, date: getLocalDateKey(),
       category: "mock",
       answers: new Array(count).fill("unrated"),
       passageTimes: passageTimes.length ? passageTimes : null,
+      passageTimeGroups: passageTimeGroups.length ? passageTimeGroups : null,
     };
     const list = mexLoadExams();
     list.unshift(exam);
@@ -10210,7 +10208,6 @@
   }
   function mexRenderDetail() {
     mexRenderDetailBoxes();
-    mexRenderTimeChart();
     mexRenderReview();
   }
   // 날짜 / 교시·과목 / 모의고사 이름 / 점수(채점 저장 전엔 "미채점") — 4개 박스.
@@ -10225,25 +10222,40 @@
     const hasLap = (exam.passageTimes || []).some(t => t.sec > 0);
     document.getElementById("mexDetailBoxLap").textContent = hasLap ? "보기 ›" : "기록 없음";
   }
-  // 시험 시뮬레이션 종료 화면(exsimShowEnd)의 랩타임 표 그대로 — 같은 행 스타일(.exend-lap-row)을
-  // 재사용해 팝업으로 띄운다. 그룹 경계는 저장 시 라벨에 이미 접두어로 합쳐뒀어서(예: "문학 지문 1")
-  // 별도 그룹 헤더 없이 평평한 목록으로 보여줘도 어떤 제재인지 구분된다.
+  // 시험 시뮬레이션 종료 화면(exsimShowEnd)의 랩타임 표를 그대로 재사용(exsimBuildLapTableHtml)해서
+  // 팝업으로 띄운다. 그룹 구조가 저장돼 있으면(passageTimeGroups) 그대로 쓰고, 이 필드가 생기기 전에
+  // 만들어진 옛 기록(평탄화된 passageTimes만 있음)은 라벨의 "그룹명+번호" 패턴으로 그룹 경계를
+  // 되짚어 최대한 비슷하게 복원한다.
   function mexOpenLapPopup() {
     const exam = mexCurrentExam;
     if (!exam) return;
-    const times = exam.passageTimes || [];
-    const body = document.getElementById("mexLapPopupBody");
-    if (!times.some(t => t.sec > 0)) {
-      body.innerHTML = '<div style="text-align:center;color:var(--ink-soft);font-size:0.78rem;padding:10px;">기록된 랩타임이 없어요</div>';
-    } else {
-      body.innerHTML = '<div class="exend-lap-rows">' + times.map(t =>
-        '<div class="exend-lap-row"><span>' + escapeHtml(t.label) + '</span><span class="exend-lap-row-dur">' + (t.sec > 0 ? formatDur(t.sec) : "-") + '</span></div>'
-      ).join("") + '</div>';
-    }
+    const groups = (exam.passageTimeGroups && exam.passageTimeGroups.length)
+      ? exam.passageTimeGroups
+      : mexInferPassageGroups(exam.passageTimes || []);
+    document.getElementById("mexLapPopupBody").innerHTML = exsimBuildLapTableHtml(groups);
     document.getElementById("mexLapPopupOverlay").classList.add("on");
   }
   function mexCloseLapPopup() {
     document.getElementById("mexLapPopupOverlay").classList.remove("on");
+  }
+  // 옛 기록 호환용 — 라벨이 "그룹명 + 항목라벨 + 번호"로 이어붙여져 있다는 점을 이용해(예:
+  // "화법과 언어 지문 1"), 번호를 뗀 나머지가 같은 동안은 같은 그룹으로 묶는다. 그룹명만 쓰고
+  // "(N문항)" 같은 원래 문항 수 표기는 복원할 수 없어 생략한다.
+  function mexInferPassageGroups(times) {
+    const groups = [];
+    let lastPrefix = null;
+    times.forEach(t => {
+      const m = t.label.match(/^(.*?)\s*(\d+)$/);
+      const prefix = m ? m[1].trim() : t.label;
+      if (prefix !== lastPrefix) {
+        const tokens = prefix.split(/\s+/).filter(Boolean);
+        const groupName = tokens.length > 1 ? tokens.slice(0, -1).join(" ") : "";
+        groups.push({ title: groupName || null, cols: 2, items: [] });
+        lastPrefix = prefix;
+      }
+      groups[groups.length - 1].items.push({ label: t.label, sec: t.sec });
+    });
+    return groups;
   }
   // 성찰 노트: 틀린 문항마다 "오답 원인"(개념/실수/시간/이해 부족 등)을 고르고 메모를 남긴다 —
   // 문제를 다시 베끼는 게 아니라 "왜 틀렸는지·어떻게 풀었어야 했는지"를 남기는 게 핵심이라는
@@ -10362,60 +10374,6 @@
     showToast("성찰 노트·피드백이 저장됐어요!");
     mexRenderReflectionChips();
   }
-  // 시간이 기록된 문항들을 소요시간 기준으로 줄세워, 하위 10%(빠름)/상위 10%(느림)/나머지 80%로
-  // 나눈다 — { 문항index: "low"|"high"|"mid" } 형태로 반환(시간 기록이 없는 문항은 포함 안 함).
-  function mexTimeTiers(times) {
-    const recorded = times.map((t, i) => ({ t: t, i: i })).filter(x => x.t != null);
-    const n = recorded.length;
-    const sorted = recorded.slice().sort((a, b) => a.t - b.t);
-    const lowCount = Math.round(n * 0.1);
-    const highCount = Math.round(n * 0.1);
-    const tiers = {};
-    sorted.forEach((item, rank) => {
-      tiers[item.i] = rank < lowCount ? "low" : rank >= n - highCount ? "high" : "mid";
-    });
-    return tiers;
-  }
-  // 국어처럼 "문항 수 ≠ 지문 수"인 과목도 정확히 보이도록, 문항 번호가 아니라 시험 시뮬레이션이
-  // 남긴 지문/문항 라벨(exam.passageTimes) 그대로를 막대로 그린다.
-  function mexRenderTimeChart() {
-    const exam = mexCurrentExam;
-    const el = document.getElementById("mexTimeChart");
-    if (!exam || !el) return;
-    const items = exam.passageTimes;
-    if (!items || !items.length || !items.some(p => p.sec != null)) {
-      el.style.display = "none";
-      return;
-    }
-    el.style.display = "block";
-    const times = items.map(p => p.sec);
-    const maxT = Math.max(1, ...times.map(t => t || 0));
-    const answeredCount = times.filter(t => t != null).length;
-    const tiers = mexTimeTiers(times);
-    const bars = items.map((p, i) => {
-      const cls = tiers[i] || "";
-      const h = p.sec == null ? 4 : Math.max(4, Math.round(p.sec / maxT * 51));
-      return '<div class="mex-time-bar-col" onclick="mexShowBarDetail(' + i + ')" title="' + escapeHtml(p.label) + '">' +
-        '<div class="mex-time-bar ' + cls + '" style="height:' + h + 'px"></div>' +
-      '</div>';
-    }).join("");
-    el.innerHTML =
-      '<div class="mex-time-chart-desc">지문·문항별 시간 분포 · ' + items.length + '개 중 ' + answeredCount + '개 시간 기록됨 (연결된 시험 시뮬레이션 랩타임 기준)</div>' +
-      '<div class="mex-time-chart-legend">' +
-        '<span class="mex-time-legend-item"><span class="mex-time-legend-dot low"></span>하위 10% (빠름)</span>' +
-        '<span class="mex-time-legend-item"><span class="mex-time-legend-dot high"></span>상위 10% (느림)</span>' +
-        '<span class="mex-time-legend-item"><span class="mex-time-legend-dot"></span>나머지 80%</span>' +
-      '</div>' +
-      '<div class="mex-time-chart-bars">' + bars + '</div>' +
-      '<div class="mex-time-chart-detail" id="mexTimeChartDetail">눌러서 소요시간을 확인해보세요</div>';
-  }
-  function mexShowBarDetail(i) {
-    const exam = mexCurrentExam;
-    if (!exam || !exam.passageTimes) return;
-    const p = exam.passageTimes[i];
-    const el = document.getElementById("mexTimeChartDetail");
-    if (el) el.textContent = p.label + " · 소요 시간 " + (p.sec == null ? "기록 없음" : formatDur(p.sec));
-  }
   // 채점 팝업 — 문항 하나하나 누르는 대신 "점수"와 "틀린 문항 번호"만 입력하면, 나머지는
   // 전부 정답으로 자동 계산한다.
   function mexOpenGradingModal() {
@@ -10448,7 +10406,6 @@
     showToast("채점 결과가 저장됐어요!");
     mexCloseGradingModal();
     mexRenderDetailBoxes();
-    mexRenderTimeChart();
     mexRenderReview();
   }
 
