@@ -1531,13 +1531,11 @@
   }
   .mex-list-row:hover { border-color: var(--green); }
   .mex-list-row-main {
-    flex: 1; min-width: 0; display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    background: none; border: none; padding: 0; cursor: pointer; text-align: left; font-family: inherit;
+    flex: 1; min-width: 0; background: none; border: none; padding: 0; cursor: pointer; text-align: left; font-family: inherit;
+    font-size: 0.86rem; font-weight: 700; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
-  .mex-list-title { font-size: 0.88rem; font-weight: 700; color: var(--ink); }
-  .mex-list-sub { font-size: 0.72rem; color: var(--ink-soft); margin-top: 3px; }
-  .mex-list-badge { flex: none; font-size: 0.78rem; font-weight: 800; color: var(--green-deep); background: var(--green-soft); border-radius: 999px; padding: 5px 12px; }
-  .mex-list-badge.partial { color: var(--tan); background: #F5EEDD; }
+  .mex-list-print-btn { flex: none; background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.72rem; font-weight: 700; cursor: pointer; padding: 6px 4px; }
+  .mex-list-print-btn:hover { color: var(--green-deep); }
   .mex-list-del-btn { flex: none; background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.72rem; font-weight: 700; cursor: pointer; padding: 6px 4px; }
   .mex-list-del-btn:hover { color: #C23B3B; }
 
@@ -10300,14 +10298,12 @@
       return;
     }
     el.innerHTML = list.map(exam => {
-      const badge = exam.scoreMine ? '<span class="mex-list-badge">' + escapeHtml(exam.scoreMine) + '/' + escapeHtml(exam.scoreMax) + '점</span>' : '<span class="mex-list-badge partial">채점 전</span>';
+      const scoreText = exam.scoreMine ? escapeHtml(exam.scoreMine) + '/' + escapeHtml(exam.scoreMax) + '점' : '채점 전';
+      const rowText = escapeHtml(exam.subject) + ' / ' + escapeHtml(exam.date) + ' / ' + escapeHtml(exam.title) + ' / ' + scoreText;
       return '<div class="mex-list-row">' +
-        '<button type="button" class="mex-list-row-main" onclick="mexOpenDetail(\'' + exam.id + '\')">' +
-          '<div><div class="mex-list-title">' + escapeHtml(exam.title) + '</div>' +
-          '<div class="mex-list-sub">' + escapeHtml(exam.subject) + ' · ' + escapeHtml(exam.date) + ' · ' + exam.count + '문항</div></div>' +
-          badge +
-        '</button>' +
-        '<button type="button" class="mex-list-del-btn" onclick="mexDeleteExam(\'' + exam.id + '\')">삭제</button>' +
+        '<button type="button" class="mex-list-row-main" onclick="mexOpenDetail(\'' + exam.id + '\')">' + rowText + '</button>' +
+        '<button type="button" class="mex-list-print-btn" onclick="mexPrintExam(\'' + exam.id + '\')">프린트하기</button>' +
+        '<button type="button" class="mex-list-del-btn" onclick="mexDeleteExam(\'' + exam.id + '\')">삭제하기</button>' +
       '</div>';
     }).join("");
   }
@@ -10327,6 +10323,10 @@
     document.getElementById("mexHomeWrap").style.display = "none";
     document.getElementById("mexDetailWrap").style.display = "flex";
     mexRenderDetail();
+  }
+  function mexPrintExam(examId) {
+    mexOpenDetail(examId);
+    setTimeout(() => window.print(), 200);
   }
   function mexBackToList() {
     mexCurrentExam = null;
