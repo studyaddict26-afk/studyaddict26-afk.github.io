@@ -1488,6 +1488,8 @@
     background: var(--green-soft); border: 1.5px dashed #B9D6C2; border-radius: 12px; padding: 14px; cursor: pointer;
   }
   .mex-new-btn:hover { background: #E2EFE6; }
+  .mex-top-row { display: flex; gap: 10px; }
+  .mex-top-row .mex-new-btn { width: auto; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .mex-new-form { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; }
   .mex-field { display: flex; flex-direction: column; gap: 6px; }
   .mex-field label { font-size: 0.76rem; font-weight: 700; color: var(--ink-soft); }
@@ -1559,6 +1561,24 @@
   .mex-time-bar.high { background: #C77B3D; }
   .mex-time-bar-col:hover .mex-time-bar { opacity: 0.7; }
   .mex-time-chart-detail { font-size: 0.78rem; color: var(--ink); font-weight: 600; text-align: center; margin-top: 10px; min-height: 1.4em; }
+
+  /* ── 오답노트 / 피드백 ── */
+  .mex-review-card { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+  .mex-review-title { font-size: 0.92rem; font-weight: 800; color: var(--ink); }
+  .mex-review-desc { font-size: 0.74rem; color: var(--ink-soft); line-height: 1.55; margin-top: -6px; }
+  #mexWrongNoteList { display: flex; flex-direction: column; gap: 10px; }
+  .mex-wrongnote-row { display: flex; flex-direction: column; gap: 7px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--cream); }
+  .mex-wrongnote-num { font-size: 0.8rem; font-weight: 800; color: var(--ink); }
+  .mex-wrongnote-reason, .mex-wrongnote-memo {
+    font-family: inherit; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; background: var(--paper); box-sizing: border-box;
+  }
+  .mex-wrongnote-reason { font-size: 0.78rem; padding: 7px 10px; }
+  .mex-wrongnote-memo { font-size: 0.8rem; padding: 8px 10px; resize: vertical; min-height: 52px; line-height: 1.5; width: 100%; }
+  .mex-feedback-textarea {
+    font-family: inherit; font-size: 0.84rem; color: var(--ink); border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px 14px; background: var(--cream); resize: vertical; min-height: 90px; line-height: 1.6; width: 100%; box-sizing: border-box;
+  }
+  .mex-review-save-btn { width: 100%; background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 13px; font-family: inherit; font-size: 0.9rem; font-weight: 800; cursor: pointer; }
 
   .mex-score-grade-btn {
     flex: none; background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 5px 12px;
@@ -4838,7 +4858,10 @@
     </div>
 
     <div class="mex-wrap" id="mexHomeWrap">
-      <button type="button" class="mex-new-btn" id="mexNewBtn" onclick="mexToggleNewForm()">+ 새 모의고사 기록하기</button>
+      <div class="mex-top-row">
+        <button type="button" class="mex-new-btn" id="mexSubjectFilterBtn" onclick="mexOpenSubjectFilterPopup()">과목 선택하기</button>
+        <button type="button" class="mex-new-btn" id="mexNewBtn" onclick="mexToggleNewForm()">+ 새 모의고사 기록하기</button>
+      </div>
       <div class="mex-new-form" id="mexNewForm" style="display:none;">
         <div class="mex-field">
           <label>시험명</label>
@@ -4868,13 +4891,18 @@
         </div>
       </div>
 
-      <div class="mex-field" id="mexSubjectFilterWrap">
-        <label>과목</label>
-        <select id="mexSubjectFilterSelect" onchange="mexSetSubjectFilter(this.value)">
-          <option value="all">전체</option>
-        </select>
-      </div>
       <div class="mex-list" id="mexList"></div>
+    </div>
+
+    <!-- ─── 과목 선택 팝업 ─── -->
+    <div class="exsim-picker-overlay" id="mexSubjectFilterOverlay" onclick="if(event.target===this) mexCloseSubjectFilterPopup()">
+      <div class="exsim-picker-box" style="max-width:360px;">
+        <div class="exsim-picker-head">
+          <span>과목 선택</span>
+          <button type="button" class="exsim-picker-close" onclick="mexCloseSubjectFilterPopup()" aria-label="닫기">×</button>
+        </div>
+        <div class="exsim-picker-list" id="mexSubjectFilterList"></div>
+      </div>
     </div>
 
     <div class="mex-detail-wrap" id="mexDetailWrap" style="display:none;">
@@ -4892,6 +4920,20 @@
         </div>
       </div>
       <div class="mex-time-chart" id="mexTimeChart" style="display:none;"></div>
+
+      <div class="mex-review-card" id="mexWrongNoteCard" style="display:none;">
+        <div class="mex-review-title">오답노트</div>
+        <div class="mex-review-desc">틀린 이유를 "개념/실수/시간/이해 부족" 중 골라보고, 정답 풀이와 다음엔 어떻게 다르게 풀지를 적어두면 같은 실수를 줄일 수 있어요.</div>
+        <div id="mexWrongNoteList"></div>
+      </div>
+
+      <div class="mex-review-card">
+        <div class="mex-review-title">피드백</div>
+        <div class="mex-review-desc">오늘 시험에 대한 총평, 시간 배분은 어땠는지, 다음 시험까지의 목표를 자유롭게 적어보세요.</div>
+        <textarea id="mexFeedbackInput" class="mex-feedback-textarea" placeholder="예) 독서 지문에서 시간을 너무 많이 써서 마지막 문학 문제를 못 풀었다. 다음엔 독서 지문 읽는 속도를 늘리는 연습이 필요하다."></textarea>
+      </div>
+
+      <button type="button" class="mex-review-save-btn" onclick="mexSaveReview()">오답노트·피드백 저장</button>
     </div>
   </section>
 
@@ -9983,6 +10025,7 @@
     document.getElementById("mexlistTitle").textContent = label + " 관리하기";
     document.getElementById("viewTitle").textContent = label + " 관리하기";
     document.getElementById("mexNewBtn").textContent = "+ 새 " + label + " 기록하기";
+    document.getElementById("mexSubjectFilterBtn").textContent = "과목 선택하기";
     document.getElementById("mexlistHint").textContent = "수능 시뮬레이션을 통해 기록하거나, 직접 입력할 수 있습니다.";
     document.getElementById("mexlistHead").style.display = "";
     document.getElementById("mexDetailWrap").style.display = "none";
@@ -9990,19 +10033,25 @@
     document.getElementById("mexNewForm").style.display = "none";
     mexRenderList();
   }
-  // 목록 위 "과목" 필터 — 카테고리(모의고사/내신) 안에 실제로 기록된 과목들만 옵션으로 보여준다.
+  // 목록 위 "과목 선택하기" 버튼 — 카테고리(모의고사/내신) 안에 실제로 기록된 과목만 팝업으로 골라 필터링.
   function mexSetSubjectFilter(subject) {
     mexSubjectFilter = subject;
+    document.getElementById("mexSubjectFilterBtn").textContent = subject === "all" ? "과목 선택하기" : subject;
     mexRenderList();
   }
-  function mexRenderSubjectFilterOptions() {
-    const sel = document.getElementById("mexSubjectFilterSelect");
-    if (!sel) return;
+  function mexOpenSubjectFilterPopup() {
     const subjects = [...new Set(mexLoadExams().filter(e => (e.category || "mock") === mexCategory).map(e => e.subject))];
-    if (mexSubjectFilter !== "all" && !subjects.includes(mexSubjectFilter)) mexSubjectFilter = "all";
-    sel.innerHTML = '<option value="all">전체</option>' + subjects.map(s =>
-      '<option value="' + escapeHtml(s) + '"' + (s === mexSubjectFilter ? " selected" : "") + '>' + escapeHtml(s) + '</option>'
+    if (mexSubjectFilter !== "all" && !subjects.includes(mexSubjectFilter)) mexSetSubjectFilter("all");
+    const options = [{ value: "all", label: "전체" }].concat(subjects.map(s => ({ value: s, label: s })));
+    document.getElementById("mexSubjectFilterList").innerHTML = options.map(o =>
+      '<label class="exsim-picker-row' + (o.value === mexSubjectFilter ? " on" : "") + '" onclick="mexSetSubjectFilter(\'' + o.value.replace(/'/g, "\\'") + '\');mexCloseSubjectFilterPopup();">' +
+        '<span class="exsim-picker-row-text"><span class="exsim-picker-row-label">' + escapeHtml(o.label) + '</span></span>' +
+      '</label>'
     ).join("");
+    document.getElementById("mexSubjectFilterOverlay").classList.add("on");
+  }
+  function mexCloseSubjectFilterPopup() {
+    document.getElementById("mexSubjectFilterOverlay").classList.remove("on");
   }
 
   function mexToggleNewForm() {
@@ -10052,10 +10101,8 @@
   function mexRenderList() {
     const el = document.getElementById("mexList");
     if (!el) return;
-    mexRenderSubjectFilterOptions();
     let list = mexLoadExams().filter(exam => (exam.category || "mock") === mexCategory);
     if (mexSubjectFilter !== "all") list = list.filter(exam => exam.subject === mexSubjectFilter);
-    document.getElementById("mexSubjectFilterWrap").style.display = list.length || mexSubjectFilter !== "all" ? "flex" : "none";
     if (!list.length) {
       const label = mexCategory === "naeshin" ? "내신" : "모의고사";
       el.innerHTML = mexSubjectFilter !== "all"
@@ -10102,6 +10149,7 @@
   function mexRenderDetail() {
     mexRenderDetailBoxes();
     mexRenderTimeChart();
+    mexRenderReview();
   }
   // 날짜 / 교시·과목 / 모의고사 이름 / 점수(채점 저장 전엔 "미채점") — 4개 박스.
   function mexRenderDetailBoxes() {
@@ -10112,6 +10160,58 @@
     document.getElementById("mexDetailBoxName").textContent = exam.title;
     document.getElementById("mexDetailBoxScore").textContent = exam.scoreMine ? exam.scoreMine + "/" + exam.scoreMax + "점" : "미채점";
     document.getElementById("mexScoreGradeBtn").textContent = exam.scoreMine ? "수정하기" : "채점하기";
+  }
+  // 오답노트: 틀린 문항마다 "오답 원인"(개념/실수/시간/이해 부족 등)을 고르고 메모를 남긴다 —
+  // 문제를 다시 베끼는 게 아니라 "왜 틀렸는지·어떻게 풀었어야 했는지"를 남기는 게 핵심이라는
+  // 오답노트 작성법 리서치를 참고해 설계함.
+  const MEX_WRONGNOTE_REASONS = [
+    { value: "concept", label: "개념 부족" },
+    { value: "mistake", label: "실수 (계산·표시 등)" },
+    { value: "time", label: "시간 부족" },
+    { value: "comprehension", label: "지문·조건 이해 부족" },
+    { value: "etc", label: "기타" },
+  ];
+  function mexRenderReview() {
+    const exam = mexCurrentExam;
+    if (!exam) return;
+    const card = document.getElementById("mexWrongNoteCard");
+    const wrongNums = (exam.answers || []).map((a, i) => a === "wrong" ? (i + 1) : null).filter(n => n !== null);
+    if (!wrongNums.length) {
+      card.style.display = "none";
+    } else {
+      card.style.display = "block";
+      const notes = exam.wrongNotes || {};
+      document.getElementById("mexWrongNoteList").innerHTML = wrongNums.map(n => {
+        const note = notes[n] || {};
+        return '<div class="mex-wrongnote-row">' +
+          '<div class="mex-wrongnote-num">' + n + '번</div>' +
+          '<select class="mex-wrongnote-reason" data-q="' + n + '">' +
+            '<option value="">오답 원인 선택</option>' +
+            MEX_WRONGNOTE_REASONS.map(r => '<option value="' + r.value + '"' + (note.reason === r.value ? " selected" : "") + '>' + r.label + '</option>').join("") +
+          '</select>' +
+          '<textarea class="mex-wrongnote-memo" data-q="' + n + '" placeholder="어떤 개념을 몰랐는지, 정답 풀이는 무엇인지, 다음엔 어떻게 접근할지 적어보세요.">' + escapeHtml(note.memo || "") + '</textarea>' +
+        '</div>';
+      }).join("");
+    }
+    document.getElementById("mexFeedbackInput").value = exam.feedback || "";
+  }
+  function mexSaveReview() {
+    const exam = mexCurrentExam;
+    if (!exam) return;
+    const wrongNotes = {};
+    document.querySelectorAll("#mexWrongNoteList .mex-wrongnote-row").forEach(row => {
+      const q = row.querySelector(".mex-wrongnote-reason").dataset.q;
+      const reason = row.querySelector(".mex-wrongnote-reason").value;
+      const memo = row.querySelector(".mex-wrongnote-memo").value.trim();
+      if (reason || memo) wrongNotes[q] = { reason: reason, memo: memo };
+    });
+    exam.wrongNotes = wrongNotes;
+    exam.feedback = document.getElementById("mexFeedbackInput").value.trim();
+    const list = mexLoadExams();
+    const idx = list.findIndex(e => e.id === exam.id);
+    if (idx !== -1) list[idx] = exam;
+    mexSaveExams(list);
+    showToast("오답노트·피드백이 저장됐어요!");
   }
   // 시간이 기록된 문항들을 소요시간 기준으로 줄세워, 하위 10%(빠름)/상위 10%(느림)/나머지 80%로
   // 나눈다 — { 문항index: "low"|"high"|"mid" } 형태로 반환(시간 기록이 없는 문항은 포함 안 함).
@@ -10200,6 +10300,7 @@
     mexCloseGradingModal();
     mexRenderDetailBoxes();
     mexRenderTimeChart();
+    mexRenderReview();
   }
 
   function formatAiAnswer(text) {
