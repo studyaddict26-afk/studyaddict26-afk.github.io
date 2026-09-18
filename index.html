@@ -1556,6 +1556,7 @@
   }
   /* ── 성찰 노트 / 피드백 (오늘의 공부 페이지의 플래너·일기 좌우 분할 카드 재사용: record-plan-diary-card 등) ── */
   .mex-review-desc { font-size: 0.74rem; color: var(--ink-soft); line-height: 1.55; }
+  .mex-reflection-hint { font-size: 0.68rem; font-weight: 600; color: var(--ink-soft); }
   /* 성찰 노트: "+ 문제 추가" 버튼과 번호 칩들이 한 줄에 나란히 — 고른 번호 하나의 작성란만
      아래 보여주는 방식. 칩은 배경 없는 텍스트 버튼(채점하기/수정하기와 같은 스타일)으로,
      지금 보고 있는 번호만 초록색으로 구분한다. */
@@ -4986,7 +4987,7 @@
           <div class="record-diary-col" id="mexReflectionCard">
             <div class="record-note-box">
               <div class="today-title-row">
-                <h3 class="record-pane-title">성찰 노트</h3>
+                <h3 class="record-pane-title">성찰 노트<span class="mex-reflection-hint">문제 번호를 눌러주세요!</span></h3>
                 <span class="record-submit-status" id="mexReflectionSubmitStatus">미제출</span>
                 <button type="button" class="record-mini-submit-btn" id="mexReflectionSubmitBtn" onclick="mexSubmitReview(this,'mexReflectionSubmitStatus')">제출하기</button>
               </div>
