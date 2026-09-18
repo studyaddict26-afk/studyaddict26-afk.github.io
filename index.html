@@ -4900,10 +4900,6 @@
           <label>응시일</label>
           <input type="date" id="mexFormDate">
         </div>
-        <div class="mex-field">
-          <label>시험 시뮬레이션 랩타임 연결 (선택)</label>
-          <select id="mexFormLinkSim"><option value="">연결 안 함</option></select>
-        </div>
         <div class="mex-form-btns">
           <button type="button" class="mex-form-cancel-btn" onclick="mexToggleNewForm()">취소</button>
           <button type="button" class="mex-form-save-btn" onclick="mexCreateExam()">기록 시작하기</button>
@@ -10100,11 +10096,6 @@
       document.getElementById("mexFormSubject").value = "";
       document.getElementById("mexFormCount").value = "20";
       document.getElementById("mexFormDate").value = getLocalDateKey();
-      const sel = document.getElementById("mexFormLinkSim");
-      const simHistory = exsimLoadHistory();
-      sel.innerHTML = '<option value="">연결 안 함</option>' + simHistory.map((s, i) =>
-        '<option value="' + i + '">' + escapeHtml(s.periodLabel) + ' ' + escapeHtml(s.subject) + ' · ' + escapeHtml(s.date) + ' (랩 ' + s.laps.length + '개)</option>'
-      ).join("");
     }
   }
 
@@ -10114,18 +10105,12 @@
     const count = Math.max(1, Math.min(60, Number(document.getElementById("mexFormCount").value) || 1));
     const date = document.getElementById("mexFormDate").value || getLocalDateKey();
     if (!title) { showToast("시험명을 입력해주세요"); return; }
-    const linkIdx = document.getElementById("mexFormLinkSim").value;
-    let passageTimes = null;
-    if (linkIdx !== "") {
-      const sim = exsimLoadHistory()[Number(linkIdx)];
-      if (sim && sim.passageTimes && sim.passageTimes.length) passageTimes = sim.passageTimes;
-    }
     const exam = {
       id: "mex_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7),
       title: title, subject: subject || "기타", count: count, date: date,
       category: mexCategory,
       answers: new Array(count).fill("unrated"),
-      passageTimes: passageTimes,
+      passageTimes: null,
     };
     const list = mexLoadExams();
     list.unshift(exam);
