@@ -1584,8 +1584,10 @@
   .mex-reflection-chip.active { color: var(--green-deep); }
   .mex-reflection-chip.filled::after { content: "●"; font-size: 0.5rem; margin-left: 4px; vertical-align: middle; color: var(--green-deep); }
   .mex-reflection-form { display: flex; flex-direction: column; gap: 10px; padding-top: 12px; border-top: 1px solid var(--line); }
-  .mex-reflection-form-head { display: flex; align-items: center; justify-content: flex-end; }
-  .mex-reflection-remove-btn { background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.72rem; font-weight: 700; cursor: pointer; padding: 0; }
+  .mex-reflection-form-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .mex-reflection-form-head .mex-wrongnote-reason { flex: 0 0 50%; width: 50%; }
+  .mex-reflection-remove-btn { flex: none; background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.72rem; font-weight: 700; cursor: pointer; padding: 0; transition: transform 0.15s; }
+  .mex-reflection-remove-btn:hover { transform: translateY(-1px); }
   .mex-reflection-remove-btn:hover { color: #C23B3B; }
   .mex-wrongnote-reason {
     font-family: inherit; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; background: var(--cream); box-sizing: border-box;
@@ -5008,11 +5010,11 @@
               </div>
               <div class="mex-reflection-form" id="mexReflectionForm" style="display:none;">
                 <div class="mex-reflection-form-head">
-                  <button type="button" class="mex-reflection-remove-btn" id="mexReflectionRemoveBtn" onclick="mexRemoveReflectionQuestion()">이 번호 빼기</button>
+                  <select class="mex-wrongnote-reason" id="mexReflectionReason">
+                    <option value="">오답 원인 선택</option>
+                  </select>
+                  <button type="button" class="mex-reflection-remove-btn" id="mexReflectionRemoveBtn" onclick="mexRemoveReflectionQuestion()">이 번호 삭제하기 →</button>
                 </div>
-                <select class="mex-wrongnote-reason" id="mexReflectionReason">
-                  <option value="">오답 원인 선택</option>
-                </select>
                 <div class="diary-q-field">
                   <label>어떤 개념이나 포인트를 놓쳤나요?</label>
                   <textarea id="mexReflectionQ1"></textarea>
@@ -10504,7 +10506,6 @@
     document.getElementById("mexReflectionQ2").value = note.q2 || "";
     document.getElementById("mexReflectionQ3").value = note.q3 || "";
     document.getElementById("mexReflectionQ4").value = note.q4 || "";
-    document.getElementById("mexReflectionRemoveBtn").style.display = mexReflectionWrongNums().includes(n) ? "none" : "inline";
     document.getElementById("mexReflectionForm").style.display = "flex";
   }
   function mexOpenReflectionAddPopup() {
