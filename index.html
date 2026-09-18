@@ -1532,7 +1532,7 @@
   .mex-list-del-btn { flex: none; background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.72rem; font-weight: 700; cursor: pointer; padding: 6px 4px; }
   .mex-list-del-btn:hover { color: #C23B3B; }
 
-  .mex-detail-wrap { max-width: 760px; width: 100%; margin: 20px auto 0 auto; padding: 0 20px 40px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; }
+  .mex-detail-wrap { max-width: 900px; width: 100%; margin: 20px auto 0 auto; padding: 0 20px 40px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; }
   .mex-back-link { align-self: flex-start; background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.82rem; font-weight: 700; cursor: pointer; padding: 0; }
   .mex-back-link:hover { color: var(--ink); }
   .mex-detail-box-row { display: flex; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); overflow: hidden; }
@@ -1541,10 +1541,17 @@
   .mex-detail-box-label { font-size: 0.66rem; color: var(--ink-soft); font-weight: 600; margin-bottom: 3px; }
   .mex-detail-box-value { font-size: 0.86rem; font-weight: 800; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .mex-detail-box-score-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .mex-detail-box-clickable { cursor: pointer; }
+  .mex-detail-box-clickable:hover { background: var(--cream); }
   @media (max-width: 560px) {
     .mex-detail-box-row { flex-wrap: wrap; }
     .mex-detail-box { flex: 1 1 calc(50% - 1px); border-bottom: 1px solid var(--line); }
     .mex-detail-box:nth-child(2n+1) { border-left: none; }
+  }
+  .mex-review-split { display: flex; gap: 18px; align-items: flex-start; }
+  .mex-review-split .mex-review-card { flex: 1 1 0; min-width: 0; }
+  @media (max-width: 700px) {
+    .mex-review-split { flex-direction: column; }
   }
 
   .mex-time-chart { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 16px 18px; }
@@ -4929,31 +4936,37 @@
             <button type="button" class="mex-score-grade-btn" id="mexScoreGradeBtn" onclick="mexOpenGradingModal()">채점하기</button>
           </div>
         </div>
+        <div class="mex-detail-box mex-detail-box-clickable" onclick="mexOpenLapPopup()">
+          <div class="mex-detail-box-label">랩타임</div>
+          <div class="mex-detail-box-value" id="mexDetailBoxLap">보기 ›</div>
+        </div>
       </div>
       <div class="mex-time-chart" id="mexTimeChart" style="display:none;"></div>
 
-      <div class="mex-review-card">
-        <div class="mex-review-title">피드백</div>
-        <div class="mex-review-desc">오늘 시험에 대한 총평, 시간 배분은 어땠는지, 다음 시험까지의 목표를 자유롭게 적어보세요.</div>
-        <textarea id="mexFeedbackInput" class="mex-feedback-textarea" placeholder="예) 독서 지문에서 시간을 너무 많이 써서 마지막 문학 문제를 못 풀었다. 다음엔 독서 지문 읽는 속도를 늘리는 연습이 필요하다."></textarea>
-      </div>
-
-      <div class="mex-review-card" id="mexReflectionCard">
-        <div class="mex-review-title">성찰 노트</div>
-        <div class="mex-review-desc">틀린 문제는 자동으로 추가되고, 맞았지만 다시 짚고 싶은 문제는 번호를 직접 추가할 수 있어요. 번호를 누르면 그 문제의 성찰 노트가 아래 나와요.</div>
-        <div class="mex-reflection-add-row">
-          <button type="button" class="mex-reflection-add-btn" onclick="mexOpenReflectionAddPopup()">+ 추가</button>
+      <div class="mex-review-split">
+        <div class="mex-review-card">
+          <div class="mex-review-title">피드백</div>
+          <div class="mex-review-desc">오늘 시험에 대한 총평, 시간 배분은 어땠는지, 다음 시험까지의 목표를 자유롭게 적어보세요.</div>
+          <textarea id="mexFeedbackInput" class="mex-feedback-textarea" placeholder="예) 독서 지문에서 시간을 너무 많이 써서 마지막 문학 문제를 못 풀었다. 다음엔 독서 지문 읽는 속도를 늘리는 연습이 필요하다."></textarea>
         </div>
-        <div class="mex-reflection-chips" id="mexReflectionChips"></div>
-        <div class="mex-reflection-form" id="mexReflectionForm" style="display:none;">
-          <div class="mex-reflection-form-head">
-            <span class="mex-reflection-form-num" id="mexReflectionFormNum">-</span>
-            <button type="button" class="mex-reflection-remove-btn" id="mexReflectionRemoveBtn" onclick="mexRemoveReflectionQuestion()">이 번호 빼기</button>
+
+        <div class="mex-review-card" id="mexReflectionCard">
+          <div class="mex-review-title">성찰 노트</div>
+          <div class="mex-review-desc">틀린 문제는 자동으로 추가되고, 맞았지만 다시 짚고 싶은 문제는 번호를 직접 추가할 수 있어요. 번호를 누르면 그 문제의 성찰 노트가 아래 나와요.</div>
+          <div class="mex-reflection-add-row">
+            <button type="button" class="mex-reflection-add-btn" onclick="mexOpenReflectionAddPopup()">+ 추가</button>
           </div>
-          <select class="mex-wrongnote-reason" id="mexReflectionReason">
-            <option value="">오답 원인 선택</option>
-          </select>
-          <textarea class="mex-wrongnote-memo" id="mexReflectionMemo" placeholder="어떤 개념을 몰랐는지, 정답 풀이는 무엇인지, 다음엔 어떻게 접근할지 적어보세요."></textarea>
+          <div class="mex-reflection-chips" id="mexReflectionChips"></div>
+          <div class="mex-reflection-form" id="mexReflectionForm" style="display:none;">
+            <div class="mex-reflection-form-head">
+              <span class="mex-reflection-form-num" id="mexReflectionFormNum">-</span>
+              <button type="button" class="mex-reflection-remove-btn" id="mexReflectionRemoveBtn" onclick="mexRemoveReflectionQuestion()">이 번호 빼기</button>
+            </div>
+            <select class="mex-wrongnote-reason" id="mexReflectionReason">
+              <option value="">오답 원인 선택</option>
+            </select>
+            <textarea class="mex-wrongnote-memo" id="mexReflectionMemo" placeholder="어떤 개념을 몰랐는지, 정답 풀이는 무엇인지, 다음엔 어떻게 접근할지 적어보세요."></textarea>
+          </div>
         </div>
       </div>
 
@@ -4987,6 +5000,17 @@
           <input type="text" id="mexGradeWrongInput" placeholder="번호를 쉼표로 구분, 없으면 비워두세요">
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- ─── 랩타임 보기 팝업 ─── -->
+  <div class="exsim-picker-overlay" id="mexLapPopupOverlay" onclick="if(event.target===this) mexCloseLapPopup()">
+    <div class="exsim-picker-box" style="max-width:440px;">
+      <div class="exsim-picker-head">
+        <span>랩타임</span>
+        <button type="button" class="exsim-picker-close" onclick="mexCloseLapPopup()" aria-label="닫기">&times;</button>
+      </div>
+      <div class="exend-lap-table" id="mexLapPopupBody" style="padding:18px;"></div>
     </div>
   </div>
 
@@ -10194,6 +10218,28 @@
     document.getElementById("mexDetailBoxName").textContent = exam.title;
     document.getElementById("mexDetailBoxScore").textContent = exam.scoreMine ? exam.scoreMine + "/" + exam.scoreMax + "점" : "미채점";
     document.getElementById("mexScoreGradeBtn").textContent = exam.scoreMine ? "수정하기" : "채점하기";
+    const hasLap = (exam.passageTimes || []).some(t => t.sec > 0);
+    document.getElementById("mexDetailBoxLap").textContent = hasLap ? "보기 ›" : "기록 없음";
+  }
+  // 시험 시뮬레이션 종료 화면(exsimShowEnd)의 랩타임 표 그대로 — 같은 행 스타일(.exend-lap-row)을
+  // 재사용해 팝업으로 띄운다. 그룹 경계는 저장 시 라벨에 이미 접두어로 합쳐뒀어서(예: "문학 지문 1")
+  // 별도 그룹 헤더 없이 평평한 목록으로 보여줘도 어떤 제재인지 구분된다.
+  function mexOpenLapPopup() {
+    const exam = mexCurrentExam;
+    if (!exam) return;
+    const times = exam.passageTimes || [];
+    const body = document.getElementById("mexLapPopupBody");
+    if (!times.some(t => t.sec > 0)) {
+      body.innerHTML = '<div style="text-align:center;color:var(--ink-soft);font-size:0.78rem;padding:10px;">기록된 랩타임이 없어요</div>';
+    } else {
+      body.innerHTML = '<div class="exend-lap-rows">' + times.map(t =>
+        '<div class="exend-lap-row"><span>' + escapeHtml(t.label) + '</span><span class="exend-lap-row-dur">' + (t.sec > 0 ? formatDur(t.sec) : "-") + '</span></div>'
+      ).join("") + '</div>';
+    }
+    document.getElementById("mexLapPopupOverlay").classList.add("on");
+  }
+  function mexCloseLapPopup() {
+    document.getElementById("mexLapPopupOverlay").classList.remove("on");
   }
   // 성찰 노트: 틀린 문항마다 "오답 원인"(개념/실수/시간/이해 부족 등)을 고르고 메모를 남긴다 —
   // 문제를 다시 베끼는 게 아니라 "왜 틀렸는지·어떻게 풀었어야 했는지"를 남기는 게 핵심이라는
