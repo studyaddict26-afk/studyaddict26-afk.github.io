@@ -1492,8 +1492,12 @@
     background: var(--green-soft); border: 1.5px solid #B9D6C2; border-radius: 12px; padding: 14px; cursor: pointer;
   }
   .mex-new-btn:hover { background: #E2EFE6; }
-  .mex-top-row { display: flex; gap: 10px; }
-  .mex-top-row .mex-new-btn { width: auto; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mex-top-row { display: flex; border: 1.5px solid #B9D6C2; border-radius: 12px; background: var(--green-soft); overflow: hidden; }
+  .mex-top-row .mex-new-btn {
+    width: auto; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    border: none; border-radius: 0; border-left: 1.5px solid #B9D6C2; background: none;
+  }
+  .mex-top-row .mex-new-btn:first-child { border-left: none; }
   .mex-field { display: flex; flex-direction: column; gap: 6px; }
   .mex-field label { font-size: 0.76rem; font-weight: 700; color: var(--ink-soft); }
   .mex-field input, .mex-field select {
@@ -4863,7 +4867,7 @@
     <div class="mex-wrap" id="mexHomeWrap">
       <div class="mex-top-row">
         <button type="button" class="mex-new-btn" id="mexSubjectFilterBtn" onclick="mexOpenSubjectFilterPopup()">과목 선택하기</button>
-        <button type="button" class="mex-new-btn" id="mexNewBtn" onclick="mexOpenNewExamPopup()">+ 새 모의고사 기록하기</button>
+        <button type="button" class="mex-new-btn" id="mexNewBtn" onclick="mexOpenNewExamPopup()">+ 새 모의고사 직접 입력하기</button>
       </div>
 
       <div class="mex-list" id="mexList"></div>
@@ -10165,7 +10169,7 @@
     const label = mexCategory === "naeshin" ? "내신" : "모의고사";
     document.getElementById("mexlistTitle").textContent = label + " 관리하기";
     document.getElementById("viewTitle").textContent = label + " 관리하기";
-    document.getElementById("mexNewBtn").textContent = "+ 새 " + label + " 기록하기";
+    document.getElementById("mexNewBtn").textContent = "+ 새 " + label + " 직접 입력하기";
     document.getElementById("mexSubjectFilterBtn").textContent = "과목 선택하기";
     document.getElementById("mexlistHint").textContent = "수능 시뮬레이션을 통해 기록하거나, 직접 입력할 수 있습니다.";
     document.getElementById("mexlistHead").style.display = "";
