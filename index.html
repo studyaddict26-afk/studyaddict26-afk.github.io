@@ -1334,6 +1334,7 @@
     font-family: inherit; font-size: 0.74rem; font-weight: 800; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
   }
   .exsim-picker-submit-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(21,82,47,0.3); }
+  .exsim-picker-submit-btn:disabled { opacity: 0.45; cursor: default; pointer-events: none; }
   .exsim-picker-close { background: none; border: none; font-size: 1.4rem; color: var(--ink-soft); cursor: pointer; line-height: 1; }
   .exsim-picker-list { overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 2px; }
   .exsim-picker-row {
@@ -1493,7 +1494,6 @@
   .mex-new-btn:hover { background: #E2EFE6; }
   .mex-top-row { display: flex; gap: 10px; }
   .mex-top-row .mex-new-btn { width: auto; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .mex-new-form { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; }
   .mex-field { display: flex; flex-direction: column; gap: 6px; }
   .mex-field label { font-size: 0.76rem; font-weight: 700; color: var(--ink-soft); }
   .mex-field input, .mex-field select {
@@ -1502,6 +1502,12 @@
   }
   .mex-field-row { display: flex; gap: 12px; align-items: flex-end; }
   .mex-field-row .mex-field { flex: 1; }
+  .mex-form-period-btn {
+    font-family: inherit; font-size: 0.86rem; color: var(--ink); border: 1px solid var(--line);
+    border-radius: 8px; padding: 10px 12px; background: var(--cream); box-sizing: border-box;
+    text-align: left; cursor: pointer; width: 100%;
+  }
+  .mex-form-period-btn:hover { border-color: var(--green); }
   /* 내신 카드 전용 — 과목명/소음버튼/시험시간/문항개수 네 칸을 진짜 2열 그리드로 묶어서,
      두 행의 왼쪽·오른쪽 칸 너비가 내용과 무관하게 항상 정확히 일치하도록 한다
      (독립된 flex row 두 개로 나누면 버튼 내용 때문에 폭이 미묘하게 어긋날 수 있었음). */
@@ -1544,7 +1550,7 @@
   .mex-detail-box-score-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .mex-detail-box-clickable { cursor: pointer; }
   .mex-detail-box-clickable:hover { background: var(--cream); }
-  #mexDetailBoxLap { font-size: 0.66rem; margin-top: 4px; }
+  #mexDetailBoxLap { font-size: 0.66rem; margin-top: 7px; }
   @media (max-width: 560px) {
     .mex-detail-box-row { flex-wrap: wrap; }
     .mex-detail-box { flex: 1 1 calc(50% - 1px); border-bottom: 1px solid var(--line); }
@@ -1555,9 +1561,9 @@
   /* 성찰 노트: 위쪽 번호 추가/선택 → 고른 번호 하나의 작성란만 아래 보여주는 방식. "틀린 문제"와
      "직접 추가한 문제"를 소제목으로 나눠 보여줘서, 별도 설명 문구 없이도 자동/수동 추가 구분이
      되도록 한다. */
-  .mex-reflection-add-row { display: flex; align-items: center; justify-content: space-between; }
+  .mex-reflection-add-row { display: flex; align-items: center; justify-content: flex-start; gap: 10px; }
   .mex-reflection-add-row-label { font-size: 0.78rem; font-weight: 700; color: var(--ink); }
-  .mex-reflection-add-btn { flex: none; background: var(--green-deep); color: #fff; border: none; border-radius: 8px; padding: 8px 14px; font-family: inherit; font-size: 0.78rem; font-weight: 800; cursor: pointer; }
+  .mex-reflection-add-btn { flex: none; background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 4px 12px; font-family: inherit; font-size: 0.72rem; font-weight: 800; cursor: pointer; }
   .mex-reflection-chips { display: flex; flex-direction: column; gap: 10px; }
   .mex-reflection-chip-group { display: flex; flex-direction: column; gap: 6px; }
   .mex-reflection-chip-group-label { font-size: 0.68rem; font-weight: 700; color: var(--ink-soft); }
@@ -4862,34 +4868,68 @@
     <div class="mex-wrap" id="mexHomeWrap">
       <div class="mex-top-row">
         <button type="button" class="mex-new-btn" id="mexSubjectFilterBtn" onclick="mexOpenSubjectFilterPopup()">과목 선택하기</button>
-        <button type="button" class="mex-new-btn" id="mexNewBtn" onclick="mexToggleNewForm()">+ 새 모의고사 기록하기</button>
-      </div>
-      <div class="mex-new-form" id="mexNewForm" style="display:none;">
-        <div class="mex-field">
-          <label>시험명</label>
-          <input type="text" id="mexFormTitle" placeholder="예: 2027학년도 9월 모의평가">
-        </div>
-        <div class="mex-field-row">
-          <div class="mex-field">
-            <label>과목</label>
-            <input type="text" id="mexFormSubject" placeholder="예: 수학">
-          </div>
-          <div class="mex-field">
-            <label>문항 수</label>
-            <input type="number" id="mexFormCount" min="1" max="60" value="20">
-          </div>
-        </div>
-        <div class="mex-field">
-          <label>응시일</label>
-          <input type="date" id="mexFormDate">
-        </div>
-        <div class="mex-form-btns">
-          <button type="button" class="mex-form-cancel-btn" onclick="mexToggleNewForm()">취소</button>
-          <button type="button" class="mex-form-save-btn" onclick="mexCreateExam()">기록 시작하기</button>
-        </div>
+        <button type="button" class="mex-new-btn" id="mexNewBtn" onclick="mexOpenNewExamPopup()">+ 새 모의고사 기록하기</button>
       </div>
 
       <div class="mex-list" id="mexList"></div>
+    </div>
+
+    <!-- ─── 새 모의고사 기록하기 팝업 (직접 입력) ─── -->
+    <div class="exsim-picker-overlay" id="mexNewExamOverlay" onclick="if(event.target===this) mexCloseNewExamPopup()">
+      <div class="exsim-picker-box" style="max-width:440px;">
+        <div class="exsim-picker-head">
+          <span>새 모의고사 기록하기</span>
+          <span class="exsim-picker-head-actions">
+            <button type="button" class="exsim-picker-submit-btn" id="mexNewExamSubmitBtn" onclick="mexCreateExam()" disabled>기록하기</button>
+            <button type="button" class="exsim-picker-close" onclick="mexCloseNewExamPopup()" aria-label="닫기">×</button>
+          </span>
+        </div>
+        <div class="mex-grading-modal-body">
+          <div class="mex-field">
+            <label>날짜</label>
+            <input type="date" id="mexFormDate" oninput="mexUpdateNewExamSubmitState()">
+          </div>
+          <div class="mex-field" id="mexFormExamFieldMock">
+            <label>시험</label>
+            <button type="button" class="mex-form-period-btn" id="mexFormPeriodLabel" onclick="mexOpenExamPeriodPicker()">선택해주세요</button>
+          </div>
+          <div class="mex-field-row" id="mexFormExamFieldNaeshin" style="display:none;">
+            <div class="mex-field">
+              <label>과목명</label>
+              <input type="text" id="mexFormNaeshinSubject" placeholder="예: 수학 내신" oninput="mexUpdateNewExamSubmitState()">
+            </div>
+            <div class="mex-field">
+              <label>문항 수</label>
+              <input type="number" id="mexFormCount" min="1" max="60" value="20" oninput="mexUpdateNewExamSubmitState()">
+            </div>
+          </div>
+          <div class="mex-field">
+            <label id="mexFormTitleLabel">모의고사 이름</label>
+            <input type="text" id="mexFormTitle" placeholder="예: 2027학년도 9월 모의평가" oninput="mexUpdateNewExamSubmitState()">
+          </div>
+          <div class="mex-field-row">
+            <div class="mex-field">
+              <label>만점 점수</label>
+              <input type="text" id="mexFormScoreMax" placeholder="예: 100" oninput="mexUpdateNewExamSubmitState()">
+            </div>
+            <div class="mex-field">
+              <label>내가 맞은 점수</label>
+              <input type="text" id="mexFormScoreMine" placeholder="예: 88" oninput="mexUpdateNewExamSubmitState()">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 시험 선택 팝업 (새 모의고사 기록하기 팝업 내부에서 사용) ─── -->
+    <div class="exsim-picker-overlay" id="mexExamPeriodPickerOverlay" onclick="if(event.target===this) mexCloseExamPeriodPicker()">
+      <div class="exsim-picker-box" style="max-width:360px;">
+        <div class="exsim-picker-head">
+          <span>시험 선택</span>
+          <button type="button" class="exsim-picker-close" onclick="mexCloseExamPeriodPicker()" aria-label="닫기">×</button>
+        </div>
+        <div class="exsim-picker-list" id="mexExamPeriodPickerList"></div>
+      </div>
     </div>
 
     <!-- ─── 과목 선택 팝업 ─── -->
@@ -4958,8 +4998,8 @@
                 <button type="button" class="record-mini-submit-btn" id="mexReflectionSubmitBtn" onclick="mexSubmitReview(this,'mexReflectionSubmitStatus')">제출하기</button>
               </div>
               <div class="mex-reflection-add-row">
-                <span class="mex-reflection-add-row-label">문제 선택</span>
-                <button type="button" class="mex-reflection-add-btn" onclick="mexOpenReflectionAddPopup()">+ 번호 추가</button>
+                <span class="mex-reflection-add-row-label">문제를 선택하세요</span>
+                <button type="button" class="mex-reflection-add-btn" onclick="mexOpenReflectionAddPopup()">+ 문제 추가</button>
               </div>
               <div class="mex-reflection-chips" id="mexReflectionChips"></div>
               <div class="mex-reflection-form" id="mexReflectionForm" style="display:none;">
@@ -10121,6 +10161,7 @@
   // ── 모의고사 관리하기 / 내신 관리하기: 같은 목록·상세·채점 화면을 mexCategory로 구분해서 쓴다 ──
   let mexCategory = "mock";
   let mexSubjectFilter = "all";
+  let mexNewFormPeriod = null;
   function mexGoList(category) {
     mexCategory = category;
     mexSubjectFilter = "all";
@@ -10136,7 +10177,7 @@
     document.getElementById("mexlistHead").style.display = "";
     document.getElementById("mexDetailWrap").style.display = "none";
     document.getElementById("mexHomeWrap").style.display = "flex";
-    document.getElementById("mexNewForm").style.display = "none";
+    mexCloseNewExamPopup();
     mexRenderList();
   }
   // 목록 위 "과목 선택하기" 버튼 — 카테고리(모의고사/내신) 안에 실제로 기록된 과목만 팝업으로 골라 필터링.
@@ -10164,35 +10205,90 @@
     document.getElementById("mexSubjectFilterOverlay").classList.remove("on");
   }
 
-  function mexToggleNewForm() {
-    const el = document.getElementById("mexNewForm");
-    const show = el.style.display === "none";
-    el.style.display = show ? "flex" : "none";
-    if (show) {
-      document.getElementById("mexFormTitle").value = "";
-      document.getElementById("mexFormSubject").value = "";
-      document.getElementById("mexFormCount").value = "20";
-      document.getElementById("mexFormDate").value = getLocalDateKey();
-    }
+  // 새 기록 팝업 — 모의고사는 EXAM_PERIODS에서 시험을 "고르는" 방식(직접 타이핑 X), 내신은
+  // 고정된 시험 목록이 없어 과목명을 직접 쓰고 문항 수도 함께 받는다. 날짜/시험/이름/점수를
+  // 모두 입력해야 "기록하기"가 눌리고, 누르면 시험 시뮬레이션 기록과 똑같이 바로 상세 페이지로 이동한다.
+  function mexOpenNewExamPopup() {
+    mexNewFormPeriod = null;
+    document.getElementById("mexFormDate").value = getLocalDateKey();
+    document.getElementById("mexFormPeriodLabel").textContent = "선택해주세요";
+    document.getElementById("mexFormNaeshinSubject").value = "";
+    document.getElementById("mexFormCount").value = "20";
+    document.getElementById("mexFormTitle").value = "";
+    document.getElementById("mexFormScoreMax").value = "";
+    document.getElementById("mexFormScoreMine").value = "";
+    const isNaeshin = mexCategory === "naeshin";
+    document.getElementById("mexFormExamFieldMock").style.display = isNaeshin ? "none" : "flex";
+    document.getElementById("mexFormExamFieldNaeshin").style.display = isNaeshin ? "flex" : "none";
+    document.getElementById("mexFormTitleLabel").textContent = isNaeshin ? "내신 이름" : "모의고사 이름";
+    mexUpdateNewExamSubmitState();
+    document.getElementById("mexNewExamOverlay").classList.add("on");
   }
-
-  function mexCreateExam() {
+  function mexCloseNewExamPopup() {
+    document.getElementById("mexNewExamOverlay").classList.remove("on");
+  }
+  function mexOpenExamPeriodPicker() {
+    const list = document.getElementById("mexExamPeriodPickerList");
+    list.innerHTML = EXAM_PERIODS.map(p =>
+      '<label class="exsim-picker-row' + (mexNewFormPeriod && mexNewFormPeriod.id === p.id ? " on" : "") + '" onclick="mexSelectNewExamPeriod(\'' + p.id + '\')">' +
+        '<span class="exsim-picker-row-text"><span class="exsim-picker-row-label">' + p.periodLabel + ' ' + p.subject + '</span></span>' +
+      '</label>'
+    ).join("");
+    document.getElementById("mexExamPeriodPickerOverlay").classList.add("on");
+  }
+  function mexCloseExamPeriodPicker() {
+    document.getElementById("mexExamPeriodPickerOverlay").classList.remove("on");
+  }
+  function mexSelectNewExamPeriod(id) {
+    const p = EXAM_PERIODS.find(x => x.id === id);
+    if (!p) return;
+    mexNewFormPeriod = p;
+    document.getElementById("mexFormPeriodLabel").textContent = p.periodLabel + " " + p.subject;
+    mexCloseExamPeriodPicker();
+    mexUpdateNewExamSubmitState();
+  }
+  function mexUpdateNewExamSubmitState() {
+    const isNaeshin = mexCategory === "naeshin";
+    const date = document.getElementById("mexFormDate").value;
     const title = document.getElementById("mexFormTitle").value.trim();
-    const subject = document.getElementById("mexFormSubject").value.trim();
-    const count = Math.max(1, Math.min(60, Number(document.getElementById("mexFormCount").value) || 1));
-    const date = document.getElementById("mexFormDate").value || getLocalDateKey();
-    if (!title) { showToast("시험명을 입력해주세요"); return; }
+    const scoreMax = document.getElementById("mexFormScoreMax").value.trim();
+    const scoreMine = document.getElementById("mexFormScoreMine").value.trim();
+    const examOk = isNaeshin
+      ? (document.getElementById("mexFormNaeshinSubject").value.trim() && Number(document.getElementById("mexFormCount").value) > 0)
+      : !!mexNewFormPeriod;
+    document.getElementById("mexNewExamSubmitBtn").disabled = !(date && examOk && title && scoreMax && scoreMine);
+  }
+  function mexCreateExam() {
+    const isNaeshin = mexCategory === "naeshin";
+    const date = document.getElementById("mexFormDate").value;
+    const title = document.getElementById("mexFormTitle").value.trim();
+    const scoreMax = document.getElementById("mexFormScoreMax").value.trim();
+    const scoreMine = document.getElementById("mexFormScoreMine").value.trim();
+    if (!date || !title || !scoreMax || !scoreMine) return;
+    let periodLabel = "", subject = "", count = 0;
+    if (isNaeshin) {
+      subject = document.getElementById("mexFormNaeshinSubject").value.trim();
+      count = Math.max(1, Math.min(60, Number(document.getElementById("mexFormCount").value) || 1));
+      if (!subject) return;
+    } else {
+      if (!mexNewFormPeriod) return;
+      periodLabel = mexNewFormPeriod.periodLabel;
+      subject = mexNewFormPeriod.subject;
+      count = mexNewFormPeriod.count;
+    }
     const exam = {
       id: "mex_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7),
-      title: title, subject: subject || "기타", count: count, date: date,
+      title: title, periodLabel: periodLabel, subject: subject, count: count, date: date,
       category: mexCategory,
+      scoreMax: scoreMax, scoreMine: scoreMine,
       answers: new Array(count).fill("unrated"),
-      passageTimes: null,
+      passageTimes: null, passageTimeGroups: null,
+      manualEntry: true,
     };
     const list = mexLoadExams();
     list.unshift(exam);
     mexSaveExams(list);
-    mexToggleNewForm();
+    mexCloseNewExamPopup();
     mexRenderList();
     mexOpenDetail(exam.id);
   }
@@ -10270,6 +10366,10 @@
   function mexOpenLapPopup() {
     const exam = mexCurrentExam;
     if (!exam) return;
+    if (exam.manualEntry) {
+      showToast("직접 입력한 시험은 랩타임 기능을 제공하지 않아요");
+      return;
+    }
     const groups = (exam.passageTimeGroups && exam.passageTimeGroups.length)
       ? exam.passageTimeGroups
       : mexInferPassageGroups(exam.passageTimes || []);
@@ -10379,7 +10479,7 @@
     const extraOnes = mexReflectionNums.filter(n => !wrongNums.includes(n));
     let html = "";
     if (wrongOnes.length) {
-      html += '<div class="mex-reflection-chip-group"><div class="mex-reflection-chip-group-label">틀린 문제</div><div class="mex-reflection-chip-row">' + wrongOnes.map(chipHtml).join("") + '</div></div>';
+      html += '<div class="mex-reflection-chip-row">' + wrongOnes.map(chipHtml).join("") + '</div>';
     }
     if (extraOnes.length) {
       html += '<div class="mex-reflection-chip-group"><div class="mex-reflection-chip-group-label">직접 추가한 문제</div><div class="mex-reflection-chip-row">' + extraOnes.map(chipHtml).join("") + '</div></div>';
