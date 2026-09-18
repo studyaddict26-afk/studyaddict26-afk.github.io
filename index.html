@@ -5012,12 +5012,16 @@
                   <textarea id="mexReflectionQ1"></textarea>
                 </div>
                 <div class="diary-q-field">
-                  <label>정답은 어떻게 풀이하나요?</label>
+                  <label>나의 잘못된 사고 과정을 작성해주세요.</label>
                   <textarea id="mexReflectionQ2"></textarea>
                 </div>
                 <div class="diary-q-field">
-                  <label>다음엔 어떻게 접근할 건가요?</label>
+                  <label>올바른 사고 과정을 작성해주세요.</label>
                   <textarea id="mexReflectionQ3"></textarea>
+                </div>
+                <div class="diary-q-field">
+                  <label>다음엔 어떻게 접근할 건가요?</label>
+                  <textarea id="mexReflectionQ4"></textarea>
                 </div>
               </div>
             </div>
@@ -10451,7 +10455,7 @@
     });
   }
   function mexReflectionNoteFilled(note) {
-    return !!(note && (note.reason || note.q1 || note.q2 || note.q3));
+    return !!(note && (note.reason || note.q1 || note.q2 || note.q3 || note.q4));
   }
   // 별도 설명 문구 없이도 바로 알 수 있도록, 틀린 문제(자동)와 직접 추가한 문제를 소제목으로 나눠 보여준다.
   function mexRenderReflectionChips() {
@@ -10475,6 +10479,7 @@
       q1: document.getElementById("mexReflectionQ1").value.trim(),
       q2: document.getElementById("mexReflectionQ2").value.trim(),
       q3: document.getElementById("mexReflectionQ3").value.trim(),
+      q4: document.getElementById("mexReflectionQ4").value.trim(),
     };
   }
   function mexSelectReflectionNum(n) {
@@ -10488,6 +10493,7 @@
     document.getElementById("mexReflectionQ1").value = note.q1 || "";
     document.getElementById("mexReflectionQ2").value = note.q2 || "";
     document.getElementById("mexReflectionQ3").value = note.q3 || "";
+    document.getElementById("mexReflectionQ4").value = note.q4 || "";
     document.getElementById("mexReflectionRemoveBtn").style.display = mexReflectionWrongNums().includes(n) ? "none" : "inline";
     document.getElementById("mexReflectionForm").style.display = "flex";
   }
