@@ -4916,7 +4916,7 @@
         </div>
         <div class="mex-detail-box mex-detail-box-clickable" onclick="mexOpenLapPopup()">
           <div class="mex-detail-box-label">랩타임</div>
-          <div class="mex-detail-box-value" id="mexDetailBoxLap">보기 ›</div>
+          <div class="mex-detail-box-value" id="mexDetailBoxLap">풀이 시간 확인하기</div>
         </div>
       </div>
       <div class="record-plan-diary-card">
@@ -10220,7 +10220,7 @@
     document.getElementById("mexDetailBoxScore").textContent = exam.scoreMine ? exam.scoreMine + "/" + exam.scoreMax + "점" : "미채점";
     document.getElementById("mexScoreGradeBtn").textContent = exam.scoreMine ? "수정하기" : "채점하기";
     const hasLap = (exam.passageTimes || []).some(t => t.sec > 0);
-    document.getElementById("mexDetailBoxLap").textContent = hasLap ? "보기 ›" : "기록 없음";
+    document.getElementById("mexDetailBoxLap").textContent = hasLap ? "풀이 시간 확인하기" : "기록 없음";
   }
   // 시험 시뮬레이션 종료 화면(exsimShowEnd)의 랩타임 표를 그대로 재사용(exsimBuildLapTableHtml)해서
   // 팝업으로 띄운다. 그룹 구조가 저장돼 있으면(passageTimeGroups) 그대로 쓰고, 이 필드가 생기기 전에
