@@ -1540,6 +1540,7 @@
     font-size: 0.76rem; font-weight: 700; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .mex-list-row-gray { color: var(--ink-soft); }
+  .mex-list-row-divider { display: inline-block; width: 0; height: 0.95em; border-left: 1px solid var(--line-dark); margin: 0 12px; vertical-align: middle; }
   .mex-list-print-btn { flex: none; background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.72rem; font-weight: 700; cursor: pointer; padding: 6px 4px; }
   .mex-list-print-btn:hover { color: var(--green-deep); }
   .mex-list-del-btn { flex: none; background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.72rem; font-weight: 700; cursor: pointer; padding: 6px 4px; }
@@ -10314,7 +10315,7 @@
     }
     el.innerHTML = list.map(exam => {
       const scoreText = exam.scoreMine ? escapeHtml(exam.scoreMine) + '점' : '채점 전';
-      const rowText = escapeHtml(exam.subject) + ' · ' + escapeHtml(exam.date) + ' / <span class="mex-list-row-gray">' + escapeHtml(exam.title) + ' · ' + scoreText + '</span>';
+      const rowText = escapeHtml(exam.subject) + ' · ' + escapeHtml(exam.date) + '<span class="mex-list-row-divider"></span><span class="mex-list-row-gray">' + escapeHtml(exam.title) + ' · ' + scoreText + '</span>';
       return '<div class="mex-list-row">' +
         '<button type="button" class="mex-list-row-main" onclick="mexOpenDetail(\'' + exam.id + '\')">' + rowText + '</button>' +
         '<button type="button" class="mex-list-print-btn" onclick="mexPrintExam(\'' + exam.id + '\')">프린트하기</button>' +
