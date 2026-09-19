@@ -3356,6 +3356,7 @@
     background: var(--cream); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px;
   }
   .record-submit-status.done { color: var(--green-deep); background: var(--green-soft); border-color: #CFE3D6; }
+  .record-submit-status.edited { color: #9A5B00; background: #FFF3DC; border-color: #F0D9A8; }
   .record-mini-submit-btn {
     flex: none;
     font-family: inherit; font-size: 0.6rem; font-weight: 700; color: var(--ink-soft);
@@ -6720,7 +6721,7 @@
   const BACK_TARGET = {
     "consult-1": "consult", "consult-2": "consult", "consult-3": "consult",
     "consult-5": "consult", "consult-6": "consult", "consult-7": "consult", "consult-8": "consult",
-    todayrecord: "home", plannerPage: "home", cumulative: "recordhub", reports: "recordhub", dayDetail: "cumulative",
+    todayrecord: "home", cumulative: "recordhub", reports: "recordhub", dayDetail: "cumulative",
     examSuneung: "examhub", examNaeshin: "examhub", mexlist: "mockexam",
   };
   function goBack() {
@@ -7058,6 +7059,7 @@
     // 항상 "학습 플래너 및 공부일기" 탭부터 보여준다.
     switchRecordTab("plan");
     loadChatHistory("chat");
+    submitContentReady.plan = false;
     loadPlan();
     loadNotes();
     loadSpecialNote();
@@ -7087,22 +7089,53 @@
   function syncTodaySubmitBadges() {
     planApi({ action: "today_status", date: getLocalDateKey() })
       .then(data => {
-        setSubmitStatusBadge("planSubmitStatus", !!data.hasPlan);
-        setSubmitStatusBadge("diarySubmitStatus", !!data.hasDiary);
+        submitServerDone.plan = !!data.hasPlan;
+        submitServerDone.diary = !!data.hasDiary;
+        refreshSubmitChip("plan");
+        refreshSubmitChip("diary");
       })
       .catch(err => console.error(err));
   }
-  function setSubmitStatusBadge(id, done) {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = done ? "제출완료" : "미제출";
-      el.classList.toggle("done", done);
-    }
-    // 배지가 "제출완료"인데 버튼은 그대로 "제출하기"라 서로 안 맞아 보이던 것 — 버튼 문구도
-    // 실제 제출 여부에 맞춰 "제출하기"/"다시 제출하기"로 같이 맞춰준다.
-    const btn = document.getElementById(id.replace("Status", "Btn"));
-    if (btn && !btn.disabled) btn.textContent = done ? "다시 제출하기" : "제출하기";
+
+  // ── 제출 후 수정하면 "수정됨" ──
+  // 서버에는 플래너=제출 시각만, 일기=1~4번이 다 채워졌는지만 남아서 "제출한 시점의 내용"이 없다.
+  // 그래서 이 기기에서 제출한 시점(또는 이미 제출완료 상태로 들어온 시점)의 내용을 학생·날짜별로
+  // 기억해두고, 지금 내용과 다르면 "수정됨" + "다시 제출하기"로 보여준다.
+  const submitServerDone = { plan: false, diary: false };
+  const submitContentReady = { plan: false, diary: false };
+  function submitSnapKey(kind) {
+    return "holoSubmitSnap_" + (localStorage.getItem("holoStudentId") || "") + "_" + getLocalDateKey() + "_" + kind;
   }
+  function currentSubmitSig(kind) {
+    if (kind === "plan") {
+      return JSON.stringify(planItems.filter(it => it.active).slice().sort((a, b) => a.id - b.id)
+        .map(it => [it.block, it.subject || "", it.text, Number(it.done) ? 1 : 0]));
+    }
+    return JSON.stringify(["diary-q1", "diary-q2", "diary-q3", "diary-q4", "diary-free"].map(id => {
+      const el = document.getElementById(id);
+      return el ? el.value.trim() : "";
+    }));
+  }
+  function refreshSubmitChip(kind) {
+    const statusId = kind === "plan" ? "planSubmitStatus" : "diarySubmitStatus";
+    const statusEl = document.getElementById(statusId);
+    const btn = document.getElementById(statusId.replace("Status", "Btn"));
+    if (!statusEl || !btn || btn.disabled || !submitContentReady[kind]) return;
+    let snap = null;
+    try { snap = localStorage.getItem(submitSnapKey(kind)); } catch (e) {}
+    if (!snap && submitServerDone[kind]) {
+      snap = currentSubmitSig(kind);
+      try { localStorage.setItem(submitSnapKey(kind), snap); } catch (e) {}
+    }
+    const state = !snap ? "none" : (snap === currentSubmitSig(kind) ? "same" : "changed");
+    statusEl.textContent = state === "same" ? "제출완료" : state === "changed" ? "수정됨" : "미제출";
+    statusEl.classList.toggle("done", state === "same");
+    statusEl.classList.toggle("edited", state === "changed");
+    btn.textContent = state === "none" ? "제출하기" : "다시 제출하기";
+  }
+  document.addEventListener("input", e => {
+    if (e.target && /^diary-(q[1-4]|free)$/.test(e.target.id)) refreshSubmitChip("diary");
+  });
 
   // 플래너/일기 둘 다 이미 계속 자동저장되고 있어서, 이 버튼은 저장 용도가 아니라
   // "확인했다"는 짧은 시각적 피드백만 준다.
@@ -7142,16 +7175,21 @@
         .then(() => loadTodayTileStatus()) // 홈 화면 "오늘의 공부" 카드도 바로 반영
         .catch(err => console.error(err));
     }
+    const kind = statusId === "planSubmitStatus" ? "plan" : "diary";
+    submitServerDone[kind] = true;
+    try { localStorage.setItem(submitSnapKey(kind), currentSubmitSig(kind)); } catch (e) {}
     const statusEl = statusId ? document.getElementById(statusId) : null;
     if (statusEl) {
       statusEl.textContent = "제출완료";
       statusEl.classList.add("done");
+      statusEl.classList.remove("edited");
     }
     btn.textContent = "제출완료 ✓";
     btn.disabled = true;
     setTimeout(() => {
       btn.textContent = "다시 제출하기";
       btn.disabled = false;
+      refreshSubmitChip(kind);
     }, 1200);
   }
 
@@ -7173,6 +7211,8 @@
         if (q3) q3.value = data.q3 || "";
         if (q4) q4.value = data.q4 || "";
         if (free) free.value = data.free || "";
+        submitContentReady.diary = true;
+        refreshSubmitChip("diary");
       })
       .catch(err => console.error(err));
   }
@@ -8071,6 +8111,7 @@
     planApi({ action: "plan_list", date: getLocalDateKey() })
       .then(data => {
         planItems = data.items || [];
+        submitContentReady.plan = true;
         initialPlanLocked = planItems.length > 0; // 이미 항목이 있으면 최초 계획은 이미 세워진 것
         restorePlannerBodyFromGate(); // 이 페이지에 다시 들어올 때마다 일단 제자리로 되돌려둔 뒤 판단한다
         renderPlanner();
@@ -8169,6 +8210,7 @@
     document.getElementById("plannerCountBadge").textContent = done + "/" + total;
 
     renderPlannerOriginal();
+    refreshSubmitChip("plan");
   }
 
   function renderPlannerOriginal() {
@@ -10626,6 +10668,7 @@
       if (btn.dataset.flash === "1") return;
       statusEl.textContent = state === "same" ? "제출완료" : state === "changed" ? "수정됨" : "미제출";
       statusEl.classList.toggle("done", state === "same");
+      statusEl.classList.toggle("edited", state === "changed");
       btn.textContent = state === "none" ? "제출하기" : "다시 제출하기";
       btn.disabled = false;
     });
