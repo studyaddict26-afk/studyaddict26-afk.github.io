@@ -1516,15 +1516,17 @@
   /* 내신 카드 전용 — 과목명/소음버튼/시험시간/문항개수 네 칸을 진짜 2열 그리드로 묶어서,
      두 행의 왼쪽·오른쪽 칸 너비가 내용과 무관하게 항상 정확히 일치하도록 한다
      (독립된 flex row 두 개로 나누면 버튼 내용 때문에 폭이 미묘하게 어긋날 수 있었음). */
-  .mex-field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; align-items: end; }
-  /* 과목명·시험 시간·문항 개수 세 칸을 'ㄴ' 모양의 한 덩어리로 이어 붙인다(소음 설정 버튼만 따로). */
+  .mex-field-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; align-items: end; }
+  /* 시험지 이름 / 과목 / 시험 시간 / 문항 개수 네 칸을 한 덩어리로 이어 붙인다(소음 설정 버튼만 따로). */
   .mex-field-grid .mex-field { background: var(--cream); border: 1px solid var(--line); padding: 9px 14px 8px; gap: 2px; }
   .mex-field-grid .mex-field:focus-within { border-color: var(--green); position: relative; z-index: 1; }
-  .mex-field-grid .mex-field input { border: none; background: transparent; padding: 4px 0; outline: none; }
-  .mex-field-grid .mex-field-subject { border-radius: 12px 12px 0 0; }
-  .mex-field-grid .mex-field-minutes { margin-top: -1px; border-radius: 0 0 0 12px; }
+  .mex-field-grid .mex-field input, .mex-field-grid .mex-field select { border: none; background: transparent; padding: 4px 0; outline: none; cursor: pointer; }
+  .mex-field-grid .mex-field input[type="text"] { cursor: text; }
+  .mex-field-grid .mex-field-name { grid-column: 1 / span 2; border-radius: 12px 12px 0 0; }
+  .mex-field-grid .mex-field-subject { margin-top: -1px; border-radius: 0 0 0 12px; }
+  .mex-field-grid .mex-field-minutes { margin-top: -1px; margin-left: -1px; border-radius: 0; }
   .mex-field-grid .mex-field-count { margin-top: -1px; margin-left: -1px; border-radius: 0 12px 12px 0; }
-  .mex-field-grid .exsim-top-btn { width: 66%; justify-self: center; padding: 8px 10px; margin-bottom: 12px; }
+  .mex-field-grid .exsim-top-btn { width: 84%; justify-self: center; padding: 8px 10px; margin-bottom: 12px; }
   .mex-field-grid .exsim-top-btn-ico { font-size: 1rem; }
   .mex-field-grid .exsim-top-btn-label { font-size: 0.78rem; }
   .mex-field-grid .exsim-top-btn-sub { font-size: 0.64rem; }
@@ -2861,6 +2863,17 @@
     display: flex; flex-direction: column;
     padding: 56px 16px 22px 16px;
   }
+  .admin-mex-list { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
+  .admin-mex-card { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+  .admin-mex-head { font-size: 0.86rem; color: var(--ink); }
+  .admin-mex-sec { border-top: 1px solid var(--line); padding-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+  .admin-mex-sec-title { font-size: 0.82rem; font-weight: 800; color: var(--ink); }
+  .admin-mex-sec-title span { font-size: 0.7rem; font-weight: 600; color: var(--ink-soft); margin-left: 6px; }
+  .admin-mex-q { font-size: 0.72rem; font-weight: 700; color: var(--ink-soft); }
+  .admin-mex-a { font-size: 0.82rem; color: var(--ink); white-space: pre-wrap; line-height: 1.55; }
+  .admin-mex-empty { color: var(--ink-soft); font-size: 0.76rem; }
+  .admin-mex-note { background: var(--cream); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
+  .admin-mex-note-head { font-size: 0.8rem; font-weight: 800; color: var(--green-deep); }
   .admin-sidebar-top { padding: 0 6px 20px 6px; border-bottom: 1px solid rgba(255,255,255,0.14); margin-bottom: 16px; text-align: center; }
   .admin-logo { font-size: 1.02rem; font-weight: 800; letter-spacing: -0.01em; text-align: center; }
   .admin-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
@@ -4833,15 +4846,27 @@
     <div class="exsim-wrap">
       <div class="exsim-naeshin-card">
         <div class="mex-field-grid">
-          <div class="mex-field mex-field-subject">
-            <label>과목명</label>
-            <input type="text" id="exsimNaeshinSubject" placeholder="예: OO 고등학교 25년도 중간고사 수학 기출">
+          <div class="mex-field mex-field-name">
+            <label>시험지 이름</label>
+            <input type="text" id="exsimNaeshinName" placeholder="예: OO 고등학교 25년도 중간고사 수학 기출">
           </div>
           <button type="button" class="exsim-top-btn" onclick="exsimOpenNoisePanel()">
             <span class="exsim-top-btn-ico">🔊</span>
             <span class="exsim-top-btn-text"><span class="exsim-top-btn-label">시험장 소음 설정하기</span><span class="exsim-top-btn-sub">설정 완료</span></span>
             <span class="exsim-top-btn-arrow">›</span>
           </button>
+          <div class="mex-field mex-field-subject">
+            <label>과목</label>
+            <select id="exsimNaeshinSubject">
+              <option value="">선택해주세요</option>
+              <option value="수학">수학</option>
+              <option value="영어">영어</option>
+              <option value="국어">국어</option>
+              <option value="과학">과학</option>
+              <option value="사회">사회</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
           <div class="mex-field mex-field-minutes">
             <label>시험 시간(분)</label>
             <input type="number" id="exsimNaeshinMinutes" min="10" max="180" value="50">
@@ -6295,6 +6320,9 @@
               <button class="admin-nav-item" type="button" onclick="showAdminPanel('students', this)">
                 <span class="admin-nav-ico">🔑</span> 학생 계정 관리
               </button>
+              <button class="admin-nav-item" type="button" onclick="showAdminPanel('mex', this)">
+                <span class="admin-nav-ico">📊</span> 모의고사 제출 현황
+              </button>
             </div>
           </div>
 
@@ -6522,6 +6550,25 @@
           </div>
           <div id="adminFormsList" class="admin-forms-list"></div>
           <div class="admin-empty" id="adminFormsEmptyMsg" style="display:none;">아직 제출된 신청서가 없습니다.</div>
+        </div>
+
+        <div class="admin-panel" id="adminPanelMex" style="display:none;">
+          <div class="admin-page-head">
+            <span class="admin-page-ico">📊</span>
+            <div>
+              <h2>모의고사 제출 현황</h2>
+              <div class="split"></div>
+              <p class="admin-page-sub">학생들이 '제출하기'를 누른 모의고사·내신 피드백과 성찰 노트를 확인합니다. 제출하지 않은 임시 작성 내용은 보이지 않습니다.</p>
+            </div>
+          </div>
+          <div class="admin-toolbar">
+            <select id="adminMexStudentFilter" onchange="renderAdminMex()" style="padding:8px 10px; border:1px solid var(--line); border-radius:8px; font-family:inherit;">
+              <option value="">전체 학생</option>
+            </select>
+            <button type="button" class="admin-status-btn" onclick="loadAdminMex()">새로고침</button>
+          </div>
+          <div id="adminMexList" class="admin-mex-list"></div>
+          <div class="admin-empty" id="adminMexEmptyMsg" style="display:none;">아직 제출된 내용이 없습니다.</div>
         </div>
 
         <div class="admin-panel" id="adminPanelStudents" style="display:none;">
@@ -9170,6 +9217,7 @@
     exsimCloseNoisePanel();
   }
   function initExamNaeshin() {
+    document.getElementById("exsimNaeshinName").value = "";
     document.getElementById("exsimNaeshinSubject").value = "";
     document.getElementById("exsimNaeshinMinutes").value = "50";
     document.getElementById("exsimNaeshinCount").value = "20";
@@ -9179,20 +9227,25 @@
   // 바로 "진행 중" 상태로 시작한다(exsimIsSimpleMode로 판별해 타임라인/문구만 간소화).
   function exsimIsSimpleMode(period) { return period.pre === period.ready && period.ready === period.start; }
   function exsimStartNaeshin() {
+    const nameInput = document.getElementById("exsimNaeshinName");
     const subjectInput = document.getElementById("exsimNaeshinSubject");
     const minutesInput = document.getElementById("exsimNaeshinMinutes");
     const countInput = document.getElementById("exsimNaeshinCount");
-    // 과목명/시험 시간/문항 개수를 전부 입력해야만 시작 가능 — 하나라도 비어있으면 막고 어떤 칸이
-    // 비었는지 토스트로 알려준다.
-    if (!subjectInput.value.trim()) { showToast("과목명을 입력해주세요"); subjectInput.focus(); return; }
+    // 시험지 이름/과목/시험 시간/문항 개수를 전부 입력해야만 시작 가능 — 하나라도 비어있으면 막고
+    // 어떤 칸이 비었는지 토스트로 알려준다.
+    if (!nameInput.value.trim()) { showToast("시험지 이름을 입력해주세요"); nameInput.focus(); return; }
+    if (!subjectInput.value) { showToast("과목을 선택해주세요"); subjectInput.focus(); return; }
     if (!minutesInput.value.trim()) { showToast("시험 시간(분)을 입력해주세요"); minutesInput.focus(); return; }
     if (!countInput.value.trim()) { showToast("문항 개수를 입력해주세요"); countInput.focus(); return; }
-    const subject = subjectInput.value.trim();
+    // 화면 곳곳(시험 진행/종료 화면, 기록)에 "과목" 자리로 보이던 이름은 시험지 이름을 그대로 쓰고,
+    // 고른 과목은 subjectCategory로 함께 들고 다닌다.
+    const subject = nameInput.value.trim();
+    const subjectCategory = subjectInput.value;
     const minutes = Math.max(1, Math.min(300, Number(minutesInput.value) || 50));
     const count = Math.max(1, Math.min(100, Number(countInput.value) || 20));
     const now = new Date();
     const nowHM = minToHM(now.getHours() * 60 + now.getMinutes());
-    exsimOpen({ id: "naeshin", periodLabel: "내신", subject: subject, pre: nowHM, ready: nowHM, start: nowHM, end: minToHM(now.getHours() * 60 + now.getMinutes() + minutes), count: count });
+    exsimOpen({ id: "naeshin", periodLabel: "내신", subject: subject, subjectCategory: subjectCategory, pre: nowHM, ready: nowHM, start: nowHM, end: minToHM(now.getHours() * 60 + now.getMinutes() + minutes), count: count });
   }
 
   // ── 수능 시뮬레이션: 시험 과목 선택 팝업(라디오 버튼, 한 번에 한 과목만 선택 가능) + 선택 정보 카드 ──
@@ -10010,6 +10063,7 @@
     list.unshift({
       periodLabel: state.period.periodLabel,
       subject: state.period.subject,
+      subjectCategory: state.period.subjectCategory || "",
       date: getLocalDateKey(),
       durationSec: state.elapsedSec,
       laps: state.laps.map(l => l.sec),
@@ -10248,6 +10302,7 @@
     document.getElementById("mexHomeWrap").style.display = "flex";
     mexCloseNewExamPopup();
     mexRenderList();
+    mexRetryUnsyncedSubmissions();
   }
   // 목록 위 "과목 선택하기" 버튼 — 카테고리(모의고사/내신) 안에 실제로 기록된 과목만 팝업으로 골라 필터링.
   function mexSetSubjectFilter(subject) {
@@ -10680,6 +10735,55 @@
       btn.disabled = false;
     });
   }
+  // ── 제출본 서버 전송 (관리자 확인용) ──
+  function mexSubmissionRequest(exam, kindName) {
+    const sub = kindName === "feedback" ? exam.feedbackSubmitted : exam.reflectionSubmitted;
+    if (!sub) return null;
+    return {
+      action: "mex_submit",
+      examId: exam.id,
+      kind: kindName,
+      meta: {
+        title: exam.title, periodLabel: exam.periodLabel || "", subject: exam.subject, date: exam.date,
+        category: exam.category || "mock", scoreMax: exam.scoreMax || "", scoreMine: exam.scoreMine || "",
+      },
+      payload: kindName === "feedback"
+        ? sub.data
+        : { wrongNotes: sub.wrongNotes, extraNums: sub.extraNums, count: exam.count },
+    };
+  }
+  function mexMarkSynced(examId, kindName, at) {
+    const field = kindName === "feedback" ? "feedbackSubmitted" : "reflectionSubmitted";
+    const list = mexLoadExams();
+    const rec = list.find(e => e.id === examId);
+    if (rec && rec[field] && rec[field].at === at) {
+      rec[field].synced = true;
+      mexSaveExams(list);
+    }
+    if (mexCurrentExam && mexCurrentExam.id === examId && mexCurrentExam[field] && mexCurrentExam[field].at === at) {
+      mexCurrentExam[field].synced = true;
+    }
+  }
+  function mexSendSubmission(exam, kindName) {
+    const req = mexSubmissionRequest(exam, kindName);
+    if (!req) return Promise.resolve(false);
+    const at = (kindName === "feedback" ? exam.feedbackSubmitted : exam.reflectionSubmitted).at;
+    return planApi(req).then(res => {
+      if (!res || !res.ok) throw new Error((res && res.error) || "mex_submit failed");
+      mexMarkSynced(exam.id, kindName, at);
+      return true;
+    }).catch(err => {
+      console.error(err);
+      return false;
+    });
+  }
+  function mexRetryUnsyncedSubmissions() {
+    mexLoadExams().forEach(exam => ["feedback", "reflection"].forEach(kindName => {
+      const sub = kindName === "feedback" ? exam.feedbackSubmitted : exam.reflectionSubmitted;
+      if (sub && sub.synced !== true) mexSendSubmission(exam, kindName);
+    }));
+  }
+  window.addEventListener("online", mexRetryUnsyncedSubmissions);
   ["input", "change"].forEach(evt => document.addEventListener(evt, e => {
     const id = e.target && e.target.id;
     if (!id || !mexCurrentExam) return;
@@ -10713,12 +10817,18 @@
     }
     mexCollectReviewIntoExam(exam);
     const copy = obj => JSON.parse(JSON.stringify(obj));
-    if (statusId === "mexFeedbackSubmitStatus") {
+    const isFeedback = statusId === "mexFeedbackSubmitStatus";
+    if (isFeedback) {
       exam.feedbackSubmitted = { at: Date.now(), data: copy(exam.feedback) };
     } else {
       exam.reflectionSubmitted = { at: Date.now(), wrongNotes: copy(exam.wrongNotes), extraNums: copy(exam.reflectionExtraNums) };
     }
     mexSaveExamRecord(exam);
+    // 관리자가 볼 수 있도록 제출본을 서버에도 저장한다. 서버 전송에 실패해도 학생 화면의 제출 상태는
+    // 그대로 두고, 아직 전송 안 된 제출본(synced 아님)은 목록 화면에 들어올 때 자동으로 다시 보낸다.
+    mexSendSubmission(exam, isFeedback ? "feedback" : "reflection").then(ok => {
+      if (!ok) showToast("서버 전송이 지연되고 있어요. 나중에 자동으로 다시 시도할게요");
+    });
     mexRenderReflectionChips();
     const statusEl = document.getElementById(statusId);
     statusEl.textContent = "제출완료";
@@ -11507,10 +11617,95 @@
     document.getElementById("adminPanelForms").style.display = name === "forms" ? "block" : "none";
     document.getElementById("adminPanelStudents").style.display = name === "students" ? "block" : "none";
     document.getElementById("adminPanelLinks").style.display = name === "links" ? "block" : "none";
+    document.getElementById("adminPanelMex").style.display = name === "mex" ? "block" : "none";
+    if (name === "mex") loadAdminMex();
     if (name === "schedule") renderAdminSchedule();
     if (name === "availability") renderAvailability();
     if (name === "forms") renderForms();
     if (name === "students") renderStudents();
+  }
+  // ── 관리자: 모의고사·내신 제출 현황 (Val Town의 mex_admin_list — Firebase 관리자 로그인 토큰으로 인증) ──
+  let adminMexItems = [];
+  function loadAdminMex() {
+    const list = document.getElementById("adminMexList");
+    const user = auth.currentUser;
+    if (!user) return;
+    list.innerHTML = '<div class="admin-empty">불러오는 중...</div>';
+    user.getIdToken().then(idToken =>
+      fetch(CHAT_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "mex_admin_list", idToken: idToken }),
+      }).then(res => res.json())
+    ).then(data => {
+      if (!data || !Array.isArray(data.items)) throw new Error((data && data.error) || "불러오지 못했어요");
+      adminMexItems = data.items;
+      const select = document.getElementById("adminMexStudentFilter");
+      const current = select.value;
+      const ids = [...new Set(adminMexItems.map(i => i.studentId))].sort();
+      select.innerHTML = '<option value="">전체 학생</option>' + ids.map(id => '<option value="' + escapeHtml(id) + '">' + escapeHtml(id) + '</option>').join("");
+      if (ids.includes(current)) select.value = current;
+      renderAdminMex();
+    }).catch(err => {
+      console.error(err);
+      list.innerHTML = '<div class="admin-empty">제출 현황을 불러오지 못했습니다. (' + escapeHtml(String(err.message || err)) + ')</div>';
+    });
+  }
+  const ADMIN_MEX_FEEDBACK_LABELS = [
+    ["q1", "1. 오늘 시험 전체적으로 어땠나요?"],
+    ["q2", "2. 시간이 가장 부족했거나 힘들었던 부분은 어디였고, 왜 그랬나요?"],
+    ["q3", "3. 이번 시험에서 잘 풀렸던 부분이나 전략은 무엇인가요?"],
+    ["q4", "4. 다음 시험까지 개선하고 싶은 부분은 무엇인가요?"],
+    ["free", "자유 기록"],
+  ];
+  const ADMIN_MEX_REFLECTION_LABELS = [
+    ["q1", "어떤 개념이나 포인트를 놓쳤나요?"],
+    ["q2", "나의 잘못된 사고 과정"],
+    ["q3", "올바른 사고 과정"],
+    ["q4", "다음엔 어떻게 접근할 건가요?"],
+  ];
+  const ADMIN_MEX_REASON_LABELS = { concept: "개념 부족", mistake: "실수 (계산·표시 등)", time: "시간 부족", comprehension: "지문·조건 이해 부족", etc: "직접 입력", custom: "직접 입력" };
+  function adminMexQa(label, text) {
+    return '<div class="admin-mex-qa"><div class="admin-mex-q">' + escapeHtml(label) + '</div><div class="admin-mex-a">' + (text ? escapeHtml(text) : '<span class="admin-mex-empty">(작성 안 함)</span>') + '</div></div>';
+  }
+  function renderAdminMex() {
+    const list = document.getElementById("adminMexList");
+    const empty = document.getElementById("adminMexEmptyMsg");
+    const filter = document.getElementById("adminMexStudentFilter").value;
+    const items = adminMexItems.filter(i => !filter || i.studentId === filter);
+    const groups = {};
+    items.forEach(i => {
+      const key = i.studentId + "" + i.examId;
+      (groups[key] = groups[key] || { info: i, feedback: null, reflection: null });
+      groups[key][i.kind] = i;
+    });
+    const cards = Object.values(groups);
+    empty.style.display = cards.length ? "none" : "block";
+    list.innerHTML = cards.map(g => {
+      const i = g.info;
+      const score = i.scoreMine ? (escapeHtml(i.scoreMine) + (i.scoreMax ? "/" + escapeHtml(i.scoreMax) : "") + "점") : "채점 전";
+      const stamp = it => it ? new Date(it.submittedAt).toLocaleString("ko-KR") : "";
+      let html = '<div class="admin-mex-card"><div class="admin-mex-head"><b>' + escapeHtml(i.studentId) + '</b> · ' +
+        (i.category === "naeshin" ? "내신" : "모의고사") + ' · ' + escapeHtml((i.periodLabel ? i.periodLabel + " " : "") + i.subject) +
+        ' · ' + escapeHtml(i.title) + ' · ' + escapeHtml(i.date) + ' · ' + score + '</div>';
+      if (g.feedback) {
+        html += '<div class="admin-mex-sec"><div class="admin-mex-sec-title">피드백 <span>' + stamp(g.feedback) + ' 제출</span></div>' +
+          ADMIN_MEX_FEEDBACK_LABELS.map(([k, label]) => adminMexQa(label, g.feedback.payload[k])).join("") + '</div>';
+      }
+      if (g.reflection) {
+        const notes = g.reflection.payload.wrongNotes || {};
+        const nums = Object.keys(notes).map(Number).sort((a, b) => a - b);
+        html += '<div class="admin-mex-sec"><div class="admin-mex-sec-title">성찰 노트 <span>' + stamp(g.reflection) + ' 제출</span></div>' +
+          (nums.length ? nums.map(n => {
+            const note = notes[n];
+            const kindLabel = note.kind === "wrong" ? "틀린 문제" : note.kind === "extra" ? "맞았지만 성찰할 문제" : "";
+            const reason = note.reason === "custom" || note.reason === "etc" ? (note.reasonCustom || "직접 입력") : (ADMIN_MEX_REASON_LABELS[note.reason] || "");
+            return '<div class="admin-mex-note"><div class="admin-mex-note-head">' + n + '번' + (kindLabel ? ' · ' + kindLabel : '') + (reason ? ' · 오답 원인: ' + escapeHtml(reason) : '') + '</div>' +
+              ADMIN_MEX_REFLECTION_LABELS.map(([k, label]) => adminMexQa(label, note[k])).join("") + '</div>';
+          }).join("") : '<div class="admin-mex-empty">작성된 성찰 노트가 없습니다.</div>') + '</div>';
+      }
+      return html + '</div>';
+    }).join("");
   }
   function renderAdminTable() {
     const body = document.getElementById("adminTableBody");
