@@ -1488,8 +1488,8 @@
   /* ── 모의고사·내신 관리하기 (Momentum 앱 채점/시간분석 화면 벤치마킹) ── */
   .mex-wrap { max-width: 760px; width: 100%; margin: 24px auto 0 auto; padding: 0 20px 40px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; }
   .mex-new-btn {
-    width: 100%; font-family: inherit; font-size: 0.88rem; font-weight: 700; color: var(--green-deep);
-    background: var(--green-soft); border: 1.5px solid #B9D6C2; border-radius: 12px; padding: 14px; cursor: pointer;
+    width: 100%; font-family: inherit; font-size: 0.78rem; font-weight: 700; color: var(--green-deep);
+    background: var(--green-soft); border: 1.5px solid #B9D6C2; border-radius: 12px; padding: 9px; cursor: pointer;
   }
   .mex-new-btn:hover { background: #E2EFE6; }
   .mex-top-row { display: flex; border: 1.5px solid #B9D6C2; border-radius: 12px; background: var(--green-soft); overflow: hidden; }
@@ -10315,7 +10315,7 @@
     }
     el.innerHTML = list.map(exam => {
       const scoreText = exam.scoreMine ? escapeHtml(exam.scoreMine) + '점' : '채점 전';
-      const rowText = escapeHtml(exam.subject) + ' · ' + escapeHtml(exam.date) + '<span class="mex-list-row-divider"></span><span class="mex-list-row-gray">' + escapeHtml(exam.title) + ' · ' + scoreText + '</span>';
+      const rowText = escapeHtml(exam.subject) + ' · ' + escapeHtml(exam.date) + '<span class="mex-list-row-divider"></span><span class="mex-list-row-gray">' + scoreText + ' · ' + escapeHtml(exam.title) + '</span>';
       return '<div class="mex-list-row">' +
         '<button type="button" class="mex-list-row-main" onclick="mexOpenDetail(\'' + exam.id + '\')">' + rowText + '</button>' +
         '<button type="button" class="mex-list-print-btn" onclick="mexPrintExam(\'' + exam.id + '\')">프린트하기</button>' +
@@ -10345,6 +10345,7 @@
     setTimeout(() => window.print(), 200);
   }
   function mexBackToList() {
+    if (mexDraftTimer) mexPersistDraft();
     mexCurrentExam = null;
     document.getElementById("mexlistHead").style.display = "";
     document.getElementById("mexDetailWrap").style.display = "none";
@@ -10464,14 +10465,8 @@
     document.getElementById("mexReflectionForm").style.display = "none";
     mexRenderReflectionChips();
     mexLoadFeedbackFields(exam);
-    [["mexFeedbackSubmitStatus", "mexFeedbackSubmitBtn"], ["mexReflectionSubmitStatus", "mexReflectionSubmitBtn"]].forEach(([statusId, btnId]) => {
-      const statusEl = document.getElementById(statusId);
-      const btn = document.getElementById(btnId);
-      statusEl.textContent = "미제출";
-      statusEl.classList.remove("done");
-      btn.textContent = "제출하기";
-      btn.disabled = false;
-    });
+    ["mexFeedbackSubmitBtn", "mexReflectionSubmitBtn"].forEach(id => { delete document.getElementById(id).dataset.flash; });
+    mexSyncSubmitStatus();
   }
   function mexReflectionNoteFilled(note) {
     return !!(note && (note.reason || note.reasonCustom || note.q1 || note.q2 || note.q3 || note.q4));
@@ -10561,6 +10556,7 @@
     mexReflectionNums.sort((a, b) => a - b);
     mexCloseReflectionAddPopup();
     mexSelectReflectionNum(validNums[0]);
+    mexPersistDraft();
   }
   function mexRemoveReflectionQuestion() {
     if (mexReflectionCurrentNum == null) return;
@@ -10569,7 +10565,77 @@
     mexReflectionCurrentNum = null;
     document.getElementById("mexReflectionForm").style.display = "none";
     mexRenderReflectionChips();
+    mexPersistDraft();
   }
+  // 자동 임시저장 — 제출하기를 누르지 않아도 학생 본인 화면에는 쓴 내용이 그대로 남는다.
+  // "제출"은 별도로 feedbackSubmitted / reflectionSubmitted 스냅샷을 남기는 동작이라
+  // (관리자에게 보여줄 내용은 이 제출본 기준), 임시저장본과는 따로 관리한다.
+  function mexCollectReviewIntoExam(exam) {
+    mexCaptureReflectionForm();
+    const wrongNums = mexReflectionWrongNums();
+    const wrongNotes = {};
+    Object.keys(mexReflectionDraft).forEach(k => {
+      const note = mexReflectionDraft[k];
+      if (mexReflectionNoteFilled(note) || (note && note.kind)) wrongNotes[k] = note;
+    });
+    exam.wrongNotes = wrongNotes;
+    exam.reflectionExtraNums = mexReflectionNums.filter(n => !wrongNums.includes(n));
+    exam.feedback = {
+      q1: document.getElementById("mexFeedbackQ1").value.trim(),
+      q2: document.getElementById("mexFeedbackQ2").value.trim(),
+      q3: document.getElementById("mexFeedbackQ3").value.trim(),
+      q4: document.getElementById("mexFeedbackQ4").value.trim(),
+      free: document.getElementById("mexFeedbackFree").value.trim(),
+    };
+  }
+  function mexSaveExamRecord(exam) {
+    const list = mexLoadExams();
+    const idx = list.findIndex(e => e.id === exam.id);
+    if (idx !== -1) list[idx] = exam;
+    mexSaveExams(list);
+  }
+  let mexDraftTimer = null;
+  function mexScheduleDraftSave() {
+    clearTimeout(mexDraftTimer);
+    mexDraftTimer = setTimeout(mexPersistDraft, 500);
+  }
+  function mexPersistDraft() {
+    clearTimeout(mexDraftTimer);
+    mexDraftTimer = null;
+    const exam = mexCurrentExam;
+    if (!exam) return;
+    mexCollectReviewIntoExam(exam);
+    mexSaveExamRecord(exam);
+    mexSyncSubmitStatus();
+  }
+  function mexReflectionPayload(source) {
+    return JSON.stringify({ n: source.wrongNotes || {}, e: source.reflectionExtraNums || source.extraNums || [] });
+  }
+  // 제출한 뒤 내용을 고치면 "수정됨"으로 바뀌어서, 다시 제출해야 관리자에게 반영된다는 걸 알 수 있다.
+  function mexSyncSubmitStatus() {
+    const exam = mexCurrentExam;
+    if (!exam) return;
+    const fbSub = exam.feedbackSubmitted;
+    const rfSub = exam.reflectionSubmitted;
+    const fbState = !fbSub ? "none" : (JSON.stringify(fbSub.data) === JSON.stringify(exam.feedback || {}) ? "same" : "changed");
+    const rfState = !rfSub ? "none" : (JSON.stringify({ n: rfSub.wrongNotes || {}, e: rfSub.extraNums || [] }) === mexReflectionPayload(exam) ? "same" : "changed");
+    [["mexFeedbackSubmitStatus", "mexFeedbackSubmitBtn", fbState], ["mexReflectionSubmitStatus", "mexReflectionSubmitBtn", rfState]].forEach(([statusId, btnId, state]) => {
+      const statusEl = document.getElementById(statusId);
+      const btn = document.getElementById(btnId);
+      if (btn.dataset.flash === "1") return;
+      statusEl.textContent = state === "same" ? "제출완료" : state === "changed" ? "수정됨" : "미제출";
+      statusEl.classList.toggle("done", state === "same");
+      btn.textContent = state === "none" ? "제출하기" : "다시 제출하기";
+      btn.disabled = false;
+    });
+  }
+  ["input", "change"].forEach(evt => document.addEventListener(evt, e => {
+    const id = e.target && e.target.id;
+    if (!id || !mexCurrentExam) return;
+    if (/^mexFeedback(Q\d|Free)$/.test(id) || /^mexReflection(Q\d|Reason|ReasonCustom)$/.test(id)) mexScheduleDraftSave();
+  }));
+  window.addEventListener("pagehide", () => { if (mexDraftTimer) mexPersistDraft(); });
+  document.addEventListener("visibilitychange", () => { if (document.hidden && mexDraftTimer) mexPersistDraft(); });
   // "오늘의 공부" 페이지의 미제출/제출하기(quickSubmit)와 같은 방식 — 누르면 저장하고 버튼이
   // 잠깐 "제출완료 ✓"로 바뀌었다가 다시 눌러 고칠 수 있게 풀린다. 피드백·성찰노트는 같은 시험
   // 기록 하나에 함께 저장되므로, 둘 중 어느 버튼을 눌러도 현재 화면의 내용을 전부 저장한다.
@@ -10594,36 +10660,24 @@
         return;
       }
     }
-    const wrongNums = mexReflectionWrongNums();
-    const wrongNotes = {};
-    Object.keys(mexReflectionDraft).forEach(k => {
-      const note = mexReflectionDraft[k];
-      if (mexReflectionNoteFilled(note) || (note && note.kind)) wrongNotes[k] = note;
-    });
-    exam.wrongNotes = wrongNotes;
-    exam.reflectionExtraNums = mexReflectionNums.filter(n => !wrongNums.includes(n));
-    exam.feedback = {
-      q1: document.getElementById("mexFeedbackQ1").value.trim(),
-      q2: document.getElementById("mexFeedbackQ2").value.trim(),
-      q3: document.getElementById("mexFeedbackQ3").value.trim(),
-      q4: document.getElementById("mexFeedbackQ4").value.trim(),
-      free: document.getElementById("mexFeedbackFree").value.trim(),
-    };
-    const list = mexLoadExams();
-    const idx = list.findIndex(e => e.id === exam.id);
-    if (idx !== -1) list[idx] = exam;
-    mexSaveExams(list);
-    mexRenderReflectionChips();
-    const statusEl = statusId ? document.getElementById(statusId) : null;
-    if (statusEl) {
-      statusEl.textContent = "제출완료";
-      statusEl.classList.add("done");
+    mexCollectReviewIntoExam(exam);
+    const copy = obj => JSON.parse(JSON.stringify(obj));
+    if (statusId === "mexFeedbackSubmitStatus") {
+      exam.feedbackSubmitted = { at: Date.now(), data: copy(exam.feedback) };
+    } else {
+      exam.reflectionSubmitted = { at: Date.now(), wrongNotes: copy(exam.wrongNotes), extraNums: copy(exam.reflectionExtraNums) };
     }
+    mexSaveExamRecord(exam);
+    mexRenderReflectionChips();
+    const statusEl = document.getElementById(statusId);
+    statusEl.textContent = "제출완료";
+    statusEl.classList.add("done");
+    btn.dataset.flash = "1";
     btn.textContent = "제출완료 ✓";
     btn.disabled = true;
     setTimeout(() => {
-      btn.textContent = "다시 제출하기";
-      btn.disabled = false;
+      delete btn.dataset.flash;
+      mexSyncSubmitStatus();
     }, 1200);
   }
   // 채점 팝업 — 문항 하나하나 누르는 대신 "점수"와 "틀린 문항 번호"만 입력하면, 나머지는
