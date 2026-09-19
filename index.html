@@ -1516,8 +1516,15 @@
   /* 내신 카드 전용 — 과목명/소음버튼/시험시간/문항개수 네 칸을 진짜 2열 그리드로 묶어서,
      두 행의 왼쪽·오른쪽 칸 너비가 내용과 무관하게 항상 정확히 일치하도록 한다
      (독립된 flex row 두 개로 나누면 버튼 내용 때문에 폭이 미묘하게 어긋날 수 있었음). */
-  .mex-field-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px; row-gap: 14px; align-items: end; }
-  .mex-field-grid .exsim-top-btn { width: 66%; justify-self: center; padding: 8px 10px; }
+  .mex-field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; align-items: end; }
+  /* 과목명·시험 시간·문항 개수 세 칸을 'ㄴ' 모양의 한 덩어리로 이어 붙인다(소음 설정 버튼만 따로). */
+  .mex-field-grid .mex-field { background: var(--cream); border: 1px solid var(--line); padding: 9px 14px 8px; gap: 2px; }
+  .mex-field-grid .mex-field:focus-within { border-color: var(--green); position: relative; z-index: 1; }
+  .mex-field-grid .mex-field input { border: none; background: transparent; padding: 4px 0; outline: none; }
+  .mex-field-grid .mex-field-subject { border-radius: 12px 12px 0 0; }
+  .mex-field-grid .mex-field-minutes { margin-top: -1px; border-radius: 0 0 0 12px; }
+  .mex-field-grid .mex-field-count { margin-top: -1px; margin-left: -1px; border-radius: 0 12px 12px 0; }
+  .mex-field-grid .exsim-top-btn { width: 66%; justify-self: center; padding: 8px 10px; margin-bottom: 12px; }
   .mex-field-grid .exsim-top-btn-ico { font-size: 1rem; }
   .mex-field-grid .exsim-top-btn-label { font-size: 0.78rem; }
   .mex-field-grid .exsim-top-btn-sub { font-size: 0.64rem; }
@@ -4826,7 +4833,7 @@
     <div class="exsim-wrap">
       <div class="exsim-naeshin-card">
         <div class="mex-field-grid">
-          <div class="mex-field">
+          <div class="mex-field mex-field-subject">
             <label>과목명</label>
             <input type="text" id="exsimNaeshinSubject" placeholder="예: OO 고등학교 25년도 중간고사 수학 기출">
           </div>
@@ -4835,11 +4842,11 @@
             <span class="exsim-top-btn-text"><span class="exsim-top-btn-label">시험장 소음 설정하기</span><span class="exsim-top-btn-sub">설정 완료</span></span>
             <span class="exsim-top-btn-arrow">›</span>
           </button>
-          <div class="mex-field">
+          <div class="mex-field mex-field-minutes">
             <label>시험 시간(분)</label>
             <input type="number" id="exsimNaeshinMinutes" min="10" max="180" value="50">
           </div>
-          <div class="mex-field">
+          <div class="mex-field mex-field-count">
             <label>문항 개수</label>
             <input type="number" id="exsimNaeshinCount" min="1" max="100" value="20">
           </div>
