@@ -10809,10 +10809,21 @@
       }
     }
     if (statusId === "mexReflectionSubmitStatus") {
-      const hasContent = Object.keys(mexReflectionDraft).some(k => mexReflectionNoteFilled(mexReflectionDraft[k]));
-      if (!hasContent) {
-        showToast("성찰 노트를 작성해주세요");
+      if (!mexReflectionNums.length) {
+        showToast("성찰 할 문제를 추가하고 작성해주세요");
         return;
+      }
+      // 추가한 문제마다 4가지 질문을 전부 채워야 제출할 수 있다 — 비어 있는 문제로 이동해서 알려준다.
+      for (const n of mexReflectionNums) {
+        const note = mexReflectionDraft[n] || {};
+        const missing = ["q1", "q2", "q3", "q4"].findIndex(k => !note[k]);
+        if (missing !== -1) {
+          mexSelectReflectionNum(n);
+          showToast(n + "번 문제의 " + (missing + 1) + "번 질문에 대한 답변을 입력해주세요");
+          const ta = document.getElementById("mexReflectionQ" + (missing + 1));
+          if (ta) ta.focus();
+          return;
+        }
       }
     }
     mexCollectReviewIntoExam(exam);
