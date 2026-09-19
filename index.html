@@ -1568,7 +1568,8 @@
      아래 보여주는 방식. 칩은 배경 없는 텍스트 버튼(채점하기/수정하기와 같은 스타일)으로,
      지금 보고 있는 번호만 초록색으로 구분한다. */
   .mex-reflection-add-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 14px; }
-  .mex-reflection-add-btn { flex: none; background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 4px 12px; font-family: inherit; font-size: 0.72rem; font-weight: 800; cursor: pointer; }
+  .mex-reflection-add-btn { flex: none; background: none; color: var(--green-deep); border: none; padding: 4px 2px; font-family: inherit; font-size: 0.76rem; font-weight: 800; cursor: pointer; transition: transform 0.15s; }
+  .mex-reflection-add-btn:hover { transform: translateY(-1px); }
   .mex-reflection-chips { display: flex; flex-wrap: wrap; gap: 4px 12px; }
   .mex-reflection-empty { font-size: 0.78rem; color: var(--ink-soft); }
   .mex-reflection-type-row { display: flex; gap: 8px; }
