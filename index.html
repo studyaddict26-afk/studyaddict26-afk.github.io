@@ -1546,18 +1546,18 @@
   .mex-list-del-btn:hover { color: #C23B3B; }
 
   .mex-detail-wrap { max-width: 1100px; width: 100%; margin: 20px auto 0 auto; padding: 0 20px 40px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; flex: 1; min-height: 0; }
-  .mex-detail-box-row { display: flex; border: 1px solid #0E3A21; border-radius: 12px; background: linear-gradient(135deg, #17492C 0%, #0F3220 100%); overflow: hidden; }
-  .mex-detail-box { flex: 1; min-width: 0; padding: 8px 12px; border-left: 1px solid rgba(255,255,255,0.1); }
+  .mex-detail-box-row { display: flex; border: 1px solid var(--line); border-radius: 12px; background: var(--cream); overflow: hidden; }
+  .mex-detail-box { flex: 1; min-width: 0; padding: 8px 12px; border-left: 1px solid var(--line); }
   .mex-detail-box:first-child { border-left: none; }
-  .mex-detail-box-label { font-size: 0.66rem; color: rgba(255,255,255,0.5); font-weight: 600; margin-bottom: 3px; }
-  .mex-detail-box-value { font-size: 0.86rem; font-weight: 800; color: #F3F3EF; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mex-detail-box-label { font-size: 0.66rem; color: var(--ink-soft); font-weight: 600; margin-bottom: 3px; }
+  .mex-detail-box-value { font-size: 0.86rem; font-weight: 800; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .mex-detail-box-score-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .mex-detail-box-clickable { cursor: pointer; }
-  .mex-detail-box-clickable:hover { background: rgba(255,255,255,0.06); }
+  .mex-detail-box-clickable:hover { background: rgba(0,0,0,0.03); }
   #mexDetailBoxLap { font-size: 0.66rem; margin-top: 7px; }
   @media (max-width: 560px) {
     .mex-detail-box-row { flex-wrap: wrap; }
-    .mex-detail-box { flex: 1 1 calc(50% - 1px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .mex-detail-box { flex: 1 1 calc(50% - 1px); border-bottom: 1px solid var(--line); }
     .mex-detail-box:nth-child(2n+1) { border-left: none; }
   }
   /* ── 성찰 노트 / 피드백 (오늘의 공부 페이지의 플래너·일기 좌우 분할 카드 재사용: record-plan-diary-card 등) ── */
@@ -1589,17 +1589,22 @@
   .mex-reflection-remove-btn { flex: none; background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.72rem; font-weight: 700; cursor: pointer; padding: 0; transition: transform 0.15s; }
   .mex-reflection-remove-btn:hover { transform: translateY(-1px); }
   .mex-reflection-remove-btn:hover { color: #C23B3B; }
+  .mex-wrongnote-reason-custom {
+    font-family: inherit; font-size: 0.78rem; color: var(--ink); border: 1px solid var(--line-dark); border-radius: 8px;
+    background: var(--paper); box-sizing: border-box; padding: 8px 10px; width: 100%;
+  }
+  .mex-wrongnote-reason-custom:focus { outline: none; border-color: var(--green); }
   .mex-wrongnote-reason {
     font-family: inherit; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; background: var(--cream); box-sizing: border-box;
     font-size: 0.78rem; padding: 8px 10px;
   }
 
   .mex-score-grade-btn {
-    flex: none; background: none; color: #F3F3EF; border: none; padding: 5px 2px;
+    flex: none; background: none; color: var(--ink); border: none; padding: 5px 2px;
     font-family: inherit; font-size: 0.66rem; font-weight: 800; cursor: pointer; transition: transform 0.15s;
   }
   .mex-score-grade-btn:hover { transform: translateY(-1px); }
-  .mex-score-grade-btn.ungraded { color: #FF8A8A; }
+  .mex-score-grade-btn.ungraded { color: #D63B3B; }
   .mex-grading-modal-body { display: flex; flex-direction: column; gap: 14px; max-height: 68vh; overflow-y: auto; overflow-x: hidden; padding: 20px; box-sizing: border-box; }
 
   /* 홈 하단 2/3: 안내 */
@@ -5010,11 +5015,12 @@
               </div>
               <div class="mex-reflection-form" id="mexReflectionForm" style="display:none;">
                 <div class="mex-reflection-form-head">
-                  <select class="mex-wrongnote-reason" id="mexReflectionReason">
+                  <select class="mex-wrongnote-reason" id="mexReflectionReason" onchange="mexToggleReasonCustom(true)">
                     <option value="">오답 원인 선택</option>
                   </select>
                   <button type="button" class="mex-reflection-remove-btn" id="mexReflectionRemoveBtn" onclick="mexRemoveReflectionQuestion()">이 번호 삭제하기 →</button>
                 </div>
+                <input type="text" class="mex-wrongnote-reason-custom" id="mexReflectionReasonCustom" placeholder="오답 원인을 직접 입력해주세요" style="display:none;">
                 <div class="diary-q-field">
                   <label>어떤 개념이나 포인트를 놓쳤나요?</label>
                   <textarea id="mexReflectionQ1"></textarea>
@@ -10435,7 +10441,7 @@
     { value: "mistake", label: "실수 (계산·표시 등)" },
     { value: "time", label: "시간 부족" },
     { value: "comprehension", label: "지문·조건 이해 부족" },
-    { value: "etc", label: "기타" },
+    { value: "custom", label: "직접 입력하기" },
   ];
   let mexReflectionNums = [];    // 현재 보여줄 번호 칩 목록(틀린 문항 ∪ 직접 추가한 문항)
   let mexReflectionDraft = {};   // 작업 중인 메모 — { 번호: {reason, memo} }, 저장 전까지는 여기서만 갱신
@@ -10467,7 +10473,7 @@
     });
   }
   function mexReflectionNoteFilled(note) {
-    return !!(note && (note.reason || note.q1 || note.q2 || note.q3 || note.q4));
+    return !!(note && (note.reason || note.reasonCustom || note.q1 || note.q2 || note.q3 || note.q4));
   }
   // 별도 설명 문구 없이도 바로 알 수 있도록, 틀린 문제(자동)와 직접 추가한 문제를 소제목으로 나눠 보여준다.
   function mexRenderReflectionChips() {
@@ -10486,22 +10492,35 @@
   // (한 번에 한 문제의 작성란만 DOM에 떠 있는 방식이라, 안 담아두면 전환할 때 내용이 날아간다).
   function mexCaptureReflectionForm() {
     if (mexReflectionCurrentNum == null) return;
+    const prev = mexReflectionDraft[mexReflectionCurrentNum] || {};
+    const reason = document.getElementById("mexReflectionReason").value;
     mexReflectionDraft[mexReflectionCurrentNum] = {
-      reason: document.getElementById("mexReflectionReason").value,
+      kind: prev.kind,
+      reason: reason,
+      reasonCustom: reason === "custom" ? document.getElementById("mexReflectionReasonCustom").value.trim() : "",
       q1: document.getElementById("mexReflectionQ1").value.trim(),
       q2: document.getElementById("mexReflectionQ2").value.trim(),
       q3: document.getElementById("mexReflectionQ3").value.trim(),
       q4: document.getElementById("mexReflectionQ4").value.trim(),
     };
   }
+  function mexToggleReasonCustom(focusIt) {
+    const isCustom = document.getElementById("mexReflectionReason").value === "custom";
+    const el = document.getElementById("mexReflectionReasonCustom");
+    el.style.display = isCustom ? "block" : "none";
+    if (isCustom && focusIt) el.focus();
+  }
   function mexSelectReflectionNum(n) {
     mexCaptureReflectionForm();
     mexReflectionCurrentNum = n;
     mexRenderReflectionChips();
     const note = mexReflectionDraft[n] || {};
+    const reasonValue = note.reason === "etc" ? "custom" : note.reason;
     document.getElementById("mexReflectionReason").innerHTML =
       '<option value="">오답 원인 선택</option>' +
-      MEX_WRONGNOTE_REASONS.map(r => '<option value="' + r.value + '"' + (note.reason === r.value ? " selected" : "") + '>' + r.label + '</option>').join("");
+      MEX_WRONGNOTE_REASONS.map(r => '<option value="' + r.value + '"' + (reasonValue === r.value ? " selected" : "") + '>' + r.label + '</option>').join("");
+    document.getElementById("mexReflectionReasonCustom").value = note.reasonCustom || "";
+    mexToggleReasonCustom();
     document.getElementById("mexReflectionQ1").value = note.q1 || "";
     document.getElementById("mexReflectionQ2").value = note.q2 || "";
     document.getElementById("mexReflectionQ3").value = note.q3 || "";
