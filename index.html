@@ -3764,6 +3764,28 @@
     #print-area.on { display: block; position: absolute; top: 0; left: 0; width: 100%; padding: 24px; }
   }
 
+  /* 모의고사 기록 프린트하기 — 인쇄할 때만 #mexPrintArea 하나만 보이게 한다 */
+  #mexPrintArea { display: none; }
+  @media print {
+    @page { margin: 14mm; }
+    body.mex-printing > *:not(#mexPrintArea) { display: none !important; }
+    body.mex-printing { background: #fff !important; }
+    body.mex-printing #mexPrintArea { display: block !important; color: #111; font-size: 11pt; line-height: 1.55; }
+    .mexp-title { font-size: 18pt; margin: 0 0 12px 0; }
+    .mexp-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; border: 1px solid #bbb; border-radius: 6px; padding: 10px 12px; margin-bottom: 14px; }
+    .mexp-meta span { display: block; font-size: 8.5pt; color: #666; }
+    .mexp-meta b { font-size: 11pt; }
+    .mexp-h2 { font-size: 13pt; margin: 18px 0 8px 0; padding-bottom: 4px; border-bottom: 2px solid #111; }
+    .mexp-qa { margin-bottom: 9px; page-break-inside: avoid; }
+    .mexp-q { font-size: 9.5pt; font-weight: 700; color: #444; }
+    .mexp-a { white-space: pre-wrap; padding-left: 8px; border-left: 3px solid #ddd; }
+    .mexp-none { color: #999; }
+    .mexp-note { border: 1px solid #ccc; border-radius: 6px; padding: 10px 12px; margin-bottom: 10px; page-break-inside: avoid; }
+    .mexp-note-head { font-weight: 800; margin-bottom: 6px; }
+    .mexp-lap .exend-lap-rows { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px 10px; }
+    .mexp-lap .exend-lap-row { display: flex; justify-content: space-between; font-size: 9pt; background: none; padding: 2px 0; border-bottom: 1px dotted #ccc; }
+    .mexp-lap .exend-lap-group-head { display: flex; justify-content: space-between; font-weight: 700; margin-top: 8px; }
+  }
   .toast-msg {
     position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%) translateY(10px);
     background: var(--ink); color: #fff; font-size: 0.82rem; font-weight: 600;
@@ -10582,9 +10604,66 @@
     document.getElementById("mexDetailWrap").style.display = "flex";
     mexRenderDetail();
   }
+  // 프린트하기 — 화면 전체를 인쇄하지 않고, 이 시험 기록(상단 정보 + 피드백 + 성찰 노트)만 깔끔한
+  // 문서로 만들어 브라우저 인쇄 창에 연결한다. 인쇄 창에서 "PDF로 저장"을 고르면 PDF로도 받을 수 있다.
+  function mexBuildPrintHtml(exam) {
+    const esc = escapeHtml;
+    const qa = (label, text) => '<div class="mexp-qa"><div class="mexp-q">' + esc(label) + '</div><div class="mexp-a">' + (text ? esc(text) : '<span class="mexp-none">(작성 안 함)</span>') + '</div></div>';
+    const score = exam.scoreMine ? esc(exam.scoreMine) + (exam.scoreMax ? " / " + esc(exam.scoreMax) : "") + "점" : "미채점";
+    const groups = (exam.passageTimeGroups && exam.passageTimeGroups.length)
+      ? exam.passageTimeGroups : mexInferPassageGroups(exam.passageTimes || []);
+    const hasLap = !exam.manualEntry && groups.some(g => g.items.some(it => it.sec > 0));
+    let totalSec = 0;
+    groups.forEach(g => g.items.forEach(it => { if (it.sec > 0) totalSec += it.sec; }));
+    const fb = (exam.feedback && typeof exam.feedback === "object") ? exam.feedback : {};
+    const notes = exam.wrongNotes || {};
+    const nums = [...new Set([...(exam.reflectionExtraNums || []), ...Object.keys(notes).map(Number)])].sort((a, b) => a - b);
+    const reasonOf = note => {
+      if (note.reason === "custom" || note.reason === "etc") return note.reasonCustom || "직접 입력";
+      const r = MEX_WRONGNOTE_REASONS.find(x => x.value === note.reason);
+      return r ? r.label : "";
+    };
+    let html = '<h1 class="mexp-title">' + esc(exam.title) + '</h1>' +
+      '<div class="mexp-meta">' +
+        '<div><span>날짜</span><b>' + esc(exam.date) + '</b></div>' +
+        '<div><span>시험</span><b>' + esc((exam.periodLabel ? exam.periodLabel + " " : "") + exam.subject) + '</b></div>' +
+        '<div><span>점수</span><b>' + score + '</b></div>' +
+        '<div><span>랩타임</span><b>' + (hasLap ? "총 " + formatDur(totalSec) : "기록 없음") + '</b></div>' +
+      '</div>';
+    if (hasLap) html += '<h2 class="mexp-h2">랩타임</h2><div class="mexp-lap">' + exsimBuildLapTableHtml(groups) + '</div>';
+    html += '<h2 class="mexp-h2">피드백</h2>' +
+      qa("1. 오늘 시험 전체적으로 어땠나요? (시간 배분, 컨디션도 편하게 적어주세요)", fb.q1) +
+      qa("2. 시간이 가장 부족했거나 힘들었던 부분은 어디였고, 왜 그랬나요?", fb.q2) +
+      qa("3. 이번 시험에서 잘 풀렸던 부분이나 전략은 무엇인가요?", fb.q3) +
+      qa("4. 다음 시험까지 개선하고 싶은 부분은 무엇인가요?", fb.q4) +
+      qa("자유 기록", fb.free);
+    html += '<h2 class="mexp-h2">성찰 노트</h2>';
+    html += nums.length ? nums.map(n => {
+      const note = notes[n] || {};
+      const kind = note.kind === "wrong" ? "틀린 문제" : note.kind === "extra" ? "맞았지만 성찰 할 문제" : "";
+      const reason = reasonOf(note);
+      return '<div class="mexp-note"><div class="mexp-note-head">' + n + '번' + (kind ? " · " + kind : "") + (reason ? " · 오답 원인: " + esc(reason) : "") + '</div>' +
+        qa("어떤 개념이나 포인트를 놓쳤나요?", note.q1) + qa("나의 잘못된 사고 과정", note.q2) +
+        qa("올바른 사고 과정", note.q3) + qa("다음엔 어떻게 접근할 건가요?", note.q4) + '</div>';
+    }).join("") : '<div class="mexp-none">작성된 성찰 노트가 없습니다.</div>';
+    return html;
+  }
   function mexPrintExam(examId) {
     mexOpenDetail(examId);
-    setTimeout(() => window.print(), 200);
+    if (mexDraftTimer) mexPersistDraft();
+    const exam = mexCurrentExam;
+    if (!exam) return;
+    let area = document.getElementById("mexPrintArea");
+    if (!area) {
+      area = document.createElement("div");
+      area.id = "mexPrintArea";
+      document.body.appendChild(area);
+    }
+    area.innerHTML = mexBuildPrintHtml(exam);
+    const cleanup = () => document.body.classList.remove("mex-printing");
+    window.addEventListener("afterprint", cleanup, { once: true });
+    document.body.classList.add("mex-printing");
+    setTimeout(() => window.print(), 150);
   }
   function mexBackToList() {
     if (mexDraftTimer) mexPersistDraft();
