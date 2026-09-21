@@ -1388,17 +1388,39 @@
   .exlv-end-btn { margin-top: 22px; font-family: inherit; font-size: 0.74rem; font-weight: 700; color: rgba(255,255,255,0.6); background: none; border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 8px 18px; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, color 0.15s, border-color 0.15s; }
   .exlv-end-btn:hover { transform: translateY(-2px); color: #fff; border-color: rgba(255,255,255,0.5); box-shadow: 0 6px 14px rgba(0,0,0,0.4); }
   /* ── 스톱워치/타이머 시작 전, 타이머 분 설정 단계 ── */
-  .gentimer-setup { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-  .gentimer-setup label { font-size: 0.82rem; font-weight: 700; color: rgba(255,255,255,0.8); }
-  .gentimer-setup input {
-    font-family: inherit; font-size: 1rem; font-weight: 700; color: #fff; text-align: center; width: 120px;
-    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; padding: 10px 14px;
+  .gentimer-setup { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .gentimer-stepper { display: flex; align-items: center; gap: 22px; }
+  .gentimer-step-btn {
+    width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.08); color: #fff;
+    border: 1px solid rgba(255,255,255,0.22); font-family: inherit; font-size: 1.3rem; font-weight: 500; line-height: 1;
+    cursor: pointer; transition: transform 0.15s, background 0.15s, border-color 0.15s;
   }
-  .gentimer-setup-btn {
-    background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 10px 28px;
-    font-family: inherit; font-size: 0.86rem; font-weight: 800; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+  .gentimer-step-btn:hover { transform: translateY(-2px); background: rgba(255,255,255,0.16); border-color: rgba(255,255,255,0.45); }
+  .gentimer-minutes { display: flex; align-items: baseline; justify-content: center; gap: 6px; min-width: 96px; }
+  .gentimer-minutes input {
+    width: 3.2ch; font-family: inherit; font-size: 2.3rem; font-weight: 800; color: #fff; text-align: center;
+    background: none; border: none; outline: none; padding: 0; -moz-appearance: textfield;
   }
-  .gentimer-setup-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(21,82,47,0.35); }
+  .gentimer-minutes input::-webkit-outer-spin-button, .gentimer-minutes input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .gentimer-minutes span { font-size: 0.9rem; font-weight: 700; color: rgba(255,255,255,0.55); }
+  .gentimer-presets { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 280px; }
+  .gentimer-presets button {
+    font-family: inherit; font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.65); background: none;
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 999px; padding: 6px 13px; cursor: pointer;
+    transition: transform 0.15s, color 0.15s, border-color 0.15s, background 0.15s;
+  }
+  .gentimer-presets button:hover { transform: translateY(-2px); color: #fff; border-color: rgba(255,255,255,0.5); }
+  .gentimer-presets button.on { color: #fff; background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.55); }
+  /* 스톱워치 랩타임 목록 — 일반 스톱워치 앱처럼 최신 랩이 맨 위, 가장 빠른 랩은 초록/가장 느린 랩은 빨강 */
+  .gentimer-laps { width: 320px; max-width: 100%; margin-top: 22px; max-height: 210px; overflow-y: auto; text-align: left; }
+  .gentimer-lap-head, .gentimer-lap-row { display: grid; grid-template-columns: 0.9fr 1.2fr 1.2fr; gap: 8px; padding: 9px 4px; font-variant-numeric: tabular-nums; }
+  .gentimer-lap-head { font-size: 0.66rem; font-weight: 700; color: rgba(255,255,255,0.4); border-bottom: 1px solid rgba(255,255,255,0.18); position: sticky; top: 0; background: #000; }
+  .gentimer-lap-row { font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.85); border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .gentimer-lap-row span:nth-child(2), .gentimer-lap-row span:nth-child(3) { text-align: right; }
+  .gentimer-lap-head span:nth-child(2), .gentimer-lap-head span:nth-child(3) { text-align: right; }
+  .gentimer-lap-row span:first-child { color: rgba(255,255,255,0.55); }
+  .gentimer-lap-row.best, .gentimer-lap-row.best span:first-child { color: #4ADE80; }
+  .gentimer-lap-row.worst, .gentimer-lap-row.worst span:first-child { color: #F87171; }
   .exlv-tl-track { position: relative; height: 2px; background: rgba(255,255,255,0.25); border-radius: 1px; overflow: hidden; }
   .exlv-tl-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--green); }
   .exlv-tl-labels { display: flex; align-items: flex-start; gap: 0; margin-top: 10px; overflow-x: auto; }
@@ -4089,9 +4111,24 @@
       </svg>
     </div>
     <div class="gentimer-setup" id="genTimerSetup" style="display:none;">
-      <label for="genTimerMinutesInput">몇 분 타이머를 맞출까요?</label>
-      <input type="number" id="genTimerMinutesInput" min="1" max="300" value="10">
-      <button type="button" class="gentimer-setup-btn" onclick="genTimerConfirmMinutes()">시작</button>
+      <div class="gentimer-stepper">
+        <button type="button" class="gentimer-step-btn" onclick="genTimerStep(-1)" aria-label="1분 줄이기">&minus;</button>
+        <div class="gentimer-minutes">
+          <input type="number" id="genTimerMinutesInput" min="1" max="300" value="10" oninput="genTimerPreviewMinutes()" aria-label="타이머 분">
+          <span>분</span>
+        </div>
+        <button type="button" class="gentimer-step-btn" onclick="genTimerStep(1)" aria-label="1분 늘리기">+</button>
+      </div>
+      <div class="gentimer-presets" id="genTimerPresets">
+        <button type="button" data-min="5" onclick="genTimerPreset(5)">5분</button>
+        <button type="button" data-min="10" onclick="genTimerPreset(10)">10분</button>
+        <button type="button" data-min="15" onclick="genTimerPreset(15)">15분</button>
+        <button type="button" data-min="20" onclick="genTimerPreset(20)">20분</button>
+        <button type="button" data-min="30" onclick="genTimerPreset(30)">30분</button>
+        <button type="button" data-min="45" onclick="genTimerPreset(45)">45분</button>
+        <button type="button" data-min="60" onclick="genTimerPreset(60)">60분</button>
+      </div>
+      <button type="button" class="exlv-end-btn" onclick="genTimerConfirmMinutes()">시작</button>
     </div>
     <div class="exlv-controls" id="genTimerControls" style="display:none;">
       <button type="button" onclick="genTimerScrub(-30)" aria-label="30초 뒤로">
@@ -4102,7 +4139,8 @@
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
       </button>
     </div>
-    <button type="button" class="exlv-end-btn" id="genTimerStartBtn" style="display:none;" onclick="genTimerStartStopwatch()">시작</button>
+    <button type="button" class="exlv-end-btn" id="genTimerStartBtn" style="display:none;" onclick="genTimerActionClick()">시작</button>
+    <div class="gentimer-laps" id="genTimerLaps" style="display:none;"></div>
   </div>
 </div>
 
@@ -10120,34 +10158,120 @@
   // exsimState/EXAM_PERIODS 등 시험 전용 로직과는 완전히 분리된 별도의 작은 상태로 동작한다.
   let genTimerState = null;
   let genTimerHandle = null;
+  // 스톱워치는 랩타임을 1/100초까지 보여주려고 흐른 시간을 밀리초(baseMs + 지금-startedAt)로 계산하고,
+  // 타이머는 예전처럼 1초 단위(elapsedSec)로 센다.
+  function genFmtMs(ms) {
+    const cs = Math.floor(Math.max(0, ms) / 10);
+    const p = n => String(n).padStart(2, "0");
+    const h = Math.floor(cs / 360000);
+    return (h ? h + ":" : "") + p(Math.floor(cs / 6000) % 60) + ":" + p(Math.floor(cs / 100) % 60) + "." + p(cs % 100);
+  }
+  function genStopwatchMs() {
+    const s = genTimerState;
+    return s.baseMs + (s.running ? Date.now() - s.startedAt : 0);
+  }
   function genTimerOpen(mode) {
-    genTimerState = { mode: mode, totalSec: 0, elapsedSec: 0, running: false };
+    genTimerState = { mode: mode, totalSec: 0, elapsedSec: 0, running: false, baseMs: 0, startedAt: null, started: false, laps: [] };
     document.getElementById("genTimerBadge").textContent = mode === "timer" ? "타이머" : "스톱워치";
     // 스톱워치는 들어오자마자 자동으로 흐르지 않고, 컨트롤(일시정지/±30초)은 미리 보여준 채
-    // 그 아래 "시작" 버튼을 눌러야 진짜로 시작된다. 타이머는 분을 먼저 입력하는 단계가 그 역할을 한다.
+    // 그 아래 "시작" 버튼을 눌러야 진짜로 시작된다. 타이머는 분을 먼저 맞추는 단계가 그 역할을 한다.
     document.getElementById("genTimerControls").style.display = mode === "timer" ? "none" : "flex";
     document.getElementById("genTimerSetup").style.display = mode === "timer" ? "flex" : "none";
     document.getElementById("genTimerStartBtn").style.display = mode === "stopwatch" ? "block" : "none";
     document.getElementById("genTimerPlayBtn").textContent = "▶";
-    document.getElementById("genTimerText").textContent = "00:00";
+    document.getElementById("genTimerText").setAttribute("font-size", mode === "stopwatch" ? "27" : "34");
+    if (mode === "timer") genTimerPreviewMinutes(); else genTimerUpdateText();
+    genTimerSyncActionBtn();
+    genTimerRenderLaps();
     document.getElementById("genTimerLive").classList.add("on");
   }
-  function genTimerStartStopwatch() {
-    document.getElementById("genTimerStartBtn").style.display = "none";
-    genTimerRun();
+  // 타이머 분 맞추기 — −/+ 버튼, 프리셋 칩, 직접 입력 모두 같은 입력칸을 쓰고 원 안 시계에 바로 미리 보여준다.
+  function genTimerMinutesValue() {
+    return Math.max(1, Math.min(300, Math.round(Number(document.getElementById("genTimerMinutesInput").value) || 10)));
+  }
+  function genTimerPreviewMinutes() {
+    const m = genTimerMinutesValue();
+    document.getElementById("genTimerText").textContent = exsimFormatTimer(m * 60);
+    document.querySelectorAll("#genTimerPresets button").forEach(b => b.classList.toggle("on", Number(b.dataset.min) === m));
+  }
+  function genTimerStep(delta) {
+    const input = document.getElementById("genTimerMinutesInput");
+    input.value = Math.max(1, Math.min(300, genTimerMinutesValue() + delta));
+    genTimerPreviewMinutes();
+  }
+  function genTimerPreset(min) {
+    document.getElementById("genTimerMinutesInput").value = min;
+    genTimerPreviewMinutes();
   }
   function genTimerConfirmMinutes() {
-    const minutes = Math.max(1, Math.min(300, Number(document.getElementById("genTimerMinutesInput").value) || 10));
-    genTimerState.totalSec = minutes * 60;
+    genTimerState.totalSec = genTimerMinutesValue() * 60;
     document.getElementById("genTimerSetup").style.display = "none";
     genTimerUpdateText();
     genTimerRun();
   }
+  // 스톱워치 아래 버튼 하나가 상태에 따라 바뀐다(일반 스톱워치 앱과 같은 방식):
+  // 시작 전 "시작" → 흐르는 중 "랩" → 멈춘 뒤 "초기화".
+  function genTimerSyncActionBtn() {
+    const s = genTimerState;
+    const btn = document.getElementById("genTimerStartBtn");
+    if (!s || s.mode !== "stopwatch") { btn.style.display = "none"; return; }
+    btn.style.display = "block";
+    btn.textContent = !s.started ? "시작" : (s.running ? "랩" : "초기화");
+  }
+  function genTimerActionClick() {
+    const s = genTimerState;
+    if (!s || s.mode !== "stopwatch") return;
+    if (!s.started) { genTimerRun(); return; }
+    if (s.running) { genTimerLap(); return; }
+    genTimerReset();
+  }
+  function genTimerLap() {
+    const s = genTimerState;
+    const total = genStopwatchMs();
+    const prev = s.laps.length ? s.laps[s.laps.length - 1].total : 0;
+    s.laps.push({ n: s.laps.length + 1, lap: total - prev, total: total });
+    genTimerRenderLaps();
+  }
+  function genTimerReset() {
+    const s = genTimerState;
+    s.baseMs = 0; s.startedAt = null; s.started = false; s.laps = [];
+    document.getElementById("genTimerPlayBtn").textContent = "▶";
+    genTimerUpdateText();
+    genTimerSyncActionBtn();
+    genTimerRenderLaps();
+  }
+  function genTimerRenderLaps() {
+    const el = document.getElementById("genTimerLaps");
+    const laps = genTimerState ? genTimerState.laps : [];
+    if (!laps.length) { el.style.display = "none"; el.innerHTML = ""; return; }
+    el.style.display = "block";
+    let best = null, worst = null;
+    if (laps.length >= 2) {
+      const times = laps.map(l => l.lap);
+      best = Math.min(...times);
+      worst = Math.max(...times);
+      if (best === worst) best = worst = null;
+    }
+    el.innerHTML = '<div class="gentimer-lap-head"><span>랩</span><span>구간</span><span>누적</span></div>' +
+      laps.slice().reverse().map(l =>
+        '<div class="gentimer-lap-row' + (l.lap === best ? " best" : l.lap === worst ? " worst" : "") + '">' +
+          '<span>랩 ' + l.n + '</span><span>' + genFmtMs(l.lap) + '</span><span>' + genFmtMs(l.total) + '</span></div>'
+      ).join("");
+  }
   function genTimerRun() {
+    const s = genTimerState;
     document.getElementById("genTimerControls").style.display = "flex";
     document.getElementById("genTimerPlayBtn").textContent = "❚❚";
-    genTimerState.running = true;
-    genTimerHandle = setInterval(genTimerTick, 1000);
+    clearInterval(genTimerHandle);
+    s.running = true;
+    s.started = true;
+    if (s.mode === "timer") {
+      genTimerHandle = setInterval(genTimerTick, 1000);
+    } else {
+      s.startedAt = Date.now();
+      genTimerHandle = setInterval(genTimerUpdateText, 50);
+    }
+    genTimerSyncActionBtn();
   }
   function genTimerTick() {
     if (!genTimerState || !genTimerState.running) return;
@@ -10161,13 +10285,20 @@
   function genTimerUpdateText() {
     const el = document.getElementById("genTimerText");
     if (!el || !genTimerState) return;
-    const displaySec = genTimerState.mode === "timer" ? (genTimerState.totalSec - genTimerState.elapsedSec) : genTimerState.elapsedSec;
-    el.textContent = exsimFormatTimer(displaySec);
+    if (genTimerState.mode === "timer") {
+      el.textContent = exsimFormatTimer(genTimerState.totalSec - genTimerState.elapsedSec);
+    } else {
+      el.textContent = genFmtMs(genStopwatchMs());
+    }
   }
   function genTimerPause() {
-    genTimerState.running = false;
+    const s = genTimerState;
+    if (s.mode === "stopwatch" && s.running) s.baseMs += Date.now() - s.startedAt;
+    s.running = false;
+    s.startedAt = null;
     clearInterval(genTimerHandle);
     document.getElementById("genTimerPlayBtn").textContent = "▶";
+    genTimerSyncActionBtn();
   }
   function genTimerTogglePause() {
     if (!genTimerState) return;
@@ -10176,10 +10307,16 @@
   }
   // ±30초 — "앞으로"는 항상 시간이 흐르는 방향(스톱워치는 늘어나고, 타이머는 남은 시간이 줄어듦).
   function genTimerScrub(delta) {
-    if (!genTimerState) return;
-    const max = genTimerState.mode === "timer" ? genTimerState.totalSec : Infinity;
-    genTimerState.elapsedSec = Math.max(0, Math.min(max, genTimerState.elapsedSec + delta));
-    if (genTimerState.mode === "timer" && genTimerState.elapsedSec >= genTimerState.totalSec) genTimerPause();
+    const s = genTimerState;
+    if (!s) return;
+    if (s.mode === "stopwatch") {
+      if (s.running) { s.baseMs += Date.now() - s.startedAt; s.startedAt = Date.now(); } // 흐른 만큼 먼저 확정한 뒤 이어서 잰다
+      s.baseMs = Math.max(0, s.baseMs + delta * 1000);
+      genTimerUpdateText();
+      return;
+    }
+    s.elapsedSec = Math.max(0, Math.min(s.totalSec, s.elapsedSec + delta));
+    if (s.elapsedSec >= s.totalSec) genTimerPause();
     genTimerUpdateText();
   }
   function genTimerClose() {
