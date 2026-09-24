@@ -1247,14 +1247,17 @@
   .exsim-selected-row .ico { flex: none; width: 20px; text-align: center; }
   .exsim-selected-row .lbl { color: var(--ink-soft); font-weight: 600; flex: none; }
   .exsim-selected-row .val { font-weight: 700; }
-  /* 내신은 시험 시간·문항 개수가 고정 시간표 없이 직접 설정하는 값이라, 같은 자리에 클릭 가능한
-     버튼 형태(끝에 화살표)로 보여준다 — 수능의 정적 정보 행(.exsim-selected-row)과 디자인은 같되 동작만 다름. */
-  button.exsim-selected-row-btn {
-    width: 100%; background: none; border: none; padding: 0; font: inherit; text-align: left; cursor: pointer;
+  /* 내신은 시험 시간·문항 개수가 고정 시간표 없이 직접 설정하는 값이라, 수능의 정적 정보 행 대신
+     작은 버튼(설정하기 →) + 바로 옆 현재 값으로 보여준다. 카드 안에서 가운데로 오도록 정렬한다. */
+  .exsim-naeshin-settings { align-items: center; }
+  .exsim-naeshin-setting-row { display: flex; align-items: center; gap: 10px; }
+  .exsim-naeshin-setting-btn {
+    flex: none; font-family: inherit; font-size: 0.76rem; font-weight: 700; color: var(--ink);
+    background: var(--cream); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px;
+    cursor: pointer; transition: border-color 0.15s, background 0.15s;
   }
-  button.exsim-selected-row-btn .val { color: var(--ink-soft); font-weight: 600; margin-left: auto; }
-  button.exsim-selected-row-btn .arrow { flex: none; color: var(--ink-soft); font-size: 1.05rem; }
-  button.exsim-selected-row-btn:hover .lbl { color: var(--green-deep); }
+  .exsim-naeshin-setting-btn:hover { border-color: var(--green); background: var(--green-soft); }
+  .exsim-naeshin-setting-val { font-size: 0.84rem; font-weight: 700; color: var(--ink); }
   .exsim-start-btn {
     flex: none; width: 120px; height: 120px; border-radius: 50%; background: var(--green-deep); color: #fff;
     border: none; font-family: inherit; font-size: 1.05rem; font-weight: 800; cursor: pointer;
@@ -9353,16 +9356,22 @@
     if (!el) return;
     const topLabelEl = document.getElementById("exsimNaeshinTopSelectedLabel");
     if (topLabelEl) topLabelEl.textContent = exsimNaeshinSubjectCategory || "선택 안 됨";
+    // 제목엔 과목뿐 아니라 시험지 이름도 함께 보여준다 — "모의고사 관리하기" 목록에서 쓰는
+    // 세로 구분선(.mex-list-row-divider)을 그대로 재사용해서 "과목 | 시험지 이름" 형태로 표시.
+    const titleHtml = (exsimNaeshinSubjectCategory ? escapeHtml(exsimNaeshinSubjectCategory) : "과목을 선택해주세요") +
+      (exsimNaeshinSubjectCategory && exsimNaeshinName ? '<span class="mex-list-row-divider"></span>' + escapeHtml(exsimNaeshinName) : '');
     el.innerHTML =
       '<div class="exsim-selected-body">' +
-        '<div class="exsim-selected-title">' + (exsimNaeshinSubjectCategory ? escapeHtml(exsimNaeshinSubjectCategory) : "과목을 선택해주세요") + '</div>' +
-        '<div class="exsim-selected-info">' +
-          '<button type="button" class="exsim-selected-row exsim-selected-row-btn" onclick="exsimOpenNaeshinSettings()">' +
-            '<span class="ico">🕐</span><span class="lbl">시험 시간 설정하기</span><span class="val">' + exsimNaeshinMinutes + '분</span><span class="arrow">›</span>' +
-          '</button>' +
-          '<button type="button" class="exsim-selected-row exsim-selected-row-btn" onclick="exsimOpenNaeshinSettings()">' +
-            '<span class="ico">📝</span><span class="lbl">문항 개수 설정하기</span><span class="val">' + exsimNaeshinCount + '문항</span><span class="arrow">›</span>' +
-          '</button>' +
+        '<div class="exsim-selected-title">' + titleHtml + '</div>' +
+        '<div class="exsim-selected-info exsim-naeshin-settings">' +
+          '<div class="exsim-naeshin-setting-row">' +
+            '<button type="button" class="exsim-naeshin-setting-btn" onclick="exsimOpenNaeshinSettings()">🕐 시험 시간 설정하기 →</button>' +
+            '<span class="exsim-naeshin-setting-val">' + exsimNaeshinMinutes + '분</span>' +
+          '</div>' +
+          '<div class="exsim-naeshin-setting-row">' +
+            '<button type="button" class="exsim-naeshin-setting-btn" onclick="exsimOpenNaeshinSettings()">📝 문항 개수 설정하기 →</button>' +
+            '<span class="exsim-naeshin-setting-val">' + exsimNaeshinCount + '문항</span>' +
+          '</div>' +
         '</div>' +
       '</div>' +
       '<button type="button" class="exsim-start-btn" onclick="exsimStartNaeshin()">시험 준비</button>';
