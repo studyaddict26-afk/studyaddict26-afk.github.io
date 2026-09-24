@@ -1412,8 +1412,10 @@
     padding: 8px 16px; cursor: pointer; transition: transform 0.15s, color 0.15s, border-color 0.15s, background 0.15s;
   }
   #genTimerStartBtn.gentimer-action-btn:hover { transform: translateY(-2px); color: #fff; border-color: rgba(255,255,255,0.5); }
-  /* 스톱워치 랩타임 목록 — 일반 스톱워치 앱처럼 최신 랩이 맨 위, 가장 빠른 랩은 초록/가장 느린 랩은 빨강 */
-  .gentimer-laps { width: 320px; max-width: 100%; margin-top: 22px; max-height: 210px; overflow-y: auto; text-align: left; }
+  /* 스톱워치/타이머 랩타임 목록 — 수능 시뮬레이션의 지문별 랩타임 기록(.exlv-passages)과 같은
+     오른쪽 패널 자리를 그대로 재사용한다. 최신 랩이 맨 위, 가장 빠른 랩은 초록/가장 느린 랩은 빨강. */
+  .gentimer-laps.exlv-passages { text-align: left; }
+  .gentimer-lap-list { display: flex; flex-direction: column; overflow-y: auto; max-height: 560px; }
   .gentimer-lap-head, .gentimer-lap-row { display: grid; grid-template-columns: 0.9fr 1.2fr 1.2fr; gap: 8px; padding: 9px 4px; font-variant-numeric: tabular-nums; }
   .gentimer-lap-head { font-size: 0.66rem; font-weight: 700; color: rgba(255,255,255,0.4); border-bottom: 1px solid rgba(255,255,255,0.18); position: sticky; top: 0; background: #000; }
   .gentimer-lap-row { font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.85); border-bottom: 1px solid rgba(255,255,255,0.08); }
@@ -1461,6 +1463,7 @@
     .exlv { flex-direction: column; gap: 22px; padding-top: 64px; }
     .exlv-passages { width: 100%; max-width: 360px; }
     .exlv-passages-list { max-height: 260px; }
+    .gentimer-lap-list { max-height: 260px; }
   }
 
   /* ── 시험 시뮬레이션: 처음 화면을 켰을 때(처음 한 번만) 주요 요소를 하나씩 짚어주는 튜토리얼.
@@ -4157,7 +4160,10 @@
       </button>
       <button type="button" class="gentimer-action-btn" id="genTimerStartBtn" style="display:none;" onclick="genTimerActionClick()">시작</button>
     </div>
-    <div class="gentimer-laps" id="genTimerLaps" style="display:none;"></div>
+  </div>
+  <div class="exlv-passages gentimer-laps" id="genTimerLaps" style="display:none;">
+    <div class="exlv-passages-title">🚩 랩타임 기록</div>
+    <div class="gentimer-lap-list" id="genTimerLapsList"></div>
   </div>
 </div>
 
@@ -10282,10 +10288,11 @@
     genTimerRenderLaps();
   }
   function genTimerRenderLaps() {
-    const el = document.getElementById("genTimerLaps");
+    const panel = document.getElementById("genTimerLaps");
+    const list = document.getElementById("genTimerLapsList");
     const laps = genTimerState ? genTimerState.laps : [];
-    if (!laps.length) { el.style.display = "none"; el.innerHTML = ""; return; }
-    el.style.display = "block";
+    if (!laps.length) { panel.style.display = "none"; list.innerHTML = ""; return; }
+    panel.style.display = "flex";
     let best = null, worst = null;
     if (laps.length >= 2) {
       const times = laps.map(l => l.lap);
@@ -10293,7 +10300,7 @@
       worst = Math.max(...times);
       if (best === worst) best = worst = null;
     }
-    el.innerHTML = '<div class="gentimer-lap-head"><span>랩</span><span>구간</span><span>누적</span></div>' +
+    list.innerHTML = '<div class="gentimer-lap-head"><span>랩</span><span>구간</span><span>누적</span></div>' +
       laps.slice().reverse().map(l =>
         '<div class="gentimer-lap-row' + (l.lap === best ? " best" : l.lap === worst ? " worst" : "") + '">' +
           '<span>랩 ' + l.n + '</span><span>' + genFmtMs(l.lap) + '</span><span>' + genFmtMs(l.total) + '</span></div>'
