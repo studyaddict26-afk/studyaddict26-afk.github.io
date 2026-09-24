@@ -10038,6 +10038,18 @@
     exsimStopNoise();
     exsimPlayPhaseAnnouncement("end");
     const state = exsimState;
+    // 아직 "풀이 끝"을 안 누르고 풀던 지문이 있으면, 그 지문의 진행 중이던 시간도 여기서
+    // 자동으로 확정해서 랩타임 표에 반영한다 — 안 그러면 그 지문만 시간이 "-"로 비어 보이고,
+    // 총 응시 시간(본령 이후 경과 시간)과 랩타임 합계가 서로 안 맞아 보인다.
+    if (state && state.passages) {
+      state.passages.forEach(p => {
+        if (p.running) {
+          p.totalSec += state.elapsedSec - p.segStartSec;
+          p.running = false;
+          p.segStartSec = null;
+        }
+      });
+    }
     document.getElementById("exsimLive").classList.remove("on");
     exsimState = null;
     exsimShowEnd(state);
