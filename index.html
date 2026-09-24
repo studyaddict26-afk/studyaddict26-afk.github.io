@@ -1502,6 +1502,13 @@
   .exend-card-row { display: flex; gap: 12px; margin-bottom: 14px; }
   .exend-card-row .exend-card { flex: 1; margin-bottom: 0; min-width: 0; padding: 10px 14px; }
   .exend-card-row .exend-card-label { font-size: 0.64rem; margin-bottom: 4px; }
+  /* 내신은 시험지 이름칸이 잠겨(readonly) 있으니, 옆의 과목/총 응시 시간 카드와 똑같은
+     흰 박스+회색 라벨+검정 굵은 글씨 디자인으로 맞춘다(모의고사는 계속 입력칸 그대로). */
+  .mex-field.exend-card label { font-size: 0.72rem; font-weight: 700; color: var(--ink-soft); text-align: center; margin-bottom: 8px; }
+  .mex-field.exend-card input {
+    border: none; background: none; padding: 0; width: 100%; text-align: center;
+    font-size: 1.15rem; font-weight: 800; color: var(--ink); cursor: default;
+  }
   .exend-card-row .exend-card-value { font-size: 0.88rem; }
   .exend-lap-table { display: flex; flex-direction: column; gap: 14px; max-height: 440px; overflow-y: auto; }
   .exend-lap-group { display: flex; flex-direction: column; gap: 1px; }
@@ -10168,7 +10175,9 @@
       ? state.period.subjectCategory
       : state.period.periodLabel + " " + state.period.subject;
     document.getElementById("exendDuration").textContent = formatDur(state.examSec || 0);
-    document.getElementById("exendNameField").style.display = "flex";
+    const nameField = document.getElementById("exendNameField");
+    nameField.style.display = "flex";
+    nameField.classList.toggle("exend-card", isNaeshin);
     document.getElementById("exendNameLabel").textContent = isNaeshin ? "시험지 이름" : "모의고사 이름";
     const nameInput = document.getElementById("exendExamNameInput");
     nameInput.placeholder = isNaeshin ? "예: OO 고등학교 25년도 중간고사 수학 기출" : "예: 9월 학력평가";
