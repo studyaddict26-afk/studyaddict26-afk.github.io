@@ -1403,19 +1403,16 @@
   }
   .gentimer-minutes input::-webkit-outer-spin-button, .gentimer-minutes input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   .gentimer-minutes span { font-size: 0.9rem; font-weight: 700; color: rgba(255,255,255,0.55); }
-  /* 스톱워치/타이머 컨트롤 줄 — 30초 이동·재생 버튼은 가운데, 랩/초기화 버튼은 수능 시뮬레이션처럼 오른쪽 끝에 붙인다 */
-  .gentimer-controls { width: 320px; max-width: 100%; justify-content: space-between; }
-  #genTimerStartBtn.gentimer-action-btn {
-    display: inline-flex; flex-direction: row; align-items: center; margin-left: auto;
-    font-family: inherit; font-size: 0.68rem; font-weight: 700; color: rgba(255,255,255,0.7);
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.25); border-radius: 999px;
-    padding: 8px 16px; cursor: pointer; transition: transform 0.15s, color 0.15s, border-color 0.15s, background 0.15s;
-  }
-  #genTimerStartBtn.gentimer-action-btn:hover { transform: translateY(-2px); color: #fff; border-color: rgba(255,255,255,0.5); }
   /* 스톱워치/타이머 랩타임 목록 — 수능 시뮬레이션의 지문별 랩타임 기록(.exlv-passages)과 같은
      오른쪽 패널 자리를 그대로 재사용한다. 최신 랩이 맨 위, 가장 빠른 랩은 초록/가장 느린 랩은 빨강. */
   .gentimer-laps.exlv-passages { text-align: left; }
-  .gentimer-lap-list { display: flex; flex-direction: column; overflow-y: auto; max-height: 560px; }
+  .gentimer-lap-btn {
+    flex: none; align-self: center; margin-bottom: 14px; font-family: inherit; font-size: 0.78rem; font-weight: 700;
+    color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 999px; padding: 9px 28px; cursor: pointer; transition: transform 0.15s, background 0.15s, border-color 0.15s;
+  }
+  .gentimer-lap-btn:hover { transform: translateY(-2px); background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.55); }
+  .gentimer-lap-list { display: flex; flex-direction: column; overflow-y: auto; max-height: 500px; }
   .gentimer-lap-head, .gentimer-lap-row { display: grid; grid-template-columns: 0.9fr 1.2fr 1.2fr; gap: 8px; padding: 9px 4px; font-variant-numeric: tabular-nums; }
   .gentimer-lap-head { font-size: 0.66rem; font-weight: 700; color: rgba(255,255,255,0.4); border-bottom: 1px solid rgba(255,255,255,0.18); position: sticky; top: 0; background: #000; }
   .gentimer-lap-row { font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.85); border-bottom: 1px solid rgba(255,255,255,0.08); }
@@ -4150,7 +4147,7 @@
       </div>
       <button type="button" class="exlv-end-btn" onclick="genTimerConfirmMinutes()">시작</button>
     </div>
-    <div class="exlv-controls gentimer-controls" id="genTimerControls" style="display:none;">
+    <div class="exlv-controls" id="genTimerControls" style="display:none;">
       <button type="button" onclick="genTimerScrub(-30)" aria-label="30초 뒤로">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>30
       </button>
@@ -4158,11 +4155,12 @@
       <button type="button" onclick="genTimerScrub(30)" aria-label="30초 앞으로">30
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
       </button>
-      <button type="button" class="gentimer-action-btn" id="genTimerStartBtn" style="display:none;" onclick="genTimerActionClick()">시작</button>
     </div>
+    <button type="button" class="exlv-end-btn" id="genTimerStartBtn" style="display:none;" onclick="genTimerActionClick()">시작하기</button>
   </div>
   <div class="exlv-passages gentimer-laps" id="genTimerLaps" style="display:none;">
     <div class="exlv-passages-title">🚩 랩타임 기록</div>
+    <button type="button" class="gentimer-lap-btn" onclick="genTimerLap()">랩</button>
     <div class="gentimer-lap-list" id="genTimerLapsList"></div>
   </div>
 </div>
@@ -10217,6 +10215,7 @@
     document.getElementById("genTimerText").setAttribute("font-size", mode === "stopwatch" ? "27" : "34");
     if (mode === "timer") genTimerPreviewMinutes(); else genTimerUpdateText();
     genTimerSyncActionBtn();
+    genTimerSyncLapsPanel();
     genTimerRenderLaps();
     document.getElementById("genTimerLive").classList.add("on");
   }
@@ -10243,36 +10242,31 @@
     genTimerUpdateText();
     genTimerRun();
   }
-  // 컨트롤 줄 오른쪽 버튼 하나가 상태에 따라 바뀐다(일반 스톱워치 앱과 같은 방식):
-  // 시작 전 "시작" → 흐르는 중 "랩" → 멈춘 뒤 "초기화". 타이머는 분 설정 화면에서 이미 "시작"을
-  // 눌러서 들어오므로, 여기서는 흐르는 중일 때만 "랩"을, 멈췄을 때 "초기화"를 보여준다.
+  // 아래쪽 큰 버튼은 "시작 전 → 실행 중(숨김, 랩은 오른쪽 패널 버튼이 전담) → 멈춘 뒤 초기화"로
+  // 바뀐다. 타이머는 분 설정 화면에서 이미 "시작"을 누르고 들어오므로 시작 전 텍스트는 안 쓴다.
   function genTimerSyncActionBtn() {
     const s = genTimerState;
     const btn = document.getElementById("genTimerStartBtn");
     if (!s) { btn.style.display = "none"; return; }
-    if (s.mode === "timer") {
-      if (!s.started) { btn.style.display = "none"; return; }
-      btn.style.display = "inline-flex";
-      btn.textContent = s.running ? "랩" : "초기화";
+    if (!s.started) {
+      btn.style.display = s.mode === "stopwatch" ? "block" : "none";
+      btn.textContent = "시작하기";
       return;
     }
-    btn.style.display = "inline-flex";
-    btn.textContent = !s.started ? "시작" : (s.running ? "랩" : "초기화");
+    if (s.running) { btn.style.display = "none"; return; }
+    btn.style.display = "block";
+    btn.textContent = "초기화";
   }
   function genTimerActionClick() {
     const s = genTimerState;
     if (!s) return;
-    if (s.mode === "timer") {
-      if (s.running) { genTimerLap(); return; }
-      if (s.started) genTimerReset();
-      return;
-    }
     if (!s.started) { genTimerRun(); return; }
-    if (s.running) { genTimerLap(); return; }
-    genTimerReset();
+    if (!s.running) genTimerReset();
   }
+  // 오른쪽 "🚩 랩타임 기록" 패널의 "랩" 버튼 전용 — 실행 중일 때만 의미가 있다.
   function genTimerLap() {
     const s = genTimerState;
+    if (!s || !s.running) return;
     const total = genStopwatchMs();
     const prev = s.laps.length ? s.laps[s.laps.length - 1].total : 0;
     s.laps.push({ n: s.laps.length + 1, lap: total - prev, total: total });
@@ -10285,14 +10279,19 @@
     document.getElementById("genTimerPlayBtn").textContent = "▶";
     genTimerUpdateText();
     genTimerSyncActionBtn();
+    genTimerSyncLapsPanel();
     genTimerRenderLaps();
   }
+  // 랩타임 패널은 "실행을 한 번이라도 시작했는지"로 보이고, 랩이 있는지와는 무관하다 —
+  // 시작하자마자 랩 버튼을 눌러야 하므로, 랩이 0개일 때도 패널(과 랩 버튼)은 보여야 한다.
+  function genTimerSyncLapsPanel() {
+    const s = genTimerState;
+    document.getElementById("genTimerLaps").style.display = (s && s.started) ? "flex" : "none";
+  }
   function genTimerRenderLaps() {
-    const panel = document.getElementById("genTimerLaps");
     const list = document.getElementById("genTimerLapsList");
     const laps = genTimerState ? genTimerState.laps : [];
-    if (!laps.length) { panel.style.display = "none"; list.innerHTML = ""; return; }
-    panel.style.display = "flex";
+    if (!laps.length) { list.innerHTML = ""; return; }
     let best = null, worst = null;
     if (laps.length >= 2) {
       const times = laps.map(l => l.lap);
@@ -10320,6 +10319,7 @@
       genTimerHandle = setInterval(genTimerUpdateText, 50);
     }
     genTimerSyncActionBtn();
+    genTimerSyncLapsPanel();
   }
   function genTimerTick() {
     if (!genTimerState || !genTimerState.running) return;
