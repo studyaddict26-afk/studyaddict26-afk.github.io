@@ -3438,7 +3438,10 @@
   }
   .planner-task-row.done .planner-task-check { background: var(--green); border-color: var(--green); }
   .planner-task-row.done .planner-task-check::after { content: "\2713"; }
-  .planner-task-text { flex: 1; min-width: 0; font-size: 0.74rem; line-height: 1.4; color: var(--ink); cursor: text; word-break: break-word; }
+  /* 과목 배지 + 내용을 flex로 나란히 두면, 내용이 길어 줄바꿈될 때 이어지는 줄이 배지 밑(맨 왼쪽)으로
+     내려오지 않고 내용 시작 위치에 맞춰 걸리듯 들여써진다("매달린 들여쓰기") — 배지 칸을 침범하지 않는다. */
+  .planner-task-text { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 4px; font-size: 0.74rem; line-height: 1.4; color: var(--ink); cursor: text; }
+  .planner-task-content { flex: 1; min-width: 0; word-break: break-word; }
   .planner-task-row.done .planner-task-text { color: var(--ink-soft); text-decoration: line-through; }
   .planner-task-del {
     flex: none; background: none; border: none; color: var(--ink-soft); font-size: 0.8rem; cursor: pointer;
@@ -3494,7 +3497,7 @@
   .planner-orig-row { font-size: 0.74rem; line-height: 1.5; color: var(--ink-soft); padding: 5px 2px; }
   .planner-orig-empty { font-size: 0.72rem; color: var(--ink-soft); opacity: 0.7; padding: 5px 2px; }
   .planner-task-subject {
-    font-size: 0.66rem; font-weight: 800; color: var(--green-deep); margin-right: 2px;
+    flex: none; font-size: 0.66rem; font-weight: 800; color: var(--green-deep);
   }
   @media (max-width: 700px) {
     .planner-dual { flex-direction: column; }
@@ -7448,8 +7451,8 @@
       const rows = items.filter(it => it.block === block && Number(it.active) === 1).map(it =>
         '<div class="planner-task-row">' +
           '<span class="planner-task-text">' +
-            (it.subject ? '<span class="planner-task-subject">[' + escapeHtml(it.subject) + ']</span> ' : '') +
-            escapeHtml(it.text) +
+            (it.subject ? '<span class="planner-task-subject">[' + escapeHtml(it.subject) + ']</span>' : '') +
+            '<span class="planner-task-content">' + escapeHtml(it.text) + '</span>' +
           '</span>' +
         '</div>'
       ).join("");
@@ -7481,8 +7484,8 @@
       const rows = items.map(it =>
         '<div class="planner-task-row' + (it.done ? ' done' : '') + '" data-id="' + it.id + '">' +
           '<span class="planner-task-text">' +
-            (it.subject ? '<span class="planner-task-subject">[' + escapeHtml(it.subject) + ']</span> ' : '') +
-            escapeHtml(it.text) +
+            (it.subject ? '<span class="planner-task-subject">[' + escapeHtml(it.subject) + ']</span>' : '') +
+            '<span class="planner-task-content">' + escapeHtml(it.text) + '</span>' +
           '</span>' +
         '</div>'
       ).join("");
@@ -7595,8 +7598,8 @@
         '<div class="planner-task-row' + (it.done ? ' done' : '') + '" data-id="' + it.id + '">' +
           '<div class="planner-task-check" onclick="togglePpPlanItem(' + it.id + ')"></div>' +
           '<span class="planner-task-text">' +
-            (it.subject ? '<span class="planner-task-subject">[' + escapeHtml(it.subject) + ']</span> ' : '') +
-            escapeHtml(it.text) +
+            (it.subject ? '<span class="planner-task-subject">[' + escapeHtml(it.subject) + ']</span>' : '') +
+            '<span class="planner-task-content">' + escapeHtml(it.text) + '</span>' +
           '</span>' +
           '<button type="button" class="planner-task-del" onclick="deletePpPlanItem(' + it.id + ')" aria-label="삭제">×</button>' +
         '</div>'
@@ -8295,8 +8298,8 @@
         '<div class="planner-task-row' + (it.done ? ' done' : '') + '" data-id="' + it.id + '">' +
           '<div class="planner-task-check" onclick="togglePlanItem(' + it.id + ')"></div>' +
           '<span class="planner-task-text" onclick="editPlanItem(' + it.id + ')">' +
-            (it.subject ? '<span class="planner-task-subject">[' + escapeHtml(it.subject) + ']</span> ' : '') +
-            escapeHtml(it.text) +
+            (it.subject ? '<span class="planner-task-subject">[' + escapeHtml(it.subject) + ']</span>' : '') +
+            '<span class="planner-task-content">' + escapeHtml(it.text) + '</span>' +
           '</span>' +
           '<button type="button" class="planner-task-del" onclick="deletePlanItem(' + it.id + ')" aria-label="삭제">×</button>' +
         '</div>'
