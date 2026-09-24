@@ -1497,6 +1497,7 @@
   .exend-title { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 1.4rem; font-weight: 800; color: var(--ink); white-space: nowrap; }
   .exend-card { border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
   .exend-card-label { font-size: 0.72rem; font-weight: 700; color: var(--ink-soft); text-align: center; margin-bottom: 8px; }
+  .exend-lap-total { color: var(--green-deep); font-weight: 800; }
   .exend-card-value { font-size: 1.15rem; font-weight: 800; color: var(--ink); text-align: center; }
   .exend-card-row { display: flex; gap: 12px; margin-bottom: 14px; }
   .exend-card-row .exend-card { flex: 1; margin-bottom: 0; min-width: 0; padding: 10px 14px; }
@@ -4183,7 +4184,7 @@
       </div>
     </div>
     <div class="exend-card" id="exendLapCard">
-      <div class="exend-card-label">랩타임</div>
+      <div class="exend-card-label">랩타임 <span class="exend-lap-total" id="exendLapTotal"></span></div>
       <div class="exend-lap-table" id="exendLapTable"></div>
     </div>
   </div>
@@ -10176,8 +10177,12 @@
     nameInput.readOnly = isNaeshin;
     nameInput.value = isNaeshin ? (state.period.subject || "") : "";
     if (!isNaeshin) exsimPopulateExamNameHistory(false);
+    const groups = exsimPassageGroupTimes(state);
     const table = document.getElementById("exendLapTable");
-    table.innerHTML = exsimBuildLapTableHtml(exsimPassageGroupTimes(state));
+    table.innerHTML = exsimBuildLapTableHtml(groups);
+    // "랩타임" 제목 옆에 기록된 랩타임을 전부 합친 시간을 보여준다 — 기록이 하나도 없으면 생략.
+    const totalSec = groups.reduce((sum, g) => sum + g.items.reduce((s, it) => s + (it.sec > 0 ? it.sec : 0), 0), 0);
+    document.getElementById("exendLapTotal").textContent = totalSec > 0 ? "· 총 " + formatDur(totalSec) : "";
     document.getElementById("exsimEnd").classList.add("on");
   }
   // 진행 화면 오른쪽 패널과 같은 제재별 그룹 구조([{title,cols,items:[{label,sec}]}])를 그대로
