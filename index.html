@@ -9448,7 +9448,7 @@
     if (!el) return;
     const ids = exsimCheckedIds;
     const topLabelEl = document.getElementById("exsimTopSelectedLabel");
-    const period = EXAM_PERIODS.find(p => p.id === ids[0]);
+    const period = exsimResolvePeriod(EXAM_PERIODS.find(p => p.id === ids[0]));
     if (topLabelEl) topLabelEl.textContent = period ? period.periodLabel + " " + period.subject : "선택 안 됨";
     if (!period) {
       el.innerHTML = '<div class="exsim-selected-info"><div class="exsim-selected-row"><span class="lbl">시험 과목을 선택해주세요</span></div></div>';
@@ -9495,6 +9495,8 @@
     const audio = LISTENING_AUDIOS.find(a => a.id === id);
     exsimListeningObjectUrl = audio ? audio.url : null;
     exsimListeningFileName = audio ? audio.title : null;
+    // 음원 선택 여부에 따라 영어의 시험 시간(13:07~ vs 13:10~)이 바뀌므로 카드도 바로 다시 그린다.
+    exsimRenderSelectedCard();
   }
 
   // ── 시험장 소음 설정(볼륨/기본 On 여부/소음 종류) — 수능/내신 페이지 어디서 열어도 같은
@@ -9631,8 +9633,18 @@
   let exsimState = null;
   let exsimTimerHandle = null;
 
+  // 영어는 듣기 음원을 실제로 고른 경우에만 "준비령 없이 13:07에 방송과 함께 본령 시작"이라는
+  // 실제 수능 시간표를 쓴다 — 음원을 선택하지 않았으면(그냥 시간만 연습하고 싶을 때) 다른
+  // 과목처럼 예비령→준비령→본령이 5분씩 흐르는 일반적인 흐름으로 되돌린다.
+  function exsimResolvePeriod(period) {
+    if (!period || period.id !== "eng") return period;
+    return Object.assign({}, period, exsimListeningObjectUrl
+      ? { ready: "13:07", start: "13:07" }
+      : { ready: "13:05", start: "13:10" });
+  }
   function exsimOpen(periodOrId) {
-    const period = typeof periodOrId === "string" ? EXAM_PERIODS.find(p => p.id === periodOrId) : periodOrId;
+    let period = typeof periodOrId === "string" ? EXAM_PERIODS.find(p => p.id === periodOrId) : periodOrId;
+    period = exsimResolvePeriod(period);
     if (!period) return;
     exsimInitClockFaceOnce();
     const preMin = hmToMin(period.pre), readyMin = hmToMin(period.ready), startMin = hmToMin(period.start);
