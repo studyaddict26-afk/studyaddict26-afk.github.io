@@ -1247,6 +1247,14 @@
   .exsim-selected-row .ico { flex: none; width: 20px; text-align: center; }
   .exsim-selected-row .lbl { color: var(--ink-soft); font-weight: 600; flex: none; }
   .exsim-selected-row .val { font-weight: 700; }
+  /* 내신은 시험 시간·문항 개수가 고정 시간표 없이 직접 설정하는 값이라, 같은 자리에 클릭 가능한
+     버튼 형태(끝에 화살표)로 보여준다 — 수능의 정적 정보 행(.exsim-selected-row)과 디자인은 같되 동작만 다름. */
+  button.exsim-selected-row-btn {
+    width: 100%; background: none; border: none; padding: 0; font: inherit; text-align: left; cursor: pointer;
+  }
+  button.exsim-selected-row-btn .val { color: var(--ink-soft); font-weight: 600; margin-left: auto; }
+  button.exsim-selected-row-btn .arrow { flex: none; color: var(--ink-soft); font-size: 1.05rem; }
+  button.exsim-selected-row-btn:hover .lbl { color: var(--green-deep); }
   .exsim-start-btn {
     flex: none; width: 120px; height: 120px; border-radius: 50%; background: var(--green-deep); color: #fff;
     border: none; font-family: inherit; font-size: 1.05rem; font-weight: 800; cursor: pointer;
@@ -1298,8 +1306,6 @@
     .exsim-hub-title { font-size: 0.74rem; }
     .exsim-hub-btn { padding: 16px 6px; }
   }
-  .exsim-naeshin-card { border: 1px solid var(--line); border-radius: 14px; background: var(--paper); padding: 22px; display: flex; flex-direction: column; gap: 14px; }
-  .exsim-naeshin-start-btn { width: 66%; height: 46px; border-radius: 23px; align-self: center; font-size: 0.86rem; }
   .exsim-listening-select {
     font-family: inherit; font-size: 0.78rem; font-weight: 700; color: var(--green-deep); background: var(--green-soft);
     border: none; border-radius: 999px; padding: 5px 10px; cursor: pointer; max-width: 170px;
@@ -1536,23 +1542,6 @@
     text-align: left; cursor: pointer; width: 100%;
   }
   .mex-form-period-btn:hover { border-color: var(--green); }
-  /* 내신 카드 전용 — 과목명/소음버튼/시험시간/문항개수 네 칸을 진짜 2열 그리드로 묶어서,
-     두 행의 왼쪽·오른쪽 칸 너비가 내용과 무관하게 항상 정확히 일치하도록 한다
-     (독립된 flex row 두 개로 나누면 버튼 내용 때문에 폭이 미묘하게 어긋날 수 있었음). */
-  .mex-field-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; align-items: end; }
-  /* 시험지 이름 / 과목 / 시험 시간 / 문항 개수 네 칸을 한 덩어리로 이어 붙인다(소음 설정 버튼만 따로). */
-  .mex-field-grid .mex-field { background: var(--cream); border: 1px solid var(--line); padding: 9px 14px 8px; gap: 2px; }
-  .mex-field-grid .mex-field:focus-within { border-color: var(--green); position: relative; z-index: 1; }
-  .mex-field-grid .mex-field input, .mex-field-grid .mex-field select { border: none; background: transparent; padding: 4px 0; outline: none; cursor: pointer; }
-  .mex-field-grid .mex-field input[type="text"] { cursor: text; }
-  .mex-field-grid .mex-field-name { grid-column: 1 / span 2; border-radius: 12px 12px 0 0; }
-  .mex-field-grid .mex-field-subject { margin-top: -1px; border-radius: 0 0 0 12px; }
-  .mex-field-grid .mex-field-minutes { margin-top: -1px; margin-left: -1px; border-radius: 0; }
-  .mex-field-grid .mex-field-count { margin-top: -1px; margin-left: -1px; border-radius: 0 12px 12px 0; }
-  .mex-field-grid .exsim-top-btn { width: 84%; justify-self: center; padding: 8px 10px; margin-bottom: 12px; }
-  .mex-field-grid .exsim-top-btn-ico { font-size: 1rem; }
-  .mex-field-grid .exsim-top-btn-label { font-size: 0.78rem; }
-  .mex-field-grid .exsim-top-btn-sub { font-size: 0.64rem; }
   .mex-form-btns { display: flex; gap: 10px; margin-top: 4px; }
   .mex-form-cancel-btn, .mex-form-save-btn {
     flex: 1; font-family: inherit; font-size: 0.86rem; font-weight: 700; border-radius: 999px; padding: 11px; cursor: pointer; border: none;
@@ -4174,7 +4163,7 @@
       <button type="button" class="exend-save-btn" id="exendSaveBtn" onclick="exsimSaveSession()">기록하기 →</button>
     </div>
     <div class="mex-field" id="exendNameField" style="margin-bottom:14px;">
-      <label>모의고사 이름</label>
+      <label id="exendNameLabel">모의고사 이름</label>
       <input type="text" id="exendExamNameInput" placeholder="예: 9월 학력평가" list="exendExamNameList">
       <datalist id="exendExamNameList"></datalist>
     </div>
@@ -4206,6 +4195,58 @@
       </span>
     </div>
     <div class="exsim-picker-list" id="exsimSubjectPickerList"></div>
+  </div>
+</div>
+
+<!-- ═══ 내신 시뮬레이션: 시험 과목 선택 팝업(시험지 이름 + 과목) ═══ -->
+<div class="exsim-picker-overlay" id="exsimNaeshinSubjectPickerOverlay" onclick="if(event.target===this) exsimCloseNaeshinSubjectPicker()">
+  <div class="exsim-picker-box" style="max-width:420px;">
+    <div class="exsim-picker-head">
+      <span>시험 과목 선택</span>
+      <span class="exsim-picker-head-actions">
+        <button type="button" class="exsim-picker-submit-btn" onclick="exsimSubmitNaeshinSubjectPicker()">제출하기</button>
+        <button type="button" class="exsim-picker-close" onclick="exsimCloseNaeshinSubjectPicker()" aria-label="닫기">×</button>
+      </span>
+    </div>
+    <div style="padding:20px; display:flex; flex-direction:column; gap:14px;">
+      <div class="mex-field">
+        <label>시험지 이름</label>
+        <input type="text" id="exsimNaeshinName" placeholder="예: OO 고등학교 25년도 중간고사 수학 기출">
+      </div>
+      <div class="mex-field">
+        <label>과목</label>
+        <select id="exsimNaeshinSubject">
+          <option value="">선택해주세요</option>
+          <option value="수학">수학</option>
+          <option value="영어">영어</option>
+          <option value="국어">국어</option>
+          <option value="과학">과학</option>
+          <option value="사회">사회</option>
+          <option value="기타">기타</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 내신 시뮬레이션: 시험 시간·문항 개수 설정 팝업 ═══ -->
+<div class="exsim-picker-overlay" id="exsimNaeshinSettingsOverlay" onclick="if(event.target===this) exsimCloseNaeshinSettings()">
+  <div class="exsim-picker-box" style="max-width:360px;">
+    <div class="exsim-picker-head">
+      <span>시험 시간 · 문항 개수 설정</span>
+      <button type="button" class="exsim-picker-close" onclick="exsimCloseNaeshinSettings()" aria-label="닫기">×</button>
+    </div>
+    <div style="padding:20px; display:flex; flex-direction:column; gap:14px;">
+      <div class="mex-field">
+        <label>시험 시간(분)</label>
+        <input type="number" id="exsimNaeshinMinutes" min="10" max="180" value="50">
+      </div>
+      <div class="mex-field">
+        <label>문항 개수</label>
+        <input type="number" id="exsimNaeshinCount" min="1" max="100" value="20">
+      </div>
+      <button type="button" class="exsim-picker-submit-btn" style="width:100%; padding:12px; font-size:0.86rem;" onclick="exsimSubmitNaeshinSettings()">확인</button>
+    </div>
   </div>
 </div>
 
@@ -4903,40 +4944,20 @@
       <div class="split"></div>
     </div>
     <div class="exsim-wrap">
-      <div class="exsim-naeshin-card">
-        <div class="mex-field-grid">
-          <div class="mex-field mex-field-name">
-            <label>시험지 이름</label>
-            <input type="text" id="exsimNaeshinName" placeholder="예: OO 고등학교 25년도 중간고사 수학 기출">
-          </div>
-          <button type="button" class="exsim-top-btn" onclick="exsimOpenNoisePanel()">
-            <span class="exsim-top-btn-ico">🔊</span>
-            <span class="exsim-top-btn-text"><span class="exsim-top-btn-label">시험장 소음 설정하기</span><span class="exsim-top-btn-sub">설정 완료</span></span>
-            <span class="exsim-top-btn-arrow">›</span>
-          </button>
-          <div class="mex-field mex-field-subject">
-            <label>과목</label>
-            <select id="exsimNaeshinSubject">
-              <option value="">선택해주세요</option>
-              <option value="수학">수학</option>
-              <option value="영어">영어</option>
-              <option value="국어">국어</option>
-              <option value="과학">과학</option>
-              <option value="사회">사회</option>
-              <option value="기타">기타</option>
-            </select>
-          </div>
-          <div class="mex-field mex-field-minutes">
-            <label>시험 시간(분)</label>
-            <input type="number" id="exsimNaeshinMinutes" min="10" max="180" value="50">
-          </div>
-          <div class="mex-field mex-field-count">
-            <label>문항 개수</label>
-            <input type="number" id="exsimNaeshinCount" min="1" max="100" value="20">
-          </div>
-        </div>
-        <button type="button" class="exsim-start-btn exsim-naeshin-start-btn" onclick="exsimStartNaeshin()">시험 준비</button>
+      <div class="exsim-top-btns">
+        <button type="button" class="exsim-top-btn" onclick="exsimOpenNaeshinSubjectPicker()">
+          <span class="exsim-top-btn-ico">📚</span>
+          <span class="exsim-top-btn-text"><span class="exsim-top-btn-label">시험 과목 선택하기</span><span class="exsim-top-btn-sub" id="exsimNaeshinTopSelectedLabel">선택 안 됨</span></span>
+          <span class="exsim-top-btn-arrow">›</span>
+        </button>
+        <button type="button" class="exsim-top-btn" onclick="exsimOpenNoisePanel()">
+          <span class="exsim-top-btn-ico">🔊</span>
+          <span class="exsim-top-btn-text"><span class="exsim-top-btn-label">시험장 소음 설정하기</span><span class="exsim-top-btn-sub">설정 완료</span></span>
+          <span class="exsim-top-btn-arrow">›</span>
+        </button>
       </div>
+
+      <div class="exsim-selected-card" id="exsimNaeshinSelectedCard"></div>
     </div>
   </section>
 
@@ -9275,36 +9296,90 @@
     exsimRenderSelectedCard();
     exsimCloseNoisePanel();
   }
+  // 내신은 수능처럼 고정된 교시가 없어, 페이지 진입 시 초기화하는 대신 "시험 과목 선택하기"/
+  // "시험 시간·문항 개수 설정" 두 팝업에서 직접 입력받아 아래 상태에 채워 넣는다.
+  let exsimNaeshinName = "";
+  let exsimNaeshinSubjectCategory = "";
+  let exsimNaeshinMinutes = 50;
+  let exsimNaeshinCount = 20;
   function initExamNaeshin() {
-    document.getElementById("exsimNaeshinName").value = "";
-    document.getElementById("exsimNaeshinSubject").value = "";
-    document.getElementById("exsimNaeshinMinutes").value = "50";
-    document.getElementById("exsimNaeshinCount").value = "20";
+    exsimNaeshinName = "";
+    exsimNaeshinSubjectCategory = "";
+    exsimNaeshinMinutes = 50;
+    exsimNaeshinCount = 20;
+    exsimRenderNaeshinSelectedCard();
     exsimCloseNoisePanel();
+  }
+  function exsimOpenNaeshinSubjectPicker() {
+    document.getElementById("exsimNaeshinName").value = exsimNaeshinName;
+    document.getElementById("exsimNaeshinSubject").value = exsimNaeshinSubjectCategory;
+    document.getElementById("exsimNaeshinSubjectPickerOverlay").classList.add("on");
+  }
+  function exsimCloseNaeshinSubjectPicker() {
+    document.getElementById("exsimNaeshinSubjectPickerOverlay").classList.remove("on");
+  }
+  function exsimSubmitNaeshinSubjectPicker() {
+    const nameInput = document.getElementById("exsimNaeshinName");
+    const subjectInput = document.getElementById("exsimNaeshinSubject");
+    if (!nameInput.value.trim()) { showToast("시험지 이름을 입력해주세요"); nameInput.focus(); return; }
+    if (!subjectInput.value) { showToast("과목을 선택해주세요"); subjectInput.focus(); return; }
+    exsimNaeshinName = nameInput.value.trim();
+    exsimNaeshinSubjectCategory = subjectInput.value;
+    exsimCloseNaeshinSubjectPicker();
+    exsimRenderNaeshinSelectedCard();
+  }
+  function exsimOpenNaeshinSettings() {
+    document.getElementById("exsimNaeshinMinutes").value = exsimNaeshinMinutes;
+    document.getElementById("exsimNaeshinCount").value = exsimNaeshinCount;
+    document.getElementById("exsimNaeshinSettingsOverlay").classList.add("on");
+  }
+  function exsimCloseNaeshinSettings() {
+    document.getElementById("exsimNaeshinSettingsOverlay").classList.remove("on");
+  }
+  function exsimSubmitNaeshinSettings() {
+    const minutesInput = document.getElementById("exsimNaeshinMinutes");
+    const countInput = document.getElementById("exsimNaeshinCount");
+    if (!minutesInput.value.trim()) { showToast("시험 시간(분)을 입력해주세요"); minutesInput.focus(); return; }
+    if (!countInput.value.trim()) { showToast("문항 개수를 입력해주세요"); countInput.focus(); return; }
+    exsimNaeshinMinutes = Math.max(1, Math.min(300, Number(minutesInput.value) || 50));
+    exsimNaeshinCount = Math.max(1, Math.min(100, Number(countInput.value) || 20));
+    exsimCloseNaeshinSettings();
+    exsimRenderNaeshinSelectedCard();
+  }
+  // 수능의 exsimRenderSelectedCard()와 같은 자리·디자인이지만, 내신은 교시가 없어 제목엔
+  // 과목만 보여주고, 고정 시간표 대신 직접 설정하는 시험 시간·문항 개수는 버튼 형태로 보여준다.
+  function exsimRenderNaeshinSelectedCard() {
+    const el = document.getElementById("exsimNaeshinSelectedCard");
+    if (!el) return;
+    const topLabelEl = document.getElementById("exsimNaeshinTopSelectedLabel");
+    if (topLabelEl) topLabelEl.textContent = exsimNaeshinSubjectCategory || "선택 안 됨";
+    el.innerHTML =
+      '<div class="exsim-selected-body">' +
+        '<div class="exsim-selected-title">' + (exsimNaeshinSubjectCategory ? escapeHtml(exsimNaeshinSubjectCategory) : "과목을 선택해주세요") + '</div>' +
+        '<div class="exsim-selected-info">' +
+          '<button type="button" class="exsim-selected-row exsim-selected-row-btn" onclick="exsimOpenNaeshinSettings()">' +
+            '<span class="ico">🕐</span><span class="lbl">시험 시간 설정하기</span><span class="val">' + exsimNaeshinMinutes + '분</span><span class="arrow">›</span>' +
+          '</button>' +
+          '<button type="button" class="exsim-selected-row exsim-selected-row-btn" onclick="exsimOpenNaeshinSettings()">' +
+            '<span class="ico">📝</span><span class="lbl">문항 개수 설정하기</span><span class="val">' + exsimNaeshinCount + '문항</span><span class="arrow">›</span>' +
+          '</button>' +
+        '</div>' +
+      '</div>' +
+      '<button type="button" class="exsim-start-btn" onclick="exsimStartNaeshin()">시험 준비</button>';
   }
   // 내신은 국가 공식 시간표가 없어 예비령/준비령 없이, 지금 이 순간을 가상 시작 시각으로 삼아
   // 바로 "진행 중" 상태로 시작한다(exsimIsSimpleMode로 판별해 타임라인/문구만 간소화).
   function exsimIsSimpleMode(period) { return period.pre === period.ready && period.ready === period.start; }
   function exsimStartNaeshin() {
-    const nameInput = document.getElementById("exsimNaeshinName");
-    const subjectInput = document.getElementById("exsimNaeshinSubject");
-    const minutesInput = document.getElementById("exsimNaeshinMinutes");
-    const countInput = document.getElementById("exsimNaeshinCount");
-    // 시험지 이름/과목/시험 시간/문항 개수를 전부 입력해야만 시작 가능 — 하나라도 비어있으면 막고
-    // 어떤 칸이 비었는지 토스트로 알려준다.
-    if (!nameInput.value.trim()) { showToast("시험지 이름을 입력해주세요"); nameInput.focus(); return; }
-    if (!subjectInput.value) { showToast("과목을 선택해주세요"); subjectInput.focus(); return; }
-    if (!minutesInput.value.trim()) { showToast("시험 시간(분)을 입력해주세요"); minutesInput.focus(); return; }
-    if (!countInput.value.trim()) { showToast("문항 개수를 입력해주세요"); countInput.focus(); return; }
-    // 화면 곳곳(시험 진행/종료 화면, 기록)에 "과목" 자리로 보이던 이름은 시험지 이름을 그대로 쓰고,
-    // 고른 과목은 subjectCategory로 함께 들고 다닌다.
-    const subject = nameInput.value.trim();
-    const subjectCategory = subjectInput.value;
-    const minutes = Math.max(1, Math.min(300, Number(minutesInput.value) || 50));
-    const count = Math.max(1, Math.min(100, Number(countInput.value) || 20));
+    // 시험지 이름·과목은 "시험 과목 선택하기" 팝업에서 이미 필수로 받았으니, 여기선 그게
+    // 채워져 있는지만 확인한다(시간·문항 개수는 기본값 50분/20문항이 항상 있어 별도 검증 불필요).
+    if (!exsimNaeshinName || !exsimNaeshinSubjectCategory) { showToast("시험 과목을 먼저 선택해주세요"); return; }
     const now = new Date();
     const nowHM = minToHM(now.getHours() * 60 + now.getMinutes());
-    exsimOpen({ id: "naeshin", periodLabel: "내신", subject: subject, subjectCategory: subjectCategory, pre: nowHM, ready: nowHM, start: nowHM, end: minToHM(now.getHours() * 60 + now.getMinutes() + minutes), count: count });
+    exsimOpen({
+      id: "naeshin", periodLabel: "내신", subject: exsimNaeshinName, subjectCategory: exsimNaeshinSubjectCategory,
+      pre: nowHM, ready: nowHM, start: nowHM, end: minToHM(now.getHours() * 60 + now.getMinutes() + exsimNaeshinMinutes), count: exsimNaeshinCount,
+    });
   }
 
   // ── 수능 시뮬레이션: 시험 과목 선택 팝업(라디오 버튼, 한 번에 한 과목만 선택 가능) + 선택 정보 카드 ──
@@ -10057,12 +10132,13 @@
 
   // ── 종료 요약 화면 ──
   let exsimEndData = null;
-  // 과목이 달라도 같은 모의고사 응시(예: 9월 학력평가)일 수 있으니, 이미 썼던 모의고사 이름들을
-  // datalist로 보여줘서 다른 과목 볼 때도 똑같은 이름을 골라 쓸 수 있게 한다.
-  function exsimPopulateExamNameHistory() {
+  // 같은 시험(모의고사는 예: 9월 학력평가, 내신은 시험지 이름)을 과목이 달라도 다시 볼 수 있으니,
+  // 이미 썼던 이름들을 datalist로 보여줘서 골라 쓸 수 있게 한다(모의고사/내신 각자 자기 카테고리만).
+  function exsimPopulateExamNameHistory(isNaeshin) {
     const dl = document.getElementById("exendExamNameList");
     if (!dl) return;
-    const names = mexLoadExams().filter(e => e.category === "mock" && e.title).map(e => e.title);
+    const category = isNaeshin ? "naeshin" : "mock";
+    const names = mexLoadExams().filter(e => e.category === category && e.title).map(e => e.title);
     const unique = [...new Set(names)];
     dl.innerHTML = unique.map(n => '<option value="' + escapeHtml(n) + '"></option>').join("");
   }
@@ -10070,12 +10146,15 @@
     exsimEndData = state;
     document.getElementById("exendSubject").textContent = state.period.periodLabel + " " + state.period.subject;
     document.getElementById("exendDuration").textContent = formatDur(state.examSec || 0);
-    // "모의고사 관리하기"에 자동 기록되는 건 내신이 아닌 경우뿐이라, 내신 세션에서는 이름
-    // 입력칸 자체를 숨기고 필수 검증도 건너뛴다.
+    // 내신도 모의고사와 똑같이 "모의고사·내신 관리하기"에 자동 기록되므로, 이름 입력이 항상
+    // 필요하다 — 라벨/placeholder만 모의고사와 내신을 구분해서 보여준다.
     const isNaeshin = state.period.id === "naeshin";
-    document.getElementById("exendNameField").style.display = isNaeshin ? "none" : "flex";
-    document.getElementById("exendExamNameInput").value = "";
-    if (!isNaeshin) exsimPopulateExamNameHistory();
+    document.getElementById("exendNameField").style.display = "flex";
+    document.getElementById("exendNameLabel").textContent = isNaeshin ? "내신 이름" : "모의고사 이름";
+    document.getElementById("exendExamNameInput").placeholder = isNaeshin ? "예: OO 고등학교 25년도 중간고사 수학 기출" : "예: 9월 학력평가";
+    // 내신은 시험 시작 전 "시험지 이름"을 이미 입력받았으니 그대로 미리 채워둔다(그대로 써도 되고 바꿔도 됨).
+    document.getElementById("exendExamNameInput").value = isNaeshin ? (state.period.subject || "") : "";
+    exsimPopulateExamNameHistory(isNaeshin);
     const table = document.getElementById("exendLapTable");
     table.innerHTML = exsimBuildLapTableHtml(exsimPassageGroupTimes(state));
     document.getElementById("exsimEnd").classList.add("on");
@@ -10148,19 +10227,25 @@
     });
     localStorage.setItem(exsimHistoryKey(), JSON.stringify(list.slice(0, 100)));
   }
-  // 수능 시뮬레이션(내신 제외)을 "기록하기"로 저장하면, "모의고사 관리하기" 목록에도
-  // 자동으로 시험 기록 하나가 생기도록 한다 — 랩타임 오른쪽 패널에 기록된 지문/문항별 시간을
-  // 그대로 가져온다(국어는 지문 단위, 수학·영어 등은 문항 단위 — 과목마다 EXAM_PASSAGE_SETS 구성 그대로).
+  // 수능·내신 시뮬레이션을 "기록하기"로 저장하면, "모의고사·내신 관리하기" 목록에도 자동으로
+  // 시험 기록 하나가 생기도록 한다 — 랩타임 오른쪽 패널에 기록된 지문/문항별 시간을 그대로
+  // 가져온다(국어는 지문 단위, 수학·영어 등은 문항 단위 — 과목마다 EXAM_PASSAGE_SETS 구성 그대로).
+  // 내신은 "직접 입력하기"로 만든 기록과 형식을 맞추기 위해 periodLabel은 비워두고, subject
+  // 자리엔 시험지 이름(제목)이 아니라 고른 과목(수학/영어 등)을 넣는다.
   function mexAutoRecordFromExam(state, examName) {
-    if (!state || !state.period || state.period.id === "naeshin") return;
+    if (!state || !state.period) return;
     const period = state.period;
+    const isNaeshin = period.id === "naeshin";
     const count = period.count || 1;
     const passageTimes = exsimPassageTimesWithGroupLabels(state);
     const passageTimeGroups = exsimPassageGroupTimes(state);
     const exam = {
       id: "mex_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7),
-      title: examName, periodLabel: period.periodLabel, subject: period.subject, count: count, date: getLocalDateKey(),
-      category: "mock",
+      title: examName,
+      periodLabel: isNaeshin ? "" : period.periodLabel,
+      subject: isNaeshin ? period.subjectCategory : period.subject,
+      count: count, date: getLocalDateKey(),
+      category: isNaeshin ? "naeshin" : "mock",
       answers: new Array(count).fill("unrated"),
       passageTimes: passageTimes.length ? passageTimes : null,
       passageTimeGroups: passageTimeGroups.length ? passageTimeGroups : null,
@@ -10175,18 +10260,12 @@
     const isNaeshin = exsimEndData.period.id === "naeshin";
     const nameInput = document.getElementById("exendExamNameInput");
     const examName = nameInput.value.trim();
-    if (!isNaeshin && !examName) { showToast("모의고사 이름을 입력해주세요"); nameInput.focus(); return; }
+    if (!examName) { showToast(isNaeshin ? "내신 이름을 입력해주세요" : "모의고사 이름을 입력해주세요"); nameInput.focus(); return; }
     exsimPersistCurrentSession(exsimEndData);
-    if (isNaeshin) {
-      showToast("기록이 저장됐어요!");
-      exsimCloseEnd();
-      exsimRenderHistory();
-      return;
-    }
-    // 수능 시뮬레이션은 저장만 하고 닫는 대신, 방금 기록된 모의고사의 채점 화면으로 바로 이동시킨다.
+    // 저장만 하고 닫는 대신, 방금 기록된 모의고사·내신의 채점 화면으로 바로 이동시킨다.
     const examId = mexAutoRecordFromExam(exsimEndData, examName);
     exsimCloseEnd();
-    mexGoList("mock");
+    mexGoList(isNaeshin ? "naeshin" : "mock");
     mexOpenDetail(examId);
   }
 
