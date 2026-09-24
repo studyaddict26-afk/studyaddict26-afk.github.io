@@ -9284,7 +9284,10 @@
   const EXAM_PERIODS = [
     { id: "kor",     periodLabel: "1교시", subject: "국어",          pre: "08:25", ready: "08:35", start: "08:40", end: "10:00", count: 45, points: 100 },
     { id: "math",    periodLabel: "2교시", subject: "수학",          pre: "10:20", ready: "10:25", start: "10:30", end: "12:10", count: 30, points: 100 },
-    { id: "eng",     periodLabel: "3교시", subject: "영어",          pre: "13:00", ready: "13:05", start: "13:10", end: "14:20", count: 45, points: 100, hasListening: true },
+    // 영어는 국어/수학과 달리 "준비령" 종이 따로 없다 — 예비령(13:00) 이후 13:07에 듣기평가
+    // 안내방송이 바로 시작되면서("문제지 표기 넘겨주세요") 그 순간이 곧 본령이다. 그래서
+    // ready와 start를 똑같이 13:07로 둔다(준비령 구간 길이가 0이 되어 화면에서도 생략됨).
+    { id: "eng",     periodLabel: "3교시", subject: "영어",          pre: "13:00", ready: "13:07", start: "13:07", end: "14:20", count: 45, points: 100, hasListening: true },
     { id: "korhist", periodLabel: "4교시", subject: "한국사",        pre: "14:40", ready: "14:45", start: "14:50", end: "15:20", count: 20, points: 50 },
     { id: "social",  periodLabel: "4교시", subject: "사회탐구",       pre: "15:25", ready: "15:30", start: "15:35", end: "16:15", count: 25, points: 50 },
     { id: "science", periodLabel: "4교시", subject: "과학탐구",       pre: "16:20", ready: "16:25", start: "16:30", end: "17:10", count: 25, points: 50 },
@@ -9810,14 +9813,17 @@
   function exsimTimelinePoints() {
     if (!exsimState) return [];
     const p = exsimState.period;
-    return exsimIsSimpleMode(p)
-      ? [ { time: p.start, label: "시작", atSec: 0 }, { time: p.end, label: "종료", atSec: exsimState.totalSec } ]
-      : [
-          { time: p.pre, label: "예비령", atSec: 0 },
-          { time: p.ready, label: "준비령", atSec: (exsimState.readyMin - exsimState.preMin) * 60 },
-          { time: p.start, label: "본령", atSec: (exsimState.startMin - exsimState.preMin) * 60 },
-          { time: p.end, label: "시험 끝", atSec: exsimState.totalSec },
-        ];
+    if (exsimIsSimpleMode(p)) {
+      return [{ time: p.start, label: "시작", atSec: 0 }, { time: p.end, label: "종료", atSec: exsimState.totalSec }];
+    }
+    const points = [{ time: p.pre, label: "예비령", atSec: 0 }];
+    // 영어처럼 준비령 없이 예비령 다음이 바로 본령인 과목은(ready와 start가 같음) 준비령 점을 생략한다.
+    if (exsimState.readyMin !== exsimState.startMin) {
+      points.push({ time: p.ready, label: "준비령", atSec: (exsimState.readyMin - exsimState.preMin) * 60 });
+    }
+    points.push({ time: p.start, label: "본령", atSec: (exsimState.startMin - exsimState.preMin) * 60 });
+    points.push({ time: p.end, label: "시험 끝", atSec: exsimState.totalSec });
+    return points;
   }
   function exsimRenderTimeline() {
     const el = document.getElementById("exlvTlLabels");
