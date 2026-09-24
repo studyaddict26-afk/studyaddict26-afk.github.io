@@ -9867,6 +9867,11 @@
     exsimState.running = !exsimState.running;
     const btn = document.getElementById("exlvPlayBtn");
     if (btn) btn.textContent = exsimState.running ? "❚❚" : "▶";
+    // 영어 듣기 음원이 이미 재생을 시작한 뒤라면, 일시정지/재생 버튼과 같이 음원도 멈췄다 이어진다.
+    if (exsimState.listeningPlayed) {
+      const audio = document.getElementById("exlvListeningAudio");
+      if (audio) { if (exsimState.running) audio.play().catch(function () {}); else audio.pause(); }
+    }
   }
   // ── 진행 화면: 지문별 랩타임 기록(오른쪽 패널) ──
   // 과목마다 지문 구성이 달라서 EXAM_PASSAGE_SETS에 과목 id별로 "그룹(소제목)+항목" 목록을
