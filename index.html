@@ -3785,6 +3785,21 @@
        안의 모든 요소에도 걸려서, display는 block인데 visibility만 hidden이라 빈 페이지처럼
        보이는 문제가 있었다 — 이 영역 전체를 명시적으로 다시 보이게 한다. */
     body.mex-printing #mexPrintArea, body.mex-printing #mexPrintArea * { visibility: visible !important; }
+    /* 맨 앞장 표지 — 인쇄 첫 페이지를 통째로 차지하고, 실제 기록 내용은 다음 페이지부터 시작한다. */
+    .mexp-cover {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 95vh; text-align: center; page-break-after: always;
+    }
+    .mexp-cover-word { font-size: 13pt; font-weight: 800; color: #15522F; letter-spacing: 0.02em; margin-bottom: 44px; }
+    .mexp-cover-word span { display: block; font-size: 8pt; font-weight: 600; color: #888; letter-spacing: 0.08em; margin-top: 3px; }
+    .mexp-cover-kicker { font-size: 9pt; font-weight: 700; letter-spacing: 0.3em; color: #999; margin-bottom: 16px; }
+    .mexp-cover-title { font-size: 26pt; font-weight: 800; color: #111; margin: 0 0 14px 0; line-height: 1.35; }
+    .mexp-cover-sub { font-size: 12pt; color: #555; margin-bottom: 40px; }
+    .mexp-cover-stats { display: flex; gap: 48px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; padding: 18px 0; margin-bottom: 44px; }
+    .mexp-cover-stats div { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .mexp-cover-stats span { font-size: 8.5pt; color: #888; }
+    .mexp-cover-stats b { font-size: 15pt; color: #111; }
+    .mexp-cover-footer { font-size: 9pt; color: #999; }
     .mexp-title { font-size: 18pt; margin: 0 0 12px 0; }
     .mexp-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; border: 1px solid #bbb; border-radius: 6px; padding: 10px 12px; margin-bottom: 14px; }
     .mexp-meta span { display: block; font-size: 8.5pt; color: #666; }
@@ -10797,7 +10812,21 @@
       const r = MEX_WRONGNOTE_REASONS.find(x => x.value === note.reason);
       return r ? r.label : "";
     };
-    let html = '<h1 class="mexp-title">' + esc(exam.title) + '</h1>' +
+    const studentId = localStorage.getItem("holoStudentId") || "";
+    const todayStr = getLocalDateKey();
+    let html =
+      '<div class="mexp-cover">' +
+        '<div class="mexp-cover-word">홀로<span>ROADMAP × STUDY ADDICT</span></div>' +
+        '<div class="mexp-cover-kicker">EXAM REPORT</div>' +
+        '<h1 class="mexp-cover-title">' + esc(exam.title) + '</h1>' +
+        '<div class="mexp-cover-sub">' + esc((exam.periodLabel ? exam.periodLabel + " " : "") + exam.subject) + ' · ' + esc(exam.date) + '</div>' +
+        '<div class="mexp-cover-stats">' +
+          '<div><span>점수</span><b>' + score + '</b></div>' +
+          '<div><span>랩타임</span><b>' + (hasLap ? "총 " + formatDur(totalSec) : "기록 없음") + '</b></div>' +
+        '</div>' +
+        '<div class="mexp-cover-footer">' + (studentId ? esc(studentId) + " 학생 · " : "") + '발급일 ' + esc(todayStr) + '</div>' +
+      '</div>' +
+      '<h1 class="mexp-title">' + esc(exam.title) + '</h1>' +
       '<div class="mexp-meta">' +
         '<div><span>날짜</span><b>' + esc(exam.date) + '</b></div>' +
         '<div><span>시험</span><b>' + esc((exam.periodLabel ? exam.periodLabel + " " : "") + exam.subject) + '</b></div>' +
