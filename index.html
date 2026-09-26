@@ -3777,7 +3777,10 @@
     @page { margin: 14mm; }
     body.mex-printing > *:not(#mexPrintArea) { display: none !important; }
     body.mex-printing { background: #fff !important; }
-    body.mex-printing #mexPrintArea { display: block !important; color: #111; font-size: 11pt; line-height: 1.55; }
+    /* body가 화면에서는 display:flex(사이드바+본문 가로 배치)라서, 다른 형제는 다 숨겨도
+       이 영역이 flex 아이템으로 남아 내용 폭만큼만 좁게 잡히고 오른쪽이 비어 보였다 — 너비를
+       페이지 전체로 명시해서 고친다. */
+    body.mex-printing #mexPrintArea { display: block !important; width: 100% !important; color: #111; font-size: 11pt; line-height: 1.55; }
     /* "내 분석지" 인쇄용 body * { visibility: hidden } 규칙(위 #print-area 블록)이 이 영역
        안의 모든 요소에도 걸려서, display는 block인데 visibility만 hidden이라 빈 페이지처럼
        보이는 문제가 있었다 — 이 영역 전체를 명시적으로 다시 보이게 한다. */
