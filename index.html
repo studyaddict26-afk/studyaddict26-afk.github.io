@@ -9053,7 +9053,22 @@
     const card = document.getElementById("report-content-" + id);
     const area = document.getElementById("print-area");
     if (!card || !area) return;
-    area.innerHTML = card.innerHTML;
+    // 모의고사 인쇄 표지와 같은 디자인(.mexp-cover류 클래스)을 그대로 재사용하되, 제목·kicker를
+    // 다르게 써서 "내 분석지"와 "모의고사 분석하기" 인쇄물을 표지만 보고도 구분할 수 있게 한다.
+    const reportCardEl = card.closest(".report-card");
+    const periodEl = reportCardEl ? reportCardEl.querySelector(".report-period") : null;
+    const periodText = periodEl ? periodEl.textContent : "";
+    const studentId = localStorage.getItem("holoStudentId") || "";
+    const todayStr = getLocalDateKey();
+    const cover =
+      '<div class="mexp-cover">' +
+        '<div class="mexp-cover-word">홀로</div>' +
+        '<div class="mexp-cover-kicker">STUDY ANALYSIS REPORT</div>' +
+        '<h1 class="mexp-cover-title">내 분석지</h1>' +
+        '<div class="mexp-cover-sub">' + escapeHtml(periodText) + '</div>' +
+        '<div class="mexp-cover-footer">' + (studentId ? escapeHtml(studentId) + " 학생 · " : "") + '발급일 ' + escapeHtml(todayStr) + '</div>' +
+      '</div>';
+    area.innerHTML = cover + card.innerHTML;
     area.classList.add("on");
     window.print();
   }
