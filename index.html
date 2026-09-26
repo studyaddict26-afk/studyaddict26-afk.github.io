@@ -1538,6 +1538,27 @@
     border: none; border-radius: 0; border-left: 1.5px solid #B9D6C2; background: none;
   }
   .mex-top-row .mex-new-btn:first-child { border-left: none; }
+  /* 내 모의고사 분석하기 — AI 호출 없이, 이미 기록된 점수·오답원인·풀이시간만으로 즉석 계산해서
+     보여준다. 과목별 추이는 같은 과목 기록이 3개 이상 쌓였을 때만(너무 적으면 추이가 의미 없음). */
+  .mex-analysis-card:empty { display: none; }
+  .mex-analysis-card { display: flex; flex-direction: column; gap: 14px; margin-bottom: 16px; }
+  .mex-analysis-empty { font-size: 0.8rem; color: var(--ink-soft); background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .mex-analysis-sec { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .mex-analysis-sec-title { font-size: 0.82rem; font-weight: 800; color: var(--ink); margin-bottom: 14px; }
+  .mex-analysis-subject { margin-bottom: 16px; }
+  .mex-analysis-subject:last-child { margin-bottom: 0; }
+  .mex-analysis-subject-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.78rem; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+  .mex-analysis-subject-avg { color: var(--green-deep); font-weight: 800; }
+  .mex-analysis-bars { display: flex; align-items: flex-end; gap: 8px; height: 64px; }
+  .mex-analysis-bar { flex: 1; min-width: 0; max-width: 40px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 4px; }
+  .mex-analysis-bar-fill { width: 100%; background: var(--green); border-radius: 4px 4px 0 0; min-height: 3px; }
+  .mex-analysis-bar-label { font-size: 0.6rem; color: var(--ink-soft); white-space: nowrap; }
+  .mex-analysis-reasons { display: flex; flex-direction: column; gap: 10px; }
+  .mex-analysis-reason-row { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; }
+  .mex-analysis-reason-label { flex: none; width: 120px; font-weight: 700; color: var(--ink); }
+  .mex-analysis-reason-bar-wrap { flex: 1; background: var(--cream); border-radius: 999px; height: 8px; overflow: hidden; }
+  .mex-analysis-reason-bar { height: 100%; background: var(--green-deep); border-radius: 999px; }
+  .mex-analysis-reason-count { flex: none; font-size: 0.74rem; color: var(--ink-soft); font-weight: 700; }
   .mex-field { display: flex; flex-direction: column; gap: 6px; }
   .mex-field label { font-size: 0.76rem; font-weight: 700; color: var(--ink-soft); }
   .mex-field input, .mex-field select {
@@ -5029,6 +5050,7 @@
     </div>
 
     <div class="mex-wrap" id="mexHomeWrap">
+      <div class="mex-analysis-card" id="mexAnalysisCard"></div>
       <div class="mex-top-row">
         <button type="button" class="mex-new-btn" id="mexSubjectFilterBtn" onclick="mexOpenSubjectFilterPopup()">과목 선택하기</button>
         <button type="button" class="mex-new-btn" id="mexNewBtn" onclick="mexOpenNewExamPopup()">+ 새 모의고사 직접 입력하기</button>
@@ -10754,6 +10776,7 @@
   }
 
   function mexRenderList() {
+    mexRenderAnalysis();
     const el = document.getElementById("mexList");
     if (!el) return;
     let list = mexLoadExams().filter(exam => (exam.category || "mock") === mexCategory);
@@ -10774,6 +10797,88 @@
         '<button type="button" class="mex-list-del-btn" onclick="mexDeleteExam(\'' + exam.id + '\')">삭제하기</button>' +
       '</div>';
     }).join("");
+  }
+  // 내 모의고사 분석하기 — AI 호출 없이 이미 기록된 데이터만으로 즉석 계산한다(과목 필터와는
+  // 무관하게 항상 카테고리 전체 기록을 본다). 한 과목당 기록이 3개 미만이면 추이가 의미 없어
+  // 보이므로 그 과목은 조용히 건너뛴다 — 아무 과목도 기준을 못 채우면 안내 문구만 보여준다.
+  const MEX_ANALYSIS_MIN_COUNT = 3;
+  function mexExamLapTotalSec(exam) {
+    const groups = (exam.passageTimeGroups && exam.passageTimeGroups.length)
+      ? exam.passageTimeGroups : mexInferPassageGroups(exam.passageTimes || []);
+    let sec = 0;
+    groups.forEach(g => g.items.forEach(it => { if (it.sec > 0) sec += it.sec; }));
+    return sec;
+  }
+  function mexRenderAnalysis() {
+    const el = document.getElementById("mexAnalysisCard");
+    if (!el) return;
+    const exams = mexLoadExams().filter(exam => (exam.category || "mock") === mexCategory);
+    const bySubject = {};
+    exams.forEach(e => { (bySubject[e.subject] = bySubject[e.subject] || []).push(e); });
+
+    const scoreTrends = Object.keys(bySubject).map(subject => {
+      const scored = bySubject[subject]
+        .filter(e => e.scoreMine && e.scoreMax && Number(e.scoreMax) > 0)
+        .slice().sort((a, b) => a.date.localeCompare(b.date))
+        .map(e => ({ pct: Math.round(Number(e.scoreMine) / Number(e.scoreMax) * 100) }));
+      return { subject, scored };
+    }).filter(t => t.scored.length >= MEX_ANALYSIS_MIN_COUNT);
+
+    const reasonCount = {};
+    exams.forEach(e => {
+      Object.values(e.wrongNotes || {}).forEach(note => {
+        if (!note || !note.reason) return;
+        const key = (note.reason === "custom" || note.reason === "etc") ? "custom" : note.reason;
+        reasonCount[key] = (reasonCount[key] || 0) + 1;
+      });
+    });
+    const reasonEntries = Object.entries(reasonCount).sort((a, b) => b[1] - a[1]).slice(0, 3);
+    const reasonMax = reasonEntries.length ? reasonEntries[0][1] : 0;
+
+    const timeTrends = Object.keys(bySubject).map(subject => {
+      const timed = bySubject[subject]
+        .map(e => ({ sec: mexExamLapTotalSec(e), date: e.date }))
+        .filter(t => t.sec > 0)
+        .sort((a, b) => a.date.localeCompare(b.date));
+      return { subject, timed };
+    }).filter(t => t.timed.length >= MEX_ANALYSIS_MIN_COUNT);
+
+    if (!scoreTrends.length && !reasonEntries.length && !timeTrends.length) {
+      el.innerHTML = '<div class="mex-analysis-empty">한 과목당 기록이 ' + MEX_ANALYSIS_MIN_COUNT + '개 이상 쌓이면, 점수·풀이 시간 추이와 자주 나오는 오답 원인을 여기서 분석해드려요.</div>';
+      return;
+    }
+
+    let html = "";
+    if (scoreTrends.length) {
+      html += '<div class="mex-analysis-sec"><div class="mex-analysis-sec-title">📈 과목별 점수 추이</div>' +
+        scoreTrends.map(t => {
+          const avg = Math.round(t.scored.reduce((s, x) => s + x.pct, 0) / t.scored.length);
+          const bars = t.scored.map(x =>
+            '<div class="mex-analysis-bar"><div class="mex-analysis-bar-fill" style="height:' + Math.max(4, x.pct) + '%"></div><div class="mex-analysis-bar-label">' + x.pct + '</div></div>'
+          ).join("");
+          return '<div class="mex-analysis-subject"><div class="mex-analysis-subject-head"><span>' + escapeHtml(t.subject) + '</span><span class="mex-analysis-subject-avg">평균 ' + avg + '점</span></div><div class="mex-analysis-bars">' + bars + '</div></div>';
+        }).join("") + '</div>';
+    }
+    if (reasonEntries.length) {
+      html += '<div class="mex-analysis-sec"><div class="mex-analysis-sec-title">⚠️ 자주 나오는 오답 원인 TOP ' + reasonEntries.length + '</div>' +
+        '<div class="mex-analysis-reasons">' + reasonEntries.map(function (pair) {
+          const key = pair[0], count = pair[1];
+          const label = key === "custom" ? "기타(직접 입력)" : ((MEX_WRONGNOTE_REASONS.find(r => r.value === key) || {}).label || key);
+          const pct = Math.round(count / reasonMax * 100);
+          return '<div class="mex-analysis-reason-row"><span class="mex-analysis-reason-label">' + escapeHtml(label) + '</span><div class="mex-analysis-reason-bar-wrap"><div class="mex-analysis-reason-bar" style="width:' + pct + '%"></div></div><span class="mex-analysis-reason-count">' + count + '회</span></div>';
+        }).join("") + '</div></div>';
+    }
+    if (timeTrends.length) {
+      html += '<div class="mex-analysis-sec"><div class="mex-analysis-sec-title">⏱️ 과목별 풀이 시간 추이</div>' +
+        timeTrends.map(t => {
+          const maxSec = Math.max.apply(null, t.timed.map(x => x.sec));
+          const bars = t.timed.map(x =>
+            '<div class="mex-analysis-bar"><div class="mex-analysis-bar-fill" style="height:' + Math.max(4, Math.round(x.sec / maxSec * 100)) + '%"></div><div class="mex-analysis-bar-label">' + formatDur(x.sec) + '</div></div>'
+          ).join("");
+          return '<div class="mex-analysis-subject"><div class="mex-analysis-subject-head"><span>' + escapeHtml(t.subject) + '</span></div><div class="mex-analysis-bars">' + bars + '</div></div>';
+        }).join("") + '</div>';
+    }
+    el.innerHTML = html;
   }
   function mexDeleteExam(examId) {
     if (!confirm("이 모의고사 기록을 삭제할까요? 삭제하면 되돌릴 수 없습니다.")) return;
