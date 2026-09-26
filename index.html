@@ -9482,12 +9482,13 @@
   let exsimListeningFileName = null;
   let exsimListeningObjectUrl = null;
   function exsimListeningRowHtml() {
-    if (!LISTENING_AUDIOS.length) {
-      return '<div class="exsim-selected-row"><span class="ico">🎧</span><span class="lbl">영어 듣기 음원</span><span class="val" style="color:var(--ink-soft);font-weight:600;">등록된 음원 없음</span></div>';
-    }
-    const options = '<option value="">선택 안 함</option>' + LISTENING_AUDIOS.map(a =>
-      '<option value="' + a.id + '"' + (a.id === exsimSelectedListeningId ? ' selected' : '') + '>' + escapeHtml(a.title) + '</option>'
-    ).join("");
+    // "선택 안 함" 바로 아래 "독해 문제만 시험보기"를 항상 넣어둔다 — 듣기 음원 목록이 비어있어도
+    // 이 옵션은 유효하므로(듣기 자체를 안 보는 모드), 음원 등록 여부와 무관하게 항상 보여준다.
+    const options = '<option value="">선택 안 함</option>' +
+      '<option value="readingOnly"' + (exsimSelectedListeningId === "readingOnly" ? ' selected' : '') + '>독해 문제만 시험보기</option>' +
+      LISTENING_AUDIOS.map(a =>
+        '<option value="' + a.id + '"' + (a.id === exsimSelectedListeningId ? ' selected' : '') + '>' + escapeHtml(a.title) + '</option>'
+      ).join("");
     return '<div class="exsim-selected-row"><span class="ico">🎧</span><span class="lbl">영어 듣기 음원</span><span class="val"><select class="exsim-listening-select" onchange="exsimSelectListeningAudio(this.value)">' + options + '</select></span></div>';
   }
   function exsimSelectListeningAudio(id) {
@@ -9495,7 +9496,7 @@
     const audio = LISTENING_AUDIOS.find(a => a.id === id);
     exsimListeningObjectUrl = audio ? audio.url : null;
     exsimListeningFileName = audio ? audio.title : null;
-    // 음원 선택 여부에 따라 영어의 시험 시간(13:07~ vs 13:10~)이 바뀌므로 카드도 바로 다시 그린다.
+    // 음원 선택 여부/독해 전용 모드에 따라 영어의 시험 시간·문항 수가 바뀌므로 카드도 바로 다시 그린다.
     exsimRenderSelectedCard();
   }
 
@@ -9638,6 +9639,16 @@
   // 과목처럼 예비령→준비령→본령이 5분씩 흐르는 일반적인 흐름으로 되돌린다.
   function exsimResolvePeriod(period) {
     if (!period || period.id !== "eng") return period;
+    if (exsimSelectedListeningId === "readingOnly") {
+      // 독해 문제만 연습 — 듣기(17문항)를 아예 건너뛰고, 실제 독해 시간(약 45분)·문항 수(28문항)만큼
+      // 내신처럼 지금 이 순간부터 바로 시작하는 타이머 모드로 진행한다(정해진 시각표를 기다릴 필요 없음).
+      const now = new Date();
+      const nowHM = minToHM(now.getHours() * 60 + now.getMinutes());
+      return Object.assign({}, period, {
+        subject: "영어(독해)", pre: nowHM, ready: nowHM, start: nowHM,
+        end: minToHM(now.getHours() * 60 + now.getMinutes() + 45), count: 28,
+      });
+    }
     return Object.assign({}, period, exsimListeningObjectUrl
       ? { ready: "13:07", start: "13:07" }
       : { ready: "13:05", start: "13:10" });
