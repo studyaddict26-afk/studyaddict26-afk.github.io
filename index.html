@@ -1541,6 +1541,9 @@
   /* 모의고사 관리하기: "분석하기"/"기록 살펴보기" 두 탭 전환 버튼 — 버튼 자체는 "내 분석지"의
      .reports-subtab-btn을 그대로 재사용(초록 필 버튼, 선택된 쪽만 채워짐). */
   .mex-subtabs { display: flex; gap: 8px; }
+  /* "기록 살펴보기" 탭 안의 과목선택 버튼 줄과 목록 사이 간격 — 원래는 .mex-wrap의 flex gap이
+     이 둘 사이에 바로 적용됐는데, 탭 전환용으로 한 겹 더 감싸면서 그 gap이 안 먹게 된 것을 복원. */
+  #mexRecordsTab { display: flex; flex-direction: column; gap: 16px; }
   /* 내 모의고사 분석하기 — AI 호출 없이, 이미 기록된 점수·오답원인·풀이시간만으로 즉석 계산해서
      보여준다. 과목별 추이는 같은 과목 기록이 3개 이상 쌓였을 때만(너무 적으면 추이가 의미 없음). */
   .mex-analysis-card:empty { display: none; }
