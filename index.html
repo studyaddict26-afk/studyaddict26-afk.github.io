@@ -1538,6 +1538,9 @@
     border: none; border-radius: 0; border-left: 1.5px solid #B9D6C2; background: none;
   }
   .mex-top-row .mex-new-btn:first-child { border-left: none; }
+  /* 모의고사 관리하기: "분석하기"/"기록 살펴보기" 두 탭 전환 버튼 — 버튼 자체는 "내 분석지"의
+     .reports-subtab-btn을 그대로 재사용(초록 필 버튼, 선택된 쪽만 채워짐). */
+  .mex-subtabs { display: flex; gap: 8px; }
   /* 내 모의고사 분석하기 — AI 호출 없이, 이미 기록된 점수·오답원인·풀이시간만으로 즉석 계산해서
      보여준다. 과목별 추이는 같은 과목 기록이 3개 이상 쌓였을 때만(너무 적으면 추이가 의미 없음). */
   .mex-analysis-card:empty { display: none; }
@@ -5050,13 +5053,21 @@
     </div>
 
     <div class="mex-wrap" id="mexHomeWrap">
-      <div class="mex-analysis-card" id="mexAnalysisCard"></div>
-      <div class="mex-top-row">
-        <button type="button" class="mex-new-btn" id="mexSubjectFilterBtn" onclick="mexOpenSubjectFilterPopup()">과목 선택하기</button>
-        <button type="button" class="mex-new-btn" id="mexNewBtn" onclick="mexOpenNewExamPopup()">+ 새 모의고사 직접 입력하기</button>
+      <div class="mex-subtabs">
+        <button type="button" class="reports-subtab-btn on" id="mexSubtabAnalysisBtn" onclick="mexShowSubtab('analysis')">내 모의고사 분석하기</button>
+        <button type="button" class="reports-subtab-btn" id="mexSubtabRecordsBtn" onclick="mexShowSubtab('records')">내 모의고사 기록 살펴보기</button>
       </div>
+      <div id="mexAnalysisTab">
+        <div class="mex-analysis-card" id="mexAnalysisCard"></div>
+      </div>
+      <div id="mexRecordsTab" style="display:none;">
+        <div class="mex-top-row">
+          <button type="button" class="mex-new-btn" id="mexSubjectFilterBtn" onclick="mexOpenSubjectFilterPopup()">과목 선택하기</button>
+          <button type="button" class="mex-new-btn" id="mexNewBtn" onclick="mexOpenNewExamPopup()">+ 새 모의고사 직접 입력하기</button>
+        </div>
 
-      <div class="mex-list" id="mexList"></div>
+        <div class="mex-list" id="mexList"></div>
+      </div>
     </div>
 
     <!-- ─── 새 모의고사 기록하기 팝업 (직접 입력) ─── -->
@@ -10670,8 +10681,17 @@
     document.getElementById("mexDetailWrap").style.display = "none";
     document.getElementById("mexHomeWrap").style.display = "flex";
     mexCloseNewExamPopup();
+    mexShowSubtab("analysis");
     mexRenderList();
     mexRetryUnsyncedSubmissions();
+  }
+  // 모의고사 관리하기 안의 "분석하기"/"기록 살펴보기" 탭 전환 — 모의고사·내신 어느 카테고리든
+  // 들어올 때마다 분석 탭을 기본으로 보여준다.
+  function mexShowSubtab(tab) {
+    document.getElementById("mexAnalysisTab").style.display = tab === "analysis" ? "block" : "none";
+    document.getElementById("mexRecordsTab").style.display = tab === "records" ? "block" : "none";
+    document.getElementById("mexSubtabAnalysisBtn").classList.toggle("on", tab === "analysis");
+    document.getElementById("mexSubtabRecordsBtn").classList.toggle("on", tab === "records");
   }
   // 목록 위 "과목 선택하기" 버튼 — 카테고리(모의고사/내신) 안에 실제로 기록된 과목만 팝업으로 골라 필터링.
   function mexSetSubjectFilter(subject) {
