@@ -1388,10 +1388,11 @@
   .exlv-controls { display: flex; align-items: center; gap: 22px; margin-bottom: 18px; }
   .exlv-controls button { background: none; border: none; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 0.62rem; font-weight: 700; cursor: pointer; }
   #exlvPlayBtn { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.14); font-size: 1.1rem; display: flex; align-items: center; justify-content: center; padding-left: 2px; }
-  .exlv-noise-row { display: flex; gap: 12px; margin-bottom: 22px; flex-wrap: wrap; justify-content: center; }
+  .exlv-noise-row { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 22px; }
   .exlv-noise-btn { font-family: inherit; font-size: 0.72rem; font-weight: 700; color: #fff; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 7px 14px; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
   .exlv-noise-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.4); }
   .exlv-noise-btn.on { background: var(--green-deep); border-color: var(--green-deep); }
+  .exlv-noise-vol { width: 120px; accent-color: var(--green-deep); cursor: pointer; }
   .exlv-timeline { width: 100%; max-width: 347px; margin-top: 8px; }
   .exlv-end-btn { margin-top: 22px; font-family: inherit; font-size: 0.74rem; font-weight: 700; color: rgba(255,255,255,0.6); background: none; border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 8px 18px; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, color 0.15s, border-color 0.15s; }
   .exlv-end-btn:hover { transform: translateY(-2px); color: #fff; border-color: rgba(255,255,255,0.5); box-shadow: 0 6px 14px rgba(0,0,0,0.4); }
@@ -4101,6 +4102,7 @@
     </div>
     <div class="exlv-noise-row" id="exlvLapRow" style="display:none;">
       <button type="button" class="exlv-noise-btn" id="exlvNoiseBtn" onclick="event.stopPropagation();exsimToggleNoise()">🔇 시험장 소음 켜기</button>
+      <input type="range" class="exlv-noise-vol" id="exlvNoiseVol" min="0" max="100" value="15" onclick="event.stopPropagation();" oninput="event.stopPropagation();exsimSetLiveNoiseVol(this.value)" aria-label="시험장 소음 볼륨">
     </div>
     <div class="exlv-timeline" id="exlvTimeline">
       <div class="exlv-tl-track"><div class="exlv-tl-fill" id="exlvTlFill"></div></div>
@@ -9505,7 +9507,6 @@
   // 만들 수 있지만, 기침·코훌쩍임 등은 진짜 녹음 파일이 없어서 우선 노이즈를 짧게 합성해
   // 흉내만 낸 것 — 나중에 진짜 음원으로 바꾸려면 exsimPlayEffectBurst()만 고치면 된다.
   const EXSIM_NOISE_TYPES = [
-    { id: "white", label: "백색 소음" },
     { id: "cough", label: "기침" },
     { id: "sniffle", label: "코 훌쩍임" },
     { id: "legshake", label: "다리 떨기" },
@@ -9514,11 +9515,12 @@
   ];
   function exsimLoadNoiseTypes() {
     const raw = localStorage.getItem("exsimNoiseTypes");
-    if (raw === null) return ["white"]; // 처음 쓰는 사람은 백색소음만 기본으로 체크
+    if (raw === null) return []; // 처음 쓰는 사람은 아무것도 기본으로 체크하지 않음
     try {
       const arr = JSON.parse(raw);
-      return Array.isArray(arr) ? arr : ["white"];
-    } catch (e) { return ["white"]; }
+      // 예전에 저장해둔 "white"(백색소음, 이제 지원 안 함)는 걸러낸다.
+      return Array.isArray(arr) ? arr.filter(t => t !== "white") : [];
+    } catch (e) { return []; }
   }
   function exsimSaveNoiseTypes() {
     const checked = Array.from(document.querySelectorAll("#exsimNoiseTypeList input[type=checkbox]:checked")).map(cb => cb.dataset.noise);
@@ -9547,6 +9549,11 @@
     const rg = document.getElementById("exsimNoiseVol");
     if (cb) localStorage.setItem("exsimNoiseDefaultOn", cb.checked ? "1" : "0");
     if (rg) localStorage.setItem("exsimNoiseVol", rg.value);
+  }
+  // 진행 화면의 소음 켜기 버튼 바로 아래 조절바 — 팝업을 열지 않고도 바로 볼륨을 바꾼다.
+  // 효과음은 매번 재생 직전에 이 값을 새로 읽으므로, 다음 효과음부터 바로 반영된다.
+  function exsimSetLiveNoiseVol(val) {
+    localStorage.setItem("exsimNoiseVol", val);
   }
 
   // ── 홈 화면: 모의고사 기록(v1은 기기 저장) ──
@@ -9690,6 +9697,8 @@
     if (playBtn) playBtn.textContent = "▶";
     const noiseBtn = document.getElementById("exlvNoiseBtn");
     if (noiseBtn) { noiseBtn.textContent = "🔇 시험장 소음 켜기"; noiseBtn.classList.remove("on"); }
+    const noiseVolEl = document.getElementById("exlvNoiseVol");
+    if (noiseVolEl) noiseVolEl.value = localStorage.getItem("exsimNoiseVol") || "15";
     exsimRenderTimeline();
     exsimRenderPassages();
     exsimDrawClock(preMin);
@@ -10024,11 +10033,10 @@
   }
 
   // ── 진행 화면: 시험장 소음(Web Audio API로 생성 — 별도 음원 파일 없이 재생) ──
-  // 백색소음은 계속 흐르고, 기침·코훌쩍임 등 나머지는 체크된 종류 중 하나를 무작위로 골라
-  // 랜덤한 간격(6~20초)으로 반복 재생한다. 진짜 녹음이 아니라 노이즈를 짧게 합성해 흉내만 낸
-  // 것 — 나중에 실제 음원 파일이 생기면 exsimPlayEffectBurst() 안의 합성 부분만 <audio> 재생
-  // 코드로 바꾸면 된다.
-  let exsimAudioCtx = null, exsimNoiseSrc = null, exsimEffectTimer = null;
+  // 기침·코훌쩍임 등 체크된 종류 중 하나를 무작위로 골라 랜덤한 간격(6~20초)으로 반복
+  // 재생한다. 진짜 녹음이 아니라 노이즈를 짧게 합성해 흉내만 낸 것 — 나중에 실제 음원 파일이
+  // 생기면 exsimPlayEffectBurst() 안의 합성 부분만 <audio> 재생 코드로 바꾸면 된다.
+  let exsimAudioCtx = null, exsimEffectTimer = null;
   function exsimToggleNoise() {
     if (!exsimState) return;
     exsimState.noiseOn = !exsimState.noiseOn;
@@ -10047,27 +10055,10 @@
       if (exsimAudioCtx.state === "suspended") exsimAudioCtx.resume();
     } catch (e) { console.error(e); return; }
     const types = exsimLoadNoiseTypes();
-    if (types.includes("white")) exsimStartWhiteNoise();
-    const effectTypes = types.filter(t => t !== "white");
-    if (effectTypes.length) exsimScheduleEffectNoise(effectTypes);
+    if (types.length) exsimScheduleEffectNoise(types);
   }
   function exsimStopNoise() {
-    if (exsimNoiseSrc) { try { exsimNoiseSrc.stop(); } catch (e) {} exsimNoiseSrc = null; }
     if (exsimEffectTimer) { clearTimeout(exsimEffectTimer); exsimEffectTimer = null; }
-  }
-  function exsimStartWhiteNoise() {
-    const bufferSize = 2 * exsimAudioCtx.sampleRate;
-    const buffer = exsimAudioCtx.createBuffer(1, bufferSize, exsimAudioCtx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-    const src = exsimAudioCtx.createBufferSource();
-    src.buffer = buffer; src.loop = true;
-    const gain = exsimAudioCtx.createGain();
-    const vol = Number(localStorage.getItem("exsimNoiseVol") || "15") / 100;
-    gain.gain.value = vol * 0.3;
-    src.connect(gain).connect(exsimAudioCtx.destination);
-    src.start(0);
-    exsimNoiseSrc = src;
   }
   function exsimScheduleEffectNoise(effectTypes) {
     const gap = 6000 + Math.random() * 14000; // 6~20초 랜덤 간격으로 반복
