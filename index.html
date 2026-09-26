@@ -2302,7 +2302,7 @@
   }
 
   /* ═══════════ 상담 안내 ═══════════ */
-  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3, #view-consult-5, #view-consult-6, #view-consult-7, #view-consult-8, #view-howto, #view-recordhub, #view-scheduleManage, #view-examhub, #view-examSuneung, #view-examNaeshin, #view-mockexam, #view-mexlist { overflow-y: auto; }
+  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3, #view-consult-5, #view-consult-6, #view-consult-7, #view-consult-8, #view-consult-korean, #view-consult-math, #view-consult-english, #view-howto, #view-recordhub, #view-scheduleManage, #view-examhub, #view-examSuneung, #view-examNaeshin, #view-mockexam, #view-mexlist { overflow-y: auto; }
   .consult-page {
     max-width: 1040px; width: 100%; margin: 0 auto;
     padding: 32px 24px 56px 24px;
@@ -5422,15 +5422,15 @@
             <span class="ef-hl">전반적인 학습 컨설팅</span>
             <span class="grade-tab-col-arrow">›</span>
           </button>
-          <button type="button" class="grade-tab-col" onclick="go('consult-6')">
+          <button type="button" class="grade-tab-col" onclick="go('consult-korean')">
             <span class="ef-hl">국어</span>
             <span class="grade-tab-col-arrow">›</span>
           </button>
-          <button type="button" class="grade-tab-col" onclick="go('consult-7')">
+          <button type="button" class="grade-tab-col" onclick="go('consult-math')">
             <span class="ef-hl">수학</span>
             <span class="grade-tab-col-arrow">›</span>
           </button>
-          <button type="button" class="grade-tab-col" onclick="go('consult-8')">
+          <button type="button" class="grade-tab-col" onclick="go('consult-english')">
             <span class="ef-hl">영어</span>
             <span class="grade-tab-col-arrow">›</span>
           </button>
@@ -5598,6 +5598,48 @@
         </div>
       </div>
 
+    </div>
+  </section>
+
+  <!-- ─── 상담 상세: 국어 선생님 소개 (준비중) ─── -->
+  <section class="view" id="view-consult-korean">
+    <div class="consult-page">
+      <div class="cd-page-head">
+        <div>
+          <span class="eyebrow">KOREAN</span>
+          <h2>국어 선생님 소개</h2>
+        </div>
+      </div>
+      <div class="split"></div>
+      <p class="hub-coming-soon">준비중입니다</p>
+    </div>
+  </section>
+
+  <!-- ─── 상담 상세: 수학 선생님 소개 (준비중) ─── -->
+  <section class="view" id="view-consult-math">
+    <div class="consult-page">
+      <div class="cd-page-head">
+        <div>
+          <span class="eyebrow">MATH</span>
+          <h2>수학 선생님 소개</h2>
+        </div>
+      </div>
+      <div class="split"></div>
+      <p class="hub-coming-soon">준비중입니다</p>
+    </div>
+  </section>
+
+  <!-- ─── 상담 상세: 영어 선생님 소개 (준비중) ─── -->
+  <section class="view" id="view-consult-english">
+    <div class="consult-page">
+      <div class="cd-page-head">
+        <div>
+          <span class="eyebrow">ENGLISH</span>
+          <h2>영어 선생님 소개</h2>
+        </div>
+      </div>
+      <div class="split"></div>
+      <p class="hub-coming-soon">준비중입니다</p>
     </div>
   </section>
 
@@ -6926,12 +6968,13 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "학습 컨설팅 선생님 소개", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "내 플래너 관리하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "학습 컨설팅 선생님 소개", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "내 플래너 관리하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { mathexam: "exam", engexam: "exam" };
   // "← 이전으로"가 상단 흰색 바(topbar)의 제목 오른쪽에 뜨는 페이지들과, 각각이 돌아갈 곳.
   const BACK_TARGET = {
     "consult-1": "consult", "consult-2": "consult", "consult-3": "consult",
     "consult-5": "consult", "consult-6": "consult", "consult-7": "consult", "consult-8": "consult",
+    "consult-korean": "consult", "consult-math": "consult", "consult-english": "consult",
     todayrecord: "home", cumulative: "recordhub", reports: "recordhub", dayDetail: "cumulative",
     examSuneung: "examhub", examNaeshin: "examhub", mexlist: "mockexam",
   };
