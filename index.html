@@ -4776,6 +4776,16 @@
             </span>
             <span class="rh-tile-head-right"><span class="rh-tile-arrow">›</span></span>
           </span>
+          <div class="rh-tile-avg rh-tile-avg-2col">
+            <div class="rh-tile-avg-col">
+              <span class="rh-tile-avg-label">현재까지 누적</span>
+              <span class="rh-score-num s2">"<span id="rhReportCount">…</span>개"</span>
+            </div>
+            <div class="rh-tile-avg-col">
+              <span class="rh-tile-avg-label"><span id="rhReportWeekLabel">9월 1주차</span> 분석지</span>
+              <span class="rh-score-num s0" id="rhReportStatus">확인 중…</span>
+            </div>
+          </div>
         </button>
       </div>
     </div>
@@ -6977,7 +6987,7 @@
     // "오늘의 학습 기록" 카드(계획/일기/AI 홀로 현황 + 점수)가 이제 홈 화면에 있어서, 홈에
     // 들어올 때도 recordhub와 똑같이 loadTodayTileStatus()로 채운다.
     if (view === "home") { syncHomeCardHeights(); loadTodayTileStatus(); loadHomeScheduleToday(); loadHomePlannerToday(); }
-    if (view === "recordhub") { loadRecordHubStatus(); setRhCumWeekLabel(); loadRhWeekScore(); }
+    if (view === "recordhub") { loadRecordHubStatus(); setRhWeekLabels(); loadRhWeekScore(); }
     if (view === "scheduleManage") loadScheduleManage();
     if (view === "examhub") initExamHub();
     if (view === "examSuneung") initExamSuneung();
@@ -6997,12 +7007,15 @@
     if (day <= firstSunday) return 1;
     return 1 + Math.ceil((day - firstSunday) / 7);
   }
-  function setRhCumWeekLabel() {
-    const el = document.getElementById("rhCumWeekLabel");
-    if (!el) return;
+  // '누적된 학습 기록'/'내 분석지' 두 카드가 같은 "9월 N주차" 라벨을 나란히 보여준다.
+  function setRhWeekLabels() {
     const now = new Date();
     const week = getWeekOfMonth(now.getFullYear(), now.getMonth() + 1, now.getDate());
-    el.textContent = (now.getMonth() + 1) + "월 " + week + "주차";
+    const label = (now.getMonth() + 1) + "월 " + week + "주차";
+    const cumEl = document.getElementById("rhCumWeekLabel");
+    if (cumEl) cumEl.textContent = label;
+    const reportEl = document.getElementById("rhReportWeekLabel");
+    if (reportEl) reportEl.textContent = label;
   }
   function loadRhWeekScore() {
     const studentId = localStorage.getItem("holoStudentId");
@@ -7149,9 +7162,13 @@
         .catch(() => { /* 조회 실패 시 기본 표시(34일)를 그대로 둔다 */ });
     }
 
-    // '내 분석지' 카드: 가장 최근 6일 분석지 작성일
-    const reportDateEl = document.getElementById("rhReportDate");
-    if (reportDateEl) {
+    // '내 분석지' 카드: 지금까지 만들어진 분석지 개수 + 이번 주 분석지 제작 상태.
+    // 월~토(6일) 동안 기록을 쌓고 일요일에 분석지가 만들어지는 주기이므로, "오늘 날짜로 만들어진
+    // 분석지가 이미 있는가"로 판단한다 — 크론이 아직 안 돌았으면(일요일이라도) 자동으로 "제작하는
+    // 중"으로 남고, 실제로 만들어진 순간 바로 "제작 완료"로 바뀐다(요일만으로 추측하지 않는다).
+    const reportCountEl = document.getElementById("rhReportCount");
+    const reportStatusEl = document.getElementById("rhReportStatus");
+    if (reportCountEl || reportStatusEl) {
       fetch(CHAT_API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -7160,11 +7177,19 @@
         .then(res => res.json())
         .then(data => {
           const weekly = (data.reports || []).filter(r => r.report_type !== "daily");
-          if (!weekly.length) { reportDateEl.textContent = "아직 없음"; return; }
-          const raw = String(weekly[0].period_end || weekly[0].created_at || "");
-          const m = raw.slice(5, 7), d = raw.slice(8, 10);
-          reportDateEl.textContent = m && d ? (Number(m) + "월 " + Number(d) + "일") : "작성됨";
-          reportDateEl.classList.add("has-report");
+          if (reportCountEl) reportCountEl.textContent = weekly.length;
+          if (reportStatusEl) {
+            const todayKey = getCalendarDateKey();
+            const isDone = weekly.some(r => {
+              const d = new Date(String(r.created_at || r.period_end || ""));
+              if (isNaN(d)) return false;
+              const key = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+              return key === todayKey;
+            });
+            reportStatusEl.textContent = isDone ? "제작 완료" : "제작하는 중";
+            reportStatusEl.classList.remove("s0", "s3");
+            reportStatusEl.classList.add(isDone ? "s3" : "s0");
+          }
         })
         .catch(() => { /* 조회 실패 시 기본 표시("확인 중…")를 그대로 둔다 */ });
     }
