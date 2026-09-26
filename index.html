@@ -3778,6 +3778,10 @@
     body.mex-printing > *:not(#mexPrintArea) { display: none !important; }
     body.mex-printing { background: #fff !important; }
     body.mex-printing #mexPrintArea { display: block !important; color: #111; font-size: 11pt; line-height: 1.55; }
+    /* "내 분석지" 인쇄용 body * { visibility: hidden } 규칙(위 #print-area 블록)이 이 영역
+       안의 모든 요소에도 걸려서, display는 block인데 visibility만 hidden이라 빈 페이지처럼
+       보이는 문제가 있었다 — 이 영역 전체를 명시적으로 다시 보이게 한다. */
+    body.mex-printing #mexPrintArea, body.mex-printing #mexPrintArea * { visibility: visible !important; }
     .mexp-title { font-size: 18pt; margin: 0 0 12px 0; }
     .mexp-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; border: 1px solid #bbb; border-radius: 6px; padding: 10px 12px; margin-bottom: 14px; }
     .mexp-meta span { display: block; font-size: 8.5pt; color: #666; }
