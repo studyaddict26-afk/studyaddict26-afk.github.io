@@ -2419,6 +2419,28 @@
     .grade-tab-col { border-right: none; border-bottom: 1px solid var(--line); }
     .grade-tab-col:last-child { border-bottom: none; }
   }
+  /* ── "선생님 살펴보기" 사진 카드 그리드 (학습 상담 안내 페이지) ── */
+  .teacher-card-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+  .teacher-card {
+    display: flex; flex-direction: column; justify-content: space-between;
+    height: 210px; background: var(--cream); border: 1px solid var(--line); border-radius: 14px;
+    padding: 14px; text-align: left; font-family: inherit; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .teacher-card:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,0.08); }
+  .tc-tagline { font-size: 0.8rem; font-weight: 800; color: var(--ink); line-height: 1.35; }
+  .tc-bottom { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
+  .tc-info { min-width: 0; }
+  .tc-subject { font-size: 0.7rem; font-weight: 700; color: var(--green-deep); }
+  .tc-name { font-size: 1.02rem; font-weight: 800; color: var(--ink); margin-top: 2px; }
+  .tc-role { font-size: 0.7rem; color: var(--ink-soft); font-weight: 600; }
+  .tc-soon { font-size: 0.76rem; color: var(--ink-soft); font-weight: 700; margin-top: 4px; }
+  .tc-photo { flex: none; width: 56px; height: 56px; display: flex; align-items: flex-end; justify-content: center; }
+  .tc-silhouette { width: 100%; height: 100%; fill: #B7BAB3; }
+  .teacher-card.is-soon .tc-bottom { align-items: flex-end; }
+  .teacher-card.is-soon { justify-content: flex-end; }
+  @media (max-width: 640px) {
+    .teacher-card-grid { grid-template-columns: 1fr 1fr; }
+  }
 
   /* ── 내 학습 기록 살펴보기 (허브): 아이콘 카드 ── */
   .rh-tile-grid { display: grid; grid-template-columns: repeat(2, 1fr); align-items: stretch; gap: 14px; }
@@ -5415,26 +5437,53 @@
 
       <p class="consult-motto"><span class="ef-hl">"방법이 변화하지 않으면 달라지는 건 없습니다. 최대한 돕겠습니다"</span></p>
 
-      <div class="grade-tabs-card">
-        <div class="grade-tabs-card-title">선생님 살펴보기</div>
-        <div class="grade-tabs-cols">
-          <button type="button" class="grade-tab-col" onclick="go('consult-teacher')">
-            <span class="ef-hl">전반적인 학습 컨설팅</span>
-            <span class="grade-tab-col-arrow">›</span>
-          </button>
-          <button type="button" class="grade-tab-col" onclick="go('consult-korean')">
-            <span class="ef-hl">국어</span>
-            <span class="grade-tab-col-arrow">›</span>
-          </button>
-          <button type="button" class="grade-tab-col" onclick="go('consult-math')">
-            <span class="ef-hl">수학</span>
-            <span class="grade-tab-col-arrow">›</span>
-          </button>
-          <button type="button" class="grade-tab-col" onclick="go('consult-english')">
-            <span class="ef-hl">영어</span>
-            <span class="grade-tab-col-arrow">›</span>
-          </button>
-        </div>
+      <div class="teacher-card-grid">
+        <button type="button" class="teacher-card" onclick="go('consult-teacher')">
+          <div class="tc-tagline">노베이스 축구선수 출신으로<br>최상위권까지</div>
+          <div class="tc-bottom">
+            <div class="tc-info">
+              <div class="tc-subject">학습 컨설팅</div>
+              <div class="tc-name">송의준</div>
+              <div class="tc-role">선생님</div>
+            </div>
+            <div class="tc-photo">
+              <svg class="tc-silhouette" viewBox="0 0 100 120"><circle cx="50" cy="34" r="24"/><path d="M8 120c0-28 18.8-46 42-46s42 18 42 46z"/></svg>
+            </div>
+          </div>
+        </button>
+        <button type="button" class="teacher-card is-soon" onclick="go('consult-korean')">
+          <div class="tc-bottom">
+            <div class="tc-info">
+              <div class="tc-subject">국어</div>
+              <div class="tc-soon">준비중입니다</div>
+            </div>
+            <div class="tc-photo">
+              <svg class="tc-silhouette" viewBox="0 0 100 120"><circle cx="50" cy="34" r="24"/><path d="M8 120c0-28 18.8-46 42-46s42 18 42 46z"/></svg>
+            </div>
+          </div>
+        </button>
+        <button type="button" class="teacher-card is-soon" onclick="go('consult-math')">
+          <div class="tc-bottom">
+            <div class="tc-info">
+              <div class="tc-subject">수학</div>
+              <div class="tc-soon">준비중입니다</div>
+            </div>
+            <div class="tc-photo">
+              <svg class="tc-silhouette" viewBox="0 0 100 120"><circle cx="50" cy="34" r="24"/><path d="M8 120c0-28 18.8-46 42-46s42 18 42 46z"/></svg>
+            </div>
+          </div>
+        </button>
+        <button type="button" class="teacher-card is-soon" onclick="go('consult-english')">
+          <div class="tc-bottom">
+            <div class="tc-info">
+              <div class="tc-subject">영어</div>
+              <div class="tc-soon">준비중입니다</div>
+            </div>
+            <div class="tc-photo">
+              <svg class="tc-silhouette" viewBox="0 0 100 120"><circle cx="50" cy="34" r="24"/><path d="M8 120c0-28 18.8-46 42-46s42 18 42 46z"/></svg>
+            </div>
+          </div>
+        </button>
       </div>
 
       <div class="grade-tabs-card">
