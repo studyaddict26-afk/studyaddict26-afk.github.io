@@ -3771,8 +3771,9 @@
      — 자료실 그룹만 라벨 아래에 무료/유료 두 하위 항목이 들여쓰기로 붙는다. */
   .teacher-layout { display: flex; gap: 32px; align-items: flex-start; margin-top: 30px; }
   .teacher-sidebar {
-    flex: none; width: 168px; display: flex; flex-direction: column;
-    background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
+    flex: none; width: max-content; display: flex; flex-direction: column;
+    background: rgba(255,255,255,0.55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 4px 24px rgba(0,0,0,0.06);
     padding: 16px; position: sticky; top: 20px;
   }
   .ts-profile-btn {
