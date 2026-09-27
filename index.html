@@ -428,12 +428,18 @@
   .chome-layout { display: grid; grid-template-columns: 200px 1fr 220px; gap: 16px; padding: 30px 24px; }
   .chome-tabs { display: flex; flex-direction: column; gap: 8px; }
   .chome-tab {
+    position: relative;
     font-family: inherit; font-size: 0.86rem; font-weight: 700; color: var(--ink);
     background: var(--paper); border: 1px solid var(--line); border-radius: 10px;
     padding: 14px 16px; text-align: left; cursor: pointer; transition: background 0.15s, color 0.15s;
   }
   .chome-tab:hover { background: var(--cream); }
   .chome-tab.on { background: #1D1D1D; color: #FFFFFF; border-color: #1D1D1D; }
+  .chome-tab.on::after {
+    content: ""; position: absolute; top: 50%; right: -8px; transform: translateY(-50%);
+    border-top: 8px solid transparent; border-bottom: 8px solid transparent;
+    border-left: 8px solid #1D1D1D;
+  }
   /* 배경색은 탭마다 달라서(CHOME_BANNERS.bg) chomeShowTab()에서 인라인으로 넣어준다. */
   .chome-banner {
     border-radius: 14px; padding: 28px 30px; transition: background 0.2s ease;
@@ -2390,7 +2396,7 @@
   .consult-splash {
     position: fixed; inset: 0; z-index: 9999; background: #F4F4F5;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+    opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
   }
   .consult-splash.on { opacity: 1; pointer-events: auto; }
   .consult-splash.on .consult-splash-logo { animation: consultSplashPop 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
@@ -7335,15 +7341,15 @@
     const group = document.getElementById("sbg-group-" + name);
     if (group) group.classList.toggle("open");
   }
-  // 홈 화면 "학습 상담 · 온라인 과외" 버튼 — 바로 이동하지 않고, 잠깐 슬로건 스플래시 화면을
-  // 보여준 뒤에 실제 페이지로 전환한다.
+  // 홈 화면 "Holo Study" 버튼 — 바로 이동하지 않고, 잠깐 슬로건 스플래시 화면을 보여준 뒤에
+  // Holo Study 홈(consult-home)으로 전환한다.
   function goConsultWithSplash() {
     const el = document.getElementById("consultSplash");
     el.classList.add("on");
     setTimeout(() => {
-      go("consult");
+      go("consult-home");
       setTimeout(() => { el.classList.remove("on"); }, 60);
-    }, 650);
+    }, 1200);
   }
   // "Holo Study" 홈 페이지 — 왼쪽 탭을 고르면 가운데 배너 내용이 바뀐다(대략적인 초안 문구,
   // 나중에 실제 내용으로 다듬으면 됨).
@@ -7377,6 +7383,21 @@
       tags: ["무료 자료실", "유료 자료실"],
     },
   };
+  const CHOME_TAB_ORDER = Object.keys(CHOME_BANNERS);
+  let chomeAutoTimer = null;
+  // 10초마다 자동으로 다음 탭으로 넘어간다(메가스터디 배너처럼) — 사용자가 직접 탭을 눌러도
+  // chomeShowTab이 매번 다시 호출돼 타이머가 리셋되므로, 방금 클릭한 탭에서 다시 10초를 센다.
+  function chomeStartAuto() {
+    if (chomeAutoTimer) clearInterval(chomeAutoTimer);
+    chomeAutoTimer = setInterval(() => {
+      const current = CHOME_TAB_ORDER.find(t => document.getElementById("chomeTab-" + t).classList.contains("on"));
+      const next = CHOME_TAB_ORDER[(CHOME_TAB_ORDER.indexOf(current) + 1) % CHOME_TAB_ORDER.length];
+      chomeShowTab(next);
+    }, 10000);
+  }
+  function chomeStopAuto() {
+    if (chomeAutoTimer) { clearInterval(chomeAutoTimer); chomeAutoTimer = null; }
+  }
   function chomeShowTab(tab) {
     Object.keys(CHOME_BANNERS).forEach(t =>
       document.getElementById("chomeTab-" + t).classList.toggle("on", t === tab));
@@ -7388,6 +7409,7 @@
       '<div class="chome-banner-title">' + d.title + '</div>' +
       '<div class="chome-banner-sub">' + escapeHtml(d.sub) + '</div>' +
       '<div class="chome-banner-tags">' + d.tags.map(t => '<span class="chome-tag">' + escapeHtml(t) + '</span>').join("") + '</div>';
+    chomeStartAuto();
   }
   // "Holo Study" 헤더의 "2027 수능 D-53" 표시 — 메가스터디 상단바 참고, 실제 수능 날짜
   // (MEX_SUNEUNG_DATE)로 계산한다.
@@ -7402,6 +7424,7 @@
   }
   let currentView = "home";
   function go(view) {
+    if (currentView === "consult-home" && view !== "consult-home") chomeStopAuto();
     currentView = view;
     document.querySelectorAll(".view").forEach(v => v.classList.remove("on"));
     document.getElementById("view-" + view).classList.add("on");
