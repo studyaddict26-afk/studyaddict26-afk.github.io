@@ -7373,10 +7373,18 @@
     "consult-programs": "consult-home",
     todayrecord: "home", cumulative: "recordhub", reports: "recordhub", dayDetail: "cumulative",
     examSuneung: "examhub", examNaeshin: "examhub", mexlist: "mockexam",
+    mathexam: "examhub", engexam: "examhub",
+    recordhub: "home", plannerPage: "home", scheduleManage: "home", mockexam: "home",
+    examhub: "home", howto: "home", ranking: "home", mypage: "home",
   };
   function goBack() {
     if (currentView === "mexlist" && mexCurrentExam) {
       mexBackToList();
+      return;
+    }
+    // 마이페이지는 Manager/Academy 공용 화면이라, 어느 쪽에서 들어왔는지에 따라 뒤로 갈 곳이 다르다.
+    if (currentView === "mypage") {
+      go(localStorage.getItem("holoActiveProduct") === "academy" ? "consult-home" : "home");
       return;
     }
     const target = BACK_TARGET[currentView];
