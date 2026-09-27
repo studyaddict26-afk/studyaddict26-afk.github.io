@@ -434,17 +434,18 @@
   }
   .chome-tab:hover { background: var(--cream); }
   .chome-tab.on { background: #1D1D1D; color: #FFFFFF; border-color: #1D1D1D; }
+  /* 배경색은 탭마다 달라서(CHOME_BANNERS.bg) chomeShowTab()에서 인라인으로 넣어준다. */
   .chome-banner {
-    background: linear-gradient(135deg, #223229, #182019); border-radius: 14px; padding: 28px 30px;
-    display: flex; flex-direction: column; justify-content: center; color: #F1EADB; min-height: 260px;
+    border-radius: 14px; padding: 28px 30px; transition: background 0.2s ease;
+    display: flex; flex-direction: column; justify-content: center; color: #FFFFFF; min-height: 260px;
   }
   .chome-banner-badges { display: flex; gap: 6px; margin-bottom: 14px; }
-  .chome-badge { font-size: 0.7rem; font-weight: 800; background: rgba(241,234,219,0.14); color: #D9C89A; padding: 4px 10px; border-radius: 999px; }
-  .chome-banner-title { font-size: 1.5rem; font-weight: 800; line-height: 1.35; margin-bottom: 10px; color: #FBFAF6; }
-  .chome-banner-accent { color: #D9C89A; }
-  .chome-banner-sub { font-size: 0.88rem; color: rgba(241,234,219,0.72); margin-bottom: 20px; }
-  .chome-banner-tags { display: flex; gap: 8px; flex-wrap: wrap; padding-top: 14px; border-top: 1px solid rgba(241,234,219,0.18); }
-  .chome-tag { font-size: 0.8rem; font-weight: 700; color: rgba(241,234,219,0.78); }
+  .chome-badge { font-size: 0.7rem; font-weight: 800; background: rgba(255,255,255,0.22); color: #FFFFFF; padding: 4px 10px; border-radius: 999px; }
+  .chome-banner-title { font-size: 1.5rem; font-weight: 800; line-height: 1.35; margin-bottom: 10px; color: #FFFFFF; }
+  .chome-banner-accent { color: #FFF3D0; }
+  .chome-banner-sub { font-size: 0.88rem; color: rgba(255,255,255,0.82); margin-bottom: 20px; }
+  .chome-banner-tags { display: flex; gap: 8px; flex-wrap: wrap; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.24); }
+  .chome-tag { font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.85); }
   .chome-side { display: flex; flex-direction: column; gap: 12px; }
   .chome-side-btn {
     flex: 1; font-family: inherit; font-size: 0.95rem; font-weight: 800; color: var(--ink);
@@ -7350,24 +7351,28 @@
   // 나중에 실제 내용으로 다듬으면 됨).
   const CHOME_BANNERS = {
     study: {
+      bg: "linear-gradient(135deg, #4A5AC4, #38428E)",
       badges: ["HOT"],
       title: '혼자 공부하는 시간,<br><span class="chome-banner-accent">Holo Study</span>가 함께합니다',
       sub: "학습 상담부터 온라인 과외까지, 나에게 맞는 선생님을 만나보세요.",
       tags: ["학습 상담", "온라인 과외", "1:1 컨설팅"],
     },
     teacher: {
+      bg: "linear-gradient(135deg, #E0824A, #C4652E)",
       badges: ["NEW"],
       title: "축구선수 출신 노베이스에서<br>최상위권까지",
       sub: "노베이스·하위권·중위권·상위권을 모두 직접 거친 학습 컨설턴트, 송의준 선생님을 만나보세요.",
       tags: ["학습 컨설팅", "국어", "수학", "영어"],
     },
     subject: {
+      bg: "linear-gradient(135deg, #3FAE81, #2C7F5D)",
       badges: ["PICK"],
       title: "과목별로 다른 전략,<br>과목별로 다른 실력업",
       sub: "국어·수학·영어, 과목마다 필요한 공부 방법은 다릅니다.",
       tags: ["국어", "수학", "영어"],
     },
     materials: {
+      bg: "linear-gradient(135deg, #9868C4, #7147A0)",
       badges: ["UPDATE"],
       title: "선생님이 직접 만든<br>공부자료",
       sub: "곧 무료·유료 자료로 만나보실 수 있어요. 준비 중이에요.",
@@ -7378,7 +7383,9 @@
     Object.keys(CHOME_BANNERS).forEach(t =>
       document.getElementById("chomeTab-" + t).classList.toggle("on", t === tab));
     const d = CHOME_BANNERS[tab];
-    document.getElementById("chomeBanner").innerHTML =
+    const bannerEl = document.getElementById("chomeBanner");
+    bannerEl.style.background = d.bg;
+    bannerEl.innerHTML =
       '<div class="chome-banner-badges">' + d.badges.map(b => '<span class="chome-badge">' + b + '</span>').join("") + '</div>' +
       '<div class="chome-banner-title">' + d.title + '</div>' +
       '<div class="chome-banner-sub">' + escapeHtml(d.sub) + '</div>' +
