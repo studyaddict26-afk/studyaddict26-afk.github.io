@@ -395,7 +395,7 @@
   .consult-header.on { display: flex; }
   .consult-brand-row {
     display: grid; grid-template-columns: 1fr auto 1fr; align-items: end;
-    background: var(--paper); padding: 34px 28px 20px 28px;
+    background: #F4F4F5; padding: 34px 28px 20px 28px;
   }
   .consult-brand {
     grid-column: 2; justify-self: center;
@@ -419,7 +419,7 @@
   .consult-exit-link:hover { color: var(--ink); border-color: var(--ink-soft); }
   .consult-nav-row {
     display: flex; align-items: center; justify-content: center; gap: 32px;
-    background: var(--paper); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    background: #F4F4F5; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
     padding: 13px 28px;
   }
   .consult-nav-link {
@@ -428,6 +428,19 @@
     transition: color 0.15s;
   }
   .consult-nav-link:hover, .consult-nav-link.on { color: var(--green-deep); }
+  /* "Holo Study" 홈(랜딩) 페이지 — 가운데 정렬된 큰 카피 + 실제 홀로 앱으로 들어가는 CTA. */
+  .consult-home-hero {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: 60px 20px; gap: 14px;
+  }
+  .consult-home-hero h2 { font-size: 1.9rem; }
+  .consult-home-sub { color: var(--ink-soft); font-size: 0.95rem; margin-bottom: 10px; }
+  .consult-home-cta {
+    font-family: inherit; font-size: 1.05rem; font-weight: 800; color: #FFFFFF;
+    background: var(--green-deep); border: none; border-radius: 999px;
+    padding: 16px 36px; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .consult-home-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(21,82,47,0.25); }
 
   .view { flex: 1; display: none; flex-direction: column; min-height: 0; }
   .view.on { display: flex; }
@@ -2341,7 +2354,7 @@
   }
 
   /* ═══════════ 상담 안내 ═══════════ */
-  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3, #view-consult-5, #view-consult-6, #view-consult-7, #view-consult-8, #view-consult-teacher, #view-consult-korean, #view-consult-math, #view-consult-english, #view-consult-materials, #view-consult-community, #view-howto, #view-recordhub, #view-scheduleManage, #view-examhub, #view-examSuneung, #view-examNaeshin, #view-mockexam, #view-mexlist { overflow-y: auto; }
+  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3, #view-consult-5, #view-consult-6, #view-consult-7, #view-consult-8, #view-consult-teacher, #view-consult-korean, #view-consult-math, #view-consult-english, #view-consult-materials, #view-consult-community, #view-consult-home, #view-howto, #view-recordhub, #view-scheduleManage, #view-examhub, #view-examSuneung, #view-examNaeshin, #view-mockexam, #view-mexlist { overflow-y: auto; }
   .consult-page {
     max-width: 1040px; width: 100%; margin: 0 auto;
     padding: 32px 24px 56px 24px;
@@ -4545,6 +4558,7 @@
       </div>
     </div>
     <nav class="consult-nav-row">
+      <button type="button" class="consult-nav-link" id="consultNav-home" onclick="go('consult-home')">홈</button>
       <button type="button" class="consult-nav-link" id="consultNav-teachers" onclick="go('consult')">홀로선생님</button>
       <button type="button" class="consult-nav-link" id="consultNav-materials" onclick="go('consult-materials')">공부자료</button>
       <button type="button" class="consult-nav-link" id="consultNav-community" onclick="go('consult-community')">커뮤니티</button>
@@ -5912,6 +5926,18 @@
     </div>
   </section>
 
+  <!-- ─── 홀로 온라인 과외: 홈 ─── -->
+  <section class="view dark-consult" id="view-consult-home">
+    <div class="consult-page">
+      <div class="consult-home-hero">
+        <span class="eyebrow">HOME</span>
+        <h2>혼자 공부하는 시간, <span class="ef-hl">Holo Study</span>가 함께합니다</h2>
+        <p class="consult-home-sub">학습 상담부터 온라인 과외까지, 나에게 맞는 선생님을 만나보세요.</p>
+        <button type="button" class="consult-home-cta" onclick="go('home')">나의 공부방 입장하기 →</button>
+      </div>
+    </div>
+  </section>
+
   <!-- ─── 상담 상세: 수학 과외 ─── -->
   <section class="view dark-consult" id="view-consult-2">
     <div class="consult-page">
@@ -7237,14 +7263,14 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "내 플래너 관리하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-home": "Holo Study", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "내 플래너 관리하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { mathexam: "exam", engexam: "exam" };
   // "← 이전으로"가 상단 흰색 바(topbar)의 제목 오른쪽에 뜨는 페이지들과, 각각이 돌아갈 곳.
   const BACK_TARGET = {
     "consult-1": "consult", "consult-2": "consult", "consult-3": "consult",
     "consult-5": "consult", "consult-6": "consult", "consult-7": "consult", "consult-8": "consult",
     "consult-teacher": "consult", "consult-korean": "consult", "consult-math": "consult", "consult-english": "consult",
-    "consult-materials": "consult", "consult-community": "consult",
+    "consult-materials": "consult", "consult-community": "consult", "consult-home": "consult",
     todayrecord: "home", cumulative: "recordhub", reports: "recordhub", dayDetail: "cumulative",
     examSuneung: "examhub", examNaeshin: "examhub", mexlist: "mockexam",
   };
@@ -7301,8 +7327,8 @@
     document.querySelector(".main > .topbar").style.display = isConsultSection ? "none" : "";
     document.getElementById("consultHeader").classList.toggle("on", isConsultSection);
     if (isConsultSection) {
-      const activeNav = (view === "consult-materials") ? "materials" : (view === "consult-community") ? "community" : "teachers";
-      ["teachers", "materials", "community"].forEach(n =>
+      const activeNav = (view === "consult-home") ? "home" : (view === "consult-materials") ? "materials" : (view === "consult-community") ? "community" : "teachers";
+      ["home", "teachers", "materials", "community"].forEach(n =>
         document.getElementById("consultNav-" + n).classList.toggle("on", n === activeNav));
       renderConsultDday();
     }
