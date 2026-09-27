@@ -2395,8 +2395,9 @@
      묻혀서 "바뀐 게 없어 보이는" 문제가 있어, 살짝 더 연한 회백색으로 구분되게 한다. */
   .dark-consult { background: #F4F4F5; }
   /* 마이페이지는 Manager/Academy 둘 다에서 같은 화면으로 들어오지만(go()가 매번 갱신),
-     어느 쪽에서 넘어왔는지(holoActiveProduct)에 따라 배경색만 그쪽 톤에 맞춘다. */
-  #view-mypage.mypage-bg-academy { background: #F4F4F5; }
+     어느 쪽에서 넘어왔는지(holoActiveProduct)에 따라 배경색만 그쪽 톤에 맞춘다 — 콘텐츠
+     영역(#view-mypage)뿐 아니라 위쪽 topbar도 같이 회색으로 바꿔야 이어져 보인다. */
+  body.mypage-bg-academy #view-mypage, body.mypage-bg-academy .topbar { background: #F4F4F5; }
   /* "Holo Study" 진입 전환 효과 — 홈 버튼을 누르면 잠깐 스플래시 화면에 로고가 팝업되듯
      나타났다가, 실제 학습 상담 페이지가 나타난다(dark-consult와 같은 회백색 톤). */
   .consult-splash {
@@ -7516,9 +7517,7 @@
         document.getElementById("consultNav-" + n).classList.toggle("on", n === activeNav));
     }
     renderConsultDday(); // Manager 홈 상단(.home-brand-inner)에도 같은 .consult-dday가 있어서 매번 같이 갱신
-    if (view === "mypage") {
-      document.getElementById("view-mypage").classList.toggle("mypage-bg-academy", localStorage.getItem("holoActiveProduct") === "academy");
-    }
+    document.body.classList.toggle("mypage-bg-academy", view === "mypage" && localStorage.getItem("holoActiveProduct") === "academy");
     if (view === "consult-home") chomeShowTab("study");
     document.body.classList.toggle("is-admin", view === "admin" || view === "form");
     if (GROUP_OF[view]) {
