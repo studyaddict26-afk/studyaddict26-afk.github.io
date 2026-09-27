@@ -2382,7 +2382,7 @@
   }
 
   /* ═══════════ 상담 안내 ═══════════ */
-  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3, #view-consult-5, #view-consult-6, #view-consult-7, #view-consult-8, #view-consult-teacher, #view-consult-korean, #view-consult-math, #view-consult-english, #view-consult-materials, #view-consult-community, #view-consult-home, #view-consult-myclass, #view-howto, #view-recordhub, #view-scheduleManage, #view-examhub, #view-examSuneung, #view-examNaeshin, #view-mockexam, #view-mexlist { overflow-y: auto; }
+  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3, #view-consult-5, #view-consult-6, #view-consult-7, #view-consult-8, #view-consult-teacher, #view-consult-korean, #view-consult-math, #view-consult-english, #view-consult-materials, #view-consult-community, #view-consult-home, #view-consult-myclass, #view-consult-programs, #view-howto, #view-recordhub, #view-scheduleManage, #view-examhub, #view-examSuneung, #view-examNaeshin, #view-mockexam, #view-mexlist { overflow-y: auto; }
   .consult-page {
     max-width: 1040px; width: 100%; margin: 0 auto;
     padding: 32px 24px 56px 24px;
@@ -4622,8 +4622,10 @@
     <nav class="consult-nav-row">
       <button type="button" class="consult-nav-link" id="consultNav-home" onclick="go('consult-home')">홈</button>
       <button type="button" class="consult-nav-link" id="consultNav-teachers" onclick="go('consult')">홀로선생님</button>
+      <button type="button" class="consult-nav-link" id="consultNav-programs" onclick="go('consult-programs')">수업 프로그램</button>
       <button type="button" class="consult-nav-link" id="consultNav-materials" onclick="go('consult-materials')">공부자료</button>
       <button type="button" class="consult-nav-link" id="consultNav-community" onclick="go('consult-community')">커뮤니티</button>
+      <button type="button" class="consult-nav-link" id="consultNav-mypage" onclick="go('mypage')">마이페이지</button>
     </nav>
   </div>
 
@@ -6018,6 +6020,20 @@
     </div>
   </section>
 
+  <!-- ─── 홀로 온라인 과외: 수업 프로그램 (준비중) ─── -->
+  <section class="view dark-consult" id="view-consult-programs">
+    <div class="consult-page">
+      <div class="cd-page-head">
+        <div>
+          <span class="eyebrow">GENERAL</span>
+          <h2>수업 프로그램</h2>
+        </div>
+      </div>
+      <div class="split"></div>
+      <p class="hub-coming-soon">준비중입니다</p>
+    </div>
+  </section>
+
   <!-- ─── 상담 상세: 수학 과외 ─── -->
   <section class="view dark-consult" id="view-consult-2">
     <div class="consult-page">
@@ -7343,7 +7359,7 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-home": "Holo Study", "consult-myclass": "나의 수업", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "내 플래너 관리하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-home": "Holo Study", "consult-myclass": "나의 수업", "consult-programs": "수업 프로그램", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "내 플래너 관리하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { mathexam: "exam", engexam: "exam" };
   // "← 이전으로"가 상단 흰색 바(topbar)의 제목 오른쪽에 뜨는 페이지들과, 각각이 돌아갈 곳.
   const BACK_TARGET = {
@@ -7351,6 +7367,7 @@
     "consult-5": "consult", "consult-6": "consult", "consult-7": "consult", "consult-8": "consult",
     "consult-teacher": "consult", "consult-korean": "consult", "consult-math": "consult", "consult-english": "consult",
     "consult-materials": "consult", "consult-community": "consult", "consult-home": "consult", "consult-myclass": "consult-home",
+    "consult-programs": "consult-home",
     todayrecord: "home", cumulative: "recordhub", reports: "recordhub", dayDetail: "cumulative",
     examSuneung: "examhub", examNaeshin: "examhub", mexlist: "mockexam",
   };
@@ -7483,8 +7500,8 @@
     document.querySelector(".main > .topbar").style.display = isConsultSection ? "none" : "";
     document.getElementById("consultHeader").classList.toggle("on", isConsultSection);
     if (isConsultSection) {
-      const activeNav = (view === "consult-home") ? "home" : (view === "consult-materials") ? "materials" : (view === "consult-community") ? "community" : "teachers";
-      ["home", "teachers", "materials", "community"].forEach(n =>
+      const activeNav = (view === "consult-home") ? "home" : (view === "consult-programs") ? "programs" : (view === "consult-materials") ? "materials" : (view === "consult-community") ? "community" : "teachers";
+      ["home", "teachers", "programs", "materials", "community"].forEach(n =>
         document.getElementById("consultNav-" + n).classList.toggle("on", n === activeNav));
     }
     renderConsultDday(); // Manager 홈 상단(.home-brand-inner)에도 같은 .consult-dday가 있어서 매번 같이 갱신
