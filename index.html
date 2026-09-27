@@ -66,7 +66,6 @@
   .sb-wordmark .holo-en { font-size: 0.85em; color: var(--green); }
   .sb-brand:hover .sb-wordmark .holo,
   .sb-brand:hover .sb-wordmark .holo-en { color: var(--green-deep); }
-  .sb-academy-wordmark { font-size: 1.2rem; font-weight: 900; letter-spacing: -0.02em; color: var(--ink); }
   .sb-profile {
     display: flex; align-items: center; gap: 10px; width: 100%;
     font-family: inherit; text-align: left; cursor: pointer;
@@ -414,14 +413,13 @@
   }
   .consult-brand-icon { width: 28px; height: 28px; flex: none; }
   .consult-brand .brand-accent { color: var(--ink); }
-  .consult-utility-group { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: 12px; }
-  .consult-dday { font-size: 0.8rem; color: var(--ink-soft); white-space: nowrap; }
-  .consult-utility-sep { color: var(--line); font-size: 0.8rem; }
-  .consult-utility-btn {
-    font-family: inherit; font-size: 0.82rem; font-weight: 600; color: var(--ink-soft);
+  .consult-dday { grid-column: 1; justify-self: start; font-size: 0.8rem; color: var(--ink-soft); white-space: nowrap; }
+  .consult-header-switch {
+    grid-column: 3; justify-self: end;
+    font-family: inherit; font-size: 0.82rem; font-weight: 600; color: var(--ink);
     background: none; border: none; cursor: pointer; padding: 0; white-space: nowrap;
   }
-  .consult-utility-btn:hover { color: var(--ink); }
+  .consult-header-switch:hover { opacity: 0.7; }
   .consult-nav-row {
     display: flex; align-items: center; justify-content: center; gap: 32px;
     background: #F4F4F5; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
@@ -4345,23 +4343,6 @@
   <div class="sb-foot">© ROADMAP × STUDY ADDICT</div>
 </nav>
 
-<!-- Academy 전용 사이드바 — Manager 사이드바와 같은 스타일(.sidebar)을 재사용하고, Manager/
-     Academy 이동은 오직 이 사이드바의 "Manager로 이동" 버튼을 통해서만 하도록 헤더에서는
-     전환 버튼을 뺐다. -->
-<nav class="sidebar closed" id="academySidebar">
-  <button class="sb-brand" onclick="go('consult-home')">
-    <div class="sb-academy-wordmark">Study Holo Academy</div>
-  </button>
-
-  <button type="button" class="sb-item" data-view="consult-home" onclick="go('consult-home')">홈</button>
-  <button type="button" class="sb-item" data-view="consult" onclick="go('consult')">홀로선생님</button>
-  <button type="button" class="sb-item" data-view="consult-materials" onclick="go('consult-materials')">공부자료</button>
-  <button type="button" class="sb-item" data-view="consult-community" onclick="go('consult-community')">커뮤니티</button>
-
-  <button type="button" class="sb-switch-product" onclick="switchProduct('manager')">Manager로 이동 →</button>
-  <button type="button" class="sb-logout" onclick="studentLogout()">로그아웃</button>
-  <div class="sb-foot">© ROADMAP × STUDY ADDICT</div>
-</nav>
 <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 <div class="consult-splash" id="consultSplash">
   <div class="consult-splash-logo">
@@ -4693,6 +4674,7 @@
        나갈 때는 "나가기"로 표기한다. -->
   <div class="consult-header" id="consultHeader">
     <div class="consult-brand-row">
+      <span class="consult-dday" id="consultDday"></span>
       <button type="button" class="consult-brand" onclick="go('consult-home')">
         <svg class="consult-brand-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
           <rect width="40" height="40" rx="10" fill="#15522F"/>
@@ -4702,12 +4684,7 @@
         </svg>
         <span>Study Holo <span class="brand-accent">Academy</span></span>
       </button>
-      <div class="consult-utility-group">
-        <span class="consult-dday" id="consultDday"></span>
-        <span class="consult-utility-sep">|</span>
-        <button type="button" class="consult-utility-btn">로그인</button>
-        <button type="button" class="consult-utility-btn">회원가입</button>
-      </div>
+      <button type="button" class="consult-header-switch" onclick="switchProduct('manager')">Study Holo Manager →</button>
     </div>
     <nav class="consult-nav-row">
       <button type="button" class="consult-nav-link" id="consultNav-home" onclick="go('consult-home')">홈</button>
@@ -6079,7 +6056,7 @@
       <div class="chome-layout">
         <nav class="chome-tabs">
           <button type="button" class="chome-tab on" id="chomeTab-study" onclick="chomeShowTab('study')">Holo Study</button>
-          <button type="button" class="chome-tab" id="chomeTab-teacher" onclick="chomeShowTab('teacher')">엘리트 운동선수 전문 선생님</button>
+          <button type="button" class="chome-tab" id="chomeTab-teacher" onclick="chomeShowTab('teacher')">운동선수 전문 선생님</button>
           <button type="button" class="chome-tab" id="chomeTab-subject" onclick="chomeShowTab('subject')">과목별 실력업</button>
           <button type="button" class="chome-tab" id="chomeTab-materials" onclick="chomeShowTab('materials')">공부자료</button>
         </nav>
@@ -7573,14 +7550,9 @@
     const isConsultSection = document.getElementById("view-" + view).classList.contains("dark-consult");
     document.querySelector(".main > .topbar").style.display = isConsultSection ? "none" : "";
     document.getElementById("consultHeader").classList.toggle("on", isConsultSection);
-    // Manager 사이드바 <-> Academy 사이드바 — 둘 중 지금 속한 쪽만 열어두고 나머지는 닫는다
-    // (Academy로 넘어갈 때 Manager 사이드바가 열린 채로 남아 겹쳐 보이던 문제도 같이 해결).
-    if (isConsultSection) {
-      closeSidebar();
-      document.getElementById("academySidebar").classList.remove("closed");
-    } else {
-      document.getElementById("academySidebar").classList.add("closed");
-    }
+    // Academy는 자체 사이드바가 없으므로, 넘어갈 때 Manager 사이드바가 열려 있으면 닫아서
+    // Academy 화면과 겹쳐 보이지 않게 한다.
+    if (isConsultSection) closeSidebar();
     if (isConsultSection) {
       const activeNav = (view === "consult-home") ? "home" : (view === "consult-materials") ? "materials" : (view === "consult-community") ? "community" : "teachers";
       ["home", "teachers", "materials", "community"].forEach(n =>
