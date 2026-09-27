@@ -388,17 +388,11 @@
 
   .topbar {
     background: var(--cream);
-    border-bottom: 1px solid var(--line);
     padding: 12px 20px;
     display: flex; align-items: center; gap: 14px;
     flex: none;
   }
-  .topbar .view-title { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.02em; }
-  .topbar .home-link {
-    margin-left: auto; font-size: 0.8rem; color: var(--ink-soft);
-    text-decoration: none;
-  }
-  .topbar .home-link:hover { color: var(--ink); }
+  .topbar .view-title { display: none; }
   .topbar .topbar-back-link {
     margin-left: 14px; font-size: 0.8rem; font-weight: 600; color: var(--ink-soft);
     text-decoration: none;
@@ -445,7 +439,7 @@
   /* "Holo Study" 홈(랜딩) 페이지 — 메가스터디 홈페이지의 왼쪽 탭 + 가운데 배너 + 오른쪽
      박스(HOT PICK) 3단 구조를 참고. 왼쪽 탭을 고르면 가운데 배너 내용이 바뀌고, 오른쪽은
      "나의 수업 입장하기"/"홀로 학습 관리 시스템으로 이동하기" 두 칸으로 나눈 버튼. */
-  .chome-layout { display: grid; grid-template-columns: 200px 1fr 220px; gap: 16px; padding: 72px 24px 30px 24px; }
+  .chome-layout { display: grid; grid-template-columns: 200px 1fr 220px; gap: 16px; padding: 32px 24px 30px 24px; }
   .chome-tabs { display: flex; flex-direction: column; gap: 8px; }
   .chome-tab {
     position: relative;
@@ -4007,7 +4001,11 @@
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       height: 95vh; text-align: center; page-break-after: always;
     }
-    .mexp-cover-word { font-size: 13pt; font-weight: 800; color: #15522F; letter-spacing: 0.02em; margin-bottom: 44px; }
+    .mexp-cover-word {
+      display: flex; align-items: center; justify-content: center; gap: 6pt;
+      font-size: 13pt; font-weight: 900; color: #111; letter-spacing: -0.02em; margin-bottom: 44px;
+    }
+    .mexp-cover-icon { width: 16pt; height: 16pt; flex: none; }
     .mexp-cover-kicker { font-size: 9pt; font-weight: 700; letter-spacing: 0.3em; color: #999; margin-bottom: 16px; }
     .mexp-cover-title { font-size: 26pt; font-weight: 800; color: #111; margin: 0 0 14px 0; line-height: 1.35; }
     .mexp-cover-sub { font-size: 12pt; color: #555; margin-bottom: 40px; }
@@ -4597,7 +4595,6 @@
   <div class="topbar">
     <span class="view-title" id="viewTitle">홀로</span>
     <a class="topbar-back-link" id="topbarBackLink" href="#" onclick="goBack();return false;" style="display:none">← 이전으로</a>
-    <a class="home-link" href="#" onclick="go('home');return false;">← 홈으로</a>
   </div>
   <!-- "학습 상담 · 온라인 과외" 전용 헤더 — 별도 앱처럼 느껴지도록 사이드바/기본 상단바 대신
        독자적인 2단 헤더(메가스터디 홈페이지 참고: 가운데 로고 줄 + 가로 목차 줄)를 쓰고,
@@ -9597,11 +9594,11 @@
     const todayStr = getLocalDateKey();
     const cover =
       '<div class="mexp-cover">' +
-        '<div class="mexp-cover-word">홀로</div>' +
+        '<div class="mexp-cover-word"><svg class="mexp-cover-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="#15522F"/><rect x="11" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/><rect x="24" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/><rect x="11" y="17.5" width="18" height="5" rx="1.5" fill="#FFFFFF"/></svg>Study Holo Manager</div>' +
         '<div class="mexp-cover-kicker">STUDY ANALYSIS REPORT</div>' +
         '<h1 class="mexp-cover-title">내 분석지</h1>' +
         '<div class="mexp-cover-sub">' + escapeHtml(periodText) + '</div>' +
-        '<div class="mexp-cover-footer">' + (studentId ? escapeHtml(studentId) + " 학생 · " : "") + '발급일 ' + escapeHtml(todayStr) + '</div>' +
+        '<div class="mexp-cover-footer">발급일 ' + escapeHtml(todayStr) + '</div>' +
       '</div>';
     area.innerHTML = cover + card.innerHTML;
     area.classList.add("on");
@@ -11547,7 +11544,7 @@
     const todayStr = getLocalDateKey();
     let html =
       '<div class="mexp-cover">' +
-        '<div class="mexp-cover-word">홀로</div>' +
+        '<div class="mexp-cover-word"><svg class="mexp-cover-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="#15522F"/><rect x="11" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/><rect x="24" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/><rect x="11" y="17.5" width="18" height="5" rx="1.5" fill="#FFFFFF"/></svg>Study Holo Manager</div>' +
         '<div class="mexp-cover-kicker">EXAM REPORT</div>' +
         '<h1 class="mexp-cover-title">' + esc(exam.title) + '</h1>' +
         '<div class="mexp-cover-sub">' + esc((exam.periodLabel ? exam.periodLabel + " " : "") + exam.subject) + ' · ' + esc(exam.date) + '</div>' +
@@ -11555,7 +11552,7 @@
           '<div><span>점수</span><b>' + score + '</b></div>' +
           '<div><span>랩타임</span><b>' + (hasLap ? "총 " + formatDur(totalSec) : "기록 없음") + '</b></div>' +
         '</div>' +
-        '<div class="mexp-cover-footer">' + (studentId ? esc(studentId) + " 학생 · " : "") + '발급일 ' + esc(todayStr) + '</div>' +
+        '<div class="mexp-cover-footer">발급일 ' + esc(todayStr) + '</div>' +
       '</div>' +
       '<h1 class="mexp-title">' + esc(exam.title) + '</h1>' +
       '<div class="mexp-meta">' +
