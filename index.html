@@ -2419,26 +2419,24 @@
     .grade-tab-col { border-right: none; border-bottom: 1px solid var(--line); }
     .grade-tab-col:last-child { border-bottom: none; }
   }
-  /* ── "선생님 살펴보기" 사진 카드 그리드 (학습 상담 안내 페이지) ── */
+  /* ── "선생님 살펴보기" 사진 카드 그리드 (학습 상담 안내 페이지) — 사진이 카드 오른쪽 아래
+     절반 가량을 상반신 크기로 채우고, 글자는 왼쪽에 겹치지 않게 떠 있는 레이아웃. ── */
   .teacher-card-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
   .teacher-card {
-    display: flex; flex-direction: column; justify-content: space-between;
-    height: 210px; background: #E7E5DF; border: 1px solid var(--line); border-radius: 0;
+    position: relative; overflow: hidden;
+    height: 260px; background: #E7E5DF; border: 1px solid var(--line); border-radius: 0;
     padding: 14px; text-align: left; font-family: inherit; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
   }
   .teacher-card:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,0.08); }
-  .tc-tagline { font-size: 0.8rem; font-weight: 800; color: var(--ink); line-height: 1.35; }
-  .tc-bottom { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
-  .tc-info { min-width: 0; }
+  .tc-tagline { position: relative; z-index: 1; max-width: 62%; font-size: 0.8rem; font-weight: 800; color: var(--ink); line-height: 1.35; }
+  .tc-info { position: absolute; left: 14px; bottom: 14px; z-index: 1; max-width: 55%; }
   .tc-subject { font-size: 0.7rem; font-weight: 700; color: var(--green-deep); }
   .tc-name { font-size: 1.02rem; font-weight: 800; color: var(--ink); margin-top: 2px; }
   .tc-role { font-size: 0.7rem; color: var(--ink-soft); font-weight: 600; }
   .tc-soon { font-size: 0.76rem; color: var(--ink-soft); font-weight: 700; margin-top: 4px; }
-  .tc-photo { flex: none; width: 96px; height: 96px; display: flex; align-items: flex-end; justify-content: center; }
+  .tc-photo { position: absolute; right: 0; bottom: 0; width: 60%; height: 80%; }
   .tc-silhouette { width: 100%; height: 100%; fill: #B7BAB3; }
-  .tc-photo-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; border-radius: 6px; }
-  .teacher-card.is-soon .tc-bottom { align-items: flex-end; }
-  .teacher-card.is-soon { justify-content: flex-end; }
+  .tc-photo-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
   @media (max-width: 640px) {
     .teacher-card-grid { grid-template-columns: 1fr 1fr; }
   }
@@ -5441,48 +5439,40 @@
       <div class="teacher-card-grid">
         <button type="button" class="teacher-card" onclick="go('consult-teacher')">
           <div class="tc-tagline">노베이스 축구선수 출신으로<br>최상위권까지</div>
-          <div class="tc-bottom">
-            <div class="tc-info">
-              <div class="tc-subject">학습 컨설팅</div>
-              <div class="tc-name">송의준</div>
-              <div class="tc-role">선생님</div>
-            </div>
-            <div class="tc-photo">
-              <img class="tc-photo-img" src="teacher-songeujun.webp" alt="송의준 선생님">
-            </div>
+          <div class="tc-info">
+            <div class="tc-subject">학습 컨설팅</div>
+            <div class="tc-name">송의준</div>
+            <div class="tc-role">선생님</div>
+          </div>
+          <div class="tc-photo">
+            <img class="tc-photo-img" src="teacher-songeujun.webp" alt="송의준 선생님">
           </div>
         </button>
         <button type="button" class="teacher-card is-soon" onclick="go('consult-korean')">
-          <div class="tc-bottom">
-            <div class="tc-info">
-              <div class="tc-subject">국어</div>
-              <div class="tc-soon">준비중입니다</div>
-            </div>
-            <div class="tc-photo">
-              <svg class="tc-silhouette" viewBox="0 0 100 120"><circle cx="50" cy="32" r="22"/><path d="M50 58c-24 0-42 20-42 62h84c0-42-18-62-42-62z"/></svg>
-            </div>
+          <div class="tc-info">
+            <div class="tc-subject">국어</div>
+            <div class="tc-soon">준비중입니다</div>
+          </div>
+          <div class="tc-photo">
+            <svg class="tc-silhouette" viewBox="0 0 100 120"><circle cx="50" cy="32" r="22"/><path d="M50 58c-24 0-42 20-42 62h84c0-42-18-62-42-62z"/></svg>
           </div>
         </button>
         <button type="button" class="teacher-card is-soon" onclick="go('consult-math')">
-          <div class="tc-bottom">
-            <div class="tc-info">
-              <div class="tc-subject">수학</div>
-              <div class="tc-soon">준비중입니다</div>
-            </div>
-            <div class="tc-photo">
-              <svg class="tc-silhouette" viewBox="0 0 100 120"><circle cx="50" cy="32" r="22"/><path d="M50 58c-24 0-42 20-42 62h84c0-42-18-62-42-62z"/></svg>
-            </div>
+          <div class="tc-info">
+            <div class="tc-subject">수학</div>
+            <div class="tc-soon">준비중입니다</div>
+          </div>
+          <div class="tc-photo">
+            <svg class="tc-silhouette" viewBox="0 0 100 120"><circle cx="50" cy="32" r="22"/><path d="M50 58c-24 0-42 20-42 62h84c0-42-18-62-42-62z"/></svg>
           </div>
         </button>
         <button type="button" class="teacher-card is-soon" onclick="go('consult-english')">
-          <div class="tc-bottom">
-            <div class="tc-info">
-              <div class="tc-subject">영어</div>
-              <div class="tc-soon">준비중입니다</div>
-            </div>
-            <div class="tc-photo">
-              <svg class="tc-silhouette" viewBox="0 0 100 120"><circle cx="50" cy="32" r="22"/><path d="M50 58c-24 0-42 20-42 62h84c0-42-18-62-42-62z"/></svg>
-            </div>
+          <div class="tc-info">
+            <div class="tc-subject">영어</div>
+            <div class="tc-soon">준비중입니다</div>
+          </div>
+          <div class="tc-photo">
+            <svg class="tc-silhouette" viewBox="0 0 100 120"><circle cx="50" cy="32" r="22"/><path d="M50 58c-24 0-42 20-42 62h84c0-42-18-62-42-62z"/></svg>
           </div>
         </button>
       </div>
