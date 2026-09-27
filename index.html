@@ -2307,21 +2307,21 @@
     max-width: 1040px; width: 100%; margin: 0 auto;
     padding: 32px 24px 56px 24px;
   }
-  /* 학습 상담·과외 관련 페이지 전체를 홀로 학습 시스템과 시각적으로 분리하기 위해 고급스러운
-     검정 배경으로 바꾼다(.dark-consult, 12개 view에 부여). 흰/크림 배경의 카드형 요소(박스,
-     버튼, 사진 카드 등)는 원래 배경 그대로 두고, 카드 없이 페이지 배경 위에 바로 놓이는
-     텍스트(제목, 구분선, 안내문 등)만 밝은 색으로 뒤집어서 대비를 맞춘다. */
-  .dark-consult { background: #121212; }
-  .dark-consult .consult-page h2 { color: #FFFFFF; }
-  .dark-consult .consult-page .split { background: linear-gradient(to right, var(--green) 50%, rgba(255,255,255,0.3) 50%); }
-  .dark-consult .ef-hl { color: #6FCF97; background: linear-gradient(transparent 60%, rgba(111,207,151,0.22) 60%); }
-  .dark-consult .cd-promo-head { color: #FFFFFF; }
-  .dark-consult .cd-promo-sub { color: rgba(255,255,255,0.62); }
-  .dark-consult .cd-back-link { color: rgba(255,255,255,0.62); }
-  .dark-consult .cd-apply-btn { background: #FFFFFF; color: #121212; }
-  .dark-consult .hub-coming-soon { color: rgba(255,255,255,0.5); }
-  .dark-consult .cx-title { color: #FFFFFF; }
-  .dark-consult .cx-title-hint { color: rgba(255,255,255,0.5); }
+  /* 학습 상담·과외 관련 페이지 전체를 홀로 학습 시스템과 시각적으로 분리하기 위해 순백색
+     배경으로 바꾼다(.dark-consult, 12개 view에 부여 — 검정 배경이었다가 사용자가 어색하다고
+     해서 흰색으로 되돌림). 기본 잉크색 텍스트가 흰 배경에서도 그대로 잘 보이므로 별도 색
+     반전은 필요 없다. */
+  .dark-consult { background: var(--paper); }
+  /* "학습 상담 · 온라인 과외" 진입 전환 효과 — 홈 버튼을 누르면 잠깐 스플래시 화면에 슬로건을
+     보여주고, 그 뒤에 실제 학습 상담 페이지가 나타난다(dark-consult와 같은 흰 톤). */
+  .consult-splash {
+    position: fixed; inset: 0; z-index: 9999; background: var(--paper);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+  }
+  .consult-splash.on { opacity: 1; pointer-events: auto; }
+  .consult-splash-brand { font-size: 1rem; font-weight: 800; color: var(--ink-soft); letter-spacing: 0.08em; margin-bottom: 12px; }
+  .consult-splash-slogan { font-size: 1.5rem; font-weight: 800; color: var(--ink); letter-spacing: -0.01em; text-align: center; padding: 0 24px; }
   .consult-page .eyebrow {
     display: inline-block; background: #F1EADB; color: var(--tan);
     font-size: 0.64rem; font-weight: 800; letter-spacing: 0.2em;
@@ -4172,6 +4172,10 @@
   <div class="sb-foot">© ROADMAP × STUDY ADDICT</div>
 </nav>
 <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+<div class="consult-splash" id="consultSplash">
+  <div class="consult-splash-brand">&lt;홀로&gt;</div>
+  <div class="consult-splash-slogan">온라인 학습 상담 · 온라인 과외</div>
+</div>
 <div id="print-area"></div>
 <div class="toast-msg" id="toastMsg"></div>
 
@@ -4512,7 +4516,7 @@
       <button type="button" class="home-nav-btn" onclick="go('recordhub')">
         <span class="hn-title">내 학습 기록</span> <span class="hn-arrow">›</span>
       </button>
-      <button type="button" class="home-nav-btn" onclick="go('consult')">
+      <button type="button" class="home-nav-btn" onclick="goConsultWithSplash()">
         <span class="hn-title">학습 상담 · 온라인 과외</span> <span class="hn-arrow">›</span>
       </button>
       <button type="button" class="home-nav-btn" onclick="go('mockexam')">
@@ -7163,6 +7167,16 @@
   function toggleGroup(name) {
     const group = document.getElementById("sbg-group-" + name);
     if (group) group.classList.toggle("open");
+  }
+  // 홈 화면 "학습 상담 · 온라인 과외" 버튼 — 바로 이동하지 않고, 잠깐 슬로건 스플래시 화면을
+  // 보여준 뒤에 실제 페이지로 전환한다.
+  function goConsultWithSplash() {
+    const el = document.getElementById("consultSplash");
+    el.classList.add("on");
+    setTimeout(() => {
+      go("consult");
+      setTimeout(() => { el.classList.remove("on"); }, 60);
+    }, 650);
   }
   let currentView = "home";
   function go(view) {
