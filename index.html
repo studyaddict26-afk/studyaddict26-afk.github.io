@@ -399,12 +399,10 @@
   }
   .consult-brand {
     grid-column: 2; justify-self: center;
-    display: flex; align-items: center; gap: 9px;
     font-family: inherit; font-size: 1.6rem; font-weight: 900; letter-spacing: -0.02em;
     color: var(--ink); background: none; border: none; cursor: pointer; padding: 0;
   }
-  .consult-brand-icon { width: 30px; height: 30px; flex: none; }
-  .consult-brand .brand-accent { color: var(--green-deep); }
+  .consult-brand .brand-accent { color: var(--ink); }
   .consult-utility-group { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: 12px; }
   .consult-dday { font-size: 0.8rem; color: var(--ink-soft); white-space: nowrap; }
   .consult-utility-sep { color: var(--line); font-size: 0.8rem; }
@@ -2403,12 +2401,10 @@
   .consult-splash.on { opacity: 1; pointer-events: auto; }
   .consult-splash.on .consult-splash-logo { animation: consultSplashPop 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
   .consult-splash-logo {
-    display: flex; align-items: center; gap: 14px;
     font-size: 2.6rem; font-weight: 900; letter-spacing: -0.02em; color: var(--ink);
     opacity: 0; transform: translateY(10px) scale(0.94);
   }
-  .consult-splash-icon { width: 48px; height: 48px; flex: none; }
-  .consult-splash-logo .brand-accent { color: var(--green-deep); }
+  .consult-splash-logo .brand-accent { color: var(--ink); }
   .consult-splash-divider {
     width: 60px; height: 3px; border-radius: 2px; margin: 16px 0 14px 0;
     background: linear-gradient(to right, var(--green) 50%, var(--ink) 50%);
@@ -4270,15 +4266,7 @@
 </nav>
 <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 <div class="consult-splash" id="consultSplash">
-  <div class="consult-splash-logo">
-    <svg class="consult-splash-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="20" cy="20" r="20" fill="#15522F"/>
-      <path d="M20 14.2c-2.3-1.9-5.4-2.7-8.2-2.5v13.2c2.8-.2 5.9.6 8.2 2.5V14.2z" fill="#F1EADB"/>
-      <path d="M20 14.2c2.3-1.9 5.4-2.7 8.2-2.5v13.2c-2.8-.2-5.9.6-8.2 2.5V14.2z" fill="#FFFFFF"/>
-      <line x1="20" y1="13.6" x2="20" y2="27.4" stroke="#0F3A20" stroke-width="0.6"/>
-    </svg>
-    <span>Holo <span class="brand-accent">Study</span></span>
-  </div>
+  <div class="consult-splash-logo">Holo <span class="brand-accent">Study</span></div>
   <div class="consult-splash-divider"></div>
   <div class="consult-splash-tagline">혼자 공부하는 시간, 함께합니다</div>
 </div>
@@ -4599,15 +4587,7 @@
        나갈 때는 "나가기"로 표기한다. -->
   <div class="consult-header" id="consultHeader">
     <div class="consult-brand-row">
-      <button type="button" class="consult-brand" onclick="go('consult-home')">
-        <svg class="consult-brand-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="20" cy="20" r="20" fill="#15522F"/>
-          <path d="M20 14.2c-2.3-1.9-5.4-2.7-8.2-2.5v13.2c2.8-.2 5.9.6 8.2 2.5V14.2z" fill="#F1EADB"/>
-          <path d="M20 14.2c2.3-1.9 5.4-2.7 8.2-2.5v13.2c-2.8-.2-5.9.6-8.2 2.5V14.2z" fill="#FFFFFF"/>
-          <line x1="20" y1="13.6" x2="20" y2="27.4" stroke="#0F3A20" stroke-width="0.6"/>
-        </svg>
-        <span>Holo <span class="brand-accent">Study</span></span>
-      </button>
+      <button type="button" class="consult-brand" onclick="go('consult-home')">Holo <span class="brand-accent">Study</span></button>
       <div class="consult-utility-group">
         <span class="consult-dday" id="consultDday"></span>
         <span class="consult-utility-sep">|</span>
