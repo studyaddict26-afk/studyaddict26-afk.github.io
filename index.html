@@ -2790,7 +2790,6 @@
     .consult-tabs { grid-template-columns: 1fr; }
   }
   /* ── 후기 · 사진 ── */
-  .consult-extra { margin-top: 30px; }
   .cx-block { margin-bottom: 28px; }
   .cx-block:last-child { margin-bottom: 0; }
   .cx-block-card {
@@ -3752,19 +3751,25 @@
   }
   .reports-subtab-btn:hover { color: var(--ink); }
   .reports-subtab-btn.on { background: var(--green); color: #FFFFFF; border-color: var(--green); }
-  /* "학습 컨설팅 송의준 선생님" 페이지 — 프로필/후기/미리보기 토글 탭 박스. 테두리 있는 알약
-     버튼(.reports-subtab-btn) 대신, 흰 배경 위에 글자 색만 바뀌는 미니멀한 탭으로 보이도록
-     이 박스 안에서만 배경/테두리를 지운다. */
-  .teacher-tabs-box {
-    display: flex; gap: 8px; background: var(--paper); border: 1px solid var(--line);
-    border-radius: 12px; padding: 10px; margin-bottom: 22px;
+  /* "학습 컨설팅 송의준 선생님" 페이지 — 왼쪽에 배경 없는(투명) 목차, 오른쪽에 선택된 섹션
+     내용이 나오는 2단 레이아웃. 자료실만 아래에 무료/유료 두 하위 항목을 들여쓰기로 보여준다. */
+  .teacher-layout { display: flex; gap: 32px; align-items: flex-start; margin-top: 30px; }
+  .teacher-sidebar { flex: none; width: 168px; display: flex; flex-direction: column; gap: 2px; position: sticky; top: 20px; }
+  .ts-link {
+    font-family: inherit; font-size: 0.86rem; font-weight: 700; color: var(--ink-soft);
+    background: none; border: none; text-align: left; padding: 9px 10px; border-radius: 8px;
+    cursor: pointer; transition: background 0.15s, color 0.15s;
   }
-  .teacher-tabs-box .reports-subtab-btn {
-    flex: 1; text-align: center;
-    background: none; border: none; color: var(--ink-soft);
+  .ts-link:hover { background: var(--cream); color: var(--ink); }
+  .ts-link.on { background: var(--green-soft); color: var(--green-deep); }
+  .ts-link.ts-sub { font-size: 0.8rem; font-weight: 600; padding-left: 22px; }
+  .ts-group-label { font-size: 0.72rem; font-weight: 800; color: var(--ink-soft); padding: 9px 10px 0 10px; }
+  .teacher-content { flex: 1; min-width: 0; }
+  @media (max-width: 760px) {
+    .teacher-layout { flex-direction: column; gap: 10px; }
+    .teacher-sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; position: static; }
+    .ts-group-label { padding-top: 6px; width: 100%; }
   }
-  .teacher-tabs-box .reports-subtab-btn:hover { color: var(--green-deep); background: none; }
-  .teacher-tabs-box .reports-subtab-btn.on { background: none; border: none; color: var(--green-deep); font-weight: 800; }
   #view-reports .reports-wrap { display: none; }
   #view-reports .reports-wrap.on { display: flex; }
   .reports-wrap {
@@ -5584,12 +5589,17 @@
         </div>
       </div>
       <div class="split"></div>
-      <div class="consult-extra">
-        <div class="teacher-tabs-box">
-          <button type="button" class="reports-subtab-btn on" id="teacherTabBtn-profile" onclick="teacherToggleTab('profile')">프로필</button>
-          <button type="button" class="reports-subtab-btn" id="teacherTabBtn-review" onclick="teacherToggleTab('review')">후기</button>
-          <button type="button" class="reports-subtab-btn" id="teacherTabBtn-preview" onclick="teacherToggleTab('preview')">학습 상담 미리보기</button>
-        </div>
+      <div class="teacher-layout">
+        <nav class="teacher-sidebar">
+          <button type="button" class="ts-link on" id="tsLink-profile" onclick="teacherShowSection('profile')">프로필</button>
+          <button type="button" class="ts-link" id="tsLink-curriculum" onclick="teacherShowSection('curriculum')">커리큘럼</button>
+          <button type="button" class="ts-link" id="tsLink-news" onclick="teacherShowSection('news')">선생님 새소식</button>
+          <div class="ts-group-label">자료실</div>
+          <button type="button" class="ts-link ts-sub" id="tsLink-materials-free" onclick="teacherShowSection('materials-free')">무료 자료실</button>
+          <button type="button" class="ts-link ts-sub" id="tsLink-materials-paid" onclick="teacherShowSection('materials-paid')">유료 자료실</button>
+          <button type="button" class="ts-link" id="tsLink-reviews" onclick="teacherShowSection('reviews')">수강 후기</button>
+        </nav>
+        <div class="teacher-content">
         <div class="cx-block" id="teacherPane-profile">
                   <div class="spec-box">
             <div class="spec-header">
@@ -5693,20 +5703,34 @@
           </div>
         </div>
 
-        <div class="cx-block" id="teacherPane-review" style="display:none;">
+        <div class="cx-block" id="teacherPane-curriculum" style="display:none;">
+          <p class="hub-coming-soon">준비중입니다</p>
+        </div>
+
+        <div class="cx-block" id="teacherPane-news" style="display:none;">
+          <p class="hub-coming-soon">준비중입니다</p>
+        </div>
+
+        <div class="cx-block" id="teacherPane-materials-free" style="display:none;">
+          <p class="hub-coming-soon">준비중입니다</p>
+        </div>
+
+        <div class="cx-block" id="teacherPane-materials-paid" style="display:none;">
+          <p class="hub-coming-soon">준비중입니다</p>
+        </div>
+
+        <div class="cx-block" id="teacherPane-reviews" style="display:none;">
           <div class="cx-title">학습 상담 후기 <span class="cx-title-hint">(사진 누르면 내용 확인 가능합니다)</span></div>
           <div class="review-track-wrap">
             <div class="review-track" id="reviewTrack"></div>
           </div>
-        </div>
-
-        <div class="cx-block" id="teacherPane-preview" style="display:none;">
-          <div class="cx-title">학습 상담 미리 보기</div>
+          <div class="cx-title" style="margin-top:22px;">학습 상담 미리 보기</div>
           <div class="cx-photos">
             <div class="cx-photo is-filled"><video src="preview-1.mp4" autoplay muted loop playsinline></video></div>
             <div class="cx-photo is-filled"><video src="preview-2.mp4" autoplay muted loop playsinline></video></div>
             <div class="cx-photo is-filled"><video src="preview-3.mp4" autoplay muted loop playsinline></video></div>
           </div>
+        </div>
         </div>
       </div>
     </div>
@@ -9336,19 +9360,14 @@
   }
   // 달을 고르면 하루하루가 바로 나오지 않고, 그 달의 "N주차" 목록이 먼저 나온다 —
   // 주차를 누르면 그 주 안의 날짜들이(기존과 같은 형태로) 나온다.
-  // "학습 컨설팅 송의준 선생님" 페이지의 프로필/후기/미리보기 토글 탭 — 같은 버튼을 다시 누르면
-  // 닫히고(전부 숨김), 다른 버튼을 누르면 그것만 보이도록 전환한다.
-  function teacherToggleTab(tab) {
-    const panes = ["profile", "review", "preview"];
-    const wasOn = document.getElementById("teacherTabBtn-" + tab).classList.contains("on");
-    panes.forEach(p => {
-      document.getElementById("teacherPane-" + p).style.display = "none";
-      document.getElementById("teacherTabBtn-" + p).classList.remove("on");
+  // "학습 컨설팅 송의준 선생님" 페이지의 왼쪽 목차(사이드바) — 프로필/커리큘럼/선생님 새소식/
+  // 무료·유료 자료실/수강 후기 중 하나만 오른쪽에 보이도록 전환한다(기본값: 프로필).
+  const TEACHER_SECTIONS = ["profile", "curriculum", "news", "materials-free", "materials-paid", "reviews"];
+  function teacherShowSection(tab) {
+    TEACHER_SECTIONS.forEach(t => {
+      document.getElementById("teacherPane-" + t).style.display = (t === tab) ? "" : "none";
+      document.getElementById("tsLink-" + t).classList.toggle("on", t === tab);
     });
-    if (!wasOn) {
-      document.getElementById("teacherPane-" + tab).style.display = "";
-      document.getElementById("teacherTabBtn-" + tab).classList.add("on");
-    }
   }
   let currentCumYm = null;
   // "전체 / 학습 플래너 / 공부 일기 / 시험 통계" 서브탭 — 전체는 기존처럼 서버가 계산한 주간 평균
