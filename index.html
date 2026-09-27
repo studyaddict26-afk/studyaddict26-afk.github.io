@@ -342,8 +342,16 @@
   .sb-group-body { display: none; flex-direction: column; padding-left: 4px; }
   .sb-group.open .sb-group-body { display: flex; }
 
+  /* Manager <-> Academy 한 번에 전환하는 버튼 — 사이드바 아래쪽(로그아웃 버로 위)에 항상
+     떠 있어서 어느 Manager 화면에 있든 바로 Academy로 넘어갈 수 있다. */
+  .sb-switch-product {
+    margin-top: auto; display: block; width: calc(100% - 24px); margin-left: 12px; margin-right: 12px;
+    background: var(--green-deep); border: none; border-radius: 8px; cursor: pointer;
+    font-family: inherit; font-size: 0.8rem; font-weight: 800;
+    color: #FFFFFF; text-align: center; padding: 10px 4px;
+  }
+  .sb-switch-product:hover { background: var(--green); }
   .sb-logout {
-    margin-top: auto;
     display: block; width: 100%;
     background: none; border: none; cursor: pointer;
     font-family: inherit; font-size: 0.78rem; font-weight: 700;
@@ -413,6 +421,14 @@
     background: none; border: none; cursor: pointer; padding: 0; white-space: nowrap;
   }
   .consult-utility-btn:hover { color: var(--ink); }
+  /* Manager <-> Academy 전환 버튼 — Academy 헤더에는 항상 이 버튼이 떠 있어서 어느
+     Academy 화면에 있든 바로 Manager로 넘어갈 수 있다(사이드바 쪽 버튼과 짝). */
+  .consult-switch-product {
+    font-family: inherit; font-size: 0.82rem; font-weight: 800; color: #FFFFFF;
+    background: var(--green-deep); border: none; border-radius: 8px;
+    padding: 7px 14px; cursor: pointer; white-space: nowrap; transition: background 0.15s;
+  }
+  .consult-switch-product:hover { background: var(--green); }
   .consult-nav-row {
     display: flex; align-items: center; justify-content: center; gap: 32px;
     background: #F4F4F5; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
@@ -483,10 +499,38 @@
   html[data-boot="form"] .topbar,
   html[data-boot="login"] .sidebar,
   html[data-boot="login"] .overlay,
-  html[data-boot="login"] .topbar { display: none; }
-  html[data-boot="login"] .view.on { display: none; }
+  html[data-boot="login"] .topbar,
+  html[data-boot="choice"] .sidebar,
+  html[data-boot="choice"] .overlay,
+  html[data-boot="choice"] .topbar,
+  html[data-boot="choice"] .consult-header { display: none; }
+  html[data-boot="login"] .view.on,
+  html[data-boot="choice"] .view.on { display: none; }
   #studentLoginGate { display: none; }
   html[data-boot="login"] #studentLoginGate { display: flex; }
+  #productChoiceGate { display: none; }
+  html[data-boot="choice"] #productChoiceGate { display: flex; }
+  #productChoiceGate {
+    position: fixed; inset: 0; z-index: 500; align-items: center; justify-content: center;
+    background: var(--cream); padding: 24px; box-sizing: border-box;
+  }
+  .pc-gate-inner { max-width: 640px; width: 100%; text-align: center; }
+  .pc-gate-logo { font-size: 1.1rem; font-weight: 900; color: var(--green-deep); letter-spacing: 0.02em; margin-bottom: 10px; }
+  .pc-gate-title { font-size: 1.5rem; font-weight: 800; color: var(--ink); margin-bottom: 28px; }
+  .pc-gate-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .pc-gate-card {
+    font-family: inherit; text-align: left; cursor: pointer;
+    background: var(--paper); border: 1.5px solid var(--line); border-radius: 14px;
+    padding: 24px 20px; transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+  }
+  .pc-gate-card:hover { border-color: var(--green-deep); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+  .pc-gate-card-name { font-size: 1.05rem; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+  .pc-gate-card-name b { color: var(--green-deep); }
+  .pc-gate-card-desc { font-size: 0.8rem; color: var(--ink-soft); line-height: 1.5; word-break: keep-all; }
+  .pc-gate-hint { margin-top: 22px; font-size: 0.78rem; color: var(--ink-soft); }
+  @media (max-width: 560px) {
+    .pc-gate-cards { grid-template-columns: 1fr; }
+  }
   #studentLoginGate {
     position: fixed; inset: 0; z-index: 500;
     flex-direction: column;
@@ -4250,6 +4294,27 @@
   <div class="sl-slide-dots" id="slLightboxDots"></div>
 </div>
 
+<!-- ═══ 로그인 직후 "Manager / Academy" 선택 화면 — 로그아웃(자정 자동 로그아웃 포함) 후
+     다시 로그인할 때마다 다시 보여준다. 한 번 고르면 holoActiveProduct에 저장돼서, 같은
+     로그인 세션 동안은 새로고침해도 다시 안 물어보고 고른 쪽으로 바로 들어간다. ═══ -->
+<div id="productChoiceGate">
+  <div class="pc-gate-inner">
+    <div class="pc-gate-logo">Holo</div>
+    <div class="pc-gate-title">어디로 들어갈까요?</div>
+    <div class="pc-gate-cards">
+      <button type="button" class="pc-gate-card" onclick="chooseProduct('manager')">
+        <div class="pc-gate-card-name">Holo Study <b>Manager</b></div>
+        <div class="pc-gate-card-desc">학습 관리 시스템 — 플래너 · 공부 일기 · 모의고사 시뮬레이션 · 분석지</div>
+      </button>
+      <button type="button" class="pc-gate-card" onclick="chooseProduct('academy')">
+        <div class="pc-gate-card-name">Holo Study <b>Academy</b></div>
+        <div class="pc-gate-card-desc">온라인 과외 시스템 — 학습 상담 · 온라인 과외</div>
+      </button>
+    </div>
+    <p class="pc-gate-hint">언제든 화면 안의 전환 버튼으로 다른 쪽으로 넘어갈 수 있어요.</p>
+  </div>
+</div>
+
 <!-- ═══ 사이드바 ═══ -->
 <nav class="sidebar closed" id="sidebar">
   <button class="sb-brand" onclick="go('home')" aria-label="홈으로">
@@ -4270,6 +4335,7 @@
     <span class="ico">•</span>학습 관리 시스템 사용 방법
   </button>
 
+  <button type="button" class="sb-switch-product" id="sbSwitchToAcademy" onclick="switchProduct('academy')">Academy로 이동 →</button>
   <button type="button" class="sb-logout" onclick="studentLogout()">로그아웃</button>
   <div class="sb-foot">© ROADMAP × STUDY ADDICT</div>
 </nav>
@@ -4618,6 +4684,7 @@
         <span class="consult-utility-sep">|</span>
         <button type="button" class="consult-utility-btn">로그인</button>
         <button type="button" class="consult-utility-btn">회원가입</button>
+        <button type="button" class="consult-switch-product" onclick="switchProduct('manager')">Manager로 이동 →</button>
       </div>
     </div>
     <nav class="consult-nav-row">
@@ -12962,6 +13029,30 @@
       document.documentElement.removeAttribute("data-boot");
     }
   }
+  // ── "Manager / Academy" 선택 화면 ──
+  // 로그인 성공 직후 호출: 이번 로그인 세션에서 이미 골라둔 게 있으면 그쪽으로 바로 들어가고,
+  // 없으면(로그아웃 후 새로 로그인한 경우 등) 선택 화면부터 보여준다.
+  function enterAfterLogin() {
+    const saved = localStorage.getItem("holoActiveProduct");
+    if (saved) {
+      hideStudentGate();
+      go(saved === "academy" ? "consult-home" : "home");
+    } else {
+      document.documentElement.setAttribute("data-boot", "choice");
+    }
+  }
+  // 선택 화면에서 카드를 고르면 호출 — 이번 로그인 세션 동안 기억해두고 그 화면으로 들어간다.
+  function chooseProduct(product) {
+    localStorage.setItem("holoActiveProduct", product);
+    document.documentElement.removeAttribute("data-boot");
+    go(product === "academy" ? "consult-home" : "home");
+  }
+  // Manager <-> Academy 전환 버튼(사이드바/Academy 헤더)에서 호출 — 선택 화면을 다시 거치지
+  // 않고 곧바로 반대쪽으로 점프한다.
+  function switchProduct(product) {
+    localStorage.setItem("holoActiveProduct", product);
+    go(product === "academy" ? "consult-home" : "home");
+  }
   // "관리자 / 학생" 로그인 역할 토글 — 아이디/비밀번호 입력칸은 그대로 공유하고, 관리자를
   // 고르면 그 칸이 이메일 입력으로 바뀌고 제출 시 학생 로그인 대신 관리자(Firebase Auth)
   // 로그인 로직을 탄다. 관리자는 회원가입하는 개념이 아니라서 회원가입 링크도 숨긴다.
@@ -13048,8 +13139,7 @@
       localStorage.setItem("holoStudentPw", pw);
       localStorage.setItem("holoStudentLoginDate", getCalendarDateKey());
       storeStudentJoinYm(doc.data());
-      hideStudentGate();
-      go("home");
+      enterAfterLogin();
     }).catch(err => {
       console.error(err);
       btn.disabled = false;
@@ -13437,6 +13527,7 @@
     localStorage.removeItem("holoStudentNickname");
     localStorage.removeItem("holoStudentNicknameChangeCount");
     localStorage.removeItem("holoStudentLoginDate");
+    localStorage.removeItem("holoActiveProduct");
     location.hash = "";
     location.reload();
   }
@@ -13692,6 +13783,7 @@
     localStorage.removeItem("holoStudentNickname");
     localStorage.removeItem("holoStudentNicknameChangeCount");
       localStorage.removeItem("holoStudentLoginDate");
+    localStorage.removeItem("holoActiveProduct");
       showStudentGate();
       return;
     }
@@ -13711,10 +13803,11 @@
     localStorage.removeItem("holoStudentNickname");
     localStorage.removeItem("holoStudentNicknameChangeCount");
         localStorage.removeItem("holoStudentLoginDate");
+    localStorage.removeItem("holoActiveProduct");
         showStudentGate();
       } else {
         storeStudentJoinYm(doc.data());
-        hideStudentGate();
+        enterAfterLogin();
       }
     }).catch(err => {
       console.error(err);
