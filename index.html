@@ -2366,16 +2366,29 @@
   /* 카드(흰 배경)와 완전히 같은 순백색(var(--paper))을 페이지 배경으로 쓰면 카드가 페이지에
      묻혀서 "바뀐 게 없어 보이는" 문제가 있어, 살짝 더 연한 회백색으로 구분되게 한다. */
   .dark-consult { background: #F4F4F5; }
-  /* "학습 상담 · 온라인 과외" 진입 전환 효과 — 홈 버튼을 누르면 잠깐 스플래시 화면에 슬로건을
-     보여주고, 그 뒤에 실제 학습 상담 페이지가 나타난다(dark-consult와 같은 흰 톤). */
+  /* "Holo Study" 진입 전환 효과 — 홈 버튼을 누르면 잠깐 스플래시 화면에 로고가 팝업되듯
+     나타났다가, 실제 학습 상담 페이지가 나타난다(dark-consult와 같은 회백색 톤). */
   .consult-splash {
-    position: fixed; inset: 0; z-index: 9999; background: var(--paper);
+    position: fixed; inset: 0; z-index: 9999; background: #F4F4F5;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
   }
   .consult-splash.on { opacity: 1; pointer-events: auto; }
-  .consult-splash-brand { font-size: 1rem; font-weight: 800; color: var(--ink-soft); letter-spacing: 0.08em; margin-bottom: 12px; }
-  .consult-splash-slogan { font-size: 1.5rem; font-weight: 800; color: var(--ink); letter-spacing: -0.01em; text-align: center; padding: 0 24px; }
+  .consult-splash.on .consult-splash-logo { animation: consultSplashPop 0.55s cubic-bezier(0.22, 1, 0.36, 1); }
+  .consult-splash-logo {
+    font-size: 2.6rem; font-weight: 900; letter-spacing: -0.02em; color: var(--ink);
+    opacity: 0; transform: translateY(10px) scale(0.94);
+  }
+  .consult-splash-logo .brand-accent { color: var(--green-deep); }
+  .consult-splash-divider {
+    width: 60px; height: 3px; border-radius: 2px; margin: 16px 0 14px 0;
+    background: linear-gradient(to right, var(--green) 50%, var(--ink) 50%);
+  }
+  .consult-splash-tagline { font-size: 0.92rem; font-weight: 600; color: var(--ink-soft); letter-spacing: -0.01em; }
+  @keyframes consultSplashPop {
+    from { opacity: 0; transform: translateY(10px) scale(0.94); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
   .consult-page .eyebrow {
     display: inline-block; background: #F1EADB; color: var(--tan);
     font-size: 0.64rem; font-weight: 800; letter-spacing: 0.2em;
@@ -4228,8 +4241,9 @@
 </nav>
 <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 <div class="consult-splash" id="consultSplash">
-  <div class="consult-splash-brand">&lt;홀로&gt;</div>
-  <div class="consult-splash-slogan">온라인 학습 상담 · 온라인 과외</div>
+  <div class="consult-splash-logo">Holo <span class="brand-accent">Study</span></div>
+  <div class="consult-splash-divider"></div>
+  <div class="consult-splash-tagline">혼자 공부하는 시간, 함께합니다</div>
 </div>
 <div id="print-area"></div>
 <div class="toast-msg" id="toastMsg"></div>
