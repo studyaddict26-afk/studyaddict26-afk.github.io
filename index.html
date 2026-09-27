@@ -66,6 +66,7 @@
   .sb-wordmark .holo-en { font-size: 0.85em; color: var(--green); }
   .sb-brand:hover .sb-wordmark .holo,
   .sb-brand:hover .sb-wordmark .holo-en { color: var(--green-deep); }
+  .sb-academy-wordmark { font-size: 1.2rem; font-weight: 900; letter-spacing: -0.02em; color: var(--ink); }
   .sb-profile {
     display: flex; align-items: center; gap: 10px; width: 100%;
     font-family: inherit; text-align: left; cursor: pointer;
@@ -421,14 +422,6 @@
     background: none; border: none; cursor: pointer; padding: 0; white-space: nowrap;
   }
   .consult-utility-btn:hover { color: var(--ink); }
-  /* Manager <-> Academy 전환 버튼 — Academy 헤더에는 항상 이 버튼이 떠 있어서 어느
-     Academy 화면에 있든 바로 Manager로 넘어갈 수 있다(사이드바 쪽 버튼과 짝). */
-  .consult-switch-product {
-    font-family: inherit; font-size: 0.82rem; font-weight: 800; color: #FFFFFF;
-    background: var(--green-deep); border: none; border-radius: 8px;
-    padding: 7px 14px; cursor: pointer; white-space: nowrap; transition: background 0.15s;
-  }
-  .consult-switch-product:hover { background: var(--green); }
   .consult-nav-row {
     display: flex; align-items: center; justify-content: center; gap: 32px;
     background: #F4F4F5; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
@@ -519,7 +512,7 @@
   .pc-gate-title { font-size: 1.5rem; font-weight: 800; color: var(--ink); margin-bottom: 28px; }
   .pc-gate-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .pc-gate-card {
-    font-family: inherit; text-align: left; cursor: pointer;
+    font-family: inherit; text-align: center; cursor: pointer;
     background: var(--paper); border: 1.5px solid var(--line); border-radius: 14px;
     padding: 24px 20px; transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
   }
@@ -528,6 +521,18 @@
   .pc-gate-card-name b { color: var(--green-deep); }
   .pc-gate-card-desc { font-size: 0.8rem; color: var(--ink-soft); line-height: 1.5; word-break: keep-all; }
   .pc-gate-hint { margin-top: 22px; font-size: 0.78rem; color: var(--ink-soft); }
+  /* 로그인 화면 -> 선택 화면 전환 연출: 로그인 쪽은 살짝 위로 사라지고, 선택 화면은
+     살짝 아래에서 떠오르듯 나타난다(gate-leaving은 JS가 data-boot을 바꾸기 직전에 붙인다). */
+  #studentLoginGate.gate-leaving .sl-gate-body { animation: gateFadeOut 0.4s cubic-bezier(0.4, 0, 1, 1) forwards; }
+  #productChoiceGate .pc-gate-inner { animation: gateFadeIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  @keyframes gateFadeOut {
+    from { opacity: 1; transform: translateY(0) scale(1); }
+    to { opacity: 0; transform: translateY(-16px) scale(0.98); }
+  }
+  @keyframes gateFadeIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
   @media (max-width: 560px) {
     .pc-gate-cards { grid-template-columns: 1fr; }
   }
@@ -2442,10 +2447,10 @@
   .consult-splash {
     position: fixed; inset: 0; z-index: 9999; background: #F4F4F5;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+    opacity: 0; pointer-events: none; transition: opacity 0.6s ease;
   }
   .consult-splash.on { opacity: 1; pointer-events: auto; }
-  .consult-splash.on .consult-splash-logo { animation: consultSplashPop 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+  .consult-splash.on .consult-splash-logo { animation: consultSplashPop 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
   .consult-splash-logo {
     display: flex; align-items: center; gap: 14px;
     font-size: 2.6rem; font-weight: 900; letter-spacing: -0.02em; color: var(--ink);
@@ -4303,12 +4308,12 @@
     <div class="pc-gate-title">어디로 들어갈까요?</div>
     <div class="pc-gate-cards">
       <button type="button" class="pc-gate-card" onclick="chooseProduct('manager')">
-        <div class="pc-gate-card-name">Holo Study <b>Manager</b></div>
-        <div class="pc-gate-card-desc">학습 관리 시스템 — 플래너 · 공부 일기 · 모의고사 시뮬레이션 · 분석지</div>
+        <div class="pc-gate-card-name">Study Holo <b>Manager</b></div>
+        <div class="pc-gate-card-desc">학습 관리</div>
       </button>
       <button type="button" class="pc-gate-card" onclick="chooseProduct('academy')">
-        <div class="pc-gate-card-name">Holo Study <b>Academy</b></div>
-        <div class="pc-gate-card-desc">온라인 과외 시스템 — 학습 상담 · 온라인 과외</div>
+        <div class="pc-gate-card-name">Study Holo <b>Academy</b></div>
+        <div class="pc-gate-card-desc">온라인 과외</div>
       </button>
     </div>
     <p class="pc-gate-hint">언제든 화면 안의 전환 버튼으로 다른 쪽으로 넘어갈 수 있어요.</p>
@@ -4339,6 +4344,24 @@
   <button type="button" class="sb-logout" onclick="studentLogout()">로그아웃</button>
   <div class="sb-foot">© ROADMAP × STUDY ADDICT</div>
 </nav>
+
+<!-- Academy 전용 사이드바 — Manager 사이드바와 같은 스타일(.sidebar)을 재사용하고, Manager/
+     Academy 이동은 오직 이 사이드바의 "Manager로 이동" 버튼을 통해서만 하도록 헤더에서는
+     전환 버튼을 뺐다. -->
+<nav class="sidebar closed" id="academySidebar">
+  <button class="sb-brand" onclick="go('consult-home')">
+    <div class="sb-academy-wordmark">Study Holo Academy</div>
+  </button>
+
+  <button type="button" class="sb-item" data-view="consult-home" onclick="go('consult-home')">홈</button>
+  <button type="button" class="sb-item" data-view="consult" onclick="go('consult')">홀로선생님</button>
+  <button type="button" class="sb-item" data-view="consult-materials" onclick="go('consult-materials')">공부자료</button>
+  <button type="button" class="sb-item" data-view="consult-community" onclick="go('consult-community')">커뮤니티</button>
+
+  <button type="button" class="sb-switch-product" onclick="switchProduct('manager')">Manager로 이동 →</button>
+  <button type="button" class="sb-logout" onclick="studentLogout()">로그아웃</button>
+  <div class="sb-foot">© ROADMAP × STUDY ADDICT</div>
+</nav>
 <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 <div class="consult-splash" id="consultSplash">
   <div class="consult-splash-logo">
@@ -4348,7 +4371,7 @@
       <rect x="24" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/>
       <rect x="11" y="17.5" width="18" height="5" rx="1.5" fill="#FFFFFF"/>
     </svg>
-    <span>Holo <span class="brand-accent">Study</span></span>
+    <span>Study Holo <span class="brand-accent">Academy</span></span>
   </div>
   <div class="consult-splash-divider"></div>
   <div class="consult-splash-tagline">혼자 공부하는 시간, 함께합니다</div>
@@ -4677,14 +4700,13 @@
           <rect x="24" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/>
           <rect x="11" y="17.5" width="18" height="5" rx="1.5" fill="#FFFFFF"/>
         </svg>
-        <span>Holo <span class="brand-accent">Study</span></span>
+        <span>Study Holo <span class="brand-accent">Academy</span></span>
       </button>
       <div class="consult-utility-group">
         <span class="consult-dday" id="consultDday"></span>
         <span class="consult-utility-sep">|</span>
         <button type="button" class="consult-utility-btn">로그인</button>
         <button type="button" class="consult-utility-btn">회원가입</button>
-        <button type="button" class="consult-switch-product" onclick="switchProduct('manager')">Manager로 이동 →</button>
       </div>
     </div>
     <nav class="consult-nav-row">
@@ -6057,7 +6079,7 @@
       <div class="chome-layout">
         <nav class="chome-tabs">
           <button type="button" class="chome-tab on" id="chomeTab-study" onclick="chomeShowTab('study')">Holo Study</button>
-          <button type="button" class="chome-tab" id="chomeTab-teacher" onclick="chomeShowTab('teacher')">홀로 선생님</button>
+          <button type="button" class="chome-tab" id="chomeTab-teacher" onclick="chomeShowTab('teacher')">엘리트 운동선수 전문 선생님</button>
           <button type="button" class="chome-tab" id="chomeTab-subject" onclick="chomeShowTab('subject')">과목별 실력업</button>
           <button type="button" class="chome-tab" id="chomeTab-materials" onclick="chomeShowTab('materials')">공부자료</button>
         </nav>
@@ -7432,15 +7454,33 @@
     const group = document.getElementById("sbg-group-" + name);
     if (group) group.classList.toggle("open");
   }
-  // 홈 화면 "Holo Study" 버튼 — 바로 이동하지 않고, 잠깐 슬로건 스플래시 화면을 보여준 뒤에
-  // Holo Study 홈(consult-home)으로 전환한다.
-  function goConsultWithSplash() {
+  // Manager <-> Academy 전환 스플래시 — 어느 시스템으로 들어가는지에 따라 로고 문구와
+  // 설명 멘트를 바꿔서 잠깐 보여준 뒤 실제 화면으로 전환한다(Academy: 온라인 상담/과외
+  // 느낌, Manager: 계획·기록·분석 느낌으로 서로 다른 멘트를 쓴다).
+  const SPLASH_CONTENT = {
+    academy: {
+      name: 'Study Holo <span class="brand-accent">Academy</span>',
+      tagline: "혼자 공부하는 시간, 함께합니다",
+    },
+    manager: {
+      name: 'Study Holo <span class="brand-accent">Manager</span>',
+      tagline: "계획부터 분석까지, 학습을 관리합니다",
+    },
+  };
+  function showProductSplash(product, targetView) {
     const el = document.getElementById("consultSplash");
+    const content = SPLASH_CONTENT[product];
+    el.querySelector(".consult-splash-logo span").innerHTML = content.name;
+    el.querySelector(".consult-splash-tagline").textContent = content.tagline;
     el.classList.add("on");
     setTimeout(() => {
-      go("consult-home");
+      go(targetView);
       setTimeout(() => { el.classList.remove("on"); }, 60);
-    }, 1200);
+    }, 1900);
+  }
+  // 홈 화면 "Study Holo Academy" 버튼 — 바로 이동하지 않고, 스플래시로 잠깐 보여준 뒤 전환한다.
+  function goConsultWithSplash() {
+    showProductSplash("academy", "consult-home");
   }
   // "Holo Study" 홈 페이지 — 왼쪽 탭을 고르면 가운데 배너 내용이 바뀐다(대략적인 초안 문구,
   // 나중에 실제 내용으로 다듬으면 됨).
@@ -7448,16 +7488,16 @@
     study: {
       bg: "linear-gradient(135deg, #4A5AC4, #38428E)",
       badges: ["HOT"],
-      title: '혼자 공부하는 시간,<br><span class="chome-banner-accent">Holo Study</span>가 함께합니다',
+      title: '혼자 공부하는 시간,<br><span class="chome-banner-accent">Study Holo Academy</span>가 함께합니다',
       sub: "학습 상담부터 온라인 과외까지, 나에게 맞는 선생님을 만나보세요.",
       tags: ["학습 상담", "온라인 과외", "1:1 컨설팅"],
     },
     teacher: {
       bg: "linear-gradient(135deg, #E0824A, #C4652E)",
       badges: ["NEW"],
-      title: "축구선수 출신 노베이스에서<br>최상위권까지",
-      sub: "노베이스·하위권·중위권·상위권을 모두 직접 거친 학습 컨설턴트, 송의준 선생님을 만나보세요.",
-      tags: ["학습 컨설팅", "국어", "수학", "영어"],
+      title: "운동선수 출신 컨설턴트의<br><span class=\"chome-banner-accent\">엘리트 선수 전문</span> 학습관리",
+      sub: "훈련·시합 일정에 맞춘 학습 관리로, 축구선수 출신 컨설턴트 송의준 선생님이 직접 공부와 운동을 함께 잡아드립니다.",
+      tags: ["운동선수 전문", "학습 컨설팅", "국어", "수학", "영어"],
     },
     subject: {
       bg: "linear-gradient(135deg, #3FAE81, #2C7F5D)",
@@ -7533,6 +7573,14 @@
     const isConsultSection = document.getElementById("view-" + view).classList.contains("dark-consult");
     document.querySelector(".main > .topbar").style.display = isConsultSection ? "none" : "";
     document.getElementById("consultHeader").classList.toggle("on", isConsultSection);
+    // Manager 사이드바 <-> Academy 사이드바 — 둘 중 지금 속한 쪽만 열어두고 나머지는 닫는다
+    // (Academy로 넘어갈 때 Manager 사이드바가 열린 채로 남아 겹쳐 보이던 문제도 같이 해결).
+    if (isConsultSection) {
+      closeSidebar();
+      document.getElementById("academySidebar").classList.remove("closed");
+    } else {
+      document.getElementById("academySidebar").classList.add("closed");
+    }
     if (isConsultSection) {
       const activeNav = (view === "consult-home") ? "home" : (view === "consult-materials") ? "materials" : (view === "consult-community") ? "community" : "teachers";
       ["home", "teachers", "materials", "community"].forEach(n =>
@@ -13038,7 +13086,12 @@
       hideStudentGate();
       go(saved === "academy" ? "consult-home" : "home");
     } else {
-      document.documentElement.setAttribute("data-boot", "choice");
+      const gate = document.getElementById("studentLoginGate");
+      gate.classList.add("gate-leaving");
+      setTimeout(() => {
+        gate.classList.remove("gate-leaving");
+        document.documentElement.setAttribute("data-boot", "choice");
+      }, 400);
     }
   }
   // 선택 화면에서 카드를 고르면 호출 — 이번 로그인 세션 동안 기억해두고 그 화면으로 들어간다.
@@ -13047,11 +13100,11 @@
     document.documentElement.removeAttribute("data-boot");
     go(product === "academy" ? "consult-home" : "home");
   }
-  // Manager <-> Academy 전환 버튼(사이드바/Academy 헤더)에서 호출 — 선택 화면을 다시 거치지
-  // 않고 곧바로 반대쪽으로 점프한다.
+  // Manager <-> Academy 전환 버튼(양쪽 사이드바에서만 호출) — 선택 화면을 다시 거치지 않고
+  // 곧바로 반대쪽으로 넘어가되, 어느 시스템으로 들어가는지 스플래시 화면을 잠깐 보여준다.
   function switchProduct(product) {
     localStorage.setItem("holoActiveProduct", product);
-    go(product === "academy" ? "consult-home" : "home");
+    showProductSplash(product, product === "academy" ? "consult-home" : "home");
   }
   // "관리자 / 학생" 로그인 역할 토글 — 아이디/비밀번호 입력칸은 그대로 공유하고, 관리자를
   // 고르면 그 칸이 이메일 입력으로 바뀌고 제출 시 학생 로그인 대신 관리자(Firebase Auth)
