@@ -2532,7 +2532,7 @@
   }
   /* ── "선생님 살펴보기" 사진 카드 그리드 (학습 상담 안내 페이지) — 사진이 카드 오른쪽 아래
      절반 가량을 상반신 크기로 채우고, 글자는 왼쪽에 겹치지 않게 떠 있는 레이아웃. ── */
-  .teacher-card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
+  .teacher-card-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
   .teacher-card {
     position: relative; overflow: hidden;
     height: 260px; background: #E7E5DF; border: 1px solid var(--line); border-radius: 0;
@@ -5643,6 +5643,15 @@
         <button type="button" class="teacher-card is-soon" onclick="go('consult-math')">
           <div class="tc-info">
             <div class="tc-subject">수학</div>
+            <div class="tc-soon">준비중입니다</div>
+          </div>
+          <div class="tc-photo">
+            <svg class="tc-silhouette" viewBox="0 0 100 120"><circle cx="50" cy="32" r="22"/><path d="M50 58c-24 0-42 20-42 62h84c0-42-18-62-42-62z"/></svg>
+          </div>
+        </button>
+        <button type="button" class="teacher-card is-soon" onclick="go('consult-english')">
+          <div class="tc-info">
+            <div class="tc-subject">영어</div>
             <div class="tc-soon">준비중입니다</div>
           </div>
           <div class="tc-photo">
