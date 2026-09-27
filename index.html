@@ -2307,6 +2307,21 @@
     max-width: 1040px; width: 100%; margin: 0 auto;
     padding: 32px 24px 56px 24px;
   }
+  /* 학습 상담·과외 관련 페이지 전체를 홀로 학습 시스템과 시각적으로 분리하기 위해 고급스러운
+     검정 배경으로 바꾼다(.dark-consult, 12개 view에 부여). 흰/크림 배경의 카드형 요소(박스,
+     버튼, 사진 카드 등)는 원래 배경 그대로 두고, 카드 없이 페이지 배경 위에 바로 놓이는
+     텍스트(제목, 구분선, 안내문 등)만 밝은 색으로 뒤집어서 대비를 맞춘다. */
+  .dark-consult { background: #121212; }
+  .dark-consult .consult-page h2 { color: #FFFFFF; }
+  .dark-consult .consult-page .split { background: linear-gradient(to right, var(--green) 50%, rgba(255,255,255,0.3) 50%); }
+  .dark-consult .ef-hl { color: #6FCF97; background: linear-gradient(transparent 60%, rgba(111,207,151,0.22) 60%); }
+  .dark-consult .cd-promo-head { color: #FFFFFF; }
+  .dark-consult .cd-promo-sub { color: rgba(255,255,255,0.62); }
+  .dark-consult .cd-back-link { color: rgba(255,255,255,0.62); }
+  .dark-consult .cd-apply-btn { background: #FFFFFF; color: #121212; }
+  .dark-consult .hub-coming-soon { color: rgba(255,255,255,0.5); }
+  .dark-consult .cx-title { color: #FFFFFF; }
+  .dark-consult .cx-title-hint { color: rgba(255,255,255,0.5); }
   .consult-page .eyebrow {
     display: inline-block; background: #F1EADB; color: var(--tan);
     font-size: 0.64rem; font-weight: 800; letter-spacing: 0.2em;
@@ -5461,7 +5476,7 @@
   </section>
 
   <!-- ─── 상담 안내 ─── -->
-  <section class="view" id="view-consult">
+  <section class="view dark-consult" id="view-consult">
     <div class="consult-page">
       <span class="eyebrow">CONSULTING</span>
       <h2>학습 상담 · 온라인 과외</h2>
@@ -5536,7 +5551,7 @@
   </section>
 
   <!-- ─── 상담 상세: 전반적인 학습 컨설팅 ─── -->
-  <section class="view" id="view-consult-1">
+  <section class="view dark-consult" id="view-consult-1">
     <div class="consult-page">
       <div class="cd-page-head">
         <div>
@@ -5595,7 +5610,7 @@
     </div>
   </section>
   <!-- ─── 상담 상세: 학습 컨설팅 선생님 소개 ─── -->
-  <section class="view" id="view-consult-teacher">
+  <section class="view dark-consult" id="view-consult-teacher">
     <div class="consult-page">
       <div class="cd-page-head">
         <div>
@@ -5761,7 +5776,7 @@
 
 
   <!-- ─── 상담 상세: 국어 선생님 소개 (준비중) ─── -->
-  <section class="view" id="view-consult-korean">
+  <section class="view dark-consult" id="view-consult-korean">
     <div class="consult-page">
       <div class="cd-page-head">
         <div>
@@ -5775,7 +5790,7 @@
   </section>
 
   <!-- ─── 상담 상세: 수학 선생님 소개 (준비중) ─── -->
-  <section class="view" id="view-consult-math">
+  <section class="view dark-consult" id="view-consult-math">
     <div class="consult-page">
       <div class="cd-page-head">
         <div>
@@ -5789,7 +5804,7 @@
   </section>
 
   <!-- ─── 상담 상세: 영어 선생님 소개 (준비중) ─── -->
-  <section class="view" id="view-consult-english">
+  <section class="view dark-consult" id="view-consult-english">
     <div class="consult-page">
       <div class="cd-page-head">
         <div>
@@ -5803,7 +5818,7 @@
   </section>
 
   <!-- ─── 상담 상세: 수학 과외 ─── -->
-  <section class="view" id="view-consult-2">
+  <section class="view dark-consult" id="view-consult-2">
     <div class="consult-page">
       <div class="cd-page-head">
         <div>
@@ -5914,7 +5929,7 @@
   </section>
 
   <!-- ─── 상담 상세: 국어 과외 ─── -->
-  <section class="view" id="view-consult-3">
+  <section class="view dark-consult" id="view-consult-3">
     <div class="consult-page">
       <div class="cd-page-head">
         <div>
@@ -6040,7 +6055,7 @@
     </div>
   </section>
   <!-- ─── 상담 상세: 고1 · 예비 고1 ─── -->
-  <section class="view" id="view-consult-5">
+  <section class="view dark-consult" id="view-consult-5">
     <div class="consult-page">
       <div class="cd-page-head">
         <div>
@@ -6069,7 +6084,7 @@
   </section>
 
   <!-- ─── 상담 상세: 고2 · 예비 고2 ─── -->
-  <section class="view" id="view-consult-6">
+  <section class="view dark-consult" id="view-consult-6">
     <div class="consult-page">
       <div class="cd-page-head">
         <div>
@@ -6098,7 +6113,7 @@
   </section>
 
   <!-- ─── 상담 상세: 고3 · 예비 고3 ─── -->
-  <section class="view" id="view-consult-7">
+  <section class="view dark-consult" id="view-consult-7">
     <div class="consult-page">
       <div class="cd-page-head">
         <div>
@@ -6127,7 +6142,7 @@
   </section>
 
   <!-- ─── 상담 상세: N수생 ─── -->
-  <section class="view" id="view-consult-8">
+  <section class="view dark-consult" id="view-consult-8">
     <div class="consult-page">
       <div class="cd-page-head">
         <div>
