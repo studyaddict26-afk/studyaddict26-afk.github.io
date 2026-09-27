@@ -3752,6 +3752,12 @@
   }
   .reports-subtab-btn:hover { color: var(--ink); }
   .reports-subtab-btn.on { background: var(--green); color: #FFFFFF; border-color: var(--green); }
+  /* "학습 컨설팅 송의준 선생님" 페이지 — 프로필/후기/미리보기 토글 탭 박스 */
+  .teacher-tabs-box {
+    display: flex; gap: 8px; background: var(--cream); border: 1px solid var(--line);
+    border-radius: 12px; padding: 10px; margin-bottom: 22px;
+  }
+  .teacher-tabs-box .reports-subtab-btn { flex: 1; text-align: center; }
   #view-reports .reports-wrap { display: none; }
   #view-reports .reports-wrap.on { display: flex; }
   .reports-wrap {
@@ -5572,7 +5578,12 @@
       </div>
       <div class="split"></div>
       <div class="consult-extra">
-        <div class="cx-block">
+        <div class="teacher-tabs-box">
+          <button type="button" class="reports-subtab-btn on" id="teacherTabBtn-profile" onclick="teacherToggleTab('profile')">프로필</button>
+          <button type="button" class="reports-subtab-btn" id="teacherTabBtn-review" onclick="teacherToggleTab('review')">후기</button>
+          <button type="button" class="reports-subtab-btn" id="teacherTabBtn-preview" onclick="teacherToggleTab('preview')">학습 상담 미리보기</button>
+        </div>
+        <div class="cx-block" id="teacherPane-profile">
                   <div class="spec-box">
             <div class="spec-header">
               <div class="spec-header-text">
@@ -5675,14 +5686,14 @@
           </div>
         </div>
 
-        <div class="cx-block">
+        <div class="cx-block" id="teacherPane-review" style="display:none;">
           <div class="cx-title">학습 상담 후기 <span class="cx-title-hint">(사진 누르면 내용 확인 가능합니다)</span></div>
           <div class="review-track-wrap">
             <div class="review-track" id="reviewTrack"></div>
           </div>
         </div>
 
-        <div class="cx-block">
+        <div class="cx-block" id="teacherPane-preview" style="display:none;">
           <div class="cx-title">학습 상담 미리 보기</div>
           <div class="cx-photos">
             <div class="cx-photo is-filled"><video src="preview-1.mp4" autoplay muted loop playsinline></video></div>
@@ -9318,6 +9329,20 @@
   }
   // 달을 고르면 하루하루가 바로 나오지 않고, 그 달의 "N주차" 목록이 먼저 나온다 —
   // 주차를 누르면 그 주 안의 날짜들이(기존과 같은 형태로) 나온다.
+  // "학습 컨설팅 송의준 선생님" 페이지의 프로필/후기/미리보기 토글 탭 — 같은 버튼을 다시 누르면
+  // 닫히고(전부 숨김), 다른 버튼을 누르면 그것만 보이도록 전환한다.
+  function teacherToggleTab(tab) {
+    const panes = ["profile", "review", "preview"];
+    const wasOn = document.getElementById("teacherTabBtn-" + tab).classList.contains("on");
+    panes.forEach(p => {
+      document.getElementById("teacherPane-" + p).style.display = "none";
+      document.getElementById("teacherTabBtn-" + p).classList.remove("on");
+    });
+    if (!wasOn) {
+      document.getElementById("teacherPane-" + tab).style.display = "";
+      document.getElementById("teacherTabBtn-" + tab).classList.add("on");
+    }
+  }
   let currentCumYm = null;
   // "전체 / 학습 플래너 / 공부 일기 / 시험 통계" 서브탭 — 전체는 기존처럼 서버가 계산한 주간 평균
   // 점수를 보여주고, 플래너·일기는 allDaysData(이미 다 불러와 있음)를 이용해 클라이언트에서 바로
