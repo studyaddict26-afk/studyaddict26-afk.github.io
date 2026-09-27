@@ -3751,24 +3751,39 @@
   }
   .reports-subtab-btn:hover { color: var(--ink); }
   .reports-subtab-btn.on { background: var(--green); color: #FFFFFF; border-color: var(--green); }
-  /* "학습 컨설팅 송의준 선생님" 페이지 — 왼쪽에 배경 없는(투명) 목차, 오른쪽에 선택된 섹션
-     내용이 나오는 2단 레이아웃. 자료실만 아래에 무료/유료 두 하위 항목을 들여쓰기로 보여준다. */
+  /* "학습 컨설팅 송의준 선생님" 페이지 — 또선생 사이트 사이드바 참고(보라색 대신 사이트 기본
+     팔레트). 흰 박스 안에 위쪽엔 "프로필" 알약 버튼, 그 아래는 그룹마다 구분선이 있는 목차
+     — 자료실 그룹만 라벨 아래에 무료/유료 두 하위 항목이 들여쓰기로 붙는다. */
   .teacher-layout { display: flex; gap: 32px; align-items: flex-start; margin-top: 30px; }
-  .teacher-sidebar { flex: none; width: 168px; display: flex; flex-direction: column; gap: 2px; position: sticky; top: 20px; }
-  .ts-link {
-    font-family: inherit; font-size: 0.86rem; font-weight: 700; color: var(--ink-soft);
-    background: none; border: none; text-align: left; padding: 9px 10px; border-radius: 8px;
-    cursor: pointer; transition: background 0.15s, color 0.15s;
+  .teacher-sidebar {
+    flex: none; width: 168px; display: flex; flex-direction: column;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px; position: sticky; top: 20px;
   }
-  .ts-link:hover { background: var(--cream); color: var(--ink); }
-  .ts-link.on { background: var(--green-soft); color: var(--green-deep); }
-  .ts-link.ts-sub { font-size: 0.8rem; font-weight: 600; padding-left: 22px; }
-  .ts-group-label { font-size: 0.72rem; font-weight: 800; color: var(--ink-soft); padding: 9px 10px 0 10px; }
+  .ts-profile-btn {
+    font-family: inherit; font-size: 0.84rem; font-weight: 700; color: var(--ink);
+    background: none; border: 1px solid var(--line); border-radius: 999px;
+    padding: 9px 10px; text-align: center; cursor: pointer; margin-bottom: 14px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .ts-profile-btn:hover, .ts-profile-btn.on { background: var(--green-soft); border-color: var(--green-deep); color: var(--green-deep); }
+  .ts-group { padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--line); }
+  .ts-group.ts-group-last { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .ts-link {
+    display: block; width: 100%;
+    font-family: inherit; font-size: 0.86rem; font-weight: 700; color: var(--ink);
+    background: none; border: none; text-align: left; padding: 4px 2px;
+    cursor: pointer; transition: color 0.15s;
+  }
+  .ts-link:hover { color: var(--green-deep); }
+  .ts-link.on { color: var(--green-deep); }
+  .ts-link.ts-sub { font-size: 0.78rem; font-weight: 500; color: var(--ink-soft); padding: 3px 2px 3px 6px; }
+  .ts-link.ts-sub:hover, .ts-link.ts-sub.on { color: var(--green-deep); }
+  .ts-group-label { font-size: 0.86rem; font-weight: 700; color: var(--ink); padding: 4px 2px; }
   .teacher-content { flex: 1; min-width: 0; }
   @media (max-width: 760px) {
-    .teacher-layout { flex-direction: column; gap: 10px; }
-    .teacher-sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; position: static; }
-    .ts-group-label { padding-top: 6px; width: 100%; }
+    .teacher-layout { flex-direction: column; gap: 16px; }
+    .teacher-sidebar { width: 100%; position: static; }
   }
   #view-reports .reports-wrap { display: none; }
   #view-reports .reports-wrap.on { display: flex; }
@@ -5591,13 +5606,21 @@
       <div class="split"></div>
       <div class="teacher-layout">
         <nav class="teacher-sidebar">
-          <button type="button" class="ts-link on" id="tsLink-profile" onclick="teacherShowSection('profile')">프로필</button>
-          <button type="button" class="ts-link" id="tsLink-curriculum" onclick="teacherShowSection('curriculum')">커리큘럼</button>
-          <button type="button" class="ts-link" id="tsLink-news" onclick="teacherShowSection('news')">선생님 새소식</button>
-          <div class="ts-group-label">자료실</div>
-          <button type="button" class="ts-link ts-sub" id="tsLink-materials-free" onclick="teacherShowSection('materials-free')">무료 자료실</button>
-          <button type="button" class="ts-link ts-sub" id="tsLink-materials-paid" onclick="teacherShowSection('materials-paid')">유료 자료실</button>
-          <button type="button" class="ts-link" id="tsLink-reviews" onclick="teacherShowSection('reviews')">수강 후기</button>
+          <button type="button" class="ts-profile-btn on" id="tsLink-profile" onclick="teacherShowSection('profile')">프로필</button>
+          <div class="ts-group">
+            <button type="button" class="ts-link" id="tsLink-curriculum" onclick="teacherShowSection('curriculum')">커리큘럼</button>
+          </div>
+          <div class="ts-group">
+            <button type="button" class="ts-link" id="tsLink-news" onclick="teacherShowSection('news')">선생님 새소식</button>
+          </div>
+          <div class="ts-group">
+            <div class="ts-group-label">자료실</div>
+            <button type="button" class="ts-link ts-sub" id="tsLink-materials-free" onclick="teacherShowSection('materials-free')">무료 자료실</button>
+            <button type="button" class="ts-link ts-sub" id="tsLink-materials-paid" onclick="teacherShowSection('materials-paid')">유료 자료실</button>
+          </div>
+          <div class="ts-group ts-group-last">
+            <button type="button" class="ts-link" id="tsLink-reviews" onclick="teacherShowSection('reviews')">수강 후기</button>
+          </div>
         </nav>
         <div class="teacher-content">
         <div class="cx-block" id="teacherPane-profile">
