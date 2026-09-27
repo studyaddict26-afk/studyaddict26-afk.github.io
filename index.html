@@ -509,7 +509,10 @@
   html[data-boot="choice"] #productChoiceGate { display: flex; }
   #productChoiceGate {
     position: fixed; inset: 0; z-index: 500; align-items: center; justify-content: center;
-    background: var(--cream); padding: 24px; box-sizing: border-box;
+    /* 왼쪽 절반은 Manager의 크림톤, 오른쪽 절반은 Academy의 회색톤 — 가운데를 기준으로
+       고르게 반씩 나눠서 선택 카드가 각자 자기 쪽 시스템 배경 위에 놓이도록 한다. */
+    background: linear-gradient(to right, var(--cream) 50%, #F4F4F5 50%);
+    padding: 24px; box-sizing: border-box;
   }
   .pc-gate-inner { max-width: 640px; width: 100%; text-align: center; }
   .pc-gate-logo { font-size: 1.1rem; font-weight: 900; color: var(--green-deep); letter-spacing: 0.02em; margin-bottom: 10px; }
