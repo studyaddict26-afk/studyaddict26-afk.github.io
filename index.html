@@ -3752,12 +3752,19 @@
   }
   .reports-subtab-btn:hover { color: var(--ink); }
   .reports-subtab-btn.on { background: var(--green); color: #FFFFFF; border-color: var(--green); }
-  /* "학습 컨설팅 송의준 선생님" 페이지 — 프로필/후기/미리보기 토글 탭 박스 */
+  /* "학습 컨설팅 송의준 선생님" 페이지 — 프로필/후기/미리보기 토글 탭 박스. 테두리 있는 알약
+     버튼(.reports-subtab-btn) 대신, 흰 배경 위에 글자 색만 바뀌는 미니멀한 탭으로 보이도록
+     이 박스 안에서만 배경/테두리를 지운다. */
   .teacher-tabs-box {
-    display: flex; gap: 8px; background: var(--cream); border: 1px solid var(--line);
+    display: flex; gap: 8px; background: var(--paper); border: 1px solid var(--line);
     border-radius: 12px; padding: 10px; margin-bottom: 22px;
   }
-  .teacher-tabs-box .reports-subtab-btn { flex: 1; text-align: center; }
+  .teacher-tabs-box .reports-subtab-btn {
+    flex: 1; text-align: center;
+    background: none; border: none; color: var(--ink-soft);
+  }
+  .teacher-tabs-box .reports-subtab-btn:hover { color: var(--green-deep); background: none; }
+  .teacher-tabs-box .reports-subtab-btn.on { background: none; border: none; color: var(--green-deep); font-weight: 800; }
   #view-reports .reports-wrap { display: none; }
   #view-reports .reports-wrap.on { display: flex; }
   .reports-wrap {
