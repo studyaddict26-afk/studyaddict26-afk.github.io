@@ -138,6 +138,21 @@
   }
   .mypage-field-hint { display: block; margin-top: 2px; font-size: 0.68rem; font-weight: 500; letter-spacing: normal; text-transform: none; color: var(--ink-soft); opacity: 0.85; }
   .mypage-field-body { padding: 12px 16px 14px; }
+  .mypage-menu-body { padding: 6px 0; }
+  .mypage-menu-link {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: inherit; font-size: 0.84rem; font-weight: 600; color: var(--ink);
+    text-decoration: none; padding: 10px 16px; transition: background 0.15s;
+  }
+  .mypage-menu-link:hover { background: var(--cream); }
+  .mypage-menu-link .arrow { color: var(--ink-soft); font-weight: 400; }
+  .mypage-logout-btn {
+    display: block; width: 100%;
+    background: none; border: none; border-top: 1px solid var(--line); cursor: pointer;
+    font-family: inherit; font-size: 0.84rem; font-weight: 600; color: var(--ink-soft);
+    text-align: left; padding: 10px 16px; transition: color 0.15s;
+  }
+  .mypage-logout-btn:hover { color: var(--ink); }
   .mypage-field-row { display: flex; gap: 6px; }
   .mypage-field-row input[type="date"], .mypage-field-row input[type="text"] {
     flex: 1; min-width: 0; font-family: inherit; font-size: 0.76rem;
@@ -378,14 +393,6 @@
     display: flex; align-items: center; gap: 14px;
     flex: none;
   }
-  .menu-btn {
-    background: none; border: 1px solid var(--line); border-radius: 7px;
-    width: 36px; height: 36px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--ink); font-size: 1rem;
-    transition: border-color 0.15s;
-  }
-  .menu-btn:hover { border-color: var(--green); color: var(--green); }
   .topbar .view-title { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.02em; }
   .topbar .home-link {
     margin-left: auto; font-size: 0.8rem; color: var(--ink-soft);
@@ -401,7 +408,7 @@
      메가스터디 홈페이지 구조 참고 — 위쪽에 로고가 가운데 오는 흰 줄, 그 아래 가로 목차 줄. */
   .consult-header { display: none; flex-direction: column; flex: none; }
   .consult-header.on { display: flex; }
-  .consult-brand-row { background: #F4F4F5; padding: 34px 0 20px 0; }
+  .consult-brand-row { background: #F4F4F5; padding: 60px 0 20px 0; }
   /* .consult-page(24px) + .chome-layout(24px) 안쪽 여백 합만큼(48px) 똑같이 안쪽 여백을 줘서,
      이 줄의 디데이/전환 링크가 아래 본문(공부자료 탭, 나의 수업 입장하기 버튼 등)과
      좌우 끝이 정확히 맞도록 한다. */
@@ -4268,31 +4275,6 @@
 </div>
 
 <!-- ═══ 사이드바 ═══ -->
-<nav class="sidebar closed" id="sidebar">
-  <button class="sb-brand" onclick="go('home')" aria-label="홈으로">
-    <div class="sb-wordmark"><span class="holo">홀로</span> <span class="holo-en">HOLO</span></div>
-  </button>
-
-  <button type="button" class="sb-profile" onclick="go('mypage')">
-    <div class="sb-profile-avatar" id="sbProfileAvatar">홀</div>
-    <div class="sb-profile-info">
-      <div class="sb-profile-line1">
-        <span class="sb-profile-name" id="sbProfileName">학생</span><span class="sb-profile-school" id="sbProfileSchool"></span>
-      </div>
-      <div class="sb-profile-mypage-link">마이페이지 →</div>
-    </div>
-  </button>
-
-  <button type="button" class="sb-item" data-view="howto" onclick="go('howto')">
-    <span class="ico">•</span>학습 관리 시스템 사용 방법
-  </button>
-
-  <button type="button" class="sb-switch-product" id="sbSwitchToAcademy" onclick="switchProduct('academy')">Academy로 이동 →</button>
-  <button type="button" class="sb-logout" onclick="studentLogout()">로그아웃</button>
-  <div class="sb-foot">© ROADMAP × STUDY ADDICT</div>
-</nav>
-
-<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 <div class="consult-splash" id="consultSplash">
   <div class="consult-splash-logo">
     <svg class="consult-splash-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
@@ -4613,7 +4595,6 @@
 <!-- ═══ 메인 ═══ -->
 <div class="main">
   <div class="topbar">
-    <button class="menu-btn" onclick="toggleSidebar()" aria-label="메뉴">☰</button>
     <span class="view-title" id="viewTitle">홀로</span>
     <a class="topbar-back-link" id="topbarBackLink" href="#" onclick="goBack();return false;" style="display:none">← 이전으로</a>
     <a class="home-link" href="#" onclick="go('home');return false;">← 홈으로</a>
@@ -5625,6 +5606,14 @@
         </div>
         <div class="mypage-field-status" id="mypageDdayStatus"></div>
         <div class="mypage-dday-list" id="mypageDdayList"></div>
+        </div>
+      </div>
+
+      <div class="mypage-field-card">
+        <div class="mypage-field-head">기타</div>
+        <div class="mypage-field-body mypage-menu-body">
+          <a href="#" class="mypage-menu-link" onclick="go('howto');return false;">학습 관리 시스템 사용 방법 <span class="arrow">›</span></a>
+          <button type="button" class="mypage-logout-btn" onclick="studentLogout()">로그아웃</button>
         </div>
       </div>
     </div>
@@ -7493,9 +7482,6 @@
     const isConsultSection = document.getElementById("view-" + view).classList.contains("dark-consult");
     document.querySelector(".main > .topbar").style.display = isConsultSection ? "none" : "";
     document.getElementById("consultHeader").classList.toggle("on", isConsultSection);
-    // Academy는 자체 사이드바가 없으므로, 넘어갈 때 Manager 사이드바가 열려 있으면 닫아서
-    // Academy 화면과 겹쳐 보이지 않게 한다.
-    if (isConsultSection) closeSidebar();
     if (isConsultSection) {
       const activeNav = (view === "consult-home") ? "home" : (view === "consult-materials") ? "materials" : (view === "consult-community") ? "community" : "teachers";
       ["home", "teachers", "materials", "community"].forEach(n =>
@@ -7508,7 +7494,6 @@
       const group = document.getElementById("sbg-group-" + GROUP_OF[view]);
       if (group) group.classList.add("open");
     }
-    if (window.innerWidth <= 760) closeSidebar();
     loadChatHistory(view);
     if (view === "todayrecord") initTodayRecord();
     if (view === "plannerPage") initPlannerPage();
@@ -9258,19 +9243,6 @@
   makeWhoCarousel("whoCarousel2", "wcLightbox2", "wclStage2", "wclDots2", "wclClose2", "wcGo2", "wclGo2");
   makeWhoCarousel("scheduleCarousel", "wcLightbox3", "wclStage3", "wclDots3", "wclClose3", "wcGo3", "wclGo3", { useNaturalSize: true });
 
-  // ── 사이드바 ──
-  const sidebar = document.getElementById("sidebar");
-  const overlay = document.getElementById("overlay");
-  function toggleSidebar() {
-    sidebar.classList.toggle("closed");
-    overlay.classList.toggle("on", !sidebar.classList.contains("closed") && window.innerWidth <= 760);
-  }
-  function closeSidebar() {
-    sidebar.classList.add("closed");
-    overlay.classList.remove("on");
-  }
-  sidebar.classList.add("closed");
-  overlay.classList.remove("on");
 
   // ── 홈 FAQ ──
   function toggleFaq(key) {
