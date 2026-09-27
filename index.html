@@ -2331,7 +2331,9 @@
      배경으로 바꾼다(.dark-consult, 12개 view에 부여 — 검정 배경이었다가 사용자가 어색하다고
      해서 흰색으로 되돌림). 기본 잉크색 텍스트가 흰 배경에서도 그대로 잘 보이므로 별도 색
      반전은 필요 없다. */
-  .dark-consult { background: var(--paper); }
+  /* 카드(흰 배경)와 완전히 같은 순백색(var(--paper))을 페이지 배경으로 쓰면 카드가 페이지에
+     묻혀서 "바뀐 게 없어 보이는" 문제가 있어, 살짝 더 연한 회백색으로 구분되게 한다. */
+  .dark-consult { background: #F4F4F5; }
   /* "학습 상담 · 온라인 과외" 진입 전환 효과 — 홈 버튼을 누르면 잠깐 스플래시 화면에 슬로건을
      보여주고, 그 뒤에 실제 학습 상담 페이지가 나타난다(dark-consult와 같은 흰 톤). */
   .consult-splash {
@@ -5705,7 +5707,7 @@
               </div>
 
               <div class="spec-item">
-                <div class="spec-head"><span class="num">3</span>인스타그램 &lt;공부중독&gt; 운영자로, 학습 컨설팅을 500회 이상 진행했습니다.</div>
+                <div class="spec-head"><span class="num">3</span>학습 컨설팅을 500회 이상 진행했습니다.</div>
                 <ul class="spec-sub">
                   <li>로드맵 독서실에서 오프라인 학습 컨설팅 진행 중</li>
                   <li>인스타그램 &lt;공부중독&gt; 채널에서 온라인 학습 컨설팅 진행 중</li>
