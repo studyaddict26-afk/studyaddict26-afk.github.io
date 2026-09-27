@@ -404,7 +404,7 @@
   .consult-header.on { display: flex; }
   .consult-brand-row { background: #F4F4F5; padding: 60px 0 20px 0; }
   /* .consult-page(24px) + .chome-layout(24px) 안쪽 여백 합만큼(48px) 똑같이 안쪽 여백을 줘서,
-     이 줄의 디데이/전환 링크가 아래 본문(공부자료 탭, 나의 수업 입장하기 버튼 등)과
+     이 줄의 디데이/전환 링크가 아래 본문(공부자료 탭, 내 교실 입장하기 버튼 등)과
      좌우 끝이 정확히 맞도록 한다. */
   .consult-brand-inner {
     display: grid; grid-template-columns: 1fr auto 1fr; align-items: end;
@@ -438,7 +438,8 @@
   .consult-nav-link:hover, .consult-nav-link.on { color: var(--green-deep); }
   /* "Holo Study" 홈(랜딩) 페이지 — 메가스터디 홈페이지의 왼쪽 탭 + 가운데 배너 + 오른쪽
      박스(HOT PICK) 3단 구조를 참고. 왼쪽 탭을 고르면 가운데 배너 내용이 바뀌고, 오른쪽은
-     "나의 수업 입장하기"/"홀로 학습 관리 시스템으로 이동하기" 두 칸으로 나눈 버튼. */
+     "내 교실 입장하기"/"수업 신청하기" 두 칸으로 나눈 버튼(기능은 나중에 추가 예정, 지금은
+     눌러도 아무 동작 없음). */
   .chome-layout { display: grid; grid-template-columns: 200px 1fr 220px; gap: 16px; padding: 32px 24px 30px 24px; }
   .chome-tabs { display: flex; flex-direction: column; gap: 8px; }
   .chome-tab {
@@ -5994,8 +5995,8 @@
         </nav>
         <div class="chome-banner" id="chomeBanner"></div>
         <div class="chome-side">
-          <button type="button" class="chome-side-btn" onclick="go('consult-myclass')">나의 수업 입장하기 <span class="chome-side-arw">→</span></button>
-          <button type="button" class="chome-side-btn" onclick="go('home')">홀로 학습 관리 시스템으로 이동하기 <span class="chome-side-arw">→</span></button>
+          <button type="button" class="chome-side-btn">내 교실 입장하기 <span class="chome-side-arw">→</span></button>
+          <button type="button" class="chome-side-btn">수업 신청하기 <span class="chome-side-arw">→</span></button>
         </div>
       </div>
     </div>
