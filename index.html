@@ -428,19 +428,43 @@
     transition: color 0.15s;
   }
   .consult-nav-link:hover, .consult-nav-link.on { color: var(--green-deep); }
-  /* "Holo Study" 홈(랜딩) 페이지 — 가운데 정렬된 큰 카피 + 실제 홀로 앱으로 들어가는 CTA. */
-  .consult-home-hero {
-    display: flex; flex-direction: column; align-items: center; text-align: center;
-    padding: 60px 20px; gap: 14px;
+  /* "Holo Study" 홈(랜딩) 페이지 — 메가스터디 홈페이지의 왼쪽 탭 + 가운데 배너 + 오른쪽
+     박스(HOT PICK) 3단 구조를 참고. 왼쪽 탭을 고르면 가운데 배너 내용이 바뀌고, 오른쪽은
+     "나의 수업 입장하기"/"홀로 학습 관리 시스템으로 이동하기" 두 칸으로 나눈 버튼. */
+  .chome-layout { display: grid; grid-template-columns: 200px 1fr 220px; gap: 16px; padding: 30px 24px; }
+  .chome-tabs { display: flex; flex-direction: column; gap: 8px; }
+  .chome-tab {
+    font-family: inherit; font-size: 0.86rem; font-weight: 700; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px; text-align: left; cursor: pointer; transition: background 0.15s, color 0.15s;
   }
-  .consult-home-hero h2 { font-size: 1.9rem; }
-  .consult-home-sub { color: var(--ink-soft); font-size: 0.95rem; margin-bottom: 10px; }
-  .consult-home-cta {
-    font-family: inherit; font-size: 1.05rem; font-weight: 800; color: #FFFFFF;
-    background: var(--green-deep); border: none; border-radius: 999px;
-    padding: 16px 36px; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+  .chome-tab:hover { background: var(--cream); }
+  .chome-tab.on { background: var(--ink); color: #FFFFFF; border-color: var(--ink); }
+  .chome-banner {
+    background: var(--green-deep); border-radius: 14px; padding: 28px 30px;
+    display: flex; flex-direction: column; justify-content: center; color: #FFFFFF; min-height: 260px;
   }
-  .consult-home-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(21,82,47,0.25); }
+  .chome-banner-badges { display: flex; gap: 6px; margin-bottom: 14px; }
+  .chome-badge { font-size: 0.7rem; font-weight: 800; background: rgba(255,255,255,0.18); color: #FFFFFF; padding: 4px 10px; border-radius: 999px; }
+  .chome-banner-title { font-size: 1.5rem; font-weight: 800; line-height: 1.35; margin-bottom: 10px; }
+  .chome-banner-accent { color: #B8F5CE; }
+  .chome-banner-sub { font-size: 0.88rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; }
+  .chome-banner-tags { display: flex; gap: 8px; flex-wrap: wrap; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.2); }
+  .chome-tag { font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.85); }
+  .chome-side { display: flex; flex-direction: column; gap: 12px; }
+  .chome-side-btn {
+    flex: 1; font-family: inherit; font-size: 0.95rem; font-weight: 800; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center;
+    padding: 16px; transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .chome-side-btn:hover { background: var(--green-deep); color: #FFFFFF; border-color: var(--green-deep); }
+  .chome-side-arw { margin-left: 4px; }
+  @media (max-width: 860px) {
+    .chome-layout { grid-template-columns: 1fr; }
+    .chome-tabs { flex-direction: row; flex-wrap: wrap; }
+    .chome-tab { flex: 1 1 auto; }
+  }
 
   .view { flex: 1; display: none; flex-direction: column; min-height: 0; }
   .view.on { display: flex; }
@@ -2354,7 +2378,7 @@
   }
 
   /* ═══════════ 상담 안내 ═══════════ */
-  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3, #view-consult-5, #view-consult-6, #view-consult-7, #view-consult-8, #view-consult-teacher, #view-consult-korean, #view-consult-math, #view-consult-english, #view-consult-materials, #view-consult-community, #view-consult-home, #view-howto, #view-recordhub, #view-scheduleManage, #view-examhub, #view-examSuneung, #view-examNaeshin, #view-mockexam, #view-mexlist { overflow-y: auto; }
+  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3, #view-consult-5, #view-consult-6, #view-consult-7, #view-consult-8, #view-consult-teacher, #view-consult-korean, #view-consult-math, #view-consult-english, #view-consult-materials, #view-consult-community, #view-consult-home, #view-consult-myclass, #view-howto, #view-recordhub, #view-scheduleManage, #view-examhub, #view-examSuneung, #view-examNaeshin, #view-mockexam, #view-mexlist { overflow-y: auto; }
   .consult-page {
     max-width: 1040px; width: 100%; margin: 0 auto;
     padding: 32px 24px 56px 24px;
@@ -5940,15 +5964,36 @@
     </div>
   </section>
 
-  <!-- ─── 홀로 온라인 과외: 홈 ─── -->
+  <!-- ─── 홀로 온라인 과외: 홈 (메가스터디 홈페이지 3단 레이아웃 참고) ─── -->
   <section class="view dark-consult" id="view-consult-home">
     <div class="consult-page">
-      <div class="consult-home-hero">
-        <span class="eyebrow">HOME</span>
-        <h2>혼자 공부하는 시간, <span class="ef-hl">Holo Study</span>가 함께합니다</h2>
-        <p class="consult-home-sub">학습 상담부터 온라인 과외까지, 나에게 맞는 선생님을 만나보세요.</p>
-        <button type="button" class="consult-home-cta" onclick="go('home')">나의 공부방 입장하기 →</button>
+      <div class="chome-layout">
+        <nav class="chome-tabs">
+          <button type="button" class="chome-tab on" id="chomeTab-study" onclick="chomeShowTab('study')">Holo Study</button>
+          <button type="button" class="chome-tab" id="chomeTab-teacher" onclick="chomeShowTab('teacher')">홀로 선생님</button>
+          <button type="button" class="chome-tab" id="chomeTab-subject" onclick="chomeShowTab('subject')">과목별 실력업</button>
+          <button type="button" class="chome-tab" id="chomeTab-materials" onclick="chomeShowTab('materials')">공부자료</button>
+        </nav>
+        <div class="chome-banner" id="chomeBanner"></div>
+        <div class="chome-side">
+          <button type="button" class="chome-side-btn" onclick="go('consult-myclass')">나의 수업 입장하기 <span class="chome-side-arw">→</span></button>
+          <button type="button" class="chome-side-btn" onclick="go('home')">홀로 학습 관리 시스템으로 이동하기 <span class="chome-side-arw">→</span></button>
+        </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ─── 홀로 온라인 과외: 나의 수업 (준비중) ─── -->
+  <section class="view dark-consult" id="view-consult-myclass">
+    <div class="consult-page">
+      <div class="cd-page-head">
+        <div>
+          <span class="eyebrow">GENERAL</span>
+          <h2>나의 수업</h2>
+        </div>
+      </div>
+      <div class="split"></div>
+      <p class="hub-coming-soon">준비중입니다</p>
     </div>
   </section>
 
@@ -7277,14 +7322,14 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-home": "Holo Study", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "내 플래너 관리하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-home": "Holo Study", "consult-myclass": "나의 수업", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "내 플래너 관리하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { mathexam: "exam", engexam: "exam" };
   // "← 이전으로"가 상단 흰색 바(topbar)의 제목 오른쪽에 뜨는 페이지들과, 각각이 돌아갈 곳.
   const BACK_TARGET = {
     "consult-1": "consult", "consult-2": "consult", "consult-3": "consult",
     "consult-5": "consult", "consult-6": "consult", "consult-7": "consult", "consult-8": "consult",
     "consult-teacher": "consult", "consult-korean": "consult", "consult-math": "consult", "consult-english": "consult",
-    "consult-materials": "consult", "consult-community": "consult", "consult-home": "consult",
+    "consult-materials": "consult", "consult-community": "consult", "consult-home": "consult", "consult-myclass": "consult-home",
     todayrecord: "home", cumulative: "recordhub", reports: "recordhub", dayDetail: "cumulative",
     examSuneung: "examhub", examNaeshin: "examhub", mexlist: "mockexam",
   };
@@ -7309,6 +7354,44 @@
       go("consult");
       setTimeout(() => { el.classList.remove("on"); }, 60);
     }, 650);
+  }
+  // "Holo Study" 홈 페이지 — 왼쪽 탭을 고르면 가운데 배너 내용이 바뀐다(대략적인 초안 문구,
+  // 나중에 실제 내용으로 다듬으면 됨).
+  const CHOME_BANNERS = {
+    study: {
+      badges: ["HOT"],
+      title: '혼자 공부하는 시간,<br><span class="chome-banner-accent">Holo Study</span>가 함께합니다',
+      sub: "학습 상담부터 온라인 과외까지, 나에게 맞는 선생님을 만나보세요.",
+      tags: ["학습 상담", "온라인 과외", "1:1 컨설팅"],
+    },
+    teacher: {
+      badges: ["NEW"],
+      title: "축구선수 출신 노베이스에서<br>최상위권까지",
+      sub: "노베이스·하위권·중위권·상위권을 모두 직접 거친 학습 컨설턴트, 송의준 선생님을 만나보세요.",
+      tags: ["학습 컨설팅", "국어", "수학", "영어"],
+    },
+    subject: {
+      badges: ["PICK"],
+      title: "과목별로 다른 전략,<br>과목별로 다른 실력업",
+      sub: "국어·수학·영어, 과목마다 필요한 공부 방법은 다릅니다.",
+      tags: ["국어", "수학", "영어"],
+    },
+    materials: {
+      badges: ["UPDATE"],
+      title: "선생님이 직접 만든<br>공부자료",
+      sub: "곧 무료·유료 자료로 만나보실 수 있어요. 준비 중이에요.",
+      tags: ["무료 자료실", "유료 자료실"],
+    },
+  };
+  function chomeShowTab(tab) {
+    Object.keys(CHOME_BANNERS).forEach(t =>
+      document.getElementById("chomeTab-" + t).classList.toggle("on", t === tab));
+    const d = CHOME_BANNERS[tab];
+    document.getElementById("chomeBanner").innerHTML =
+      '<div class="chome-banner-badges">' + d.badges.map(b => '<span class="chome-badge">' + b + '</span>').join("") + '</div>' +
+      '<div class="chome-banner-title">' + d.title + '</div>' +
+      '<div class="chome-banner-sub">' + escapeHtml(d.sub) + '</div>' +
+      '<div class="chome-banner-tags">' + d.tags.map(t => '<span class="chome-tag">' + escapeHtml(t) + '</span>').join("") + '</div>';
   }
   // "Holo Study" 헤더의 "2027 수능 D-53" 표시 — 메가스터디 상단바 참고, 실제 수능 날짜
   // (MEX_SUNEUNG_DATE)로 계산한다.
@@ -7346,6 +7429,7 @@
         document.getElementById("consultNav-" + n).classList.toggle("on", n === activeNav));
       renderConsultDday();
     }
+    if (view === "consult-home") chomeShowTab("study");
     document.body.classList.toggle("is-admin", view === "admin" || view === "form");
     if (GROUP_OF[view]) {
       const group = document.getElementById("sbg-group-" + GROUP_OF[view]);
