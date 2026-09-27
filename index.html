@@ -389,6 +389,26 @@
     text-decoration: none;
   }
   .topbar .topbar-back-link:hover { color: var(--ink); }
+  /* "학습 상담 · 온라인 과외" 전용 헤더 — 기본 .topbar를 대신해서 켜진다(go()에서 전환). */
+  .consult-topbar {
+    display: none; align-items: center; gap: 20px;
+    background: var(--paper); border-bottom: 1px solid var(--line);
+    padding: 14px 28px; flex: none;
+  }
+  .consult-topbar.on { display: flex; }
+  .consult-brand {
+    font-family: inherit; font-size: 1.1rem; font-weight: 900; letter-spacing: -0.02em;
+    color: var(--ink); background: none; border: none; cursor: pointer; padding: 0;
+  }
+  .consult-brand .brand-accent { color: var(--green-deep); }
+  .consult-topbar-back { font-size: 0.82rem; font-weight: 600; color: var(--ink-soft); text-decoration: none; }
+  .consult-topbar-back:hover { color: var(--ink); }
+  .consult-exit-link {
+    margin-left: auto; font-size: 0.82rem; font-weight: 700; color: var(--ink-soft);
+    text-decoration: none; padding: 7px 16px; border: 1px solid var(--line); border-radius: 8px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .consult-exit-link:hover { color: var(--ink); border-color: var(--ink-soft); }
 
   .view { flex: 1; display: none; flex-direction: column; min-height: 0; }
   .view.on { display: flex; }
@@ -4489,6 +4509,13 @@
     <a class="topbar-back-link" id="topbarBackLink" href="#" onclick="goBack();return false;" style="display:none">← 이전으로</a>
     <a class="home-link" href="#" onclick="go('home');return false;">← 홈으로</a>
   </div>
+  <!-- "학습 상담 · 온라인 과외" 전용 헤더 — 별도 앱처럼 느껴지도록 사이드바/기본 상단바 대신
+       독자적인 브랜드 바(메가스터디 홈페이지 참고)를 쓰고, 나갈 때는 "나가기"로 표기한다. -->
+  <div class="consult-topbar" id="consultTopbar">
+    <button type="button" class="consult-brand" onclick="go('consult')">홀로<span class="brand-accent"> 온라인 과외</span></button>
+    <a class="consult-topbar-back" id="consultTopbarBack" href="#" onclick="goBack();return false;" style="display:none">← 이전으로</a>
+    <a class="consult-exit-link" href="#" onclick="go('home');return false;">나가기</a>
+  </div>
 
   <!-- ─── 홈 ─── -->
   <section class="view on" id="view-home">
@@ -7192,6 +7219,13 @@
       view === "todayrecord" ? "오늘의 공부 " + formatStudyDateShort() : titles[view];
     const backLink = document.getElementById("topbarBackLink");
     if (backLink) backLink.style.display = BACK_TARGET[view] ? "" : "none";
+    // "학습 상담 · 온라인 과외" 관련 페이지(dark-consult 클래스가 붙은 12개 view)는 별도
+    // 앱처럼 느껴지도록 기본 상단바 대신 전용 브랜드 바를 쓰고, "홈으로" 대신 "나가기"로 나간다.
+    const isConsultSection = document.getElementById("view-" + view).classList.contains("dark-consult");
+    document.querySelector(".main > .topbar").style.display = isConsultSection ? "none" : "";
+    document.getElementById("consultTopbar").classList.toggle("on", isConsultSection);
+    const consultBack = document.getElementById("consultTopbarBack");
+    if (consultBack) consultBack.style.display = BACK_TARGET[view] ? "" : "none";
     document.body.classList.toggle("is-admin", view === "admin" || view === "form");
     if (GROUP_OF[view]) {
       const group = document.getElementById("sbg-group-" + GROUP_OF[view]);
