@@ -2536,17 +2536,20 @@
   .teacher-card {
     position: relative; overflow: hidden;
     /* 고정 높이(px) 대신 가로세로 비율로 고정 — 나중에 선생님이 늘어나 카드 폭이 줄어들어도
-       전체 카드가 그대로 축소만 되고, 안의 사진 크롭(위치·확대율)은 항상 똑같이 유지된다. */
+       전체 카드가 그대로 축소만 되고, 안의 사진 크롭(위치·확대율)은 항상 똑같이 유지된다.
+       container-type: inline-size로 이 카드 자체를 기준 삼아서, 안의 글자 크기(cqw 단위)도
+       카드 폭이 줄어드는 것과 똑같은 비율로 같이 줄어들게 한다. */
+    container-type: inline-size;
     aspect-ratio: 0.9135; background: #E7E5DF; border: 1px solid var(--line); border-radius: 0;
     padding: 14px; text-align: left; font-family: inherit; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
   }
   .teacher-card:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,0.08); }
-  .tc-tagline { position: absolute; left: 14px; top: 14px; right: 14px; z-index: 1; font-size: 0.92rem; font-weight: 800; color: var(--ink); line-height: 1.35; }
+  .tc-tagline { position: absolute; left: 14px; top: 14px; right: 14px; z-index: 1; font-size: 6.2cqw; font-weight: 800; color: var(--ink); line-height: 1.35; }
   .tc-info { position: absolute; left: 14px; bottom: 14px; z-index: 1; max-width: 55%; }
-  .tc-subject { font-size: 0.7rem; font-weight: 700; color: var(--green-deep); }
-  .tc-name { font-size: 1.02rem; font-weight: 800; color: var(--ink); margin-top: 2px; }
-  .tc-role { font-size: 0.7rem; color: var(--ink-soft); font-weight: 600; }
-  .tc-soon { font-size: 0.76rem; color: var(--ink-soft); font-weight: 700; margin-top: 4px; }
+  .tc-subject { font-size: 4.72cqw; font-weight: 700; color: var(--green-deep); }
+  .tc-name { font-size: 6.87cqw; font-weight: 800; color: var(--ink); margin-top: 2px; }
+  .tc-role { font-size: 4.72cqw; color: var(--ink-soft); font-weight: 600; }
+  .tc-soon { font-size: 5.12cqw; color: var(--ink-soft); font-weight: 700; margin-top: 4px; }
   .tc-photo { position: absolute; right: 0; bottom: 0; width: 60%; height: 80%; }
   .tc-silhouette { width: 100%; height: 100%; fill: #B7BAB3; }
   .tc-photo-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
