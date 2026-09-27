@@ -389,26 +389,38 @@
     text-decoration: none;
   }
   .topbar .topbar-back-link:hover { color: var(--ink); }
-  /* "학습 상담 · 온라인 과외" 전용 헤더 — 기본 .topbar를 대신해서 켜진다(go()에서 전환). */
-  .consult-topbar {
-    display: none; align-items: center; gap: 20px;
-    background: var(--paper); border-bottom: 1px solid var(--line);
-    padding: 14px 28px; flex: none;
+  /* "학습 상담 · 온라인 과외" 전용 헤더 — 기본 .topbar를 대신해서 켜진다(go()에서 전환).
+     메가스터디 홈페이지 구조 참고 — 위쪽에 로고가 가운데 오는 흰 줄, 그 아래 가로 목차 줄. */
+  .consult-header { display: none; flex-direction: column; flex: none; }
+  .consult-header.on { display: flex; }
+  .consult-brand-row {
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+    background: var(--paper); padding: 16px 28px;
   }
-  .consult-topbar.on { display: flex; }
   .consult-brand {
-    font-family: inherit; font-size: 1.1rem; font-weight: 900; letter-spacing: -0.02em;
+    grid-column: 2; justify-self: center;
+    font-family: inherit; font-size: 1.25rem; font-weight: 900; letter-spacing: -0.02em;
     color: var(--ink); background: none; border: none; cursor: pointer; padding: 0;
   }
   .consult-brand .brand-accent { color: var(--green-deep); }
-  .consult-topbar-back { font-size: 0.82rem; font-weight: 600; color: var(--ink-soft); text-decoration: none; }
-  .consult-topbar-back:hover { color: var(--ink); }
   .consult-exit-link {
-    margin-left: auto; font-size: 0.82rem; font-weight: 700; color: var(--ink-soft);
+    grid-column: 3; justify-self: end;
+    font-size: 0.82rem; font-weight: 700; color: var(--ink-soft);
     text-decoration: none; padding: 7px 16px; border: 1px solid var(--line); border-radius: 8px;
     transition: color 0.15s, border-color 0.15s;
   }
   .consult-exit-link:hover { color: var(--ink); border-color: var(--ink-soft); }
+  .consult-nav-row {
+    display: flex; align-items: center; justify-content: center; gap: 32px;
+    background: var(--paper); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    padding: 13px 28px;
+  }
+  .consult-nav-link {
+    font-family: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink);
+    background: none; border: none; cursor: pointer; padding: 2px 0;
+    transition: color 0.15s;
+  }
+  .consult-nav-link:hover, .consult-nav-link.on { color: var(--green-deep); }
 
   .view { flex: 1; display: none; flex-direction: column; min-height: 0; }
   .view.on { display: flex; }
@@ -2322,7 +2334,7 @@
   }
 
   /* ═══════════ 상담 안내 ═══════════ */
-  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3, #view-consult-5, #view-consult-6, #view-consult-7, #view-consult-8, #view-consult-teacher, #view-consult-korean, #view-consult-math, #view-consult-english, #view-howto, #view-recordhub, #view-scheduleManage, #view-examhub, #view-examSuneung, #view-examNaeshin, #view-mockexam, #view-mexlist { overflow-y: auto; }
+  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3, #view-consult-5, #view-consult-6, #view-consult-7, #view-consult-8, #view-consult-teacher, #view-consult-korean, #view-consult-math, #view-consult-english, #view-consult-materials, #view-consult-community, #view-howto, #view-recordhub, #view-scheduleManage, #view-examhub, #view-examSuneung, #view-examNaeshin, #view-mockexam, #view-mexlist { overflow-y: auto; }
   .consult-page {
     max-width: 1040px; width: 100%; margin: 0 auto;
     padding: 32px 24px 56px 24px;
@@ -4512,11 +4524,18 @@
     <a class="home-link" href="#" onclick="go('home');return false;">← 홈으로</a>
   </div>
   <!-- "학습 상담 · 온라인 과외" 전용 헤더 — 별도 앱처럼 느껴지도록 사이드바/기본 상단바 대신
-       독자적인 브랜드 바(메가스터디 홈페이지 참고)를 쓰고, 나갈 때는 "나가기"로 표기한다. -->
-  <div class="consult-topbar" id="consultTopbar">
-    <button type="button" class="consult-brand" onclick="go('consult')">홀로<span class="brand-accent"> 온라인 과외</span></button>
-    <a class="consult-topbar-back" id="consultTopbarBack" href="#" onclick="goBack();return false;" style="display:none">← 이전으로</a>
-    <a class="consult-exit-link" href="#" onclick="go('home');return false;">나가기</a>
+       독자적인 2단 헤더(메가스터디 홈페이지 참고: 가운데 로고 줄 + 가로 목차 줄)를 쓰고,
+       나갈 때는 "나가기"로 표기한다. -->
+  <div class="consult-header" id="consultHeader">
+    <div class="consult-brand-row">
+      <button type="button" class="consult-brand" onclick="go('consult')">Holo <span class="brand-accent">Study</span></button>
+      <a class="consult-exit-link" href="#" onclick="go('home');return false;">나가기</a>
+    </div>
+    <nav class="consult-nav-row">
+      <button type="button" class="consult-nav-link" id="consultNav-teachers" onclick="go('consult')">홀로선생님</button>
+      <button type="button" class="consult-nav-link" id="consultNav-materials" onclick="go('consult-materials')">공부자료</button>
+      <button type="button" class="consult-nav-link" id="consultNav-community" onclick="go('consult-community')">커뮤니티</button>
+    </nav>
   </div>
 
   <!-- ─── 홈 ─── -->
@@ -5852,6 +5871,34 @@
     </div>
   </section>
 
+  <!-- ─── 홀로 온라인 과외: 공부자료 (준비중) ─── -->
+  <section class="view dark-consult" id="view-consult-materials">
+    <div class="consult-page">
+      <div class="cd-page-head">
+        <div>
+          <span class="eyebrow">GENERAL</span>
+          <h2>공부자료</h2>
+        </div>
+      </div>
+      <div class="split"></div>
+      <p class="hub-coming-soon">준비중입니다</p>
+    </div>
+  </section>
+
+  <!-- ─── 홀로 온라인 과외: 커뮤니티 (준비중) ─── -->
+  <section class="view dark-consult" id="view-consult-community">
+    <div class="consult-page">
+      <div class="cd-page-head">
+        <div>
+          <span class="eyebrow">GENERAL</span>
+          <h2>커뮤니티</h2>
+        </div>
+      </div>
+      <div class="split"></div>
+      <p class="hub-coming-soon">준비중입니다</p>
+    </div>
+  </section>
+
   <!-- ─── 상담 상세: 수학 과외 ─── -->
   <section class="view dark-consult" id="view-consult-2">
     <div class="consult-page">
@@ -7177,13 +7224,14 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "내 플래너 관리하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "내 플래너 관리하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { mathexam: "exam", engexam: "exam" };
   // "← 이전으로"가 상단 흰색 바(topbar)의 제목 오른쪽에 뜨는 페이지들과, 각각이 돌아갈 곳.
   const BACK_TARGET = {
     "consult-1": "consult", "consult-2": "consult", "consult-3": "consult",
     "consult-5": "consult", "consult-6": "consult", "consult-7": "consult", "consult-8": "consult",
     "consult-teacher": "consult", "consult-korean": "consult", "consult-math": "consult", "consult-english": "consult",
+    "consult-materials": "consult", "consult-community": "consult",
     todayrecord: "home", cumulative: "recordhub", reports: "recordhub", dayDetail: "cumulative",
     examSuneung: "examhub", examNaeshin: "examhub", mexlist: "mockexam",
   };
@@ -7222,13 +7270,17 @@
       view === "todayrecord" ? "오늘의 공부 " + formatStudyDateShort() : titles[view];
     const backLink = document.getElementById("topbarBackLink");
     if (backLink) backLink.style.display = BACK_TARGET[view] ? "" : "none";
-    // "학습 상담 · 온라인 과외" 관련 페이지(dark-consult 클래스가 붙은 12개 view)는 별도
-    // 앱처럼 느껴지도록 기본 상단바 대신 전용 브랜드 바를 쓰고, "홈으로" 대신 "나가기"로 나간다.
+    // "학습 상담 · 온라인 과외" 관련 페이지(dark-consult 클래스가 붙은 view)는 별도 앱처럼
+    // 느껴지도록 기본 상단바 대신 전용 2단 헤더(로고 줄 + 가로 목차)를 쓰고, "홈으로" 대신
+    // "나가기"로 나간다. 목차 중 현재 있는 곳과 관련된 항목만 강조 표시한다.
     const isConsultSection = document.getElementById("view-" + view).classList.contains("dark-consult");
     document.querySelector(".main > .topbar").style.display = isConsultSection ? "none" : "";
-    document.getElementById("consultTopbar").classList.toggle("on", isConsultSection);
-    const consultBack = document.getElementById("consultTopbarBack");
-    if (consultBack) consultBack.style.display = BACK_TARGET[view] ? "" : "none";
+    document.getElementById("consultHeader").classList.toggle("on", isConsultSection);
+    if (isConsultSection) {
+      const activeNav = (view === "consult-materials") ? "materials" : (view === "consult-community") ? "community" : "teachers";
+      ["teachers", "materials", "community"].forEach(n =>
+        document.getElementById("consultNav-" + n).classList.toggle("on", n === activeNav));
+    }
     document.body.classList.toggle("is-admin", view === "admin" || view === "form");
     if (GROUP_OF[view]) {
       const group = document.getElementById("sbg-group-" + GROUP_OF[view]);
