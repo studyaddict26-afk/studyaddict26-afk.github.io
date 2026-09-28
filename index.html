@@ -1272,21 +1272,14 @@
      옆에 이번 주 누적/평균과 분석지 바로가기를 붙인다. 숫자 카드가 세로로 너무 길어지지
      않도록 라벨/숫자 폰트 크기를 작게 유지한다. */
   .home-week-overview {
-    /* 위 4버튼 행(.home-nav-grid)/카드 행(.home-promo-slot)은 980px 안에 24px 안쪽 여백을
-       주는 방식(내용 폭 932px)이라, 이 박스도 똑같이 932px로 맞춰야 양끝 선이 나란해진다. */
-    max-width: 932px; width: 100%; margin: 0 auto 12px auto; padding: 16px 20px 18px 20px;
+    max-width: 620px; width: 100%; margin: 0 auto 12px auto; padding: 12px 18px 12px 18px;
     box-sizing: border-box; background: var(--paper); border: 1px solid var(--line); border-radius: 0;
   }
   .hwo-title { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
-  .hwo-body { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; align-items: end; margin-top: 12px; }
-  .hwo-bars { display: flex; align-items: flex-end; gap: 8px; height: 64px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
-  .hwo-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-  .hwo-bar { width: 100%; max-width: 24px; border-radius: 4px 4px 0 0; background: var(--green-deep); }
-  .hwo-bar.empty { background: var(--line); }
-  .hwo-bar-label { font-size: 0.66rem; color: var(--ink-soft); white-space: nowrap; }
-  .hwo-bar-col.today .hwo-bar-label { color: var(--green-deep); font-weight: 800; }
-  .hwo-stats { display: flex; flex-direction: column; gap: 6px; }
-  .hwo-stat-row { display: flex; justify-content: space-between; align-items: baseline; background: var(--cream); border-radius: 8px; padding: 5px 10px; }
+  .hwo-body { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; align-items: center; margin-top: 6px; }
+  .hwo-bars svg { display: block; width: 100%; height: 46px; }
+  .hwo-stats { display: flex; flex-direction: column; gap: 5px; }
+  .hwo-stat-row { display: flex; justify-content: space-between; align-items: baseline; background: var(--cream); border-radius: 8px; padding: 4px 10px; }
   .hwo-stat-label { font-size: 0.68rem; color: var(--ink-soft); font-weight: 600; }
   .hwo-stat-val { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
   .hwo-report-link {
@@ -7631,10 +7624,14 @@
     }
     return out;
   }
+  // 막대 대신 꺾은선(월~토 6개 점을 잇는 폴리라인)으로 그린다 — 미래(아직 안 온) 요일은
+  // 점만 회색으로 찍고 선은 거기까지 잇지 않는다.
+  const HWO_CHART_X = [50, 140, 230, 320, 410, 500];
+  const HWO_CHART_BASE_Y = 40, HWO_CHART_TOP_Y = 8;
   function loadHomeWeeklyOverview() {
     const studentId = localStorage.getItem("holoStudentId");
-    const barsEl = document.getElementById("hwoBars");
-    if (!studentId || !barsEl) return;
+    const chartEl = document.getElementById("hwoBars");
+    if (!studentId || !chartEl) return;
     const todayKey = getLocalDateKey();
     const weekDates = getMonToSatDates(todayKey);
     fetch(CHAT_API_URL, {
@@ -7647,18 +7644,30 @@
         const byDate = {};
         (data.days || []).forEach(d => { byDate[d.date] = d; });
         let total = 0, countedDays = 0;
-        barsEl.innerHTML = weekDates.map((dateStr, i) => {
+        const points = weekDates.map((dateStr, i) => {
           const isFuture = dateStr > todayKey;
           const rec = byDate[dateStr];
           const score = rec ? (Number(rec.score) || 0) : 0;
           if (!isFuture) { total += score; countedDays++; }
-          const heightPx = isFuture ? 3 : Math.max(3, Math.round((score / 3) * 48));
-          const isToday = dateStr === todayKey;
-          return '<div class="hwo-bar-col' + (isToday ? " today" : "") + '">' +
-            '<div class="hwo-bar' + (isFuture ? " empty" : "") + '" style="height:' + heightPx + 'px"></div>' +
-            '<div class="hwo-bar-label">' + HWO_DAY_LABELS[i] + " " + (isFuture ? "-" : score) + '</div>' +
-          '</div>';
-        }).join("");
+          const y = HWO_CHART_BASE_Y - (score / 3) * (HWO_CHART_BASE_Y - HWO_CHART_TOP_Y);
+          return { x: HWO_CHART_X[i], y: y, score: score, isFuture: isFuture, isToday: dateStr === todayKey };
+        });
+        const knownPts = points.filter(p => !p.isFuture);
+        let svg = '<svg viewBox="0 0 550 58" preserveAspectRatio="none">';
+        if (knownPts.length > 1) {
+          svg += '<polyline points="' + knownPts.map(p => p.x + "," + p.y).join(" ") +
+            '" style="fill:none;stroke:var(--green-deep);stroke-width:2" />';
+        }
+        points.forEach((p, i) => {
+          svg += p.isFuture
+            ? '<circle cx="' + p.x + '" cy="' + HWO_CHART_BASE_Y + '" r="2.5" style="fill:var(--line)" />'
+            : '<circle cx="' + p.x + '" cy="' + p.y + '" r="' + (p.isToday ? 4 : 3) + '" style="fill:var(--green-deep)" />';
+          svg += '<text x="' + p.x + '" y="54" text-anchor="middle" font-size="11" style="fill:' +
+            (p.isToday ? "var(--green-deep)" : "var(--ink-soft)") + ';font-weight:' + (p.isToday ? 800 : 600) + '">' +
+            HWO_DAY_LABELS[i] + " " + (p.isFuture ? "-" : p.score) + '</text>';
+        });
+        svg += '</svg>';
+        chartEl.innerHTML = svg;
         const totalEl = document.getElementById("hwoWeekTotal");
         const avgEl = document.getElementById("hwoWeekAvg");
         if (totalEl) totalEl.textContent = total + "점";
