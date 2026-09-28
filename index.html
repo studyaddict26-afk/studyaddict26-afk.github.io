@@ -1545,8 +1545,12 @@
   .exlv-noise-vol::-moz-range-track { height: 2px; border-radius: 999px; background: rgba(255,255,255,0.25); }
   .exlv-noise-vol::-moz-range-thumb { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.7); border: none; }
   .exlv-timeline { width: 100%; max-width: 347px; margin-top: 8px; }
-  .exlv-end-btn { margin-top: 22px; font-family: inherit; font-size: 0.74rem; font-weight: 700; color: rgba(255,255,255,0.6); background: none; border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 8px 18px; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, color 0.15s, border-color 0.15s; }
+  .exlv-end-btn { margin-top: 22px; font-family: inherit; font-size: 0.74rem; font-weight: 700; color: rgba(255,255,255,0.6); background: none; border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 8px 18px; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, color 0.15s, border-color 0.15s, background 0.15s; }
   .exlv-end-btn:hover { transform: translateY(-2px); color: #fff; border-color: rgba(255,255,255,0.5); box-shadow: 0 6px 14px rgba(0,0,0,0.4); }
+  /* "시험 바로 시작하기"/"시험 시작하기" 상태일 때는 시험장 소음 켜기 버튼처럼 밝게 보이도록
+     해서, 종료 전엔 흐릿해서 못 누르는 버튼처럼 보이지 않게 한다. */
+  .exlv-end-btn.is-start { color: #fff; background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.25); }
+  .exlv-end-btn.is-start:hover { background: rgba(255,255,255,0.2); }
   /* ── 스톱워치/타이머 시작 전, 타이머 분 설정 단계 ── */
   .gentimer-setup { display: flex; flex-direction: column; align-items: center; gap: 18px; }
   .gentimer-stepper { display: flex; align-items: center; gap: 22px; }
@@ -10717,11 +10721,15 @@
   function exsimUpdateEndBtn() {
     const btn = document.getElementById("exlvEndBtn");
     if (!btn || !exsimState) return;
+    let isStart;
     if (exsimIsSimpleMode(exsimState.period)) {
-      btn.textContent = exsimState.started ? "시험 종료하기" : "시험 시작하기";
+      isStart = !exsimState.started;
+      btn.textContent = isStart ? "시험 시작하기" : "시험 종료하기";
     } else {
-      btn.textContent = exsimPhaseLabel() === "본령" ? "시험 종료하기" : "시험 바로 시작하기";
+      isStart = exsimPhaseLabel() !== "본령";
+      btn.textContent = isStart ? "시험 바로 시작하기" : "시험 종료하기";
     }
+    btn.classList.toggle("is-start", isStart);
   }
   function exsimEndBtnClick() {
     if (!exsimState) return;
