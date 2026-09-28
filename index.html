@@ -12026,6 +12026,7 @@
   }
   function mexRemoveReflectionQuestion() {
     if (mexReflectionCurrentNum == null) return;
+    if (!confirm("이 번호를 정말 삭제할까요? 작성한 성찰 내용도 함께 사라져요.")) return;
     mexReflectionNums = mexReflectionNums.filter(n => n !== mexReflectionCurrentNum);
     delete mexReflectionDraft[mexReflectionCurrentNum];
     mexReflectionCurrentNum = null;
