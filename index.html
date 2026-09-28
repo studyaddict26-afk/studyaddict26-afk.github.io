@@ -1272,7 +1272,7 @@
      옆에 이번 주 누적/평균과 분석지 바로가기를 붙인다. 숫자 카드가 세로로 너무 길어지지
      않도록 라벨/숫자 폰트 크기를 작게 유지한다. */
   .home-week-overview {
-    max-width: 620px; width: 100%; margin: 0 auto 12px auto; padding: 12px 18px 12px 18px;
+    max-width: 620px; width: 100%; margin: 4px auto 28px auto; padding: 12px 18px 12px 18px;
     box-sizing: border-box; background: var(--paper); border: 1px solid var(--line); border-radius: 0;
   }
   .hwo-title { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
@@ -4692,6 +4692,18 @@
       </div>
     </div>
 
+    <div class="home-week-overview">
+      <span class="hwo-title">이번 주 한눈에 보기</span>
+      <div class="hwo-body">
+        <div class="hwo-bars" id="hwoBars"></div>
+        <div class="hwo-stats">
+          <div class="hwo-stat-row"><span class="hwo-stat-label">이번 주 누적</span><span class="hwo-stat-val" id="hwoWeekTotal">0점</span></div>
+          <div class="hwo-stat-row"><span class="hwo-stat-label">하루 평균</span><span class="hwo-stat-val" id="hwoWeekAvg">0.0점</span></div>
+          <button type="button" class="hwo-report-link" onclick="go('reports')">이번 주 분석지 보기 <span class="arrow">›</span></button>
+        </div>
+      </div>
+    </div>
+
     <div class="home-nav-grid">
       <button type="button" class="home-nav-btn" onclick="go('recordhub')">
         <span class="hn-title">내 학습 기록</span> <span class="hn-arrow">›</span>
@@ -4773,18 +4785,6 @@
           <ul class="home-schedule-log" id="homeScheduleLog">
             <li class="sched-empty-msg">확인 중…</li>
           </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="home-week-overview">
-      <span class="hwo-title">이번 주 한눈에 보기</span>
-      <div class="hwo-body">
-        <div class="hwo-bars" id="hwoBars"></div>
-        <div class="hwo-stats">
-          <div class="hwo-stat-row"><span class="hwo-stat-label">이번 주 누적</span><span class="hwo-stat-val" id="hwoWeekTotal">0점</span></div>
-          <div class="hwo-stat-row"><span class="hwo-stat-label">하루 평균</span><span class="hwo-stat-val" id="hwoWeekAvg">0.0점</span></div>
-          <button type="button" class="hwo-report-link" onclick="go('reports')">이번 주 분석지 보기 <span class="arrow">›</span></button>
         </div>
       </div>
     </div>
