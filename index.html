@@ -1272,7 +1272,9 @@
      옆에 이번 주 누적/평균과 분석지 바로가기를 붙인다. 숫자 카드가 세로로 너무 길어지지
      않도록 라벨/숫자 폰트 크기를 작게 유지한다. */
   .home-week-overview {
-    max-width: 980px; width: 100%; margin: 0 auto 12px auto; padding: 16px 20px 18px 20px;
+    /* 위 4버튼 행(.home-nav-grid)/카드 행(.home-promo-slot)은 980px 안에 24px 안쪽 여백을
+       주는 방식(내용 폭 932px)이라, 이 박스도 똑같이 932px로 맞춰야 양끝 선이 나란해진다. */
+    max-width: 932px; width: 100%; margin: 0 auto 12px auto; padding: 16px 20px 18px 20px;
     box-sizing: border-box; background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
   }
   .hwo-title { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
@@ -1295,7 +1297,7 @@
 
   /* ── 홈 화면 "Study Holo Academy" 홍보 배너 — 클릭하면 스플래시를 거쳐 Academy로 전환. ── */
   .home-academy-banner {
-    max-width: 980px; width: 100%; margin: 0 auto 40px auto; padding: 16px 20px;
+    max-width: 932px; width: 100%; margin: 0 auto 40px auto; padding: 16px 20px;
     box-sizing: border-box; background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
     display: flex; align-items: center; justify-content: space-between; gap: 16px;
     cursor: pointer; transition: border-color 0.15s;
