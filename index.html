@@ -957,7 +957,7 @@
   }
 
   .home-promo-slot {
-    max-width: 980px; width: 100%; margin: 18px auto 48px auto; padding: 0 24px;
+    max-width: 980px; width: 100%; margin: 18px auto 12px auto; padding: 0 24px;
     display: flex; align-items: stretch; gap: 12px;
   }
   /* 위 4개 버튼 행(gap 12px, flex:1 1 0 넷)과 정확히 같은 격자에 맞춘다:
@@ -1266,6 +1266,52 @@
   @media (max-width: 760px) {
     .home-promo-slot { flex-direction: column; }
     .home-promo-video { aspect-ratio: auto; padding: 40px 22px; }
+  }
+
+  /* ── 홈 화면 "이번 주 한눈에 보기" — 요일별 막대(0~3점)로 이번 주 흐름을 보여주고,
+     옆에 이번 주 누적/평균과 분석지 바로가기를 붙인다. 숫자 카드가 세로로 너무 길어지지
+     않도록 라벨/숫자 폰트 크기를 작게 유지한다. */
+  .home-week-overview {
+    max-width: 980px; width: 100%; margin: 0 auto 12px auto; padding: 16px 20px 18px 20px;
+    box-sizing: border-box; background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
+  }
+  .hwo-title { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
+  .hwo-body { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; align-items: end; margin-top: 12px; }
+  .hwo-bars { display: flex; align-items: flex-end; gap: 8px; height: 64px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+  .hwo-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .hwo-bar { width: 100%; max-width: 24px; border-radius: 4px 4px 0 0; background: var(--green-deep); }
+  .hwo-bar.empty { background: var(--line); }
+  .hwo-bar-label { font-size: 0.66rem; color: var(--ink-soft); white-space: nowrap; }
+  .hwo-bar-col.today .hwo-bar-label { color: var(--green-deep); font-weight: 800; }
+  .hwo-stats { display: flex; flex-direction: column; gap: 6px; }
+  .hwo-stat-row { display: flex; justify-content: space-between; align-items: baseline; background: var(--cream); border-radius: 8px; padding: 5px 10px; }
+  .hwo-stat-label { font-size: 0.68rem; color: var(--ink-soft); font-weight: 600; }
+  .hwo-stat-val { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
+  .hwo-report-link {
+    align-self: flex-end; font-family: inherit; background: none; border: none; cursor: pointer;
+    font-size: 0.72rem; font-weight: 700; color: var(--green-deep); padding: 2px 0;
+  }
+  .hwo-report-link:hover { color: var(--green); }
+
+  /* ── 홈 화면 "Study Holo Academy" 홍보 배너 — 클릭하면 스플래시를 거쳐 Academy로 전환. ── */
+  .home-academy-banner {
+    max-width: 980px; width: 100%; margin: 0 auto 40px auto; padding: 16px 20px;
+    box-sizing: border-box; background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    cursor: pointer; transition: border-color 0.15s;
+  }
+  .home-academy-banner:hover { border-color: var(--green-deep); }
+  .hab-eyebrow { font-size: 0.7rem; font-weight: 800; color: var(--green-deep); letter-spacing: 0.04em; }
+  .hab-title { font-size: 0.92rem; font-weight: 800; color: var(--ink); margin-top: 3px; }
+  .hab-sub { font-size: 0.76rem; color: var(--ink-soft); margin-top: 3px; }
+  .hab-btn {
+    flex: none; font-size: 0.8rem; font-weight: 700; color: var(--ink);
+    background: var(--cream); border: 1px solid var(--line); border-radius: 8px;
+    padding: 10px 14px; white-space: nowrap;
+  }
+  @media (max-width: 640px) {
+    .hwo-body { grid-template-columns: 1fr; }
+    .home-academy-banner { flex-direction: column; align-items: flex-start; }
   }
 
   /* ── 작은 허브 페이지 (내 학습 기록 / 우리 동네 내신 기출) ── */
@@ -4735,6 +4781,27 @@
         </div>
       </div>
     </div>
+
+    <div class="home-week-overview">
+      <span class="hwo-title">이번 주 한눈에 보기</span>
+      <div class="hwo-body">
+        <div class="hwo-bars" id="hwoBars"></div>
+        <div class="hwo-stats">
+          <div class="hwo-stat-row"><span class="hwo-stat-label">이번 주 누적</span><span class="hwo-stat-val" id="hwoWeekTotal">0점</span></div>
+          <div class="hwo-stat-row"><span class="hwo-stat-label">하루 평균</span><span class="hwo-stat-val" id="hwoWeekAvg">0.0점</span></div>
+          <button type="button" class="hwo-report-link" onclick="go('reports')">이번 주 분석지 보기 <span class="arrow">›</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="home-academy-banner" onclick="switchProduct('academy')">
+      <div>
+        <div class="hab-eyebrow">Study Holo Academy</div>
+        <div class="hab-title">혼자 하기 막히는 과목, 특화된 전문 선생님과 함께</div>
+        <div class="hab-sub">운동선수 · 노베이스 · 최상위권 전문 선생님</div>
+      </div>
+      <div class="hab-btn">수업 프로그램 살펴보기 →</div>
+    </div>
   </section>
 
   <!-- ─── 학습 관리 시스템 사용 방법 ─── -->
@@ -7532,7 +7599,7 @@
     if (view === "cumulative") loadDayList();
     // "오늘의 학습 기록" 카드(계획/일기/AI 홀로 현황 + 점수)가 이제 홈 화면에 있어서, 홈에
     // 들어올 때도 recordhub와 똑같이 loadTodayTileStatus()로 채운다.
-    if (view === "home") { syncHomeCardHeights(); loadTodayTileStatus(); loadHomeScheduleToday(); loadHomePlannerToday(); }
+    if (view === "home") { syncHomeCardHeights(); loadTodayTileStatus(); loadHomeScheduleToday(); loadHomePlannerToday(); loadHomeWeeklyOverview(); }
     if (view === "recordhub") { loadRecordHubStatus(); setRhWeekLabels(); loadRhWeekScore(); }
     if (view === "scheduleManage") loadScheduleManage();
     if (view === "examhub") initExamHub();
@@ -7541,6 +7608,59 @@
     if (view === "mockexam") initMockExam();
     if (view === "mexlist") initMexlist();
     if (view === "ranking") switchRankingTab("today"); // 매번 "오늘의 랭킹" 탭부터 새로 불러온다
+  }
+
+  // ── 홈 화면 "이번 주 한눈에 보기" — 오늘이 속한 주(월~일)의 날짜별 점수를 막대로 보여준다.
+  // day_list API가 지금까지의 모든 기록을 돌려주므로, 이번 주 날짜만 골라서 쓴다.
+  const HWO_DAY_LABELS = ["월", "화", "수", "목", "금", "토", "일"];
+  function getMonToSunDates(dateKey) {
+    const d = new Date(dateKey + "T00:00:00");
+    const dow = d.getDay(); // 0=일 ... 6=토
+    const diffToMon = dow === 0 ? -6 : 1 - dow;
+    const mon = new Date(d);
+    mon.setDate(d.getDate() + diffToMon);
+    const out = [];
+    for (let i = 0; i < 7; i++) {
+      const dt = new Date(mon);
+      dt.setDate(mon.getDate() + i);
+      out.push(dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, "0") + "-" + String(dt.getDate()).padStart(2, "0"));
+    }
+    return out;
+  }
+  function loadHomeWeeklyOverview() {
+    const studentId = localStorage.getItem("holoStudentId");
+    const barsEl = document.getElementById("hwoBars");
+    if (!studentId || !barsEl) return;
+    const todayKey = getLocalDateKey();
+    const weekDates = getMonToSunDates(todayKey);
+    fetch(CHAT_API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "day_list", studentId: studentId }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        const byDate = {};
+        (data.days || []).forEach(d => { byDate[d.date] = d; });
+        let total = 0, countedDays = 0;
+        barsEl.innerHTML = weekDates.map((dateStr, i) => {
+          const isFuture = dateStr > todayKey;
+          const rec = byDate[dateStr];
+          const score = rec ? (Number(rec.score) || 0) : 0;
+          if (!isFuture) { total += score; countedDays++; }
+          const heightPx = isFuture ? 3 : Math.max(3, Math.round((score / 3) * 48));
+          const isToday = dateStr === todayKey;
+          return '<div class="hwo-bar-col' + (isToday ? " today" : "") + '">' +
+            '<div class="hwo-bar' + (isFuture ? " empty" : "") + '" style="height:' + heightPx + 'px"></div>' +
+            '<div class="hwo-bar-label">' + HWO_DAY_LABELS[i] + " " + (isFuture ? "-" : score) + '</div>' +
+          '</div>';
+        }).join("");
+        const totalEl = document.getElementById("hwoWeekTotal");
+        const avgEl = document.getElementById("hwoWeekAvg");
+        if (totalEl) totalEl.textContent = total + "점";
+        if (avgEl) avgEl.textContent = (countedDays ? (total / countedDays) : 0).toFixed(1) + "점";
+      })
+      .catch(() => { /* 조회 실패 시 빈 상태로 둔다 */ });
   }
 
   // ── '내 학습 기록 살펴보기' 허브: '누적된 학습 기록' 카드의 "이번 주" 라벨 + 주간 누적 점수 평균 ──
