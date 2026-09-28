@@ -7610,17 +7610,19 @@
     if (view === "ranking") switchRankingTab("today"); // 매번 "오늘의 랭킹" 탭부터 새로 불러온다
   }
 
-  // ── 홈 화면 "이번 주 한눈에 보기" — 오늘이 속한 주(월~일)의 날짜별 점수를 막대로 보여준다.
+  // ── 홈 화면 "이번 주 한눈에 보기" — 오늘이 속한 주의 월~토(6일) 점수를 막대로 보여준다.
+  // 일요일은 계획/일기를 쓰는 날이 아니라 그 주(월~토) 분석지가 나오는 날이라 점수 집계
+  // 대상이 아니므로(다른 곳들도 전부 월~토 6일 기준), 막대에도 넣지 않는다.
   // day_list API가 지금까지의 모든 기록을 돌려주므로, 이번 주 날짜만 골라서 쓴다.
-  const HWO_DAY_LABELS = ["월", "화", "수", "목", "금", "토", "일"];
-  function getMonToSunDates(dateKey) {
+  const HWO_DAY_LABELS = ["월", "화", "수", "목", "금", "토"];
+  function getMonToSatDates(dateKey) {
     const d = new Date(dateKey + "T00:00:00");
     const dow = d.getDay(); // 0=일 ... 6=토
     const diffToMon = dow === 0 ? -6 : 1 - dow;
     const mon = new Date(d);
     mon.setDate(d.getDate() + diffToMon);
     const out = [];
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 6; i++) {
       const dt = new Date(mon);
       dt.setDate(mon.getDate() + i);
       out.push(dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, "0") + "-" + String(dt.getDate()).padStart(2, "0"));
@@ -7632,7 +7634,7 @@
     const barsEl = document.getElementById("hwoBars");
     if (!studentId || !barsEl) return;
     const todayKey = getLocalDateKey();
-    const weekDates = getMonToSunDates(todayKey);
+    const weekDates = getMonToSatDates(todayKey);
     fetch(CHAT_API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
