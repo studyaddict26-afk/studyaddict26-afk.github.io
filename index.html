@@ -1278,22 +1278,34 @@
     max-width: 980px; width: 100%; margin: 24px auto 28px auto; padding: 0 24px; box-sizing: border-box;
   }
   .home-week-overview {
-    flex: 0 0 596px; padding: 13px 18px 13px 18px;
+    flex: 0 0 596px; padding: 10px 18px 10px 18px;
     box-sizing: border-box; background: var(--paper); border: 1px solid var(--line); border-radius: 0;
+    display: flex; flex-direction: column; gap: 6px;
   }
+  .hwo-top-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
   .hwo-title { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
-  .hwo-body { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; align-items: flex-start; margin-top: 2px; }
-  .hwo-bars svg { display: block; width: 100%; height: 42px; }
-  .hwo-stats { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-  .hwo-stat-pair { display: flex; gap: 8px; }
-  .hwo-stat-row { display: flex; align-items: baseline; gap: 8px; background: var(--cream); border-radius: 0; padding: 2px 10px; }
-  .hwo-stat-label { font-size: 0.68rem; color: var(--ink-soft); font-weight: 600; white-space: nowrap; }
-  .hwo-stat-val { font-size: 0.86rem; font-weight: 800; color: var(--ink); white-space: nowrap; }
   .hwo-report-link {
-    align-self: flex-end; font-family: inherit; background: none; border: none; cursor: pointer;
-    font-size: 0.72rem; font-weight: 700; color: var(--ink); padding: 1px 0;
+    flex: none; font-family: inherit; background: none; border: none; cursor: pointer;
+    font-size: 0.72rem; font-weight: 700; color: var(--green-deep); padding: 0;
   }
-  .hwo-report-link:hover { color: var(--ink-soft); }
+  .hwo-report-link:hover { color: var(--green); }
+  .hwo-body { display: flex; align-items: center; gap: 20px; }
+  .hwo-chart-col { flex: 1.6; min-width: 0; }
+  .hwo-chart-svg { display: block; width: 100%; height: 26px; }
+  .hwo-day-labels { display: flex; margin-top: 4px; }
+  .hwo-day-label {
+    flex: 1; text-align: center; font-size: 0.74rem; font-weight: 600; color: var(--ink-soft);
+  }
+  .hwo-day-label .n { font-weight: 700; color: var(--ink); margin-left: 2px; }
+  .hwo-day-label.today { color: var(--green-deep); }
+  .hwo-day-label.today .n { color: var(--green-deep); font-weight: 800; }
+  .hwo-stat-pair { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+  .hwo-stat-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    background: var(--cream); border-radius: 0; padding: 4px 12px;
+  }
+  .hwo-stat-label { font-size: 0.7rem; color: var(--ink-soft); font-weight: 600; white-space: nowrap; }
+  .hwo-stat-val { font-size: 0.92rem; font-weight: 800; color: var(--ink); white-space: nowrap; }
 
   /* Study Holo Academy 홍보 박스 — 클릭하면 스플래시를 거쳐 Academy로 전환. 남는 공간에
      꼭 맞도록 flex:1로 늘어나고, 모서리는 각지게(border-radius 없음) 유지한다. */
@@ -1312,7 +1324,7 @@
     padding: 7px 10px; text-align: center; white-space: nowrap;
   }
   @media (max-width: 640px) {
-    .hwo-body { grid-template-columns: 1fr; }
+    .hwo-body { flex-direction: column; align-items: stretch; }
     .home-top-row { flex-direction: column; }
     .home-week-overview { flex: none; }
   }
@@ -4702,15 +4714,18 @@
 
     <div class="home-top-row">
       <div class="home-week-overview">
-        <span class="hwo-title">이번 주 한눈에 보기</span>
+        <div class="hwo-top-row">
+          <span class="hwo-title">이번 주 한눈에 보기</span>
+          <button type="button" class="hwo-report-link" onclick="go('reports')">이번 주 분석지 보기 <span class="arrow">›</span></button>
+        </div>
         <div class="hwo-body">
-          <div class="hwo-bars" id="hwoBars"></div>
-          <div class="hwo-stats">
-            <button type="button" class="hwo-report-link" onclick="go('reports')">이번 주 분석지 보기 <span class="arrow">›</span></button>
-            <div class="hwo-stat-pair">
-              <div class="hwo-stat-row"><span class="hwo-stat-label">이번 주 누적</span><span class="hwo-stat-val" id="hwoWeekTotal">0점</span></div>
-              <div class="hwo-stat-row"><span class="hwo-stat-label">하루 평균</span><span class="hwo-stat-val" id="hwoWeekAvg">0.0점</span></div>
-            </div>
+          <div class="hwo-chart-col">
+            <svg class="hwo-chart-svg" id="hwoChartSvg" viewBox="0 0 476 26" preserveAspectRatio="none"></svg>
+            <div class="hwo-day-labels" id="hwoDayLabels"></div>
+          </div>
+          <div class="hwo-stat-pair">
+            <div class="hwo-stat-row"><span class="hwo-stat-label">이번 주 누적</span><span class="hwo-stat-val" id="hwoWeekTotal">0점</span></div>
+            <div class="hwo-stat-row"><span class="hwo-stat-label">하루 평균</span><span class="hwo-stat-val" id="hwoWeekAvg">0.0점</span></div>
           </div>
         </div>
       </div>
@@ -7633,14 +7648,17 @@
     }
     return out;
   }
-  // 막대 대신 꺾은선(월~토 6개 점을 잇는 폴리라인)으로 그린다 — 미래(아직 안 온) 요일은
-  // 점만 회색으로 찍고 선은 거기까지 잇지 않는다.
-  const HWO_CHART_X = [50, 140, 230, 320, 410, 500];
-  const HWO_CHART_BASE_Y = 18, HWO_CHART_TOP_Y = 4;
+  // 꺾은선(월~토 6개 점을 잇는 폴리라인)으로 그린다 — 미래(아직 안 온) 요일은 점만 옅게
+  // 찍고 선은 거기까지 잇지 않는다. 요일/점수 글자는 SVG 안에 넣지 않고 그 아래 별도
+  // HTML 줄로 뺀다 — SVG 안 <text>는 앱 폰트를 제대로 못 물려받아 거칠게 보였기 때문.
+  const HWO_CHART_X = [8, 100, 192, 284, 376, 468];
+  const HWO_CHART_W = 476;
+  const HWO_CHART_BASE_Y = 22, HWO_CHART_TOP_Y = 3;
   function loadHomeWeeklyOverview() {
     const studentId = localStorage.getItem("holoStudentId");
-    const chartEl = document.getElementById("hwoBars");
-    if (!studentId || !chartEl) return;
+    const svgEl = document.getElementById("hwoChartSvg");
+    const labelsEl = document.getElementById("hwoDayLabels");
+    if (!studentId || !svgEl || !labelsEl) return;
     const todayKey = getLocalDateKey();
     const weekDates = getMonToSatDates(todayKey);
     fetch(CHAT_API_URL, {
@@ -7662,21 +7680,23 @@
           return { x: HWO_CHART_X[i], y: y, score: score, isFuture: isFuture, isToday: dateStr === todayKey };
         });
         const knownPts = points.filter(p => !p.isFuture);
-        let svg = '<svg viewBox="0 0 550 42" preserveAspectRatio="none">';
-        if (knownPts.length > 1) {
-          svg += '<polyline points="' + knownPts.map(p => p.x + "," + p.y).join(" ") +
-            '" style="fill:none;stroke:#17181A;stroke-width:2" />';
-        }
-        points.forEach((p, i) => {
-          svg += p.isFuture
-            ? '<circle cx="' + p.x + '" cy="' + HWO_CHART_BASE_Y + '" r="2.5" style="fill:rgba(23,24,26,0.3)" />'
-            : '<circle cx="' + p.x + '" cy="' + p.y + '" r="' + (p.isToday ? 4 : 3) + '" style="fill:#17181A" />';
-          svg += '<text x="' + p.x + '" y="39" text-anchor="middle" font-size="15" font-family="inherit" style="fill:' +
-            (p.isToday ? "#17181A" : "rgba(23,24,26,0.65)") + ';font-weight:' + (p.isToday ? 800 : 600) + '">' +
-            HWO_DAY_LABELS[i] + " " + (p.isFuture ? "-" : p.score) + '</text>';
-        });
-        svg += '</svg>';
-        chartEl.innerHTML = svg;
+        svgEl.setAttribute("viewBox", "0 0 " + HWO_CHART_W + " 26");
+        svgEl.innerHTML =
+          '<line x1="0" y1="' + HWO_CHART_BASE_Y + '" x2="' + HWO_CHART_W + '" y2="' + HWO_CHART_BASE_Y +
+          '" style="stroke:var(--line);stroke-width:1" />' +
+          (knownPts.length > 1
+            ? '<polyline points="' + knownPts.map(p => p.x + "," + p.y).join(" ") +
+              '" style="fill:none;stroke:var(--green-deep);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round" />'
+            : "") +
+          points.map(p => p.isFuture
+            ? '<circle cx="' + p.x + '" cy="' + HWO_CHART_BASE_Y + '" r="2.5" style="fill:var(--line)" />'
+            : '<circle cx="' + p.x + '" cy="' + p.y + '" r="' + (p.isToday ? 4.5 : 3) +
+              '" style="fill:var(--paper);stroke:var(--green-deep);stroke-width:2" />'
+          ).join("");
+        labelsEl.innerHTML = points.map((p, i) =>
+          '<div class="hwo-day-label' + (p.isToday ? " today" : "") + '">' + HWO_DAY_LABELS[i] +
+          '<span class="n">' + (p.isFuture ? "-" : p.score) + '</span></div>'
+        ).join("");
         const totalEl = document.getElementById("hwoWeekTotal");
         const avgEl = document.getElementById("hwoWeekAvg");
         if (totalEl) totalEl.textContent = total + "점";
