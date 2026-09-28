@@ -1282,7 +1282,13 @@
     box-sizing: border-box; background: var(--paper); border: 1px solid var(--line); border-radius: 0;
     display: flex; flex-direction: column; gap: 6px;
   }
-  .hwo-top-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .hwo-top-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .hwo-title-group { display: flex; align-items: center; gap: 8px; }
+  .hwo-icon {
+    width: 24px; height: 24px; border-radius: 7px; background: var(--green-soft);
+    display: flex; align-items: center; justify-content: center; color: var(--green-deep); flex: none;
+  }
+  .hwo-icon svg { width: 13px; height: 13px; }
   .hwo-title { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
   .hwo-report-link {
     flex: none; font-family: inherit; background: none; border: none; cursor: pointer;
@@ -4715,7 +4721,12 @@
     <div class="home-top-row">
       <div class="home-week-overview">
         <div class="hwo-top-row">
-          <span class="hwo-title">이번 주 한눈에 보기</span>
+          <span class="hwo-title-group">
+            <span class="hwo-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z" stroke-linejoin="round"/><path d="M4 9h16M9 4v16"/></svg>
+            </span>
+            <span class="hwo-title">이번 주 한눈에 보기</span>
+          </span>
           <button type="button" class="hwo-report-link" onclick="go('reports')">이번 주 분석지 보기 <span class="arrow">›</span></button>
         </div>
         <div class="hwo-body">
