@@ -7633,7 +7633,7 @@
   // 막대 대신 꺾은선(월~토 6개 점을 잇는 폴리라인)으로 그린다 — 미래(아직 안 온) 요일은
   // 점만 회색으로 찍고 선은 거기까지 잇지 않는다.
   const HWO_CHART_X = [50, 140, 230, 320, 410, 500];
-  const HWO_CHART_BASE_Y = 40, HWO_CHART_TOP_Y = 8;
+  const HWO_CHART_BASE_Y = 28, HWO_CHART_TOP_Y = 5;
   function loadHomeWeeklyOverview() {
     const studentId = localStorage.getItem("holoStudentId");
     const chartEl = document.getElementById("hwoBars");
@@ -7659,7 +7659,7 @@
           return { x: HWO_CHART_X[i], y: y, score: score, isFuture: isFuture, isToday: dateStr === todayKey };
         });
         const knownPts = points.filter(p => !p.isFuture);
-        let svg = '<svg viewBox="0 0 550 58" preserveAspectRatio="none">';
+        let svg = '<svg viewBox="0 0 550 46" preserveAspectRatio="none">';
         if (knownPts.length > 1) {
           svg += '<polyline points="' + knownPts.map(p => p.x + "," + p.y).join(" ") +
             '" style="fill:none;stroke:var(--green-deep);stroke-width:2" />';
@@ -7668,7 +7668,7 @@
           svg += p.isFuture
             ? '<circle cx="' + p.x + '" cy="' + HWO_CHART_BASE_Y + '" r="2.5" style="fill:var(--line)" />'
             : '<circle cx="' + p.x + '" cy="' + p.y + '" r="' + (p.isToday ? 4 : 3) + '" style="fill:var(--green-deep)" />';
-          svg += '<text x="' + p.x + '" y="54" text-anchor="middle" font-size="11" style="fill:' +
+          svg += '<text x="' + p.x + '" y="42" text-anchor="middle" font-size="15" style="fill:' +
             (p.isToday ? "var(--green-deep)" : "var(--ink-soft)") + ';font-weight:' + (p.isToday ? 800 : 600) + '">' +
             HWO_DAY_LABELS[i] + " " + (p.isFuture ? "-" : p.score) + '</text>';
         });
