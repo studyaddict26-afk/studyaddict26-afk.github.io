@@ -1324,7 +1324,7 @@
     flex: 1; min-width: 0; box-sizing: border-box;
     background: #F4F4F5; border: 1px solid var(--line); border-radius: 0;
     padding: 12px 14px; display: flex; flex-direction: column; justify-content: center; gap: 6px;
-    cursor: pointer; transition: border-color 0.15s, opacity 0.3s;
+    cursor: pointer; transition: border-color 0.15s, opacity 0.5s;
   }
   .home-academy-compact:hover { border-color: var(--green-deep); }
   .hac-eyebrow { font-size: 0.66rem; font-weight: 800; color: var(--green-deep); letter-spacing: 0.03em; }
@@ -7688,7 +7688,7 @@
       homeAcademyPromoIdx = (homeAcademyPromoIdx + 1) % HOME_ACADEMY_PROMO_SLIDES.length;
       renderHomeAcademyPromo();
       box.style.opacity = "1";
-    }, 300);
+    }, 500);
   }
   renderHomeAcademyPromo();
   setInterval(rotateHomeAcademyPromo, 10000);
