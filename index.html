@@ -7760,8 +7760,7 @@
             : "") +
           points.map(p => p.isFuture
             ? '<circle cx="' + p.x + '" cy="' + HWO_CHART_BASE_Y + '" r="2.5" style="fill:var(--line)" />'
-            : '<circle cx="' + p.x + '" cy="' + p.y + '" r="' + (p.isToday ? 4.5 : 3) +
-              '" style="fill:var(--paper);stroke:var(--green-deep);stroke-width:1.5" />'
+            : '<circle cx="' + p.x + '" cy="' + p.y + '" r="3" style="fill:var(--paper);stroke:var(--green-deep);stroke-width:1.5" />'
           ).join("");
         labelsEl.innerHTML = points.map((p, i) =>
           '<div class="hwo-day-label' + (p.isToday ? " today" : "") + '">' + HWO_DAY_LABELS[i] +
