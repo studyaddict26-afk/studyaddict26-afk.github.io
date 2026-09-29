@@ -1316,12 +1316,21 @@
   /* Study Holo Academy 홍보 박스 — 클릭하면 스플래시를 거쳐 Academy로 전환. 남는 공간에
      꼭 맞도록 flex:1로 늘어나고, 모서리는 각지게(border-radius 없음) 유지한다. */
   .home-academy-compact {
+    position: relative; overflow: hidden; min-height: 114px;
     flex: 1; min-width: 0; box-sizing: border-box;
     background: #F4F4F5; border: 1px solid var(--line); border-radius: 0;
-    padding: 12px 14px; display: flex; flex-direction: column; justify-content: center; gap: 6px;
-    cursor: pointer; transition: border-color 0.15s, opacity 0.3s;
+    padding: 12px 14px; cursor: pointer; transition: border-color 0.15s;
   }
   .home-academy-compact:hover { border-color: var(--green-deep); }
+  /* .hac-slide는 항상 absolute — static(보통 흐름)에서 absolute로 바뀌는 전환 자체가 있으면
+     (직접 확인함) 그 프레임의 transform 애니메이션이 브라우저에서 씹혀버려서, 나가는
+     슬라이드가 안 움직이고 그대로 있는 버그가 생긴다. 처음부터 계속 absolute로 두고
+     박스 쪽에 min-height를 줘서(위) 평소에도 빈 박스로 찌그러지지 않게 한다. */
+  .hac-slide {
+    position: absolute; inset: 12px 14px;
+    display: flex; flex-direction: column; justify-content: center; gap: 6px;
+    transition: transform 0.45s ease;
+  }
   .hac-eyebrow { font-size: 0.66rem; font-weight: 800; color: var(--green-deep); letter-spacing: 0.03em; }
   .hac-title { font-size: 0.8rem; font-weight: 800; color: var(--ink); line-height: 1.3; }
   .hac-btn {
@@ -4745,9 +4754,11 @@
         </div>
       </div>
       <div class="home-academy-compact" id="homeAcademyPromo">
-        <div class="hac-eyebrow">Study Holo Academy</div>
-        <div class="hac-title">특화된 전문 선생님과 함께 공부하자</div>
-        <div class="hac-btn">수업 프로그램 살펴보기 →</div>
+        <div class="hac-slide">
+          <div class="hac-eyebrow">Study Holo Academy</div>
+          <div class="hac-title">특화된 전문 선생님과 함께 공부하자</div>
+          <div class="hac-btn">수업 프로그램 살펴보기 →</div>
+        </div>
       </div>
     </div>
 
@@ -7663,24 +7674,49 @@
     { eyebrow: "Study Holo Academy", title: "27수능 대비 확통 특강", btn: "특강 알아보기 →", onclick: () => switchProduct("academy") },
   ];
   let homeAcademyPromoIdx = 0;
+  function hacSlideHtml(slide) {
+    return '<div class="hac-eyebrow">' + escapeHtml(slide.eyebrow) + '</div>' +
+      '<div class="hac-title">' + escapeHtml(slide.title) + '</div>' +
+      '<div class="hac-btn">' + escapeHtml(slide.btn) + '</div>';
+  }
   function renderHomeAcademyPromo() {
     const box = document.getElementById("homeAcademyPromo");
     if (!box) return;
     const slide = HOME_ACADEMY_PROMO_SLIDES[homeAcademyPromoIdx];
-    box.querySelector(".hac-eyebrow").textContent = slide.eyebrow;
-    box.querySelector(".hac-title").textContent = slide.title;
-    box.querySelector(".hac-btn").textContent = slide.btn;
+    const current = box.querySelector(".hac-slide");
+    if (current) current.innerHTML = hacSlideHtml(slide);
     box.onclick = slide.onclick;
   }
+  // 기존 슬라이드는 왼쪽으로 밀려나가고, 새 슬라이드는 오른쪽에서 밀고 들어오는 전환.
+  // .hac-slide는 항상 absolute라 겹쳐 놓고 옆으로 미는 게 바로 가능 — 전환이 끝나면 나가는
+  // 슬라이드를 지우고, 남은 슬라이드 하나만 박스 안에 둔다. isHacAnimating으로 겹쳐 실행만 막는다.
+  let isHacAnimating = false;
   function rotateHomeAcademyPromo() {
     const box = document.getElementById("homeAcademyPromo");
-    if (!box || HOME_ACADEMY_PROMO_SLIDES.length < 2) return;
-    box.style.opacity = "0";
+    if (!box || HOME_ACADEMY_PROMO_SLIDES.length < 2 || isHacAnimating) return;
+    const current = box.querySelector(".hac-slide");
+    if (!current) return;
+    const nextIdx = (homeAcademyPromoIdx + 1) % HOME_ACADEMY_PROMO_SLIDES.length;
+    const slide = HOME_ACADEMY_PROMO_SLIDES[nextIdx];
+    isHacAnimating = true;
+
+    const next = document.createElement("div");
+    next.className = "hac-slide";
+    next.style.transform = "translateX(100%)";
+    next.innerHTML = hacSlideHtml(slide);
+    box.appendChild(next);
+    box.onclick = slide.onclick;
+
+    void next.offsetWidth; // 강제 reflow — 시작 위치(오른쪽 바깥)를 먼저 확정한 뒤에 전환을 건다.
+    current.style.transform = "translateX(-100%)";
+    next.style.transform = "translateX(0)";
+
     setTimeout(() => {
-      homeAcademyPromoIdx = (homeAcademyPromoIdx + 1) % HOME_ACADEMY_PROMO_SLIDES.length;
-      renderHomeAcademyPromo();
-      box.style.opacity = "1";
-    }, 300);
+      current.remove();
+      next.style.transform = "";
+      homeAcademyPromoIdx = nextIdx;
+      isHacAnimating = false;
+    }, 450);
   }
   renderHomeAcademyPromo();
   setInterval(rotateHomeAcademyPromo, 10000);
