@@ -1228,7 +1228,19 @@
   .pp-hw-session-status.done { color: var(--green-deep); background: var(--green-soft); border-color: #CFE3D6; }
   .pp-hw-session-chevron { flex: none; color: var(--ink-soft); font-size: 0.66rem; }
   .pp-hw-session-due { color: var(--ink-soft); font-weight: 600; }
-  .pp-hw-session-detail { padding: 0 16px 14px; display: flex; flex-direction: column; gap: 10px; }
+  /* 모의고사 기록처럼, 세션 줄을 누르면 목록/통계 박스는 숨고 이 뒤로가기+상세만 남는
+     "그 수업만의 페이지"로 바뀐다. */
+  .pp-hw-back-btn {
+    display: block; font-family: inherit; font-size: 0.8rem; font-weight: 600; color: var(--ink-soft);
+    background: none; border: none; cursor: pointer; padding: 0; margin-bottom: 14px;
+  }
+  .pp-hw-back-btn:hover { color: var(--ink); }
+  .pp-hw-session-page-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--line);
+  }
+  .pp-hw-session-page-title { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
+  .pp-hw-session-detail { display: flex; flex-direction: column; gap: 10px; }
   .pp-hw-record { border-top: 1px solid var(--line); padding-top: 10px; }
   .pp-hw-record-row { display: flex; align-items: center; gap: 14px; }
   .pp-hw-record-mid {
@@ -1244,7 +1256,6 @@
   .pp-hw-record.done .pp-hw-record-mid { color: var(--ink-soft); text-decoration: line-through; }
   .pp-hw-desc { font-size: 0.78rem; color: var(--ink-soft); line-height: 1.55; margin-top: 6px; }
   .pp-hw-empty { color: var(--ink-soft); font-size: 0.8rem; text-align: center; padding: 20px 0; }
-  .pp-hw-note { font-size: 0.7rem; color: var(--ink-soft); text-align: center; padding-top: 4px; }
   /* 계획 상담 챗봇 말풍선 안에 바로 뜨는 계획 입력 카드 — AI가 날짜를 확정하면 뜬다. */
   .pp-chat-plan-card {
     background: var(--cream); border: 1px solid var(--line); border-radius: 12px;
@@ -5394,7 +5405,6 @@
             </div>
             <div class="pp-hw-subject-tabs" id="ppHwSubjectTabs"></div>
             <div id="ppHwDetail"></div>
-            <div class="pp-hw-note">지금은 화면 예시예요 — 선생님 계정이 연동되면 실제로 낸 숙제가 이 자리에 표시돼요.</div>
           </div>
         </div>
       </div>
@@ -8830,6 +8840,7 @@
     document.getElementById("ppHwTotalCount").textContent = (all.length + PP_HW_PAST_WEEKS_COUNT) + "개";
   }
   function jumpToPpHwItem(subject) {
+    closePpHwSessionPage(true);
     ppHwSubject = subject;
     renderPpHwSubjectTabs();
     renderPpHwDetail();
@@ -8842,50 +8853,70 @@
     ).join("");
   }
   function selectPpHwSubject(subject) {
+    closePpHwSessionPage(true);
     ppHwSubject = subject;
     renderPpHwSubjectTabs();
     renderPpHwDetail();
   }
   // 2단계: 고른 과목의 수업(세션)들을 날짜순으로 세로 나열 — 각 줄은 그 수업 하나를 한 줄
-  // 요약("YYYY-MM-DD · 세부과목 · 시작~종료 | 숙제 기한 ...")으로 접어두고,
-  // 누르면 그 수업에서 낸 숙제(제목·기한·완료 액션)가 펼쳐진다.
-  let ppHwExpandedSessions = new Set();
-  function ppHwSessionKey(subject, classIdx) { return subject + "|" + classIdx; }
-  function togglePpHwSession(subject, classIdx) {
-    const key = ppHwSessionKey(subject, classIdx);
-    if (ppHwExpandedSessions.has(key)) ppHwExpandedSessions.delete(key);
-    else ppHwExpandedSessions.add(key);
+  // 요약("YYYY-MM-DD · 세부과목 · 시작~종료 | 숙제 기한 ...")으로 보여준다. 모의고사 기록처럼,
+  // 누르면 아코디언으로 펼치는 대신 그 수업 하나만의 페이지로 넘어간다(목록/통계 박스는
+  // 숨기고, 그 자리에 뒤로가기 + 상세 내용만 보여준다).
+  let ppHwOpenSessionIdx = null;
+  function openPpHwSessionPage(classIdx) {
+    ppHwOpenSessionIdx = classIdx;
+    document.querySelector("#ppHomeworkBody .pp-hw-todo-box").style.display = "none";
+    document.getElementById("ppHwSubjectTabs").style.display = "none";
     renderPpHwDetail();
+  }
+  // silent=true면 다시 그리지 않고 상태만 원위치(과목 전환 등 다른 곳에서 먼저 닫아둘 때 씀).
+  function closePpHwSessionPage(silent) {
+    ppHwOpenSessionIdx = null;
+    document.querySelector("#ppHomeworkBody .pp-hw-todo-box").style.display = "";
+    document.getElementById("ppHwSubjectTabs").style.display = "";
+    if (!silent) renderPpHwDetail();
   }
   function renderPpHwDetail() {
     const classes = ppHwClassesForSubject(ppHwSubject);
     const wrap = document.getElementById("ppHwDetail");
     if (!classes.length) { wrap.innerHTML = '<div class="pp-hw-empty">숙제가 없어요.</div>'; return; }
+    if (ppHwOpenSessionIdx !== null && classes[ppHwOpenSessionIdx]) {
+      wrap.innerHTML = ppHwRenderSessionPage(classes[ppHwOpenSessionIdx], ppHwOpenSessionIdx);
+      return;
+    }
     wrap.innerHTML = classes.map((cls, classIdx) => {
-      const expanded = ppHwExpandedSessions.has(ppHwSessionKey(ppHwSubject, classIdx));
       const allDone = cls.tasks.every(t => t.done);
       const dues = cls.tasks.map(t => ppHwFormatMD(t.due)).join("·");
       const title = cls.classDate + " · " + escapeHtml(cls.detailSubject) + " · " + cls.timeStart + " ~ " + cls.timeEnd +
         ' <span class="pp-hw-session-due">| 숙제 기한 ' + dues + '</span>';
-      const detailHtml = cls.tasks.map((task, taskIdx) =>
-        '<div class="pp-hw-record' + (task.done ? " done" : "") + '">' +
-          '<div class="pp-hw-record-row">' +
-            '<span class="pp-hw-record-mid">' + escapeHtml(task.title) + ' · 기한 ' + ppHwFormatMD(task.due) + '</span>' +
-            '<span class="pp-hw-record-spacer"></span>' +
-            '<button type="button" class="pp-hw-record-action" onclick="togglePpHwDone(' + classIdx + ', ' + taskIdx + ')">' + (task.done ? "완료 취소하기" : "완료로 표시하기") + '</button>' +
-          '</div>' +
-          '<div class="pp-hw-desc">' + escapeHtml(task.desc) + '</div>' +
-        '</div>'
-      ).join("");
       return '<div class="pp-hw-session">' +
-        '<button type="button" class="pp-hw-session-btn" onclick="togglePpHwSession(\'' + ppHwSubject + '\', ' + classIdx + ')">' +
+        '<button type="button" class="pp-hw-session-btn" onclick="openPpHwSessionPage(' + classIdx + ')">' +
           '<span class="pp-hw-session-title">' + title + '</span>' +
           '<span class="pp-hw-session-status' + (allDone ? " done" : "") + '">' + (allDone ? "숙제 완료" : "숙제 미완료") + '</span>' +
-          '<span class="pp-hw-session-chevron">' + (expanded ? "︿" : "﹀") + '</span>' +
+          '<span class="pp-hw-session-chevron">〉</span>' +
         '</button>' +
-        (expanded ? '<div class="pp-hw-session-detail">' + detailHtml + '</div>' : "") +
       '</div>';
     }).join("");
+  }
+  function ppHwRenderSessionPage(cls, classIdx) {
+    const allDone = cls.tasks.every(t => t.done);
+    const title = cls.classDate + " · " + escapeHtml(cls.detailSubject) + " · " + cls.timeStart + " ~ " + cls.timeEnd;
+    const detailHtml = cls.tasks.map((task, taskIdx) =>
+      '<div class="pp-hw-record' + (task.done ? " done" : "") + '">' +
+        '<div class="pp-hw-record-row">' +
+          '<span class="pp-hw-record-mid">' + escapeHtml(task.title) + ' · 기한 ' + ppHwFormatMD(task.due) + '</span>' +
+          '<span class="pp-hw-record-spacer"></span>' +
+          '<button type="button" class="pp-hw-record-action" onclick="togglePpHwDone(' + classIdx + ', ' + taskIdx + ')">' + (task.done ? "완료 취소하기" : "완료로 표시하기") + '</button>' +
+        '</div>' +
+        '<div class="pp-hw-desc">' + escapeHtml(task.desc) + '</div>' +
+      '</div>'
+    ).join("");
+    return '<button type="button" class="pp-hw-back-btn" onclick="closePpHwSessionPage()">← 목록으로</button>' +
+      '<div class="pp-hw-session-page-head">' +
+        '<span class="pp-hw-session-page-title">' + title + '</span>' +
+        '<span class="pp-hw-session-status' + (allDone ? " done" : "") + '">' + (allDone ? "숙제 완료" : "숙제 미완료") + '</span>' +
+      '</div>' +
+      '<div class="pp-hw-session-detail">' + detailHtml + '</div>';
   }
   function togglePpHwDone(classIdx, taskIdx) {
     const cls = ppHwClassesForSubject(ppHwSubject)[classIdx];
