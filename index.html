@@ -1165,6 +1165,86 @@
   .pp-cal-cell.selected { background: var(--ink); color: #fff; }
   .pp-cal-cell.disabled { color: var(--line-dark); cursor: default; }
   .pp-cal-cell.empty { visibility: hidden; }
+  /* "내 계획 상담하기" 제목 옆 "숙제 확인하기 →" 토글 버튼 — 누르면 같은 챗봇 칸 자리에
+     숙제 목록이 대신 뜬다(왼쪽 사이드바는 그대로). 아직 선생님 계정/실제 숙제 데이터가 없어서
+     지금은 예시 화면만 보여준다. */
+  .pp-hw-toggle-btn {
+    font-family: inherit; font-size: 0.76rem; font-weight: 700; color: var(--green-deep);
+    background: none; border: none; cursor: pointer; padding: 0; white-space: nowrap;
+    margin-left: auto;
+  }
+  .pp-hw-toggle-btn:hover { opacity: 0.7; }
+  .pp-pane-ico { filter: grayscale(1) opacity(0.65); }
+  /* chat-wrap/quick-row/input-zone을 감싸는 래퍼 — 원래 이 셋이 .sched-chat-col의 직접 자식으로
+     flex:1(chat-wrap) 만큼 늘어났는데, 숙제 보기와 토글하려고 감싸면서 이 래퍼 자체가 그 flex:1
+     역할을 대신 받아야 한다(안 그러면 chat-wrap의 flex:1이 남는 공간을 못 찾는다). */
+  #ppPlanChatBody { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .pp-hw-body { flex: 1; min-height: 0; overflow-y: auto; padding: 0 20px 20px; display: flex; flex-direction: column; gap: 12px; }
+  /* 홈 화면 "이번 주 한눈에 보기" 박스와 같은 생김새(hwo-* 클래스 재사용)로 만든 요약 박스 —
+     아직 완료 안 된 숙제를 To Do List로 보여주고, 옆에 누적 개수 통계를 붙인다. */
+  .pp-hw-todo-box {
+    padding: 10px 18px; box-sizing: border-box;
+    background: var(--paper); border: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .pp-hw-todo-list-col { flex: 2; min-width: 0; }
+  .pp-hw-stat-col { flex: 0.7; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .pp-hw-todo-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; max-height: 72px; overflow-y: auto; }
+  .pp-hw-todo-item {
+    display: flex; align-items: center; gap: 7px; font-size: 0.78rem; color: var(--ink);
+    background: none; border: none; font-family: inherit; text-align: left; padding: 0; cursor: pointer; width: 100%;
+  }
+  .pp-hw-todo-item:hover .pp-hw-todo-title { text-decoration: underline; }
+  .pp-hw-todo-bullet { flex: none; width: 12px; height: 12px; border-radius: 3px; border: 1.5px solid var(--line-dark); }
+  .pp-hw-todo-subject-tag { flex: none; font-size: 0.64rem; font-weight: 800; color: var(--green-deep); background: var(--green-soft); border-radius: 4px; padding: 1px 5px; }
+  .pp-hw-todo-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pp-hw-todo-due { flex: none; font-size: 0.7rem; color: var(--tan); font-weight: 700; }
+  .pp-hw-todo-empty { font-size: 0.78rem; color: var(--ink-soft); }
+  /* 1단계: 과목 탭 — 꽉 채운 알약 버튼 대신, 밑줄 인디케이터만 움직이는 절제된 텍스트 탭.
+     고르면 그 아래(날짜 탭 + 상세)가 전부 그 과목 걸로 바뀐다. */
+  .pp-hw-subject-tabs { display: flex; gap: 22px; border-bottom: 1px solid var(--line); }
+  .pp-hw-subject-tab {
+    font-family: inherit; font-size: 0.82rem; font-weight: 600; color: var(--ink-soft);
+    background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -1px;
+    padding: 0 0 9px 0; cursor: pointer; letter-spacing: 0.01em;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .pp-hw-subject-tab:hover { color: var(--ink); }
+  .pp-hw-subject-tab.on { color: var(--ink); font-weight: 800; border-bottom-color: var(--green-deep); }
+  /* 2단계: 수업(세션) 아코디언 — 한 줄 제목(날짜·세부과목·수업시간·기한 요약)을 누르면
+     그 수업에서 낸 숙제들(제목·기한·완료 액션)이 펼쳐진다. */
+  .pp-hw-session { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .pp-hw-session + .pp-hw-session { margin-top: 8px; }
+  .pp-hw-session-btn {
+    width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    font-family: inherit; background: none; border: none; cursor: pointer; padding: 12px 16px; text-align: left;
+  }
+  .pp-hw-session-btn:hover { background: var(--cream); }
+  .pp-hw-session-title { flex: 1; min-width: 0; font-size: 0.8rem; font-weight: 700; color: var(--ink); line-height: 1.45; }
+  .pp-hw-session-status {
+    flex: none; font-size: 0.6rem; font-weight: 800; color: var(--ink-soft);
+    background: var(--cream); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px;
+  }
+  .pp-hw-session-status.done { color: var(--green-deep); background: var(--green-soft); border-color: #CFE3D6; }
+  .pp-hw-session-chevron { flex: none; color: var(--ink-soft); font-size: 0.66rem; }
+  .pp-hw-session-due { color: var(--ink-soft); font-weight: 600; }
+  .pp-hw-session-detail { padding: 0 16px 14px; display: flex; flex-direction: column; gap: 10px; }
+  .pp-hw-record { border-top: 1px solid var(--line); padding-top: 10px; }
+  .pp-hw-record-row { display: flex; align-items: center; gap: 14px; }
+  .pp-hw-record-mid {
+    font-size: 0.78rem; color: var(--ink-soft); font-weight: 600;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .pp-hw-record-spacer { flex: 1; min-width: 8px; }
+  .pp-hw-record-action {
+    flex: none; font-family: inherit; font-size: 0.76rem; font-weight: 700; color: var(--green-deep);
+    background: none; border: none; cursor: pointer; padding: 0; white-space: nowrap;
+  }
+  .pp-hw-record-action:hover { opacity: 0.7; }
+  .pp-hw-record.done .pp-hw-record-mid { color: var(--ink-soft); text-decoration: line-through; }
+  .pp-hw-desc { font-size: 0.78rem; color: var(--ink-soft); line-height: 1.55; margin-top: 6px; }
+  .pp-hw-empty { color: var(--ink-soft); font-size: 0.8rem; text-align: center; padding: 20px 0; }
+  .pp-hw-note { font-size: 0.7rem; color: var(--ink-soft); text-align: center; padding-top: 4px; }
   /* 계획 상담 챗봇 말풍선 안에 바로 뜨는 계획 입력 카드 — AI가 날짜를 확정하면 뜬다. */
   .pp-chat-plan-card {
     background: var(--cream); border: 1px solid var(--line); border-radius: 12px;
@@ -5271,20 +5351,50 @@
 
         <div class="sched-chat-col">
           <div class="chat-pane-title-row">
-            <h3 class="record-pane-title">📝 내 계획 상담하기</h3>
+            <h3 class="record-pane-title" id="ppChatPaneTitle"><span class="pp-pane-ico">📝</span> 내 계획 관리하기</h3>
+            <button type="button" class="pp-hw-toggle-btn" id="ppHwToggleBtn" onclick="togglePpHomeworkView()">숙제 관리하기 →</button>
           </div>
-          <div class="chat-wrap" id="chat-plan"></div>
-          <div class="sched-chat-quick-row">
-            <button type="button" class="sched-chat-quick-btn" onclick="todayPlanQuickPrompt()">📅 오늘 계획 세우기</button>
-            <button type="button" class="sched-chat-quick-btn" onclick="send('plan', '나중 날짜의 계획을 미리 세우고 싶어요.')">🗓️ 나중 계획 미리 세우기</button>
-            <button type="button" class="sched-chat-quick-btn" onclick="habitQuickPrompt()">📝 내 습관 또는 문제점 입력해두기</button>
-            <button type="button" class="sched-chat-quick-btn" onclick="planCheckQuickPrompt()">✅ 지금 계획 괜찮은지 봐주세요</button>
-          </div>
-          <div class="input-zone">
-            <div class="input-box">
-              <input id="q-plan" type="text" placeholder="예: 수학을 언제 공부하는 게 좋을까요?" autocomplete="off">
-              <button onclick="send('plan')">보내기</button>
+          <div id="ppPlanChatBody">
+            <div class="chat-wrap" id="chat-plan"></div>
+            <div class="sched-chat-quick-row">
+              <button type="button" class="sched-chat-quick-btn" onclick="todayPlanQuickPrompt()">📅 오늘 계획 세우기</button>
+              <button type="button" class="sched-chat-quick-btn" onclick="send('plan', '나중 날짜의 계획을 미리 세우고 싶어요.')">🗓️ 나중 계획 미리 세우기</button>
+              <button type="button" class="sched-chat-quick-btn" onclick="habitQuickPrompt()">📝 내 습관 또는 문제점 입력해두기</button>
+              <button type="button" class="sched-chat-quick-btn" onclick="planCheckQuickPrompt()">✅ 지금 계획 괜찮은지 봐주세요</button>
             </div>
+            <div class="input-zone">
+              <div class="input-box">
+                <input id="q-plan" type="text" placeholder="예: 수학을 언제 공부하는 게 좋을까요?" autocomplete="off">
+                <button onclick="send('plan')">보내기</button>
+              </div>
+            </div>
+          </div>
+          <div id="ppHomeworkBody" class="pp-hw-body" style="display:none;">
+            <div class="pp-hw-todo-box">
+              <div class="hwo-top-row">
+                <span class="hwo-title-group">
+                  <span class="hwo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.5 12.5l2.2 2.2L16 9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                  <span class="hwo-title">To Do List</span>
+                </span>
+                <button type="button" class="hwo-report-link" onclick="return false;">선생님 코멘트 모아보기 <span class="arrow">›</span></button>
+              </div>
+              <div class="hwo-body">
+                <div class="pp-hw-todo-list-col">
+                  <ul class="pp-hw-todo-list" id="ppHwTodoList"></ul>
+                </div>
+                <div class="pp-hw-stat-col">
+                  <div class="hwo-stat-pair">
+                    <div class="hwo-stat-row"><span class="hwo-stat-label">이번 주 누적 숙제</span><span class="hwo-stat-val" id="ppHwWeekCount">0개</span></div>
+                    <div class="hwo-stat-row"><span class="hwo-stat-label">전체 누적</span><span class="hwo-stat-val" id="ppHwTotalCount">0개</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pp-hw-subject-tabs" id="ppHwSubjectTabs"></div>
+            <div id="ppHwDetail"></div>
+            <div class="pp-hw-note">지금은 화면 예시예요 — 선생님 계정이 연동되면 실제로 낸 숙제가 이 자리에 표시돼요.</div>
           </div>
         </div>
       </div>
@@ -8630,6 +8740,159 @@
     requestAnimationFrame(() => {
       chat.style.height = left.getBoundingClientRect().height + "px";
     });
+  }
+  // "숙제 관리하기 →" 토글 — 왼쪽 사이드바는 그대로 두고, 오른쪽 챗봇 칸만 숙제 화면으로
+  // 바꿔치기한다. 아직 선생님 계정/실제 숙제 데이터가 없어서 지금은 화면 예시(하드코딩)만
+  // 보여준다 — 실제 데이터 연동은 선생님 회원가입·숙제 등록 기능이 생긴 뒤에 붙이면 된다.
+  // 과목 탭(1단계, "수학"이 아니라 수1/수2/미적분처럼 세부 과목 단위) → 그 과목 안에서
+  // 수업 날짜순 탭(2단계, 수업 시간 포함) → 그 수업에서 낸 숙제들(3단계, 숙제마다 자기
+  // 기한을 따로 가짐 — 한 수업에 숙제가 여러 개면 각자 다른 기한일 수 있다).
+  const PP_HW_DATA = {
+    "수학": [
+      { detailSubject: "수1", classDate: "2026-09-24", timeStart: "19:00", timeEnd: "21:00", tasks: [
+        { title: "인수분해 프린트 1~10번 풀기", desc: "답만 말고 풀이 과정까지 써오기", due: "2026-09-27", done: true }
+      ] },
+      { detailSubject: "수1", classDate: "2026-09-28", timeStart: "19:00", timeEnd: "21:30", tasks: [
+        { title: "쎈 수학 3단원 오답노트 정리", desc: "헷갈렸던 유형만 골라서 다시 풀어보고, 왜 틀렸는지 한 줄로 적어오기", due: "2026-10-02", done: false },
+        { title: "인수분해 심화 프린트 11~20번", desc: "이번엔 시간 재면서 풀어보기", due: "2026-10-05", done: false }
+      ] },
+      { detailSubject: "미적분", classDate: "2026-09-27", timeStart: "21:00", timeEnd: "22:30", tasks: [
+        { title: "극한 개념 정리 노트 작성", desc: "정의만 옮겨 적지 말고 예시 문제 하나씩 같이 적기", due: "2026-10-01", done: false }
+      ] }
+    ],
+    "국어": [
+      { detailSubject: "독서", classDate: "2026-09-29", timeStart: "17:00", timeEnd: "19:00", tasks: [
+        { title: "비문학 지문 2개 요약하기", desc: "문단별로 핵심 문장 하나씩 뽑아서 노트에 정리", due: "2026-10-02", done: false }
+      ] }
+    ],
+    "영어": [
+      { detailSubject: "문법", classDate: "2026-09-26", timeStart: "20:00", timeEnd: "21:30", tasks: [
+        { title: "단어장 Day 12~14 암기", desc: "주말 단어 테스트 대비", due: "2026-09-30", done: true }
+      ] }
+    ],
+    "과학": [
+      { detailSubject: "화학1", classDate: "2026-09-25", timeStart: "18:00", timeEnd: "19:30", tasks: [
+        { title: "몰 개념 문제집 20문항", desc: "틀린 문제는 오답 이유까지 적어오기", due: "2026-10-03", done: false }
+      ] }
+    ]
+  };
+  // "전체 누적" 통계는 지금 예시 데이터(PP_HW_DATA)보다 더 과거 것까지 합친 값이라는 걸
+  // 보여주려고 더한 가상의 과거분 — 실제 데이터가 생기면 이 상수는 지우고 서버 값을 쓰면 된다.
+  const PP_HW_PAST_WEEKS_COUNT = 11;
+  let ppShowingHomework = false;
+  let ppHwSubject = Object.keys(PP_HW_DATA)[0];
+  function togglePpHomeworkView() {
+    ppShowingHomework = !ppShowingHomework;
+    document.getElementById("ppPlanChatBody").style.display = ppShowingHomework ? "none" : "";
+    document.getElementById("ppHomeworkBody").style.display = ppShowingHomework ? "" : "none";
+    document.getElementById("ppChatPaneTitle").innerHTML = ppShowingHomework ? '<span class="pp-pane-ico">📚</span> 숙제 관리하기' : '<span class="pp-pane-ico">📝</span> 내 계획 관리하기';
+    document.getElementById("ppHwToggleBtn").textContent = ppShowingHomework ? "내 계획 관리하기 →" : "숙제 관리하기 →";
+    if (ppShowingHomework) renderPpHwAll();
+  }
+  function ppHwFormatMD(dateStr) {
+    const [, m, d] = dateStr.split("-").map(Number);
+    return m + "/" + d;
+  }
+  function ppHwClassesForSubject(subject) {
+    return (PP_HW_DATA[subject] || []).slice().sort((a, b) => a.classDate < b.classDate ? -1 : 1);
+  }
+  function ppHwAllTasks() {
+    const out = [];
+    Object.entries(PP_HW_DATA).forEach(([subject, classes]) => {
+      classes.forEach((cls, classIdx) => {
+        cls.tasks.forEach((task, taskIdx) => out.push({ subject, cls, classIdx, task, taskIdx }));
+      });
+    });
+    return out;
+  }
+  function renderPpHwAll() {
+    renderPpHwTodoBox();
+    renderPpHwSubjectTabs();
+    renderPpHwDetail();
+  }
+  // 홈 화면 "이번 주 한눈에 보기"처럼, 아직 완료 안 한 숙제만 To Do List로 보여주고
+  // 옆에 누적 개수를 통계처럼 붙인다. 기한이 빠른 순으로 정렬해서 급한 것부터 보이게 한다.
+  function renderPpHwTodoBox() {
+    const all = ppHwAllTasks();
+    const todo = all.filter(x => !x.task.done).sort((a, b) => a.task.due < b.task.due ? -1 : 1);
+    const listEl = document.getElementById("ppHwTodoList");
+    listEl.innerHTML = todo.length
+      ? todo.map(x =>
+          '<button type="button" class="pp-hw-todo-item" onclick="jumpToPpHwItem(\'' + x.subject + '\')">' +
+            '<span class="pp-hw-todo-bullet"></span>' +
+            '<span class="pp-hw-todo-subject-tag">' + escapeHtml(x.cls.detailSubject) + '</span>' +
+            '<span class="pp-hw-todo-title">' + escapeHtml(x.task.title) + '</span>' +
+            '<span class="pp-hw-todo-due">기한 ' + ppHwFormatMD(x.task.due) + '</span>' +
+          '</button>'
+        ).join("")
+      : '<li class="pp-hw-todo-empty">완료 안 한 숙제가 없어요.</li>';
+    document.getElementById("ppHwWeekCount").textContent = all.length + "개";
+    document.getElementById("ppHwTotalCount").textContent = (all.length + PP_HW_PAST_WEEKS_COUNT) + "개";
+  }
+  function jumpToPpHwItem(subject) {
+    ppHwSubject = subject;
+    renderPpHwSubjectTabs();
+    renderPpHwDetail();
+  }
+  // 1단계: 큰 과목(국어/수학/영어/과학)만 탭으로 나열 — 수1/미적분 같은 세부 과목은
+  // 탭이 아니라 그 안 각 수업(세션) 줄에 딸린 정보로 들어간다.
+  function renderPpHwSubjectTabs() {
+    document.getElementById("ppHwSubjectTabs").innerHTML = Object.keys(PP_HW_DATA).map(subject =>
+      '<button type="button" class="pp-hw-subject-tab' + (subject === ppHwSubject ? " on" : "") + '" onclick="selectPpHwSubject(\'' + subject + '\')">' + escapeHtml(subject) + '</button>'
+    ).join("");
+  }
+  function selectPpHwSubject(subject) {
+    ppHwSubject = subject;
+    renderPpHwSubjectTabs();
+    renderPpHwDetail();
+  }
+  // 2단계: 고른 과목의 수업(세션)들을 날짜순으로 세로 나열 — 각 줄은 그 수업 하나를 한 줄
+  // 요약("YYYY-MM-DD · 세부과목 · 시작~종료 | 숙제 기한 ...")으로 접어두고,
+  // 누르면 그 수업에서 낸 숙제(제목·기한·완료 액션)가 펼쳐진다.
+  let ppHwExpandedSessions = new Set();
+  function ppHwSessionKey(subject, classIdx) { return subject + "|" + classIdx; }
+  function togglePpHwSession(subject, classIdx) {
+    const key = ppHwSessionKey(subject, classIdx);
+    if (ppHwExpandedSessions.has(key)) ppHwExpandedSessions.delete(key);
+    else ppHwExpandedSessions.add(key);
+    renderPpHwDetail();
+  }
+  function renderPpHwDetail() {
+    const classes = ppHwClassesForSubject(ppHwSubject);
+    const wrap = document.getElementById("ppHwDetail");
+    if (!classes.length) { wrap.innerHTML = '<div class="pp-hw-empty">숙제가 없어요.</div>'; return; }
+    wrap.innerHTML = classes.map((cls, classIdx) => {
+      const expanded = ppHwExpandedSessions.has(ppHwSessionKey(ppHwSubject, classIdx));
+      const allDone = cls.tasks.every(t => t.done);
+      const dues = cls.tasks.map(t => ppHwFormatMD(t.due)).join("·");
+      const title = cls.classDate + " · " + escapeHtml(cls.detailSubject) + " · " + cls.timeStart + " ~ " + cls.timeEnd +
+        ' <span class="pp-hw-session-due">| 숙제 기한 ' + dues + '</span>';
+      const detailHtml = cls.tasks.map((task, taskIdx) =>
+        '<div class="pp-hw-record' + (task.done ? " done" : "") + '">' +
+          '<div class="pp-hw-record-row">' +
+            '<span class="pp-hw-record-mid">' + escapeHtml(task.title) + ' · 기한 ' + ppHwFormatMD(task.due) + '</span>' +
+            '<span class="pp-hw-record-spacer"></span>' +
+            '<button type="button" class="pp-hw-record-action" onclick="togglePpHwDone(' + classIdx + ', ' + taskIdx + ')">' + (task.done ? "완료 취소하기" : "완료로 표시하기") + '</button>' +
+          '</div>' +
+          '<div class="pp-hw-desc">' + escapeHtml(task.desc) + '</div>' +
+        '</div>'
+      ).join("");
+      return '<div class="pp-hw-session">' +
+        '<button type="button" class="pp-hw-session-btn" onclick="togglePpHwSession(\'' + ppHwSubject + '\', ' + classIdx + ')">' +
+          '<span class="pp-hw-session-title">' + title + '</span>' +
+          '<span class="pp-hw-session-status' + (allDone ? " done" : "") + '">' + (allDone ? "숙제 완료" : "숙제 미완료") + '</span>' +
+          '<span class="pp-hw-session-chevron">' + (expanded ? "︿" : "﹀") + '</span>' +
+        '</button>' +
+        (expanded ? '<div class="pp-hw-session-detail">' + detailHtml + '</div>' : "") +
+      '</div>';
+    }).join("");
+  }
+  function togglePpHwDone(classIdx, taskIdx) {
+    const cls = ppHwClassesForSubject(ppHwSubject)[classIdx];
+    const task = cls && cls.tasks[taskIdx];
+    if (task) task.done = !task.done;
+    renderPpHwTodoBox();
+    renderPpHwDetail();
   }
   function ppCalShift(delta) {
     ppCalMonth += delta;
