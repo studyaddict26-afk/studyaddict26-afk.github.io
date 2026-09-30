@@ -1052,12 +1052,16 @@
      .consult-page가 이 규칙 없이 기본(블록, 높이 제한 없음) 상태로 있으면, 안의
      .sched-manage-layout이 기댈 "정해진 높이"가 없어서 왼쪽 칸 내용물 키만큼 세로로
      한없이 늘어나고(그러다 오른쪽 챗봇 칸까지 같이 늘어남), 화면이 넓을 때 특히 심해진다. */
-  #view-scheduleManage .consult-page { display: flex; flex-direction: column; align-items: flex-start; flex: 1; min-height: 0; }
-  #view-scheduleManage .sched-manage-layout { align-self: stretch; }
-  /* 내 플래너 관리하기는 스케줄 페이지와 달리 시간표 박스가 내용물 크기만큼만 차지해서(flex:none),
-     .consult-page를 뷰포트 높이까지 늘리지 않아도 된다 — 오히려 그렇게 하면 오른쪽 챗봇 칸이
-     왼쪽 칸(달력 등)의 실제 내용물보다 더 늘어나 두 박스 아랫줄이 안 맞게 된다. .consult-page를
-     기본(내용물 크기) 그대로 둬서, 행 높이가 왼쪽 칸의 실제 내용물 높이에 맞춰지게 한다. */
+  /* 플래너 페이지도 스케줄 페이지와 똑같이 뷰포트 남는 높이까지 늘어나게 한다 — 예전엔 이걸
+     빼서 내용물 크기만큼만 차지하게 했었는데, 그러면 화면(특히 아이패드)에 따라 두 페이지의
+     가로세로 비율이 서로 달라지고 아래쪽이 화면 밖으로 잘리는 문제가 있었다. 두 페이지가 항상
+     똑같이 생기도록, 아래 시간표 박스(.sched-timetable-box)도 스케줄 페이지처럼 flex:1로
+     남는 공간을 채우게 뒀다 — 달력 내용물 높이는 고정이라 박스 안쪽에 여백이 좀 생기지만,
+     박스 바깥에 빈 공간이 생기는 것보다는 훨씬 낫다. */
+  #view-scheduleManage .consult-page,
+  #view-plannerPage .consult-page { display: flex; flex-direction: column; align-items: flex-start; flex: 1; min-height: 0; }
+  #view-scheduleManage .sched-manage-layout,
+  #view-plannerPage .sched-manage-layout { align-self: stretch; }
   .sched-manage-layout { display: flex; gap: 20px; align-items: stretch; flex: 1; min-height: 480px; }
   .sched-left-col { flex: 0 0 190px; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
   .sched-sidebar {
@@ -1111,17 +1115,6 @@
   }
   .sched-sidebar-link-btn:hover { border-color: var(--green); background: var(--green-soft); }
   /* ── 내 플래너 관리하기 (내 스케줄 관리하기와 같은 레이아웃, 왼쪽 칸만 살짝 더 넓게) ── */
-  /* 기본 .sched-manage-layout엔 min-height:480px 바닥값이 있는데, 이 페이지는 내용물
-     실제 높이가 그보다 작아질 수 있어서(계획 박스 150px 고정 등) 그 바닥값 때문에 억지로
-     늘어나(align-items:stretch) 왼쪽 칸 안에 빈 공간이 다시 생긴다 — 이 페이지는 그 바닥값을
-     빼고 내용물 높이 그대로 쓴다. */
-  /* max-height도 같이 걸어서, 챗봇 대화가 쌓여도 이 행 자체가 계속 커지지 않고 여기서
-     멈추게 한다 — 그래야 안에 있는 .chat-wrap(flex:1;overflow-y:auto)이 "정해진 높이"를
-     갖게 되어 박스가 늘어나는 대신 그 안에서만 스크롤된다.
-     .sched-chat-col 자체에도 똑같이 max-height를 걸어둔다 — 행(row)의 auto-height 계산이
-     늘어난 자식(챗봇 칸)의 내용물 크기를 그대로 반영해버리는 경우까지 막아주는 이중 안전장치. */
-  #view-plannerPage .sched-manage-layout { min-height: 0; max-height: 620px; }
-  #view-plannerPage .sched-chat-col { max-height: 620px; }
   .pp-layout.sched-manage-layout { --pp-left-w: 230px; }
   .pp-layout .sched-left-col { flex: 0 0 var(--pp-left-w); }
   .pp-plan-inner { gap: 10px; }
@@ -1140,10 +1133,6 @@
   .pp-note-box { flex: none; }
   .pp-note-box .planner-special-note-input { min-height: 20px; max-height: 40px; padding: 4px 8px; }
   .pp-note-box .planner-special-note-input::placeholder { font-size: 0.68rem; }
-  /* 시간표 박스(.sched-timetable-box)는 원래 남는 세로 공간을 다 채우도록 flex:1인데,
-     달력은 사진과 달리 내용물 높이가 정해져 있어서 그대로 두면 박스 안쪽에 빈 공간이
-     남는다 — 이 페이지에서는 내용물 크기 그대로 박스가 딱 맞게 감싸도록 한다. */
-  #view-plannerPage .sched-timetable-box { flex: none; }
   .pp-calendar { display: flex; flex-direction: column; }
   .pp-cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
   .pp-cal-nav {
@@ -8738,18 +8727,6 @@
       '</div>' +
       '<div class="pp-cal-weekdays">' + WEEKDAY_LABELS.map(w => '<span>' + w + '</span>').join("") + '</div>' +
       '<div class="pp-cal-grid">' + cells + '</div>';
-    syncPpColumnHeights();
-  }
-  // 왼쪽 칸(달력 등)이 실제로 그려진 픽셀 높이를 그대로 재서 챗봇 칸 높이에 맞춘다 — 5주짜리
-  // 달이든 6주짜리 달이든, 챗봇 칸 아랫줄이 항상 왼쪽 칸 아랫줄과 같은 위치에 오도록(늘어나기만
-  // 하고 줄어들지 않는 버그가 있었어서, 매번 그 순간의 실제 높이로 다시 맞춘다 — 늘고 줄고 다 됨).
-  function syncPpColumnHeights() {
-    const left = document.querySelector("#view-plannerPage .sched-left-col");
-    const chat = document.querySelector("#view-plannerPage .sched-chat-col");
-    if (!left || !chat) return;
-    requestAnimationFrame(() => {
-      chat.style.height = left.getBoundingClientRect().height + "px";
-    });
   }
   // "숙제 관리하기 →" 토글 — 왼쪽 사이드바는 그대로 두고, 오른쪽 챗봇 칸만 숙제 화면으로
   // 바꿔치기한다. 아직 선생님 계정/실제 숙제 데이터가 없어서 지금은 화면 예시(하드코딩)만
