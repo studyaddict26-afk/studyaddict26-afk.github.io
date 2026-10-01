@@ -1125,6 +1125,14 @@
   /* 완전 고정 height — min/max로 범위를 두면 항목이 늘어날 때마다 그 범위 안에서도 계속
      커져서 아래(특이사항 메모·달력) 박스들이 밀려 내려간다. 항목 몇 개든 늘 이 크기 그대로,
      넘치면 그 안에서만 스크롤된다. */
+  .pp-plan-date-row { display: flex; align-items: center; gap: 6px; margin-bottom: 14px; }
+  .pp-plan-date-row .sched-sidebar-date { flex: 1; margin-bottom: 0; }
+  .pp-plan-edit-btn {
+    font-family: inherit; font-size: 0.68rem; font-weight: 700; color: var(--green-deep);
+    background: none; border: none; cursor: pointer; padding: 0; white-space: nowrap; flex: none;
+  }
+  .pp-plan-edit-btn:hover { opacity: 0.7; }
+  .pp-plan-edit-btn.on { color: var(--ink-soft); }
   .pp-plan-blocks { display: flex; flex-direction: column; gap: 12px; height: 108px; overflow-y: auto; }
   .pp-plan-empty { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--ink-soft); font-size: 0.8rem; }
   .pp-plan-blocks .planner-block-head { font-size: 0.72rem; }
@@ -5334,7 +5342,10 @@
         <div class="sched-left-col">
           <aside class="sched-sidebar">
             <div class="sched-sidebar-inner pp-plan-inner">
-              <div class="sched-sidebar-date" id="ppSidebarDate">-</div>
+              <div class="pp-plan-date-row">
+                <div class="sched-sidebar-date" id="ppSidebarDate">-</div>
+                <button type="button" class="pp-plan-edit-btn" id="ppPlanEditBtn" onclick="togglePpPlanEditMode()">수정하기</button>
+              </div>
               <div class="pp-plan-blocks" id="ppPlanBlocks"></div>
             </div>
             <div class="pp-note-box">
@@ -8391,6 +8402,9 @@
   let ppSelectedDate = null;
   let ppPlanItems = [];
   const ppAddRowOpen = {};
+  // 숙제 확인하면서도 바로 플래너를 고칠 수 있게 "수정하기" 버튼으로 켜고 끄는 편집 모드.
+  // 지난 날짜는 기록이라 편집 불가 — 오늘/미래 날짜를 고를 때만 버튼이 보인다.
+  let ppPlanEditMode = false;
   let ppCalYear = null, ppCalMonth = null;
   // 선택한 날짜가 이 화면을 열었을 때 이미 항목이 있었는지 — 있었으면(이미 최초 계획을 세운 뒤라면)
   // 이번에 새로 추가하는 항목은 "수정한 계획"(is_initial=0)으로, 없었으면(처음 계획을 쓰는 거라면)
@@ -8419,6 +8433,13 @@
     const wrap = document.getElementById("ppPlanBlocks");
     if (!wrap) return;
     const today = getLocalDateKey();
+    ppPlanEditMode = false;
+    const editBtn = document.getElementById("ppPlanEditBtn");
+    if (editBtn) {
+      editBtn.style.display = dateStr < today ? "none" : "";
+      editBtn.textContent = "수정하기";
+      editBtn.classList.remove("on");
+    }
     if (dateStr >= today) {
       // 오늘이거나 미래 날짜 — 미리 계획을 써둘 수 있게 편집 가능한 형태로 보여준다.
       wrap.innerHTML = '<div class="planner-orig-empty">불러오는 중...</div>';
@@ -8477,12 +8498,11 @@
     ).join("");
   }
 
-  // 오늘/미래 날짜일 때 호출된다 — 이 사이드바는 이제 완전히 읽기 전용 표시 용도다.
-  // "+ 추가하기"·체크박스·삭제 버튼 전부 없앴다 — 계획 추가/수정은 오른쪽 챗봇을 통해서만
-  // 하고("나중 계획 세우기"/"고정 스케줄 변경하기" 등), 완료 체크는 "오늘의 공부" 페이지의
-  // "계획 수정하면서 공부하기"에서만 한다. 오늘 날짜는 그 완료 상태(선 긋기)를 그대로 보여주고
-  // (같은 holo_plans 데이터라 항상 동일하게 반영됨), 미래 날짜는 아직 완료될 수 없으니
-  // 자연히 전부 완료 전 모양으로 보인다.
+  // 오늘/미래 날짜일 때 호출된다. 기본은 읽기 전용 표시이고, "수정하기" 버튼으로
+  // ppPlanEditMode를 켜면 그때만 체크박스·삭제·"+ 추가하기"가 나타난다 — 숙제를 확인하다가
+  // 바로 그 자리에서 계획을 고칠 수 있게 하기 위함. 완료 체크는 "오늘의 공부" 페이지의
+  // "계획 수정하면서 공부하기"에서도 똑같이 할 수 있고(같은 holo_plans 데이터), 미래 날짜는
+  // 아직 완료될 수 없으니 자연히 전부 완료 전 모양으로 보인다.
   function renderPpPlanBlocks() {
     const wrap = document.getElementById("ppPlanBlocks");
     if (!wrap) return;
@@ -8490,17 +8510,42 @@
       const items = ppPlanItems.filter(it => it.block === block && it.active);
       const rows = items.map(it =>
         '<div class="planner-task-row' + (it.done ? ' done' : '') + '" data-id="' + it.id + '">' +
+          (ppPlanEditMode ? '<div class="planner-task-check" onclick="togglePpPlanItem(' + it.id + ')"></div>' : '') +
           '<span class="planner-task-text">' +
             (it.subject ? '<span class="planner-task-subject">[' + escapeHtml(it.subject) + ']</span>' : '') +
             '<span class="planner-task-content">' + escapeHtml(it.text) + '</span>' +
           '</span>' +
+          (ppPlanEditMode ? '<button type="button" class="planner-task-del" onclick="deletePpPlanItem(' + it.id + ')" aria-label="삭제">×</button>' : '') +
         '</div>'
       ).join("");
+      const addRow = (ppPlanEditMode && ppAddRowOpen[block])
+        ? '<div class="planner-task-row planner-task-new">' +
+            '<div class="planner-task-check-ghost"></div>' +
+            '<input type="text" class="planner-new-subject-input" id="ppNewSubject-' + block + '" placeholder="과목" ' +
+              'onkeydown="if(event.key===\'Enter\'){submitPpNewRow(\'' + block + '\');event.preventDefault();}" ' +
+              'onblur="handlePpNewRowBlur(\'' + block + '\')">' +
+            '<input type="text" class="planner-new-content-input" id="ppNewContent-' + block + '" placeholder="내용" ' +
+              'onkeydown="if(event.key===\'Enter\'){submitPpNewRow(\'' + block + '\');event.preventDefault();}" ' +
+              'onblur="handlePpNewRowBlur(\'' + block + '\')">' +
+          '</div>'
+        : '';
       return '<div class="planner-block" data-block="' + block + '">' +
-        '<div class="planner-block-head-row"><span class="planner-block-head">' + block + '</span></div>' +
-        '<div class="planner-tasks">' + rows + '</div>' +
+        '<div class="planner-block-head-row">' +
+          '<span class="planner-block-head">' + block + '</span>' +
+          (ppPlanEditMode ? '<button type="button" class="planner-block-add-btn" onclick="showPpAddRow(\'' + block + '\')">+ 추가하기</button>' : '') +
+        '</div>' +
+        '<div class="planner-tasks">' + rows + addRow + '</div>' +
       '</div>';
     }).join("");
+  }
+  function togglePpPlanEditMode() {
+    ppPlanEditMode = !ppPlanEditMode;
+    renderPpPlanBlocks();
+    const btn = document.getElementById("ppPlanEditBtn");
+    if (btn) {
+      btn.textContent = ppPlanEditMode ? "완료" : "수정하기";
+      btn.classList.toggle("on", ppPlanEditMode);
+    }
   }
   function showPpAddRow(block) {
     ppAddRowOpen[block] = true;
