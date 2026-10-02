@@ -386,12 +386,82 @@
   body.is-admin .overlay,
   body.is-admin .topbar { display: none; }
   body.is-teacher .sidebar,
-  body.is-teacher .overlay { display: none; }
-  .th-logout-btn {
-    font-family: inherit; font-size: 0.78rem; font-weight: 700; color: var(--ink-soft);
-    background: none; border: none; cursor: pointer; padding: 0; margin-bottom: 14px;
+  body.is-teacher .overlay,
+  body.is-teacher .topbar { display: none; }
+  /* ── 선생님 대시보드 — 네이비 사이드바 + 회백색 본문(통계 카드/요약/학부모 보고서 미리보기) ── */
+  #view-teacherHome { background: #F4F4F5; }
+  .td-shell { flex: 1; min-height: 0; display: flex; }
+  .td-side {
+    flex: none; width: 92px; background: #0D2155; color: #C9D4F0;
+    display: flex; flex-direction: column; gap: 4px; padding: 14px 0; overflow-y: auto;
   }
-  .th-logout-btn:hover { color: var(--ink); }
+  .td-nav {
+    display: flex; flex-direction: column; align-items: center; gap: 7px;
+    font-family: inherit; font-size: 0.72rem; font-weight: 600; color: inherit;
+    background: none; border: none; cursor: pointer; padding: 16px 4px;
+  }
+  .td-nav svg { width: 22px; height: 22px; }
+  .td-nav:hover { color: #fff; background: rgba(255,255,255,0.06); }
+  .td-nav.on { color: #fff; background: #1A3A86; font-weight: 800; }
+  .td-nav-logo {
+    width: 38px; height: 38px; border-radius: 50%; background: #1F5CE0; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .td-nav-logo svg { width: 20px; height: 20px; }
+  .td-main { flex: 1; min-width: 0; overflow-y: auto; padding: 30px 34px 56px; }
+  .td-pane { display: none; width: 100%; max-width: 1080px; margin: 0 auto; }
+  .td-pane.on { display: block; }
+  .td-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; }
+  .td-head h2 { font-size: 1.45rem; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
+  .td-head-sub { font-size: 0.82rem; font-weight: 600; color: var(--ink-soft); }
+  .td-card { background: #fff; border: 1px solid #E8E8EA; border-radius: 16px; padding: 20px 22px; box-shadow: 0 1px 2px rgba(15,23,42,0.03); }
+  .td-stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 14px; }
+  .td-stat-label { font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); }
+  .td-stat-val { margin: 6px 0 8px; display: flex; align-items: baseline; gap: 3px; }
+  .td-stat-val b { font-size: 2rem; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
+  .td-stat-val small { font-size: 0.9rem; font-weight: 700; color: var(--ink); }
+  .td-spark { height: 38px; }
+  .td-spark svg { width: 100%; height: 100%; display: block; }
+  .td-stat-delta { margin-top: 8px; font-size: 0.74rem; font-weight: 600; color: var(--ink-soft); }
+  .td-row2 { display: grid; grid-template-columns: 3fr 2fr; gap: 14px; }
+  .td-card-title { display: flex; align-items: center; gap: 8px; font-size: 0.92rem; font-weight: 800; color: var(--ink); margin-bottom: 16px; }
+  .td-card-title svg { width: 18px; height: 18px; flex: none; }
+  .td-summary-body { display: flex; align-items: center; gap: 28px; }
+  .td-summary-rows { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+  .td-sum-row { display: flex; align-items: center; gap: 12px; font-size: 0.82rem; }
+  .td-sum-label { flex: none; width: 122px; font-weight: 600; color: var(--ink-soft); }
+  .td-sum-bar { flex: 1; height: 6px; border-radius: 999px; background: #E6ECF7; overflow: hidden; }
+  .td-sum-bar i { display: block; height: 100%; width: 0; background: #1F5CE0; border-radius: 999px; }
+  .td-sum-val { margin-left: auto; font-weight: 800; color: var(--ink); white-space: nowrap; }
+  .td-donut { position: relative; flex: none; width: 128px; height: 128px; }
+  .td-donut svg { width: 100%; height: 100%; display: block; }
+  .td-donut-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .td-donut-center b { font-size: 1.5rem; font-weight: 800; color: var(--ink); }
+  .td-donut-center span { font-size: 0.66rem; font-weight: 600; color: var(--ink-soft); }
+  .td-soon-pill { margin-left: auto; font-size: 0.64rem; font-weight: 800; color: var(--ink-soft); background: #F1F1F3; border-radius: 999px; padding: 3px 10px; }
+  .td-parent-demo { opacity: 0.6; display: flex; flex-direction: column; gap: 12px; }
+  .td-parent-msg { display: flex; gap: 10px; background: #F7F7F8; border-radius: 12px; padding: 12px 14px; font-size: 0.78rem; line-height: 1.55; color: var(--ink); }
+  .td-parent-avatar { flex: none; width: 34px; height: 34px; border-radius: 50%; background: #FDE7D5; color: #B45309; display: flex; align-items: center; justify-content: center; }
+  .td-parent-avatar svg { width: 18px; height: 18px; }
+  .td-parent-name { font-weight: 800; margin-bottom: 2px; }
+  .td-parent-file { display: flex; align-items: center; gap: 10px; border: 1px solid #E8E8EA; border-radius: 12px; padding: 10px 14px; font-size: 0.78rem; font-weight: 700; color: var(--ink); }
+  .td-parent-file-ico { width: 30px; height: 30px; border-radius: 8px; background: #E4ECFD; color: #1F5CE0; display: flex; align-items: center; justify-content: center; }
+  .td-parent-file-ico svg { width: 16px; height: 16px; }
+  .td-settings-card { max-width: 420px; display: flex; flex-direction: column; gap: 14px; }
+  .td-settings-row { display: flex; align-items: center; font-size: 0.86rem; }
+  .td-logout-btn {
+    align-self: flex-start; font-family: inherit; font-size: 0.8rem; font-weight: 700; color: #B42318;
+    background: #FEF3F2; border: 1px solid #FECDCA; border-radius: 8px; padding: 9px 18px; cursor: pointer;
+  }
+  .td-logout-btn:hover { opacity: 0.85; }
+  @media (max-width: 860px) {
+    .td-side { width: 68px; }
+    .td-nav { font-size: 0.64rem; }
+    .td-main { padding: 22px 16px 48px; }
+    .td-stat-row, .td-row2 { grid-template-columns: 1fr; }
+    .td-summary-body { flex-direction: column; align-items: stretch; }
+    .td-donut { align-self: center; }
+  }
 
   .topbar {
     background: var(--cream);
@@ -5560,11 +5630,97 @@
 
   <!-- ─── 선생님 대시보드 — 내 학생 목록 + 숙제 배정 ─── -->
   <section class="view" id="view-teacherHome">
-    <div class="consult-page">
-      <button type="button" class="th-logout-btn" onclick="teacherLogout()">로그아웃</button>
-      <span class="eyebrow">TEACHER</span>
-      <h2>내 학생 관리</h2>
-      <div class="split"></div>
+    <div class="td-shell">
+      <aside class="td-side">
+        <button type="button" class="td-nav on" id="tdNav-dash" onclick="tdShowTab('dash')">
+          <span class="td-nav-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-4 9 4-9 4-9-4z"/><path d="M7 11.5V15c0 1.4 2.2 3 5 3s5-1.6 5-3v-3.5"/><path d="M21 9v5"/></svg></span>
+          <span class="td-nav-label">대시보드</span>
+        </button>
+        <button type="button" class="td-nav" id="tdNav-students" onclick="tdShowTab('students')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+          <span class="td-nav-label">학생</span>
+        </button>
+        <button type="button" class="td-nav" id="tdNav-lessons" onclick="tdShowTab('lessons')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5z"/><path d="M9 12h6M9 16h4"/></svg>
+          <span class="td-nav-label">수업기록</span>
+        </button>
+        <button type="button" class="td-nav" id="tdNav-counsel" onclick="tdShowTab('counsel')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01"/></svg>
+          <span class="td-nav-label">상담</span>
+        </button>
+        <button type="button" class="td-nav" id="tdNav-report" onclick="tdShowTab('report')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 13h6M9 17h4"/></svg>
+          <span class="td-nav-label">보고서</span>
+        </button>
+        <button type="button" class="td-nav" id="tdNav-settings" onclick="tdShowTab('settings')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/></svg>
+          <span class="td-nav-label">설정</span>
+        </button>
+      </aside>
+
+      <main class="td-main">
+        <div class="td-pane on" id="tdPane-dash">
+          <div class="td-head"><h2>대시보드</h2><span class="td-head-sub" id="tdGreeting"></span></div>
+          <div class="td-stat-row">
+            <div class="td-card td-stat">
+              <div class="td-stat-label">전체 학생</div>
+              <div class="td-stat-val"><b id="tdStatStudents">-</b><small>명</small></div>
+              <div class="td-spark" id="tdSparkStudents"></div>
+              <div class="td-stat-delta" id="tdDeltaStudents">&nbsp;</div>
+            </div>
+            <div class="td-card td-stat">
+              <div class="td-stat-label">이번 주 수업</div>
+              <div class="td-stat-val"><b id="tdStatSessions">-</b><small>건</small></div>
+              <div class="td-spark" id="tdSparkSessions"></div>
+              <div class="td-stat-delta" id="tdDeltaSessions">&nbsp;</div>
+            </div>
+            <div class="td-card td-stat">
+              <div class="td-stat-label">미완료 숙제</div>
+              <div class="td-stat-val"><b id="tdStatPending">-</b><small>건</small></div>
+              <div class="td-spark" id="tdSparkPending"></div>
+              <div class="td-stat-delta" id="tdDeltaPending">&nbsp;</div>
+            </div>
+          </div>
+          <div class="td-row2">
+            <div class="td-card td-summary">
+              <div class="td-card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#1F5CE0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+                <span>이번 주 요약</span>
+              </div>
+              <div class="td-summary-body">
+                <div class="td-summary-rows">
+                  <div class="td-sum-row"><span class="td-sum-label">이번 주 수업 시간</span><span class="td-sum-val" id="tdSumHours">-</span></div>
+                  <div class="td-sum-row"><span class="td-sum-label">숙제 완료율</span><span class="td-sum-bar"><i id="tdSumBar"></i></span><span class="td-sum-val" id="tdSumRate">-</span></div>
+                  <div class="td-sum-row"><span class="td-sum-label">등록한 숙제</span><span class="td-sum-val" id="tdSumTasks">-</span></div>
+                  <div class="td-sum-row"><span class="td-sum-label">학생당 평균 숙제</span><span class="td-sum-val" id="tdSumAvg">-</span></div>
+                </div>
+                <div class="td-donut" id="tdDonut"></div>
+              </div>
+            </div>
+            <div class="td-card td-parent">
+              <div class="td-card-title">
+                <span>학부모 보고서 미리보기</span>
+                <span class="td-soon-pill">준비 중</span>
+              </div>
+              <div class="td-parent-demo">
+                <div class="td-parent-msg">
+                  <span class="td-parent-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></span>
+                  <div class="td-parent-text">
+                    <div class="td-parent-name">학부모님</div>
+                    <div>이번 주 학습 리포트를 전달드립니다. 학생의 학습 현황과 선생님 코멘트를 확인해주세요.</div>
+                  </div>
+                </div>
+                <div class="td-parent-file">
+                  <span class="td-parent-file-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg></span>
+                  <span class="td-parent-file-name">주간 학습 리포트.pdf</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="td-pane" id="tdPane-students">
+          <div class="td-head"><h2>학생</h2></div>
 
       <div class="ac-connect-box">
         <div class="ac-connect-label">학생 연결하기</div>
@@ -5603,6 +5759,29 @@
         <div class="th-section-title">등록한 수업/숙제</div>
         <div id="thHwList"></div>
       </div>
+        </div>
+
+        <div class="td-pane" id="tdPane-lessons">
+          <div class="td-head"><h2>수업기록</h2></div>
+          <p class="hub-coming-soon">준비중입니다</p>
+        </div>
+        <div class="td-pane" id="tdPane-counsel">
+          <div class="td-head"><h2>상담</h2></div>
+          <p class="hub-coming-soon">준비중입니다</p>
+        </div>
+        <div class="td-pane" id="tdPane-report">
+          <div class="td-head"><h2>보고서</h2></div>
+          <p class="hub-coming-soon">준비중입니다</p>
+        </div>
+        <div class="td-pane" id="tdPane-settings">
+          <div class="td-head"><h2>설정</h2></div>
+          <div class="td-card td-settings-card">
+            <div class="td-settings-row"><span class="td-sum-label">선생님</span><span class="td-sum-val" id="tdSettingsName"></span></div>
+            <div class="td-settings-row"><span class="td-sum-label">아이디</span><span class="td-sum-val" id="tdSettingsId"></span></div>
+            <button type="button" class="td-logout-btn" onclick="teacherLogout()">로그아웃</button>
+          </div>
+        </div>
+      </main>
     </div>
   </section>
 
@@ -7995,7 +8174,7 @@
     if (view === "mexlist") initMexlist();
     if (view === "ranking") switchRankingTab("today"); // 매번 "오늘의 랭킹" 탭부터 새로 불러온다
     if (view === "academyHome") loadAcademyData();
-    if (view === "teacherHome") loadTeacherStudents();
+    if (view === "teacherHome") tdShowTab("dash");
   }
 
   // ── 홈 화면 Academy 홍보 박스 — 고정 문구 하나 대신, 10초마다 다른 홍보 슬라이드로 바뀐다.
@@ -14375,6 +14554,127 @@
   let teacherStudentsCache = [];
   let thOpenStudentId = null, thOpenStudentName = null;
   let thHomeworkCache = [];
+  // ── 선생님 대시보드: 사이드바 탭 전환 + 통계(실제 연결/숙제 데이터로 계산) ──
+  const TD_TABS = ["dash", "students", "lessons", "counsel", "report", "settings"];
+  function tdShowTab(name) {
+    TD_TABS.forEach(t => {
+      document.getElementById("tdNav-" + t).classList.toggle("on", t === name);
+      document.getElementById("tdPane-" + t).classList.toggle("on", t === name);
+    });
+    if (name === "dash") loadTeacherDashboard();
+    if (name === "students") { closeTeacherStudent(); loadTeacherStudents(); }
+    if (name === "settings") {
+      document.getElementById("tdSettingsName").textContent = localStorage.getItem("holoTeacherName") || "-";
+      document.getElementById("tdSettingsId").textContent = localStorage.getItem("holoTeacherId") || "-";
+    }
+  }
+  function tdSpark(vals, color) {
+    const w = 100, h = 36, pad = 4;
+    const max = Math.max.apply(null, vals), min = Math.min.apply(null, vals);
+    const span = max - min;
+    const line = vals.map((v, i) => {
+      const x = (i / (vals.length - 1)) * w;
+      const y = span === 0 ? h - pad : h - pad - ((v - min) / span) * (h - pad * 2);
+      return (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1);
+    }).join(" ");
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none"><path d="' + line + '" fill="none" stroke="' + color + '" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  }
+  function tdDonut(pct) {
+    const r = 46, c = 2 * Math.PI * r, off = c * (1 - pct / 100);
+    const arc = pct > 0
+      ? '<circle cx="64" cy="64" r="' + r + '" fill="none" stroke="#1F5CE0" stroke-width="13" stroke-linecap="round" stroke-dasharray="' + c.toFixed(1) + '" stroke-dashoffset="' + off.toFixed(1) + '" transform="rotate(-90 64 64)"/>'
+      : '';
+    return '<svg viewBox="0 0 128 128"><circle cx="64" cy="64" r="' + r + '" fill="none" stroke="#E6ECF7" stroke-width="13"/>' + arc + '</svg>' +
+      '<div class="td-donut-center"><b>' + (Math.round(pct * 10) / 10) + '</b><span>숙제 완료율(%)</span></div>';
+  }
+  function tdMondayOf(d) {
+    const m = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    const dow = m.getDay();
+    m.setDate(m.getDate() + (dow === 0 ? -6 : 1 - dow));
+    return m;
+  }
+  function tdWeeksAgo(d, curMon) {
+    return Math.round((curMon - tdMondayOf(d)) / 604800000);
+  }
+  function tdMinutes(hhmm) {
+    const p = (hhmm || "").split(":");
+    return (Number(p[0]) || 0) * 60 + (Number(p[1]) || 0);
+  }
+  function tdSignedDelta(n) { return n > 0 ? "+" + n : String(n); }
+  function loadTeacherDashboard() {
+    const id = localStorage.getItem("holoTeacherId");
+    if (!id) return;
+    document.getElementById("tdGreeting").textContent = (localStorage.getItem("holoTeacherName") || id) + " 선생님";
+    Promise.all([
+      db.collection("teacherStudentLinks").where("teacherId", "==", id).get(),
+      db.collection("academyHomework").where("teacherId", "==", id).get()
+    ]).then(res => {
+      teacherStudentsCache = res[0].docs.map(d => d.data());
+      renderTeacherDashboard(teacherStudentsCache, res[1].docs.map(d => d.data()));
+    }).catch(err => console.error(err));
+  }
+  function renderTeacherDashboard(links, hws) {
+    const WEEKS = 8;
+    const now = new Date();
+    const curMon = tdMondayOf(now);
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    // 전체 학생 — 주 단위 누적 추이 + 이번 달 신규
+    const linkDates = links.map(l => (l.linkedAt && l.linkedAt.toDate) ? l.linkedAt.toDate() : now);
+    const studentSeries = [];
+    for (let i = WEEKS - 1; i >= 0; i--) {
+      const end = new Date(curMon.getTime() + (7 - i * 7) * 86400000);
+      studentSeries.push(linkDates.filter(d => d < end).length);
+    }
+    const monthNew = linkDates.filter(d => d >= monthStart).length;
+    document.getElementById("tdStatStudents").textContent = links.length;
+    document.getElementById("tdSparkStudents").innerHTML = tdSpark(studentSeries, "#2563EB");
+    document.getElementById("tdDeltaStudents").textContent = monthNew > 0 ? "이번 달 +" + monthNew : "이번 달 새로 연결된 학생 없음";
+
+    // 이번 주 수업 — 주 단위 수업 건수 추이, 지난 주 대비
+    const sessionSeries = new Array(WEEKS).fill(0);
+    let thisWeekMin = 0;
+    hws.forEach(h => {
+      const ago = tdWeeksAgo(new Date(h.classDate + "T00:00:00"), curMon);
+      if (ago >= 0 && ago < WEEKS) sessionSeries[WEEKS - 1 - ago]++;
+      if (ago === 0) {
+        let m = tdMinutes(h.timeEnd) - tdMinutes(h.timeStart);
+        if (m < 0) m += 1440;
+        thisWeekMin += m;
+      }
+    });
+    const thisWeekSessions = sessionSeries[WEEKS - 1], lastWeekSessions = sessionSeries[WEEKS - 2];
+    const sessionDiff = thisWeekSessions - lastWeekSessions;
+    document.getElementById("tdStatSessions").textContent = thisWeekSessions;
+    document.getElementById("tdSparkSessions").innerHTML = tdSpark(sessionSeries, "#16A34A");
+    document.getElementById("tdDeltaSessions").textContent = sessionDiff === 0 ? "지난 주와 같아요" : "지난 주 대비 " + tdSignedDelta(sessionDiff);
+
+    // 미완료 숙제 — 기한 주 단위 추이, 이번 주 마감 건수
+    let totalTasks = 0, doneTasks = 0, pendingTasks = 0, pendingThisWeek = 0;
+    const dueSeries = new Array(WEEKS).fill(0);
+    hws.forEach(h => (h.tasks || []).forEach(t => {
+      totalTasks++;
+      if (t.done) doneTasks++; else {
+        pendingTasks++;
+        if (tdWeeksAgo(new Date(t.due + "T00:00:00"), curMon) === 0) pendingThisWeek++;
+      }
+      const ago = tdWeeksAgo(new Date(t.due + "T00:00:00"), curMon);
+      if (ago >= 0 && ago < WEEKS) dueSeries[WEEKS - 1 - ago]++;
+    }));
+    document.getElementById("tdStatPending").textContent = pendingTasks;
+    document.getElementById("tdSparkPending").innerHTML = tdSpark(dueSeries, "#7C3AED");
+    document.getElementById("tdDeltaPending").textContent = "이번 주 마감 " + pendingThisWeek;
+
+    // 이번 주 요약 + 도넛(숙제 완료율)
+    const rate = totalTasks ? (doneTasks / totalTasks) * 100 : 0;
+    const rateText = Math.round(rate * 10) / 10 + "%";
+    document.getElementById("tdSumHours").textContent = (Math.round(thisWeekMin / 6) / 10) + "시간";
+    document.getElementById("tdSumBar").style.width = rate + "%";
+    document.getElementById("tdSumRate").textContent = rateText;
+    document.getElementById("tdSumTasks").textContent = totalTasks + "개";
+    document.getElementById("tdSumAvg").textContent = (links.length ? Math.round((totalTasks / links.length) * 10) / 10 : 0) + "개";
+    document.getElementById("tdDonut").innerHTML = tdDonut(rate);
+  }
   function submitTeacherPairing(e) {
     e.preventDefault();
     const codeInput = document.getElementById("thPairCode");
