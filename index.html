@@ -7,7 +7,7 @@
 <script>
   if (location.hash === "#admin") document.documentElement.setAttribute("data-boot", "admin");
   else if (location.hash === "#form") document.documentElement.setAttribute("data-boot", "form");
-  else if (!localStorage.getItem("holoStudentId")) document.documentElement.setAttribute("data-boot", "login");
+  else if (!localStorage.getItem("holoStudentId") && !localStorage.getItem("holoTeacherId")) document.documentElement.setAttribute("data-boot", "login");
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
@@ -385,6 +385,13 @@
   body.is-admin .sidebar,
   body.is-admin .overlay,
   body.is-admin .topbar { display: none; }
+  body.is-teacher .sidebar,
+  body.is-teacher .overlay { display: none; }
+  .th-logout-btn {
+    font-family: inherit; font-size: 0.78rem; font-weight: 700; color: var(--ink-soft);
+    background: none; border: none; cursor: pointer; padding: 0; margin-bottom: 14px;
+  }
+  .th-logout-btn:hover { color: var(--ink); }
 
   .topbar {
     background: var(--cream);
@@ -1252,6 +1259,49 @@
   .pp-hw-record-action:hover { opacity: 0.7; }
   .pp-hw-record.done .pp-hw-record-mid { color: var(--ink-soft); text-decoration: line-through; }
   .pp-hw-desc { font-size: 0.78rem; color: var(--ink-soft); line-height: 1.55; margin-top: 6px; }
+  /* ── Academy(학생: 선생님 연결) / 선생님 대시보드 공용 ── */
+  .ac-connect-box {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px;
+    display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px;
+  }
+  .ac-connect-label { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
+  .ac-connect-hint { font-size: 0.74rem; color: var(--ink-soft); }
+  .ac-connect-form { display: flex; gap: 8px; }
+  .ac-connect-form input {
+    flex: 1; font-family: inherit; font-size: 0.82rem; border: 1px solid var(--line); border-radius: 8px;
+    padding: 9px 12px; background: var(--cream);
+  }
+  .ac-connect-form button {
+    flex: none; font-family: inherit; font-size: 0.8rem; font-weight: 700; color: #fff;
+    background: var(--green-deep); border: none; border-radius: 8px; padding: 9px 16px; cursor: pointer;
+  }
+  .ac-connect-form button:hover { opacity: 0.88; }
+  .th-card-list { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+  .th-card {
+    width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    font-family: inherit; text-align: left; background: var(--paper); border: 1px solid var(--line);
+    border-radius: 10px; padding: 13px 16px; cursor: pointer;
+  }
+  .th-card:hover { background: var(--cream); }
+  .th-card-name { font-size: 0.86rem; font-weight: 700; color: var(--ink); }
+  .th-card-arrow { color: var(--ink-soft); font-size: 0.72rem; }
+  .th-section-title { font-size: 0.86rem; font-weight: 800; color: var(--ink); margin: 20px 0 4px; }
+  .th-hw-form {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px;
+    display: flex; flex-direction: column; gap: 10px; margin-top: 10px;
+  }
+  .th-hw-form-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .th-hw-form-row > * { flex: 1; min-width: 110px; }
+  .th-hw-form input, .th-hw-form textarea {
+    width: 100%; box-sizing: border-box; font-family: inherit; font-size: 0.8rem; border: 1px solid var(--line);
+    border-radius: 8px; padding: 8px 10px; background: var(--cream);
+  }
+  .th-hw-form textarea { min-height: 48px; resize: vertical; }
+  .th-hw-submit-btn {
+    align-self: flex-start; font-family: inherit; font-size: 0.8rem; font-weight: 700; color: #fff;
+    background: var(--green-deep); border: none; border-radius: 8px; padding: 9px 18px; cursor: pointer;
+  }
+  .th-hw-submit-btn:hover { opacity: 0.88; }
   .pp-hw-empty { color: var(--ink-soft); font-size: 0.8rem; text-align: center; padding: 20px 0; }
   /* 계획 상담 챗봇 말풍선 안에 바로 뜨는 계획 입력 카드 — AI가 날짜를 확정하면 뜬다. */
   .pp-chat-plan-card {
@@ -4268,8 +4318,8 @@
 
     <div id="slLoginPane">
       <div class="sl-role-toggle" id="slRoleToggle">
-        <button type="button" class="sl-role-btn" data-role="admin" onclick="setLoginRole('admin')">관리자</button>
         <button type="button" class="sl-role-btn on" data-role="student" onclick="setLoginRole('student')">학생</button>
+        <button type="button" class="sl-role-btn" data-role="teacher" onclick="setLoginRole('teacher')">선생님</button>
       </div>
       <form id="studentLoginForm" onsubmit="handleLoginGateSubmit(event)">
         <div class="apply-field">
@@ -4288,7 +4338,7 @@
         <div class="apply-status-msg" id="studentLoginMsg"></div>
       </form>
       <p class="sl-switch-link" id="slLoginSwitchLink"><a href="#" onclick="showStudentSignupTypePane();return false;">아직 계정이 없으신가요? 회원가입하기 →</a></p>
-      <p class="sl-switch-link" id="slAdminInquiryLink" style="display:none;"><a href="#" onclick="return false;">관리형 독서실 도입 문의하기 →</a></p>
+      <p class="sl-switch-link" id="slTeacherInquiryLink" style="display:none;"><a href="#" onclick="showComingSoonModal();return false;">선생님 회원가입은 준비 중이에요 — 문의하기 →</a></p>
     </div>
 
     <div id="slSignupTypePane" style="display:none;">
@@ -5447,6 +5497,112 @@
   </section>
 
   <!-- ─── 공부 음악 (준비중) ─── -->
+  <!-- ─── Academy 홈(학생) — 선생님과 상호 코드로 연결하고, 연결된 선생님별 수업/숙제를 확인 ─── -->
+  <section class="view" id="view-academyHome">
+    <div class="home-brand-row">
+      <div class="home-brand-inner">
+        <span class="consult-dday" id="academyDday"></span>
+        <div class="home-brand-center">
+          <svg class="home-brand-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+            <rect width="40" height="40" rx="10" fill="#15522F"/>
+            <rect x="11" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/>
+            <rect x="24" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/>
+            <rect x="11" y="17.5" width="18" height="5" rx="1.5" fill="#FFFFFF"/>
+          </svg>
+          <span class="home-brand-text">Study Holo Academy</span>
+        </div>
+        <div class="home-brand-actions">
+          <button type="button" class="consult-header-switch" onclick="go('mypage')">마이페이지</button>
+          <span class="hba-divider"></span>
+          <button type="button" class="consult-header-switch" onclick="switchProduct('manager')">Study Holo Manager →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ac-connect-box">
+      <div class="ac-connect-label">선생님 연결하기</div>
+      <div class="ac-connect-hint">과외 선생님과 미리 정한 연결 코드를 입력하면 자동으로 연결돼요.</div>
+      <form class="ac-connect-form" onsubmit="submitAcademyPairing(event)">
+        <input type="text" id="acPairCode" placeholder="연결 코드 입력" maxlength="12">
+        <button type="submit">연결하기</button>
+      </form>
+      <div class="apply-status-msg" id="acPairMsg"></div>
+    </div>
+
+    <div class="pp-hw-todo-box">
+      <div class="hwo-top-row">
+        <span class="hwo-title-group">
+          <span class="hwo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z" stroke-linejoin="round"/><path d="M4 9h16M9 4v16"/></svg>
+          </span>
+          <span class="hwo-title">To Do List</span>
+        </span>
+      </div>
+      <ul class="pp-hw-todo-list" id="acTodoList"></ul>
+    </div>
+
+    <div class="th-section-title">연결된 선생님</div>
+    <div class="th-card-list" id="acTeacherList"></div>
+  </section>
+
+  <!-- ─── Academy — 선생님 한 명의 수업 현황/진도/목표/숙제 ─── -->
+  <section class="view" id="view-academyTeacher">
+    <div class="consult-page">
+      <span class="eyebrow">ACADEMY</span>
+      <h2 id="acTeacherPageTitle">선생님</h2>
+      <div class="split"></div>
+      <div id="acTeacherDetail"></div>
+    </div>
+  </section>
+
+  <!-- ─── 선생님 대시보드 — 내 학생 목록 + 숙제 배정 ─── -->
+  <section class="view" id="view-teacherHome">
+    <div class="consult-page">
+      <button type="button" class="th-logout-btn" onclick="teacherLogout()">로그아웃</button>
+      <span class="eyebrow">TEACHER</span>
+      <h2>내 학생 관리</h2>
+      <div class="split"></div>
+
+      <div class="ac-connect-box">
+        <div class="ac-connect-label">학생 연결하기</div>
+        <div class="ac-connect-hint">학생과 미리 정한 연결 코드를 입력하면 자동으로 연결돼요.</div>
+        <form class="ac-connect-form" onsubmit="submitTeacherPairing(event)">
+          <input type="text" id="thPairCode" placeholder="연결 코드 입력" maxlength="12">
+          <button type="submit">연결하기</button>
+        </form>
+        <div class="apply-status-msg" id="thPairMsg"></div>
+      </div>
+
+      <div id="thStudentListWrap">
+        <div class="th-section-title">내 학생 목록</div>
+        <div class="th-card-list" id="thStudentList"></div>
+      </div>
+
+      <div id="thStudentDetailWrap" style="display:none;">
+        <button type="button" class="pp-hw-back-btn" onclick="closeTeacherStudent()">← 학생 목록으로</button>
+        <div class="pp-hw-session-page-head">
+          <span class="pp-hw-session-page-title" id="thStudentDetailName"></span>
+        </div>
+        <form class="th-hw-form" id="thAddHwForm" onsubmit="submitTeacherHomework(event)">
+          <div class="th-hw-form-row">
+            <input type="date" id="thHwDate" required>
+            <input type="text" id="thHwSubject" placeholder="세부 과목 (예: 수1)" required>
+            <input type="time" id="thHwStart" required>
+            <input type="time" id="thHwEnd" required>
+          </div>
+          <input type="text" id="thHwTitle" placeholder="숙제 제목" required>
+          <textarea id="thHwDesc" placeholder="설명 (선택)"></textarea>
+          <div class="th-hw-form-row">
+            <input type="date" id="thHwDue" required>
+            <button type="submit" class="th-hw-submit-btn">숙제 등록하기</button>
+          </div>
+        </form>
+        <div class="th-section-title">등록한 수업/숙제</div>
+        <div id="thHwList"></div>
+      </div>
+    </div>
+  </section>
+
   <section class="view" id="view-studymusic">
     <div class="chat-head">
       <span class="eyebrow">GENERAL</span>
@@ -7161,6 +7317,12 @@
               <button class="admin-nav-item" type="button" onclick="showAdminPanel('students', this)">
                 <span class="admin-nav-ico">🔑</span> 학생 계정 관리
               </button>
+              <button class="admin-nav-item" type="button" onclick="showAdminPanel('teachers', this)">
+                <span class="admin-nav-ico">🧑‍🏫</span> 선생님 계정 관리
+              </button>
+              <button class="admin-nav-item" type="button" onclick="previewLegacyAcademy()">
+                <span class="admin-nav-ico">🗂️</span> Academy(구) 미리보기
+              </button>
               <button class="admin-nav-item" type="button" onclick="showAdminPanel('mex', this)">
                 <span class="admin-nav-ico">📊</span> 모의고사 제출 현황
               </button>
@@ -7483,6 +7645,44 @@
             <div class="admin-empty" id="adminStudentsEmptyMsg" style="display:none;">등록된 학생 계정이 없습니다.</div>
           </div>
         </div>
+
+        <div class="admin-panel" id="adminPanelTeachers" style="display:none;">
+          <div class="admin-page-head">
+            <span class="admin-page-ico">🧑‍🏫</span>
+            <div>
+              <h2>선생님 계정 관리</h2>
+              <div class="split"></div>
+              <p class="admin-page-sub">Academy(과외 선생님용)에 로그인할 수 있는 선생님 계정을 관리합니다. 아직 선생님 셀프 회원가입 전이라, 여기서 직접 만들어줘야 합니다.</p>
+            </div>
+          </div>
+          <div class="admin-toolbar">
+            <form id="teacherAddForm" onsubmit="submitTeacherAdd(event)" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; width:100%;">
+              <div class="apply-field" style="flex:none; width:100px; margin-bottom:0;">
+                <label for="tch-id">아이디</label>
+                <input type="text" id="tch-id" required>
+              </div>
+              <div class="apply-field" style="flex:none; width:100px; margin-bottom:0;">
+                <label for="tch-pw">비밀번호</label>
+                <input type="text" id="tch-pw" required>
+              </div>
+              <div class="apply-field" style="flex:none; width:120px; margin-bottom:0;">
+                <label for="tch-name">선생님 이름</label>
+                <input type="text" id="tch-name" required>
+              </div>
+              <button type="submit" class="apply-submit-btn" style="flex:none;">+ 계정 추가</button>
+            </form>
+          </div>
+          <div class="apply-status-msg" id="teacherAddMsg" style="margin-bottom:10px;"></div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr><th>아이디</th><th>이름</th><th>등록일</th><th></th></tr>
+              </thead>
+              <tbody id="adminTeachersBody"></tbody>
+            </table>
+            <div class="admin-empty" id="adminTeachersEmptyMsg" style="display:none;">등록된 선생님 계정이 없습니다.</div>
+          </div>
+        </div>
       </main>
     </div>
   </section>
@@ -7610,7 +7810,7 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-home": "Holo Study", "consult-myclass": "나의 수업", "consult-programs": "수업 프로그램", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "플래너 · 숙제 관리하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", studymusic: "공부 음악", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-home": "Holo Study", "consult-myclass": "나의 수업", "consult-programs": "수업 프로그램", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "플래너 · 숙제 관리하기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "내 스케줄 관리하기", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", studymusic: "공부 음악", academyHome: "Academy", academyTeacher: "선생님 수업 현황", teacherHome: "내 학생 관리", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { mathexam: "exam", engexam: "exam" };
   // "← 이전으로"가 상단 흰색 바(topbar)의 제목 오른쪽에 뜨는 페이지들과, 각각이 돌아갈 곳.
   const BACK_TARGET = {
@@ -7624,6 +7824,7 @@
     mathexam: "examhub", engexam: "examhub",
     recordhub: "home", plannerPage: "home", scheduleManage: "home", mockexam: "home",
     examhub: "home", howto: "home", ranking: "home", mypage: "home", studymusic: "home",
+    academyTeacher: "academyHome",
   };
   function goBack() {
     if (currentView === "mexlist" && mexCurrentExam) {
@@ -7632,7 +7833,7 @@
     }
     // 마이페이지는 Manager/Academy 공용 화면이라, 어느 쪽에서 들어왔는지에 따라 뒤로 갈 곳이 다르다.
     if (currentView === "mypage") {
-      go(localStorage.getItem("holoActiveProduct") === "academy" ? "consult-home" : "home");
+      go(localStorage.getItem("holoActiveProduct") === "academy" ? "academyHome" : "home");
       return;
     }
     const target = BACK_TARGET[currentView];
@@ -7767,6 +7968,7 @@
     document.body.classList.toggle("mypage-bg-academy", view === "mypage" && localStorage.getItem("holoActiveProduct") === "academy");
     if (view === "consult-home") chomeShowTab("study");
     document.body.classList.toggle("is-admin", view === "admin" || view === "form");
+    document.body.classList.toggle("is-teacher", view === "teacherHome");
     if (GROUP_OF[view]) {
       const group = document.getElementById("sbg-group-" + GROUP_OF[view]);
       if (group) group.classList.add("open");
@@ -7788,6 +7990,8 @@
     if (view === "mockexam") initMockExam();
     if (view === "mexlist") initMexlist();
     if (view === "ranking") switchRankingTab("today"); // 매번 "오늘의 랭킹" 탭부터 새로 불러온다
+    if (view === "academyHome") loadAcademyData();
+    if (view === "teacherHome") loadTeacherStudents();
   }
 
   // ── 홈 화면 Academy 홍보 박스 — 고정 문구 하나 대신, 10초마다 다른 홍보 슬라이드로 바뀐다.
@@ -13359,6 +13563,7 @@
     document.getElementById("adminPanelSchedule").style.display = name === "schedule" ? "block" : "none";
     document.getElementById("adminPanelForms").style.display = name === "forms" ? "block" : "none";
     document.getElementById("adminPanelStudents").style.display = name === "students" ? "block" : "none";
+    document.getElementById("adminPanelTeachers").style.display = name === "teachers" ? "block" : "none";
     document.getElementById("adminPanelLinks").style.display = name === "links" ? "block" : "none";
     document.getElementById("adminPanelMex").style.display = name === "mex" ? "block" : "none";
     if (name === "mex") loadAdminMex();
@@ -13366,6 +13571,67 @@
     if (name === "availability") renderAvailability();
     if (name === "forms") renderForms();
     if (name === "students") renderStudents();
+    if (name === "teachers") loadAdminTeachers();
+  }
+  // ── 관리자: 선생님 계정 관리 (아직 선생님 셀프 회원가입이 없어서, 학생 계정처럼 관리자가 직접 만들어준다) ──
+  let adminAllTeachers = [];
+  let unsubscribeTeachers = null;
+  function loadAdminTeachers() {
+    if (unsubscribeTeachers) return;
+    unsubscribeTeachers = db.collection("teachers").orderBy("createdAt", "desc").onSnapshot(snap => {
+      adminAllTeachers = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+      renderAdminTeachersTable();
+    });
+  }
+  function renderAdminTeachersTable() {
+    const tbody = document.getElementById("adminTeachersBody");
+    const emptyMsg = document.getElementById("adminTeachersEmptyMsg");
+    if (!tbody) return;
+    emptyMsg.style.display = adminAllTeachers.length ? "none" : "block";
+    tbody.innerHTML = adminAllTeachers.map(t => {
+      const created = t.createdAt && t.createdAt.toDate ? t.createdAt.toDate().toLocaleDateString("ko-KR") : "-";
+      return "<tr><td>" + escapeHtml(t.id) + "</td><td>" + escapeHtml(t.name || "-") + "</td><td>" + created + "</td>"
+        + "<td><button type=\"button\" class=\"admin-delete-btn\" onclick=\"deleteTeacherAccount('" + t.id + "')\">삭제</button></td></tr>";
+    }).join("");
+  }
+  function submitTeacherAdd(e) {
+    e.preventDefault();
+    const msg = document.getElementById("teacherAddMsg");
+    msg.textContent = "";
+    msg.className = "apply-status-msg";
+    const id = document.getElementById("tch-id").value.trim();
+    const pw = document.getElementById("tch-pw").value.trim();
+    const name = document.getElementById("tch-name").value.trim();
+    if (!id || !pw || !name) return;
+    db.collection("teachers").doc(id).get().then(doc => {
+      if (doc.exists) {
+        msg.textContent = "이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.";
+        msg.className = "apply-status-msg error";
+        return;
+      }
+      return db.collection("teachers").doc(id).set({
+        password: pw, name: name, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(() => {
+        document.getElementById("teacherAddForm").reset();
+        msg.textContent = "계정이 추가됐습니다.";
+        msg.className = "apply-status-msg success";
+      });
+    }).catch(err => {
+      console.error(err);
+      msg.textContent = "저장 중 오류가 발생했어요.";
+      msg.className = "apply-status-msg error";
+    });
+  }
+  function deleteTeacherAccount(id) {
+    if (!confirm("이 선생님 계정을 삭제할까요? 연결된 학생과의 연동 정보는 남아있지만, 이 계정으로는 더 이상 로그인할 수 없게 됩니다.")) return;
+    db.collection("teachers").doc(id).delete().catch(err => console.error(err));
+  }
+  // ── 관리자: 기존(재구성 전) Academy 콘텐츠 미리보기 — 삭제하지 않고 그대로 두되, 학생들이
+  // 더 이상 거쳐가지 않는 화면이라 관리자만 이 버튼으로 들어가 확인할 수 있게 한다.
+  function previewLegacyAcademy() {
+    document.documentElement.removeAttribute("data-boot");
+    document.body.classList.remove("is-admin");
+    go("consult-home");
   }
   // ── 관리자: 모의고사·내신 제출 현황 (Val Town의 mex_admin_list — Firebase 관리자 로그인 토큰으로 인증) ──
   let adminMexItems = [];
@@ -13553,7 +13819,7 @@
     const saved = localStorage.getItem("holoActiveProduct");
     if (saved) {
       hideStudentGate();
-      go(saved === "academy" ? "consult-home" : "home");
+      go(saved === "academy" ? "academyHome" : "home");
     } else {
       const gate = document.getElementById("studentLoginGate");
       gate.classList.add("gate-leaving");
@@ -13567,17 +13833,23 @@
   function chooseProduct(product) {
     localStorage.setItem("holoActiveProduct", product);
     document.documentElement.removeAttribute("data-boot");
-    go(product === "academy" ? "consult-home" : "home");
+    go(product === "academy" ? "academyHome" : "home");
+  }
+  // 선생님 로그인 성공 직후 호출 — 선생님은 Manager/Academy 선택 화면을 거치지 않고
+  // 바로 자기 대시보드(내 학생 목록)로 들어간다.
+  function enterTeacherHome() {
+    hideStudentGate();
+    go("teacherHome");
   }
   // Manager <-> Academy 전환 버튼(양쪽 사이드바에서만 호출) — 선택 화면을 다시 거치지 않고
   // 곧바로 반대쪽으로 넘어가되, 어느 시스템으로 들어가는지 스플래시 화면을 잠깐 보여준다.
   function switchProduct(product) {
     localStorage.setItem("holoActiveProduct", product);
-    showProductSplash(product, product === "academy" ? "consult-home" : "home");
+    showProductSplash(product, product === "academy" ? "academyHome" : "home");
   }
-  // "관리자 / 학생" 로그인 역할 토글 — 아이디/비밀번호 입력칸은 그대로 공유하고, 관리자를
-  // 고르면 그 칸이 이메일 입력으로 바뀌고 제출 시 학생 로그인 대신 관리자(Firebase Auth)
-  // 로그인 로직을 탄다. 관리자는 회원가입하는 개념이 아니라서 회원가입 링크도 숨긴다.
+  // "학생 / 선생님" 로그인 역할 토글 — 아이디/비밀번호 입력칸은 그대로 공유하고, 역할에 따라
+  // studentLogin() 또는 teacherLogin()을 탄다. 관리자는 index.html#admin의 완전히 별도 로그인
+  // (adminLogin())을 쓰므로 이 공개 게이트에는 아예 없다 — 계약 맺은 독서실에게만 별도 안내.
   let studentGateRole = "student";
   function setLoginRole(role) {
     studentGateRole = role;
@@ -13587,47 +13859,54 @@
     const idInput = document.getElementById("sl-id");
     const h2 = document.getElementById("slLoginH2");
     const switchLink = document.getElementById("slLoginSwitchLink");
-    const adminInquiryLink = document.getElementById("slAdminInquiryLink");
+    const teacherInquiryLink = document.getElementById("slTeacherInquiryLink");
     const msg = document.getElementById("studentLoginMsg");
     if (msg) { msg.textContent = ""; msg.className = "apply-status-msg"; }
-    if (role === "admin") {
-      idInput.type = "email";
-      idInput.placeholder = "이메일";
-      idInput.setAttribute("aria-label", "이메일");
-      idInput.autocomplete = "username";
-      if (h2) h2.textContent = "관리자 계정으로 로그인해주세요";
+    idInput.type = "text";
+    idInput.placeholder = "아이디";
+    idInput.setAttribute("aria-label", "아이디");
+    if (role === "teacher") {
+      if (h2) h2.textContent = "선생님 계정으로 로그인해주세요";
       if (switchLink) switchLink.style.display = "none";
-      if (adminInquiryLink) adminInquiryLink.style.display = "";
+      if (teacherInquiryLink) teacherInquiryLink.style.display = "";
     } else {
-      idInput.type = "text";
-      idInput.placeholder = "아이디";
-      idInput.setAttribute("aria-label", "아이디");
       if (h2) h2.textContent = "등록된 아이디로 로그인해주세요";
       if (switchLink) switchLink.style.display = "";
-      if (adminInquiryLink) adminInquiryLink.style.display = "none";
+      if (teacherInquiryLink) teacherInquiryLink.style.display = "none";
     }
   }
   function handleLoginGateSubmit(e) {
-    if (studentGateRole === "admin") adminLoginFromGate(e);
+    if (studentGateRole === "teacher") teacherLogin(e);
     else studentLogin(e);
   }
-  function adminLoginFromGate(e) {
+  function teacherLogin(e) {
     e.preventDefault();
-    const email = document.getElementById("sl-id").value.trim();
+    const id = document.getElementById("sl-id").value.trim();
     const pw = document.getElementById("sl-pw").value;
     const btn = document.getElementById("studentLoginBtn");
     const msg = document.getElementById("studentLoginMsg");
     msg.textContent = "";
     msg.className = "apply-status-msg";
-    if (!email || !pw) return;
+    if (!id || !pw) return;
     btn.disabled = true;
-    btn.textContent = "로그인 중...";
-    auth.signInWithEmailAndPassword(email, pw).then(() => {
-      document.documentElement.setAttribute("data-boot", "admin");
-    }).catch(err => {
+    btn.textContent = "확인 중...";
+    db.collection("teachers").doc(id).get().then(doc => {
       btn.disabled = false;
       btn.textContent = "로그인";
-      msg.textContent = "로그인 정보가 올바르지 않아요.";
+      if (!doc.exists || doc.data().password !== pw) {
+        msg.textContent = "아이디 또는 비밀번호가 올바르지 않습니다.";
+        msg.className = "apply-status-msg error";
+        return;
+      }
+      localStorage.setItem("holoTeacherId", id);
+      localStorage.setItem("holoTeacherPw", pw);
+      localStorage.setItem("holoTeacherName", doc.data().name || "");
+      enterTeacherHome();
+    }).catch(err => {
+      console.error(err);
+      btn.disabled = false;
+      btn.textContent = "로그인";
+      msg.textContent = "로그인 중 오류가 발생했어요. 다시 시도해주세요.";
       msg.className = "apply-status-msg error";
     });
   }
@@ -14053,6 +14332,281 @@
     location.hash = "";
     location.reload();
   }
+  function teacherLogout() {
+    localStorage.removeItem("holoTeacherId");
+    localStorage.removeItem("holoTeacherPw");
+    localStorage.removeItem("holoTeacherName");
+    location.hash = "";
+    location.reload();
+  }
+
+  // ══════════════════════════════════════════════════════════════════════
+  // Academy — 선생님↔학생 상호 코드 연결, 선생님 대시보드, 학생이 보는 수업/숙제 현황
+  // ══════════════════════════════════════════════════════════════════════
+  // 코드 페어링: 먼저 입력한 쪽은 "대기" 상태로 pairingCodes에 저장되고, 반대 역할이 같은
+  // 코드를 입력하는 순간 teacherStudentLinks가 생성되며 코드는 소모된다. 트랜잭션으로 묶어서
+  // 거의 동시에 둘 다 입력해도 연결이 한 번만 만들어지게 한다.
+  function submitPairingCode(role, code, ownId, ownName, onDone) {
+    const ref = db.collection("pairingCodes").doc(code);
+    db.runTransaction(tx => tx.get(ref).then(doc => {
+      if (!doc.exists) {
+        tx.set(ref, { role: role, ownerId: ownId, ownerName: ownName, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        return { status: "pending" };
+      }
+      const data = doc.data();
+      if (data.role === role) return { status: "error", message: "이미 같은 역할로 등록된 코드예요. 다른 코드를 정해서 입력해주세요." };
+      const teacherId = role === "teacher" ? ownId : data.ownerId;
+      const teacherName = role === "teacher" ? ownName : data.ownerName;
+      const studentId = role === "student" ? ownId : data.ownerId;
+      const studentName = role === "student" ? ownName : data.ownerName;
+      const linkRef = db.collection("teacherStudentLinks").doc(teacherId + "_" + studentId);
+      tx.set(linkRef, { teacherId: teacherId, teacherName: teacherName, studentId: studentId, studentName: studentName, linkedAt: firebase.firestore.FieldValue.serverTimestamp() });
+      tx.delete(ref);
+      return { status: "linked", teacherId: teacherId, teacherName: teacherName, studentId: studentId, studentName: studentName };
+    })).then(result => onDone(Object.assign({ ok: true }, result)))
+      .catch(err => { console.error(err); onDone({ ok: false, message: "연결 중 오류가 발생했어요." }); });
+  }
+
+  // ── 선생님 대시보드 ──
+  let teacherStudentsCache = [];
+  let thOpenStudentId = null, thOpenStudentName = null;
+  let thHomeworkCache = [];
+  function submitTeacherPairing(e) {
+    e.preventDefault();
+    const codeInput = document.getElementById("thPairCode");
+    const code = codeInput.value.trim();
+    const msg = document.getElementById("thPairMsg");
+    if (!code) return;
+    msg.textContent = "연결 확인 중...";
+    msg.className = "apply-status-msg";
+    const teacherId = localStorage.getItem("holoTeacherId");
+    const teacherName = localStorage.getItem("holoTeacherName") || teacherId;
+    submitPairingCode("teacher", code, teacherId, teacherName, result => {
+      if (!result.ok || result.status === "error") {
+        msg.textContent = result.message || "오류가 발생했어요.";
+        msg.className = "apply-status-msg error";
+        return;
+      }
+      codeInput.value = "";
+      if (result.status === "pending") {
+        msg.textContent = "학생이 같은 코드를 입력하면 자동으로 연결돼요.";
+        msg.className = "apply-status-msg success";
+      } else {
+        msg.textContent = result.studentName + " 학생과 연결됐어요!";
+        msg.className = "apply-status-msg success";
+        loadTeacherStudents();
+      }
+    });
+  }
+  function loadTeacherStudents() {
+    const teacherId = localStorage.getItem("holoTeacherId");
+    if (!teacherId) return;
+    db.collection("teacherStudentLinks").where("teacherId", "==", teacherId).get().then(snap => {
+      teacherStudentsCache = snap.docs.map(d => d.data());
+      renderTeacherStudentList();
+    }).catch(err => console.error(err));
+  }
+  function renderTeacherStudentList() {
+    const wrap = document.getElementById("thStudentList");
+    if (!wrap) return;
+    if (!teacherStudentsCache.length) { wrap.innerHTML = '<div class="pp-plan-empty">아직 연결된 학생이 없어요.</div>'; return; }
+    wrap.innerHTML = teacherStudentsCache.map(s =>
+      '<button type="button" class="th-card" onclick="openTeacherStudent(\'' + s.studentId + '\',\'' + s.studentName.replace(/'/g, "\\'") + '\')">' +
+        '<span class="th-card-name">' + escapeHtml(s.studentName) + '</span>' +
+        '<span class="th-card-arrow">›</span>' +
+      '</button>'
+    ).join("");
+  }
+  function openTeacherStudent(studentId, studentName) {
+    thOpenStudentId = studentId; thOpenStudentName = studentName;
+    document.getElementById("thStudentListWrap").style.display = "none";
+    document.getElementById("thStudentDetailWrap").style.display = "";
+    document.getElementById("thStudentDetailName").textContent = studentName + " 학생";
+    document.getElementById("thAddHwForm").reset();
+    loadTeacherHomeworkForStudent();
+  }
+  function closeTeacherStudent() {
+    thOpenStudentId = null;
+    document.getElementById("thStudentListWrap").style.display = "";
+    document.getElementById("thStudentDetailWrap").style.display = "none";
+  }
+  function loadTeacherHomeworkForStudent() {
+    const teacherId = localStorage.getItem("holoTeacherId");
+    db.collection("academyHomework").where("teacherId", "==", teacherId).where("studentId", "==", thOpenStudentId).get().then(snap => {
+      thHomeworkCache = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+      thHomeworkCache.sort((a, b) => a.classDate < b.classDate ? 1 : -1);
+      renderTeacherHomeworkList();
+    }).catch(err => console.error(err));
+  }
+  function renderTeacherHomeworkList() {
+    const wrap = document.getElementById("thHwList");
+    if (!wrap) return;
+    if (!thHomeworkCache.length) { wrap.innerHTML = '<div class="pp-plan-empty">아직 등록한 수업이 없어요.</div>'; return; }
+    wrap.innerHTML = thHomeworkCache.map(h => {
+      const allDone = h.tasks.length > 0 && h.tasks.every(t => t.done);
+      const dueList = h.tasks.map(t => ppHwFormatMD(t.due)).join(" · ");
+      return '<div class="pp-hw-session"><div class="pp-hw-session-btn" style="cursor:default;">' +
+        '<span class="pp-hw-session-title">' + escapeHtml(h.classDate) + ' · ' + escapeHtml(h.subject) + ' · ' + escapeHtml(h.timeStart) + ' ~ ' + escapeHtml(h.timeEnd) +
+        ' <span class="pp-hw-session-due">| 숙제 기한 ' + dueList + '</span></span>' +
+        '<span class="pp-hw-session-status' + (allDone ? ' done' : '') + '">' + (allDone ? '숙제 완료' : '숙제 미완료') + '</span>' +
+      '</div></div>';
+    }).join("");
+  }
+  function submitTeacherHomework(e) {
+    e.preventDefault();
+    const teacherId = localStorage.getItem("holoTeacherId");
+    const teacherName = localStorage.getItem("holoTeacherName") || teacherId;
+    const classDate = document.getElementById("thHwDate").value;
+    const subject = document.getElementById("thHwSubject").value.trim();
+    const timeStart = document.getElementById("thHwStart").value;
+    const timeEnd = document.getElementById("thHwEnd").value;
+    const title = document.getElementById("thHwTitle").value.trim();
+    const desc = document.getElementById("thHwDesc").value.trim();
+    const due = document.getElementById("thHwDue").value;
+    if (!classDate || !subject || !timeStart || !timeEnd || !title || !due || !thOpenStudentId) return;
+    db.collection("academyHomework").add({
+      teacherId: teacherId, teacherName: teacherName, studentId: thOpenStudentId, studentName: thOpenStudentName,
+      subject: subject, classDate: classDate, timeStart: timeStart, timeEnd: timeEnd,
+      tasks: [{ title: title, desc: desc, due: due, done: false }],
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+      document.getElementById("thAddHwForm").reset();
+      loadTeacherHomeworkForStudent();
+    }).catch(err => console.error(err));
+  }
+
+  // ── 학생이 보는 Academy ──
+  let acLinkedTeachers = [];
+  let acOpenTeacherId = null, acOpenTeacherName = null, acOpenSessionId = null;
+  let acTeacherHwCache = [];
+  function submitAcademyPairing(e) {
+    e.preventDefault();
+    const codeInput = document.getElementById("acPairCode");
+    const code = codeInput.value.trim();
+    const msg = document.getElementById("acPairMsg");
+    if (!code) return;
+    msg.textContent = "연결 확인 중...";
+    msg.className = "apply-status-msg";
+    const studentId = localStorage.getItem("holoStudentId");
+    const studentName = localStorage.getItem("holoStudentName") || studentId;
+    submitPairingCode("student", code, studentId, studentName, result => {
+      if (!result.ok || result.status === "error") {
+        msg.textContent = result.message || "오류가 발생했어요.";
+        msg.className = "apply-status-msg error";
+        return;
+      }
+      codeInput.value = "";
+      if (result.status === "pending") {
+        msg.textContent = "선생님이 같은 코드를 입력하면 자동으로 연결돼요.";
+        msg.className = "apply-status-msg success";
+      } else {
+        msg.textContent = result.teacherName + " 선생님과 연결됐어요!";
+        msg.className = "apply-status-msg success";
+        loadAcademyData();
+      }
+    });
+  }
+  function loadAcademyData() {
+    const studentId = localStorage.getItem("holoStudentId");
+    if (!studentId) return;
+    db.collection("teacherStudentLinks").where("studentId", "==", studentId).get().then(snap => {
+      acLinkedTeachers = snap.docs.map(d => d.data());
+      renderAcademyTeacherList();
+      loadAcademyTodo();
+    }).catch(err => console.error(err));
+  }
+  function renderAcademyTeacherList() {
+    const wrap = document.getElementById("acTeacherList");
+    if (!wrap) return;
+    if (!acLinkedTeachers.length) { wrap.innerHTML = '<div class="pp-plan-empty">아직 연결된 선생님이 없어요.</div>'; return; }
+    wrap.innerHTML = acLinkedTeachers.map(t =>
+      '<button type="button" class="th-card" onclick="openAcademyTeacher(\'' + t.teacherId + '\',\'' + t.teacherName.replace(/'/g, "\\'") + '\')">' +
+        '<span class="th-card-name">' + escapeHtml(t.teacherName) + ' 선생님</span>' +
+        '<span class="th-card-arrow">›</span>' +
+      '</button>'
+    ).join("");
+  }
+  function loadAcademyTodo() {
+    const studentId = localStorage.getItem("holoStudentId");
+    const listEl = document.getElementById("acTodoList");
+    if (!listEl) return;
+    if (!acLinkedTeachers.length) { listEl.innerHTML = '<li class="pp-hw-todo-empty">연결된 선생님이 없어요.</li>'; return; }
+    db.collection("academyHomework").where("studentId", "==", studentId).get().then(snap => {
+      const items = [];
+      snap.docs.forEach(d => {
+        const h = d.data();
+        h.tasks.forEach(t => { if (!t.done) items.push({ teacherName: h.teacherName, title: t.title, due: t.due }); });
+      });
+      items.sort((a, b) => a.due < b.due ? -1 : 1);
+      listEl.innerHTML = items.length ? items.slice(0, 5).map(it =>
+        '<li class="pp-hw-todo-item">' +
+          '<span class="pp-hw-todo-bullet"></span>' +
+          '<span class="pp-hw-todo-subject-tag">' + escapeHtml(it.teacherName) + '</span>' +
+          '<span class="pp-hw-todo-title">' + escapeHtml(it.title) + '</span>' +
+          '<span class="pp-hw-todo-due">기한 ' + ppHwFormatMD(it.due) + '</span>' +
+        '</li>'
+      ).join("") : '<li class="pp-hw-todo-empty">완료 안 한 숙제가 없어요.</li>';
+    }).catch(err => console.error(err));
+  }
+  function openAcademyTeacher(teacherId, teacherName) {
+    acOpenTeacherId = teacherId; acOpenTeacherName = teacherName; acOpenSessionId = null;
+    go("academyTeacher");
+    document.getElementById("viewTitle").textContent = teacherName + " 선생님";
+    document.getElementById("acTeacherPageTitle").textContent = teacherName + " 선생님";
+    loadAcademyTeacherHomework();
+  }
+  function loadAcademyTeacherHomework() {
+    const studentId = localStorage.getItem("holoStudentId");
+    db.collection("academyHomework").where("teacherId", "==", acOpenTeacherId).where("studentId", "==", studentId).get().then(snap => {
+      acTeacherHwCache = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+      acTeacherHwCache.sort((a, b) => a.classDate < b.classDate ? 1 : -1);
+      renderAcademyTeacherDetail();
+    }).catch(err => console.error(err));
+  }
+  function renderAcademyTeacherDetail() {
+    const wrap = document.getElementById("acTeacherDetail");
+    if (!wrap) return;
+    if (acOpenSessionId) {
+      const h = acTeacherHwCache.find(x => x.id === acOpenSessionId);
+      if (h) {
+        wrap.innerHTML =
+          '<button type="button" class="pp-hw-back-btn" onclick="closeAcademySession()">← 목록으로</button>' +
+          '<div class="pp-hw-session-page-head"><span class="pp-hw-session-page-title">' + escapeHtml(h.classDate) + ' · ' + escapeHtml(h.subject) + '</span></div>' +
+          '<div class="pp-hw-session-detail">' +
+          h.tasks.map((t, i) =>
+            '<div class="pp-hw-record' + (t.done ? ' done' : '') + '">' +
+              '<div class="pp-hw-record-row"><span class="pp-hw-record-mid">' + escapeHtml(t.title) + ' · 기한 ' + ppHwFormatMD(t.due) + '</span>' +
+              '<span class="pp-hw-record-spacer"></span>' +
+              '<button type="button" class="pp-hw-record-action" onclick="toggleAcademyTaskDone(\'' + h.id + '\',' + i + ')">' + (t.done ? '완료 취소하기' : '완료로 표시하기') + '</button></div>' +
+              (t.desc ? '<div class="pp-hw-desc">' + escapeHtml(t.desc) + '</div>' : '') +
+            '</div>'
+          ).join("") +
+          '</div>';
+        return;
+      }
+      acOpenSessionId = null;
+    }
+    if (!acTeacherHwCache.length) { wrap.innerHTML = '<div class="pp-plan-empty">아직 등록된 수업이 없어요.</div>'; return; }
+    wrap.innerHTML = acTeacherHwCache.map(h => {
+      const allDone = h.tasks.length > 0 && h.tasks.every(t => t.done);
+      const dueList = h.tasks.map(t => ppHwFormatMD(t.due)).join(" · ");
+      return '<div class="pp-hw-session"><button type="button" class="pp-hw-session-btn" onclick="openAcademySession(\'' + h.id + '\')">' +
+        '<span class="pp-hw-session-title">' + escapeHtml(h.classDate) + ' · ' + escapeHtml(h.subject) + ' · ' + escapeHtml(h.timeStart) + ' ~ ' + escapeHtml(h.timeEnd) +
+        ' <span class="pp-hw-session-due">| 숙제 기한 ' + dueList + '</span></span>' +
+        '<span class="pp-hw-session-status' + (allDone ? ' done' : '') + '">' + (allDone ? '숙제 완료' : '숙제 미완료') + '</span>' +
+        '<span class="pp-hw-session-chevron">〉</span>' +
+      '</button></div>';
+    }).join("");
+  }
+  function openAcademySession(id) { acOpenSessionId = id; renderAcademyTeacherDetail(); }
+  function closeAcademySession() { acOpenSessionId = null; renderAcademyTeacherDetail(); }
+  function toggleAcademyTaskDone(hwId, taskIdx) {
+    const h = acTeacherHwCache.find(x => x.id === hwId);
+    if (!h) return;
+    h.tasks[taskIdx].done = !h.tasks[taskIdx].done;
+    renderAcademyTeacherDetail();
+    db.collection("academyHomework").doc(hwId).update({ tasks: h.tasks }).catch(err => console.error(err));
+  }
   // "누적된 학습 기록"의 연/월 선택기가 학생마다 가입한 달부터만 보이도록, 계정의
   // Firestore 가입일(createdAt)을 "YYYY-MM"으로 저장해둔다. serverTimestamp()가 아직 반영되기
   // 전(가입 직후 오프라인 캐시 등)이라 createdAt이 없을 수도 있는데, 그때는 그냥 건너뛴다 —
@@ -14338,6 +14892,28 @@
     });
   }
 
+  // 학생 세션 체크와 동일한 패턴 — 저장된 아이디/비번을 teachers 컬렉션과 대조해서 유효하면
+  // 바로 선생님 대시보드로 들어간다(선생님은 자정 자동 로그아웃 대상이 아니다, 매일 쓰는 도구라
+  // 학생처럼 매일 다시 로그인시킬 이유가 없음).
+  function checkTeacherSession() {
+    const id = localStorage.getItem("holoTeacherId");
+    const pw = localStorage.getItem("holoTeacherPw");
+    if (!id || !pw) { showStudentGate(); return; }
+    db.collection("teachers").doc(id).get().then(doc => {
+      if (!doc.exists || doc.data().password !== pw) {
+        localStorage.removeItem("holoTeacherId");
+        localStorage.removeItem("holoTeacherPw");
+        localStorage.removeItem("holoTeacherName");
+        showStudentGate();
+      } else {
+        enterTeacherHome();
+      }
+    }).catch(err => {
+      console.error(err);
+      hideStudentGate();
+      go("teacherHome");
+    });
+  }
   function routeFromHash() {
     if (location.hash === "#admin") {
       go("admin");
@@ -14345,6 +14921,8 @@
     } else if (location.hash === "#form") {
       go("form");
       document.documentElement.removeAttribute("data-boot");
+    } else if (localStorage.getItem("holoTeacherId")) {
+      checkTeacherSession();
     } else {
       checkStudentSession();
     }
