@@ -2613,6 +2613,9 @@
      어느 쪽에서 넘어왔는지(holoActiveProduct)에 따라 배경색만 그쪽 톤에 맞춘다 — 콘텐츠
      영역(#view-mypage)뿐 아니라 위쪽 topbar도 같이 회색으로 바꿔야 이어져 보인다. */
   body.mypage-bg-academy #view-mypage, body.mypage-bg-academy .topbar { background: #F4F4F5; }
+  /* 새 Academy(선생님 연결) 화면들도 구 Academy(dark-consult)와 같은 회백색 톤으로 맞춘다. */
+  #view-academyHome, #view-academyTeacher { background: #F4F4F5; }
+  body.is-academy-page .topbar { background: #F4F4F5; }
   /* "Holo Study" 진입 전환 효과 — 홈 버튼을 누르면 잠깐 스플래시 화면에 로고가 팝업되듯
      나타났다가, 실제 학습 상담 페이지가 나타난다(dark-consult와 같은 회백색 톤). */
   .consult-splash {
@@ -7969,6 +7972,7 @@
     if (view === "consult-home") chomeShowTab("study");
     document.body.classList.toggle("is-admin", view === "admin" || view === "form");
     document.body.classList.toggle("is-teacher", view === "teacherHome");
+    document.body.classList.toggle("is-academy-page", view === "academyHome" || view === "academyTeacher");
     if (GROUP_OF[view]) {
       const group = document.getElementById("sbg-group-" + GROUP_OF[view]);
       if (group) group.classList.add("open");
