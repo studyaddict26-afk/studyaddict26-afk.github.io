@@ -2536,16 +2536,29 @@
   /* (위 설명 갱신) 핸드폰도 위에 소개(핵심 가치 3가지 · 기능 알아보기 · 함께하는 학생 수 · 공부 시작~입시 끝), 그 아래에 로그인 카드를 세로로 쌓는다.
      인스타그램 링크로 처음 들어온 사람이 홀로가 뭔지 먼저 읽고 바로 로그인 · 가입할 수 있게. 화면은 위아래로 스크롤된다. */
   @media (max-width: 767px) {
-    .sl-gate-body { flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 26px; padding: 22px 20px 40px; }
-    .sl-hero-content { display: block; flex: none; max-width: none; width: 100%; align-self: stretch; margin-top: 8px; }
-    .sl-hero-eyebrow { margin-bottom: 8px; font-size: 0.68rem; }
-    .sl-hero-content h1 { margin-bottom: 20px; font-size: 2.2rem; }
-    .sl-slide-title-list { margin-bottom: 16px; }
-    .sl-slide-title-list li { font-size: 0.92rem; padding-left: 32px; }
-    .sl-slide-title-list li + li { margin-top: 11px; }
-    .sl-hero-social { margin-top: 14px; }
-    .sl-fun-track { margin-top: 26px; margin-bottom: 30px; max-width: none; }
-    .student-login-box { width: 100%; max-width: 440px; align-self: center; padding: 30px 24px; }
+    /* 한 화면에 소개와 로그인이 같이 보이도록 전체를 촘촘하게: 로고는 가운데, 핵심 가치 3가지는 한 줄씩, 로그인 카드는 작게 */
+    .sl-gate-body { flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 14px; padding: 12px 18px 24px; }
+    .sl-hero-content { display: block; flex: none; max-width: none; width: 100%; align-self: stretch; margin-top: 0; text-align: center; }
+    .sl-hero-eyebrow { margin-bottom: 2px; font-size: 0.64rem; }
+    .sl-hero-content h1 { margin-bottom: 12px; font-size: 1.9rem; line-height: 1.2; text-align: center; }
+    .sl-slide-title-list { margin-bottom: 10px; text-align: left; }
+    .sl-slide-title-list li { padding-left: 24px; white-space: nowrap; font-size: clamp(0.6rem, 3.25cqw, 0.86rem); line-height: 1.5; }
+    .sl-slide-title-list li + li { margin-top: 7px; }
+    .sl-slide-title-list li::before { width: 17px; height: 17px; top: 1px; font-size: 0.6rem; line-height: 17px; }
+    .sl-slide-card { text-align: left; }
+    .sl-slide-cta { font-size: 0.78rem; }
+    .sl-hero-social { margin-top: 8px; font-size: 0.74rem; justify-content: flex-start; }
+    .sl-fun-track { margin-top: 12px; margin-bottom: 14px; max-width: none; text-align: left; }
+    .student-login-box { width: 100%; max-width: 440px; align-self: center; padding: 14px 18px 12px; border-radius: 12px; }
+    .student-login-box .sl-header { margin-bottom: 8px; }
+    .student-login-box .sl-avatar { width: 38px; height: 38px; box-shadow: 0 3px 8px rgba(10,26,68,0.3); }
+    .student-login-box .sl-avatar svg { width: 20px; height: 20px; }
+    .student-login-box .sl-role-toggle { margin-bottom: 8px; }
+    #slLoginPane .sl-role-btn { padding-top: 4px; padding-bottom: 4px; font-size: 0.78rem; }
+    #slLoginPane .apply-field { margin-bottom: 8px; }
+    #slLoginPane .apply-field input { padding-top: 6px; padding-bottom: 6px; font-size: 0.82rem; }
+    #slLoginPane .apply-submit-btn { padding-top: 8px; padding-bottom: 8px; font-size: 0.86rem; }
+    .student-login-box .sl-switch-link { margin-top: 8px; font-size: 0.72rem; }
   }
   .student-login-box {
     flex: none;
