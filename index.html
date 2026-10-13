@@ -2533,9 +2533,19 @@
   }
   /* 아이패드(세로 768px~)·노트북·데스크톱에서는 목차 바 + 히어로 콘텐츠까지 다 보여주는
      랜딩 페이지 느낌으로, 핸드폰(앱, 767px 이하)에서는 로그인 카드만 딱 나오게 한다. */
+  /* (위 설명 갱신) 핸드폰도 위에 소개(핵심 가치 3가지 · 기능 알아보기 · 함께하는 학생 수 · 공부 시작~입시 끝), 그 아래에 로그인 카드를 세로로 쌓는다.
+     인스타그램 링크로 처음 들어온 사람이 홀로가 뭔지 먼저 읽고 바로 로그인 · 가입할 수 있게. 화면은 위아래로 스크롤된다. */
   @media (max-width: 767px) {
-    .sl-hero-content { display: none; }
-    .sl-gate-body { justify-content: center; padding: 10px 20px 40px; }
+    .sl-gate-body { flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 26px; padding: 22px 20px 40px; }
+    .sl-hero-content { display: block; flex: none; max-width: none; width: 100%; align-self: stretch; margin-top: 8px; }
+    .sl-hero-eyebrow { margin-bottom: 8px; font-size: 0.68rem; }
+    .sl-hero-content h1 { margin-bottom: 20px; font-size: 2.2rem; }
+    .sl-slide-title-list { margin-bottom: 16px; }
+    .sl-slide-title-list li { font-size: 0.92rem; padding-left: 32px; }
+    .sl-slide-title-list li + li { margin-top: 11px; }
+    .sl-hero-social { margin-top: 14px; }
+    .sl-fun-track { margin-top: 26px; margin-bottom: 30px; max-width: none; }
+    .student-login-box { width: 100%; max-width: 440px; align-self: center; padding: 30px 24px; }
   }
   .student-login-box {
     flex: none;
@@ -6081,7 +6091,7 @@
 <div id="studentLoginGate">
   <div class="sl-gate-body">
     <div class="sl-hero-content">
-      <div class="sl-hero-eyebrow">관리형 독서실 학습 관리 시스템</div>
+      <div class="sl-hero-eyebrow">온라인 학습 관리 시스템</div>
       <h1><span class="accent">홀로</span> <span class="en">HOLO</span></h1>
       <div class="sl-slide-card">
         <ul class="sl-slide-title-list" id="slHeroTitleList"></ul>
