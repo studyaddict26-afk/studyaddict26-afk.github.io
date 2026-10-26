@@ -3371,6 +3371,26 @@
     .hd-right-top { flex-direction: column; }
   }
 
+  /* 태블릿 · 모바일(1100px 이하): 홈이 답답하지 않게 제목 · 요일 · 날짜 글자를 한 단계 줄인다 */
+  @media (max-width: 1100px) {
+    #view-home .home-nav-btn .hn-title { font-size: 0.68rem; }
+    #view-home .hwo-title { font-size: 0.74rem; }
+    #view-home .hwo-report-link { font-size: 0.64rem; }
+    #view-home .hwo-day-label { font-size: 0.6rem; }
+    #view-home .rh-tile-title { font-size: 0.8rem; }
+    #view-home .home-schedule-title { font-size: 0.74rem; }
+    #view-home .home-schedule-date { font-size: 0.6rem; margin-bottom: 6px; }
+    #view-home .hps-title { font-size: calc(0.54rem * var(--hs, 1)); }
+    #view-home .hp-title, #view-home .hn-notice-title, .hd-right-top .hac-eyebrow { font-size: 0.74rem; }
+    #view-home .hn-notice-empty { font-size: 0.68rem; }
+    #view-home .hd-right-top .hac-title { font-size: 0.6rem; }
+    #view-home .hac-btn { font-size: 0.66rem; }
+    #view-home .rh-tile-status-label { font-size: 0.68rem; }
+    #view-home .rh-tile-score-big { font-size: 1.25rem; }
+    #view-home .hd-ai .chat-pane-title-row .record-pane-title { font-size: 0.74rem; }
+    #view-home .hd-ai .chat-pane-note { font-size: 0.62rem; }
+  }
+
   /* ── 작은 허브 페이지 (내 학습 기록 / 우리 동네 내신 기출) ── */
   .hub-page-wrap {
     max-width: 700px; width: 100%; margin: 32px auto 0 auto; padding: 0 24px 48px 24px;
