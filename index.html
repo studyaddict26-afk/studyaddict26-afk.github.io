@@ -15,6 +15,7 @@
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&display=swap" rel="stylesheet">
 <style>
   :root {
     --cream: #F7F5F0;
@@ -2842,10 +2843,11 @@
     flex: 1; min-height: 0; align-content: start; justify-content: center;
     overflow-y: auto;
   }
+  .home-schedule-log { row-gap: calc(6px * var(--hs, 1)); }
   .home-schedule-log li { display: contents; }
   .home-schedule-log li.sched-empty-msg { display: block; grid-column: 1 / -1; text-align: center; }
-  .hsl-label { font-size: 0.74rem; color: var(--ink-soft); white-space: nowrap; }
-  .hsl-time { font-size: 0.74rem; color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .hsl-label { font-size: calc(0.74rem * var(--hs, 1)); color: var(--ink-soft); white-space: nowrap; }
+  .hsl-time { font-size: calc(0.74rem * var(--hs, 1)); color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .home-schedule-title {
     display: inline-flex; align-items: center; gap: 4px; flex: none;
     font-size: 0.88rem; font-weight: 600; color: var(--ink); text-decoration: none;
@@ -2858,12 +2860,12 @@
   .home-schedule-title:hover .arrow { transform: translateX(2px); }
   /* 홈 화면 "내 플래너 관리하기" 박스 안, 오늘 계획을 오전/오후/저녁으로 간단히 보여주는 목록 */
   .home-planner-blocks { display: flex; flex-direction: column; flex: 1; min-height: 0; justify-content: flex-start; overflow-y: auto; }
-  .hps-block { display: flex; flex-direction: column; gap: 4px; flex: none; }
-  .hps-title { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em; color: var(--ink-soft); }
-  .hps-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; flex: none; }
-  .hps-list li { font-size: 0.78rem; color: var(--ink); min-height: 15px; padding-left: 13px; position: relative; }
+  .hps-block { display: flex; flex-direction: column; gap: calc(4px * var(--hs, 1)); flex: none; }
+  .hps-title { font-size: calc(0.62rem * var(--hs, 1)); font-weight: 700; letter-spacing: 0.08em; color: var(--ink-soft); }
+  .hps-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: calc(3px * var(--hs, 1)); flex: none; }
+  .hps-list li { font-size: calc(0.78rem * var(--hs, 1)); color: var(--ink); min-height: calc(15px * var(--hs, 1)); padding-left: 13px; position: relative; }
   .hps-list li::before { content: "•"; position: absolute; left: 0; color: var(--ink-soft); }
-  .hps-divider { height: 1px; background: var(--line); margin: 8px 0; }
+  .hps-divider { height: 1px; background: var(--line); margin: calc(8px * var(--hs, 1)) 0; }
 
   /* ── 내 스케줄 관리하기 / 내 플래너 관리하기 (같은 레이아웃을 쓰는 전용 페이지들) ──
      .consult-page가 이 규칙 없이 기본(블록, 높이 제한 없음) 상태로 있으면, 안의
@@ -3306,6 +3308,9 @@
   #view-home .home-brand-inner { max-width: 1480px; padding: 0 40px; align-items: center; }
   #view-home .home-brand-text { font-size: 1.3rem; }
   #view-home .consult-dday { margin-left: 16px; }
+  #view-home .hwo-stat-val { font-size: 0.72rem; font-weight: 500; }
+  #view-home .hwo-stat-label { font-size: 0.62rem; }
+  #view-home .rh-tile-score-big { font-weight: 500; } /* 오늘의 공부 점수(N/2점)도 볼드 없이 — 모바일 포함 */
   #view-home .home-brand-actions { margin-right: 16px; } /* 마이페이지도 D-day와 같은 만큼 안쪽으로 */
   #view-home .home-brand-row, .home-dash { zoom: 0.94; } /* 비율은 그대로 두고 전체를 6% 줄여 양옆 여백을 늘린다 */
   #view-home .home-brand-icon { width: 24px; height: 24px; }
@@ -3330,6 +3335,16 @@
   .home-dash .home-promo-slot { grid-column: 1; grid-row: 2; align-self: end; height: calc(var(--ln-cal-h) - var(--ln-nav-h) - var(--ln-gap)); display: flex; gap: var(--ln-gap); align-items: stretch; min-height: 0; }
   .home-dash .home-promo-slot .rh-tile { flex: 1 1 0; min-width: 0; padding: 14px 16px; border-radius: 12px; }
   .home-dash .home-week-overview { border-radius: 12px; }
+  .hd-today-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--ln-gap); }
+  .hd-today-col .rh-tile { flex: 1 1 0; min-height: 0; }
+  .home-pledge-box { flex: 1 1 0; min-height: 0; box-sizing: border-box; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .hp-head { flex: none; display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .hp-title { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
+  .hp-saved { font-size: 0.66rem; color: var(--ink-soft); }
+  /* 다짐은 굵은 붓글씨 느낌(East Sea Dokdo)으로, 글이 짧을수록 크게 · 가운데에 놓는다(너무 꽉 차지 않게 글자 크기를 제한) */
+  .home-pledge-box textarea { flex: 1; min-height: 0; resize: none; box-sizing: border-box; width: 100%; border: none; border-radius: 8px; background: var(--cream); padding: 10px 14px; font-family: "East Sea Dokdo", "Nanum Brush Script", cursive; font-size: 1.9rem; line-height: 1.15; text-align: center; color: #17181A; overflow: hidden; -webkit-text-stroke: 0.7px #17181A; }
+  .home-pledge-box textarea::placeholder { font-size: 1.3rem; color: var(--ink-soft); }
+  .home-pledge-box textarea:focus { outline: 1px solid var(--green); }
   .hd-stack { flex: 0 0 calc((100% - 2 * var(--ln-gap)) / 3); min-width: 0; display: flex; flex-direction: column; gap: var(--ln-gap); } /* 폭 = 위 버튼 하나(시험 시뮬레이션)와 같음 */
   .hd-stack .home-schedule-box { flex: 1 1 0; min-height: 0; border-radius: 12px; padding: 10px 12px; }
   .home-notice-box {
@@ -6819,6 +6834,7 @@
       </div>
 
     <div class="home-promo-slot">
+      <div class="hd-today-col">
       <div class="rh-tile">
         <button type="button" class="rh-tile-head rh-tile-head-btn" onclick="go('todayrecord')">
           <span class="rh-tile-head-left">
@@ -6845,6 +6861,11 @@
           <div class="rh-tile-score-col">
             <div class="rh-tile-score-big rh-score-num s1" id="rhTileScoreBig">1/2점</div>
           </div>
+        </div>
+      </div>
+        <div class="home-pledge-box">
+          <div class="hp-head"><span class="hp-title">오늘의 다짐</span><span class="hp-saved" id="hpSaved"></span></div>
+          <textarea id="hpText" maxlength="200" placeholder="오늘 하루 다짐을 적어 보세요" oninput="hpSave()"></textarea>
         </div>
       </div>
       <div class="hd-stack">
@@ -10710,7 +10731,7 @@
     }
     loadChatHistory(view);
     if (view === "todayrecord") initTodayRecord();
-    if (view === "home") loadChatHistory("chat");
+    if (view === "home") { loadChatHistory("chat"); hpLoad(); }
     if (view === "plannerPage") initPlannerPage();
     if (view === "mypage") initMypage();
     if (view === "reports") loadReports();
@@ -11098,9 +11119,23 @@
   // 직접 지정한다(align-items:stretch만으로는 안 됨 — 내용이 그 높이보다 길어지면 flex:1
   // 박스 자체가 같이 늘어나 버려서, 아예 고정 픽셀 높이를 줘야 크림색 안쪽에서만 스크롤된다).
   // 모바일(세로로 쌓이는 레이아웃)에서는 의미가 없어서 지정한 높이를 다시 지운다.
+  // 홈 "공부 계획 세우기" · "내 스케줄 관리하기" 누런 칸: 항목이 많아 칸을 넘치면 글자 크기를 단계적으로 줄여(최소 50%) 스크롤 없이 한눈에 보이게 한다.
+  function homeFitLists() {
+    ["homePlannerBlocks", "homeScheduleLog"].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el || !el.clientHeight) return;
+      let s = 1;
+      el.style.setProperty("--hs", s);
+      while (el.scrollHeight > el.clientHeight + 1 && s > 0.5) {
+        s = Math.round((s - 0.05) * 100) / 100;
+        el.style.setProperty("--hs", s);
+      }
+    });
+  }
   function syncHomeCardHeights() {
     // 홈은 이제 격자(.home-dash)가 높이를 정해서, 예전에 박스마다 고정 높이를 줬던 것을 지운다.
     document.querySelectorAll(".home-promo-slot .home-schedule-box").forEach(box => { box.style.height = ""; });
+    homeFitLists();
   }
   // 위 syncHomeCardHeights()를 데이터 로드가 끝나는 시점마다 일일이 호출해주는 방식은,
   // 폰트 로딩이 늦게 끝나거나 서버 응답이 느릴 때(콜드 스타트 등) 그 사이에는 박스 높이가
@@ -11130,6 +11165,7 @@
       loadHomeScheduleToday();
       loadHomePlannerToday();
       loadChatHistory("chat");
+      hpLoad();
     }
   }, 0);
 
@@ -12097,6 +12133,42 @@
   // 넘어가고(그 날짜로 이미 저장돼 있으므로) "오늘의 학습 기록"에는 새 빈 하루가 나타난다.
   // 서버(valtown.ts)의 kstTodayStr()도 반드시 같은 규칙이어야 한다 — 하나만 고치면 프론트가
   // 보내는 날짜와 서버가 아는 "오늘"이 어긋난다.
+  // ── 홈 "오늘의 다짐": 하루(새벽 6시 기준)마다 따로, 이 기기 브라우저에 저장 ──
+  function hpKey() { return "holoPledge:" + (localStorage.getItem("holoStudentId") || "") + ":" + getLocalDateKey(); }
+  function hpLoad() {
+    const el = document.getElementById("hpText");
+    if (!el) return;
+    let v = "";
+    try { v = localStorage.getItem(hpKey()) || ""; } catch (e) {}
+    el.value = v; hpFit();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(hpFit);
+    const s = document.getElementById("hpSaved"); if (s) s.textContent = "";
+  }
+  // 다짐 글자 크기 · 세로 가운데: 글이 짧으면 크게, 길면 작게(최대 2.3rem ~ 최소 1.2rem), 남는 높이의 절반을 위 여백으로
+  function hpFit() {
+    const el = document.getElementById("hpText");
+    if (!el || !el.clientHeight) return;
+    const len = el.value.length;
+    const rem = len <= 8 ? 2.3 : len <= 16 ? 2 : len <= 30 ? 1.7 : len <= 60 ? 1.4 : 1.2;
+    el.style.fontSize = rem + "rem";
+    // 같은 글자 · 폭의 보이지 않는 복사본으로 글 높이를 재서, 남는 높이의 절반을 위 여백으로 준다
+    let m = document.getElementById("hpMirror");
+    if (!m) { m = document.createElement("div"); m.id = "hpMirror"; document.body.appendChild(m); }
+    const cs = getComputedStyle(el);
+    m.style.cssText = "position:absolute;visibility:hidden;left:-9999px;top:0;white-space:pre-wrap;word-break:break-word;box-sizing:border-box;" +
+      "width:" + el.clientWidth + "px;padding:0 " + cs.paddingLeft + ";font-family:" + cs.fontFamily + ";font-size:" + cs.fontSize + ";line-height:" + cs.lineHeight + ";text-align:center;";
+    m.textContent = el.value || " ";
+    const free = el.clientHeight - 20 - m.offsetHeight;
+    el.style.paddingTop = (10 + Math.max(0, free / 2)) + "px";
+  }
+  let hpTimer = null;
+  function hpSave() {
+    hpFit(); clearTimeout(hpTimer);
+    hpTimer = setTimeout(() => {
+      const el = document.getElementById("hpText"), s = document.getElementById("hpSaved");
+      try { localStorage.setItem(hpKey(), el.value); if (s) s.textContent = "저장됨"; } catch (e) { if (s) s.textContent = "저장 실패"; }
+    }, 400);
+  }
   function getLocalDateKey() {
     const d = new Date();
     if (d.getHours() < 6) d.setDate(d.getDate() - 1);
