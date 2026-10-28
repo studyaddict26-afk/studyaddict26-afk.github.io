@@ -17,14 +17,10 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{min-height:100%}
-body{font-family:var(--font);color:var(--ink);word-break:keep-all;background:
-  radial-gradient(1100px 700px at 78% 28%,#fff 0,transparent 70%),
-  radial-gradient(800px 600px at 8% 100%,#E3EDE1 0,transparent 70%),
-  radial-gradient(700px 500px at 100% 100%,#FBE6D8 0,transparent 70%),
-  var(--offwhite);overflow-x:hidden}
+body{font-family:var(--font);color:var(--ink);word-break:keep-all;background:#ECE9E1;overflow-x:hidden;padding:0 clamp(12px,3vw,40px) 40px}
 
 /* ---------- page layout (fills the screen) ---------- */
-.page{max-width:1360px;margin:0 auto;min-height:100vh;display:grid;grid-template-columns:minmax(340px,40%) minmax(0,1fr);align-items:center;gap:0 8px;padding:0 32px}
+.page{display:grid;grid-template-columns:minmax(340px,42%) minmax(0,1fr);align-items:center;gap:0 8px;padding:56px clamp(24px,4vw,64px) 36px}
 .left{display:flex;flex-direction:column;gap:18px;padding:40px 0;max-width:520px}
 .brand{font-size:13px;font-weight:700;letter-spacing:.14em;color:var(--teal)}
 .left h1{font-size:clamp(28px,2.5vw,40px);line-height:1.2;font-weight:900;letter-spacing:-.03em}
@@ -43,7 +39,7 @@ body{font-family:var(--font);color:var(--ink);word-break:keep-all;background:
 .disc b{color:var(--teal)}
 
 /* ---------- 3D scene ---------- */
-.scene{min-width:0;overflow:hidden;position:relative;height:min(100vh,780px);min-height:560px;display:flex;align-items:center;justify-content:center;perspective:2000px}
+.scene{min-width:0;overflow:hidden;position:relative;height:700px;display:flex;align-items:center;justify-content:center;perspective:2000px}
 .world{width:900px;height:880px;flex:none;position:relative;transform-style:preserve-3d;transform:scale(var(--k,1)) rotateX(var(--rx,4deg)) rotateY(var(--ry,-12deg));transition:transform .12s ease-out}
 .bob{position:absolute;inset:0;transform-style:preserve-3d;animation:bob 6s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
@@ -126,18 +122,18 @@ button.btn[disabled]{background:var(--gray);color:var(--gray-ink);cursor:not-all
 }
 
 /* ---------- nav / sections / signup ---------- */
-html{scroll-behavior:smooth;scroll-padding-top:60px}
-.nav{position:sticky;top:0;z-index:20;background:rgba(247,245,240,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid #E3E1D8}
-.navin{max-width:1360px;margin:0 auto;padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+.nav{position:sticky;top:12px;z-index:20;max-width:1240px;margin:16px auto 0;background:rgba(255,255,255,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid #DDD9CE;border-radius:999px;box-shadow:0 10px 30px -18px rgba(20,40,40,.4)}
+.navin{padding:0 28px;height:52px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.sheet{max-width:1240px;margin:16px auto 0;border-radius:32px;overflow:hidden;box-shadow:0 30px 60px -40px rgba(20,40,40,.5);background:radial-gradient(1100px 700px at 78% 12%,#fff 0,transparent 70%),radial-gradient(800px 600px at 8% 100%,#E3EDE1 0,transparent 70%),radial-gradient(700px 500px at 100% 100%,#FBE6D8 0,transparent 70%),var(--offwhite)}
 .navin b{font-weight:900;letter-spacing:-.01em}.navin b small{font-weight:500;color:var(--ink-soft);font-size:12px}
 .navin nav{display:flex;gap:20px;font-size:14px;font-weight:500}
 .navin a{color:var(--teal);text-decoration:none}.navin a:hover{text-decoration:underline}
-.page{min-height:calc(100vh - 56px)}
 .cta{display:flex;align-items:center;gap:14px;margin-top:2px}
 .cta span{font-size:13px;color:var(--ink-soft)}
 .btn-cta{display:inline-flex;align-items:center;justify-content:center;font:inherit;font-weight:700;font-size:15px;padding:11px 22px;border-radius:12px;background:var(--teal);color:#fff;border:0;text-decoration:none;cursor:pointer;transition:filter .15s}
 .btn-cta:hover{filter:brightness(1.12)}.btn-cta[disabled]{opacity:.55;cursor:default}
-.sections{max-width:1100px;margin:0 auto;padding:0 32px}
+.sections{max-width:1040px;margin:0 auto;padding:0 clamp(24px,4vw,48px)}
 .sec{padding:76px 0;border-top:1px solid #E3E1D8}
 .lab{font-size:13px;font-weight:700;color:var(--teal);letter-spacing:.04em}
 .sec h2{margin-top:8px;font-size:clamp(24px,2.4vw,32px);line-height:1.35;font-weight:900;letter-spacing:-.02em}
@@ -164,7 +160,7 @@ html{scroll-behavior:smooth;scroll-padding-top:60px}
 #form .agree input{margin-top:6px}#form .agree span{font-size:13px}
 #form .btn-cta{align-self:flex-start;margin-top:12px}
 #msg{font-size:14px;color:var(--ink-soft);min-height:1.5em;margin-top:6px}
-.foot{max-width:1100px;margin:0 auto;padding:30px 32px 50px;border-top:1px solid #E3E1D8;font-size:13px;color:var(--ink-soft);line-height:1.6}
+.foot{max-width:1040px;margin:0 auto;padding:30px clamp(24px,4vw,48px) 44px;border-top:1px solid #E3E1D8;font-size:13px;color:var(--ink-soft);line-height:1.6}
 @media (max-width:980px){
   .navin{padding:0 20px}.navin nav{gap:12px;font-size:13px}
   .sections,.foot{padding-left:20px;padding-right:20px}
@@ -172,11 +168,38 @@ html{scroll-behavior:smooth;scroll-padding-top:60px}
   .sec{padding:52px 0}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+.ladder{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:22px}
+.ladder .st{background:rgba(255,255,255,.7);border:1px solid #ECE9E1;border-radius:14px;padding:12px 14px}
+.ladder .st b{display:block;font-size:15px}.ladder .st span{display:block;margin-top:2px;font-size:13px;color:var(--ink-soft);line-height:1.5}
+.ladder .st.weak{background:rgba(255,255,255,.4)}
+.rules{list-style:none;margin-top:22px;display:grid;gap:0}
+.rules li{padding:12px 0;border-top:1px solid #E3E1D8;font-size:15px;line-height:1.65;display:flex;gap:10px}
+.rules li::before{content:"✓";color:var(--teal);font-weight:900;flex:none}
+.rules li.x::before{content:"–";color:var(--gray-ink)}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:26px}
+.box{background:rgba(255,255,255,.7);border:1px solid #ECE9E1;border-radius:16px;padding:18px 20px}
+.box h3{font-size:16px;font-weight:700}.box ul{list-style:none;margin-top:8px;display:grid;gap:6px;font-size:14.5px;line-height:1.6;color:var(--ink-soft)}
+.box li::before{content:"· ";color:var(--teal);font-weight:900}
+.plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:28px}
+.plan{background:rgba(255,255,255,.78);border:1px solid #ECE9E1;border-radius:18px;padding:22px}
+.plan.main{border-top:3px solid var(--teal)}
+.plan .tg2{display:inline-block;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--teal-soft);color:var(--teal-deep)}
+.plan .tg2.soon{background:var(--gray);color:var(--gray-ink)}
+.plan h3{margin-top:8px;font-size:18px}.plan .price{font-size:34px}
+.pays{margin-top:24px}
+.pays table{width:100%;border-collapse:collapse;font-size:14.5px}
+.pays th,.pays td{text-align:left;padding:10px 12px 10px 0;border-top:1px solid #E3E1D8;vertical-align:top;line-height:1.55}
+.pays th{font-size:13px;color:var(--ink-soft);font-weight:500;border-top:0}
+.pays td:first-child{font-weight:700;white-space:nowrap}
+.pays td.st{white-space:nowrap;color:var(--teal);font-weight:700}
+@media (max-width:980px){.ladder,.cols,.plans{grid-template-columns:minmax(0,1fr)}.pays{overflow-x:auto}.nav{border-radius:24px}.navin{padding:0 16px}}
 </style>
 </head>
 <body>
 <header class="nav"><div class="navin"><b>WATCH DOG <small>(가칭)</small></b>
-  <nav aria-label="섹션"><a href="#demo">앱 체험</a><a href="#problem">문제</a><a href="#solution">해결</a><a href="#offer">혜택</a><a href="#signup">신청</a></nav></div></header>
+  <nav aria-label="섹션"><a href="#demo">앱 체험</a><a href="#problem">문제</a><a href="#solution">해결</a><a href="#trust">운영 원칙</a><a href="#offer">가격</a><a href="#signup">신청</a></nav></div></header>
+<div class="sheet">
 <div class="page" id="demo">
   <section class="left">
     <div class="brand">노령 반려동물 방문 돌봄 · 제천 시범 준비 중</div>
@@ -203,55 +226,113 @@ html{scroll-behavior:smooth;scroll-padding-top:60px}
     </div></div>
   </section>
 </div>
-
 <main class="sections">
   <section id="problem" class="sec">
     <p class="lab">1 문제</p>
     <h2>날짜는 정해졌는데, 맡길 곳이 안 정해져요</h2>
+    <p class="note" style="margin-top:12px;font-size:15px">출근·출장·여행·명절·입원처럼 날짜가 고정된 부재 앞에서, 식사 확인·배변 정리·이동 보조 같은 “빠지면 안 되는 케어”를 맡길 곳을 찾아야 합니다.</p>
     <div class="items">
-      <div class="it"><span class="no">1</span><h3>일일이 물어봐야 해요</h3><p>같은 질문을 여러 곳에 반복합니다.</p></div>
-      <div class="it"><span class="no">2</span><h3>'해 봤다'를 믿을 수 없어요</h3><p>"노견 가능"만으로는 알 수 없습니다.</p></div>
-      <div class="it"><span class="no">3</span><h3>총액은 직전에야 알아요</h3><p>추가 항목 때문에 비교가 어렵습니다.</p></div>
+      <div class="it"><span class="no">1</span><h3>업체마다 따로 물어봐야 해요</h3><p>노령·투약 가능 여부를 곳곳에 개별 문의합니다.</p></div>
+      <div class="it"><span class="no">2</span><h3>'해 봤다'를 믿기 어려워요</h3><p>후보마다 해당 케어를 해 본 경험을 따로 확인해야 합니다.</p></div>
+      <div class="it"><span class="no">3</span><h3>최종 금액이 직전에야 보여요</h3><p>추가비·수수료를 포함한 총액이 예약 전까지 불투명합니다.</p></div>
     </div>
-    <p class="note">가상 예시: 확정까지 17일, 문의 15건. 실제 측정값이 아닙니다.</p>
+    <p class="note">반려가구의 47.8%가 최근 여행을 포기한 경험이 있다고 답했습니다(KB경영연구소, 2023 한국 반려동물 보고서). 노령 동물에 한정한 통계가 아니라 참고용이며, 노령 동물 보호자의 실제 부담은 시범 운영에서 직접 확인합니다.</p>
   </section>
 
   <section id="solution" class="sec">
     <p class="lab">2 해결</p>
     <h2>케어 계획서 기반 매칭, 하나만 합니다</h2>
+    <p class="note" style="margin-top:12px;font-size:15px">우리 아이에게 꼭 필요한 케어를 해 본 사람만 보여 주고, 총액과 케어 계획까지 확정해 연결합니다.</p>
     <div class="items">
-      <div class="it"><span class="no">1</span><h3>업무별 경험 확인</h3><p>식사·배변·보행 보조, 투약마다 해 본 경험을 표시합니다.</p></div>
-      <div class="it"><span class="no">2</span><h3>예약 전 총액 확정</h3><p>방문비, 이동비, 수수료를 합친 한 장 견적을 먼저 봅니다.</p></div>
-      <div class="it"><span class="no">3</span><h3>계획서와 수행 기록</h3><p>정한 케어를 문서로 남기고 방문마다 확인합니다.</p></div>
+      <div class="it"><span class="no">1</span><h3>업무별 경험 확인</h3><p>식사 확인·배변 정리·이동 보조처럼 필요한 케어마다 해 본 경험을 보여 주고, 확인되지 않은 항목은 “미확인”으로 표시합니다.</p></div>
+      <div class="it"><span class="no">2</span><h3>예약 전 한 장 견적</h3><p>최소 시간, 포함 업무, 추가 비용, 수수료를 합친 최종 총액을 예약 전에 봅니다.</p></div>
+      <div class="it"><span class="no">3</span><h3>케어 계획서와 수행 기록</h3><p>업무·시간·추가 비용·연락 및 병원 이동 절차를 양측이 동의해 확정하고, 방문 뒤 수행 내용을 기록합니다.</p></div>
     </div>
-    <p class="flow"><b>이용 순서</b> 케어 입력 5분 <i>→</i> 해 본 사람 확인 <i>→</i> 한 장 견적 <i>→</i> 사전 만남·계획서 확정</p>
+    <p class="flow"><b>이용 순서</b> 케어 입력(약 5분) <i>→</i> 해 본 사람 확인 <i>→</i> 한 장 견적 <i>→</i> 사전 만남 <i>→</i> 계획서 확정·결제 <i>→</i> 방문 기록</p>
+  </section>
+
+  <section id="trust" class="sec">
+    <p class="lab">3 운영 원칙</p>
+    <h2>‘확인’이 무엇을 뜻하는지 먼저 말씀드려요</h2>
+    <div class="ladder">
+      <div class="st weak"><b>자기신고</b><span>제공자가 직접 적은 경험. 단독으로는 “확인”으로 표시하지 않습니다.</span></div>
+      <div class="st"><b>교육 이수</b><span>정해진 교육을 마친 기록으로 지식을 확인합니다.</span></div>
+      <div class="st"><b>실습 확인</b><span>운영자 입회나 영상·사진으로 해당 업무 수행을 확인합니다.</span></div>
+      <div class="st"><b>이전 수행 기록</b><span>서비스 안에서 완료한 방문 기록. 가장 강한 근거입니다.</span></div>
+    </div>
+    <ul class="rules">
+      <li>필수 업무가 “미확인”인 후보는 추가 확인 전까지 예약을 확정하지 않습니다.</li>
+      <li>‘확인’은 해당 업무의 근거를 확인했다는 뜻이며, 안전이나 의료 자격을 보증하지 않습니다.</li>
+      <li>제공자가 취소하면 같은 조건으로 확인된 대체 인력을 먼저 배정하고, 없으면 바로 알려 일정을 다시 조율합니다.</li>
+      <li>방문 중 이상이 있으면 계획서에 적어 둔 보호자 연락처와 병원 이동 절차를 따릅니다(응급 연락 절차는 출시 전 확정).</li>
+    </ul>
+    <div class="cols">
+      <div class="box"><h3>이런 분께 맞아요</h3><ul>
+        <li>식사 확인·배변 정리·이동 보조처럼 개별 생활 보조가 필요한 노견·노묘</li>
+        <li>출근·출장·여행·명절·입원 등 정해진 부재가 있는 보호자</li>
+        <li>돌봄을 부탁할 사람이 없어 외부 서비스를 찾고 있는 보호자</li>
+        <li>정해진 방문 돌봄으로 필요한 관리가 가능한 경우</li>
+      </ul></div>
+      <div class="box"><h3>지금은 하지 않아요</h3><ul>
+        <li>방문 사이 상주, 종일·야간 돌봄, 지속 관찰이 필요한 동물</li>
+        <li>직접 복약 지원: 수행 요건과 수의 자문을 확인한 뒤 도입할 확장 항목입니다. 복약 관련 요청은 운영자가 먼저 확인합니다.</li>
+        <li>진단, 처방 변경, 주사, 수액</li>
+        <li>AI 영상 분석과 자동 추천, 노령이라는 이유만의 요금 일괄 가산</li>
+      </ul></div>
+    </div>
   </section>
 
   <section id="offer" class="sec">
-    <p class="lab">3 가격과 혜택</p>
+    <p class="lab">4 가격과 혜택</p>
     <h2>총액을 먼저 보여 드립니다</h2>
-    <div class="two">
-      <div>
-        <p class="cap">시범 제안가 · 2박 3일, 하루 3회 방문</p>
+    <p class="note" style="margin-top:12px;font-size:15px">아래 금액은 시범 운영을 위한 제안가이며 검증 전 가설입니다. 확정 요금이 아니고 시범 전에 바뀔 수 있습니다.</p>
+    <div class="plans">
+      <div class="plan main">
+        <span class="tg2">베이직 · 건별 결제</span>
+        <h3>2박 3일 방문 돌봄</h3>
+        <p class="cap">하루 3회 × 회당 40분 × 3일 = 방문 9회</p>
         <p class="price">140,000원 <small>총액</small></p>
-        <div class="rows"><div><span>돌봄 인력 보수 (9회)</span><b>99,000원</b></div><div><span>보험 적립·운영·수수료</span><b>41,000원</b></div></div>
-        <p class="note">확정 전에 바뀔 수 있습니다. 안전을 100% 약속하지 않으며, 보험은 출시 전에 확인합니다.</p>
+        <div class="rows">
+          <div><span>돌봄 제공자 보수 (9회 × 11,000원)</span><b>99,000원</b></div>
+          <div><span>중개·운영 수수료</span><b>41,000원</b></div>
+        </div>
+        <p class="note">제공자 보수 11,000원에는 40분 돌봄과 이동 실비가 들어 있습니다. 중개·운영 수수료에는 매칭·사전 만남 운영, 보험·사고 대비 적립, 결제 수수료가 포함됩니다. 야간 상주는 포함되지 않습니다.</p>
       </div>
+      <div class="plan">
+        <span class="tg2 soon">프로 · 정기 구독 · 2단계(가설)</span>
+        <h3>정기 방문</h3>
+        <p class="cap">월 12회(주 3회) × 방문당 20분</p>
+        <p class="price">108,000원 <small>월</small></p>
+        <p class="note">건별 이용 뒤 재이용이 확인된 보호자에게 먼저 제안할 계획입니다. 필요한 방문 빈도에 맞춰 다시 설계될 수 있습니다.</p>
+      </div>
+    </div>
+    <div class="pays">
+      <p class="cap">결제 방식 (제안)</p>
+      <table>
+        <tr><th>방식</th><th>어떻게 결제하나</th><th>단계</th></tr>
+        <tr><td>건별 총액 결제</td><td>케어 계획서를 확정한 뒤, 한 장 견적의 총액을 한 번에 결제합니다.</td><td class="st">1단계</td></tr>
+        <tr><td>예약금 + 잔금</td><td>일정이 먼 명절·여행 예약은 일부를 먼저 결제하고, 돌봄 완료와 수행 기록 확인 뒤 잔금을 정산합니다. 제공자 지급은 확인 뒤에 합니다.</td><td class="st">1단계</td></tr>
+        <tr><td>정기 구독</td><td>월 정액을 자동 결제하고 방문 횟수를 정해 사용합니다.</td><td class="st">2단계</td></tr>
+      </table>
+      <p class="note">결제 수단은 카드, 간편결제, 계좌이체를 검토 중입니다. 케어 입력과 후보 열람은 무료이고, 예약이 확정될 때만 요금이 발생합니다. 안전을 100% 약속하지 않으며, 보험은 노령 동물 보장 여부를 포함해 출시 전에 확인합니다.</p>
+    </div>
+    <div class="two" style="margin-top:34px">
       <div>
-        <p class="cap">사전예약 혜택</p>
+        <p class="cap">사전예약 혜택 (시범 기준)</p>
         <div class="rows ben">
           <div><b>우선 매칭</b><span>첫 시범에서 요청을 먼저 매칭합니다.</span></div>
           <div><b>첫 시범 참여</b><span>일정이 정해지면 가장 먼저 안내합니다.</span></div>
           <div><b>입력 도움</b><span>필수 케어 입력을 함께 정리합니다.</span></div>
         </div>
       </div>
+      <div></div>
     </div>
   </section>
 
   <section id="signup" class="sec">
     <div class="two su">
       <div>
-        <p class="lab">4 사전예약</p>
+        <p class="lab">5 사전예약</p>
         <h2>제천 첫 시범에 먼저 연락드릴게요</h2>
         <p class="note">시범 운영 안내와 필수 케어 확인에만 사용합니다.</p>
       </div>
@@ -261,7 +342,7 @@ html{scroll-behavior:smooth;scroll-padding-top:60px}
         <label for="species">아이 종류</label>
         <select id="species" class="field"><option>노견</option><option>노묘</option><option>그 외</option></select>
         <label for="reason">필요한 이유</label>
-        <textarea id="reason" rows="3" class="field" placeholder="예: 11월 2박 3일 출장, 하루 2번 약을 먹여 줄 사람이 필요해요."></textarea>
+        <textarea id="reason" rows="3" class="field" placeholder="예: 11월 2박 3일 출장, 계단 이동과 식사 확인을 도와줄 사람이 필요해요."></textarea>
         <label class="agree"><input id="agree" type="checkbox"><span>이름, 연락처, 입력 내용을 시범 운영 안내에 사용하는 데 동의합니다.</span></label>
         <button id="submit" class="btn-cta" type="submit">신청하기</button>
         <p id="msg" role="status" aria-live="polite"></p>
@@ -269,7 +350,8 @@ html{scroll-behavior:smooth;scroll-padding-top:60px}
     </div>
   </section>
 </main>
-<footer class="foot">WATCH DOG(가칭)은 제천 시범 운영을 준비하는 서비스입니다. 가격과 혜택은 시범 전에 확정됩니다. 이 페이지의 화면과 가격은 콘셉트 목업입니다.</footer>
+<footer class="foot">WATCH DOG(가칭)은 제천 시범 운영을 준비하는 서비스입니다. 이 페이지의 화면, 인물, 가격은 콘셉트 목업이며 실제 서비스 실적이나 확정 요금이 아닙니다.</footer>
+</div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
@@ -300,16 +382,17 @@ html{scroll-behavior:smooth;scroll-padding-top:60px}
 
 <script>
 /* 버튼은 화면 이동·표시만 바꾸고, 실제 기능(저장·결제·매칭)은 없음 */
-const P={step:1,view:"main",tasks:{med:true,feed:true,walk:true,toilet:false},win:{m:true,e:true},cand:"A",verify:{}};
+const P={step:1,view:"main",tasks:{feed:true,toilet:true,mob:true,walk:false,med:false},win:{m:true,e:true},cand:"A",verify:{}};
 const CAND={
-  A:{n:"돌봄 인력 A",t:"월 08–10시 · 수 18–20시",ev:{med:true,feed:true,walk:true,toilet:false},sum:"투약·식사·보행 보조 경험이 확인되었습니다(시연용 자료)."},
-  B:{n:"돌봄 인력 B",t:"화 08–10시 · 목 18–20시",ev:{med:false,feed:true,walk:true,toilet:true},sum:"식사·보행·배변 패드 케어 경험이 확인되었습니다(시연용 자료)."}};
-const TN={med:"하루 2회 약 먹이기",feed:"식사 보조",walk:"보행 보조",toilet:"배변 패드 케어"};
-const PN={med:"투약",feed:"식사 보조",walk:"보행 보조",toilet:"배변 패드"};
-const SH={med:"투약",feed:"식사",walk:"보행",toilet:"배변"};
-const STEPS=[["01","필수 케어 입력","반려동물·부재 일정·필요한 업무"],["02","후보 비교","업무별 경험 확인·미확인"],["03","총액·계획서","방문 횟수·시간·추가비·수수료"],["04","사전 만남","만난 뒤 양측이 확정"]];
+  A:{n:"제공자 A",t:"월 08–10시 · 수 18–20시",ev:{feed:true,toilet:true,mob:false,walk:true},sum:"식사 확인·배변 정리·산책 경험이 확인되었습니다(시연용 자료)."},
+  B:{n:"제공자 B",t:"화 08–10시 · 목 18–20시",ev:{feed:true,toilet:false,mob:true,walk:true},sum:"식사 확인·이동 보조·산책 경험이 확인되었습니다(시연용 자료)."}};
+const TN={feed:"식사 준비·섭취 확인",toilet:"배변 정리",mob:"이동 보조",walk:"합의된 계획에 맞춘 산책"};
+const PN={feed:"식사 확인",toilet:"배변 정리",mob:"이동 보조",walk:"산책"};
+const SH=PN;
+const STEPS=[["01","필수 케어 입력","반려동물·부재 일정·필요한 업무"],["02","후보 비교","업무별 경험 확인·미확인"],["03","총액·계획서","방문 횟수·시간·추가비·수수료"],["04","사전 만남","만난 뒤 양측이 확정하고 결제"]];
 const $=id=>document.getElementById(id);
-const req=()=>["med","feed","walk","toilet"].filter(k=>P.tasks[k]);
+const KEYS=["feed","toilet","mob","walk"];
+const req=()=>KEYS.filter(k=>P.tasks[k]);
 const ev=(c,k)=>CAND[c].ev[k]||P.verify[c+k]==="done";
 const missing=c=>req().filter(k=>!ev(c,k));
 const bdg=(c,k)=>ev(c,k)?'<span class="badge">항목 확인</span>':(P.verify[c+k]==="req"?'<span class="badge un">확인 요청됨</span>':'<span class="badge un">미확인</span>');
@@ -317,37 +400,40 @@ const bdg=(c,k)=>ev(c,k)?'<span class="badge">항목 확인</span>':(P.verify[c+
 function screen(){
   if(P.step===1)return `<div class="step">01 · 필수 케어 입력</div><h3>필요한 돌봄을 알려 주세요</h3>
   <div class="card"><div class="who"><span class="av p"></span>보리 · 노견 · 13세 <span class="tag-demo">시연용</span></div><div class="small">보호자 집 방문 · 부재 3일</div></div>
-  <div class="card">${["med","feed","walk","toilet"].map(k=>`<div class="row tg ${P.tasks[k]?"":"off"}" data-a="task" data-k="${k}"><span class="chk">✓</span>${TN[k]}</div>`).join("")}</div>
+  <div class="card">${KEYS.map(k=>`<div class="row tg ${P.tasks[k]?"":"off"}" data-a="task" data-k="${k}"><span class="chk">✓</span>${TN[k]}</div>`).join("")}
+   <div class="row tg ${P.tasks.med?"":"off"}" data-a="task" data-k="med"><span class="chk ${P.tasks.med?"off":""}">${P.tasks.med?"!":"✓"}</span>복약 관련 요청<span class="badge un">운영자 확인 필요</span></div></div>
   <div class="card"><div class="small">희망 방문 시간</div><div><button class="chip ${P.win.m?"":"off"}" data-a="win" data-k="m">오전 08–10시</button> <button class="chip ${P.win.e?"":"off"}" data-a="win" data-k="e">저녁 18–20시</button></div></div>
+  <div class="small">직접 복약 지원은 수행 요건과 수의 자문을 확인한 뒤 도입할 확장 항목이라, 복약 관련 요청은 운영자가 먼저 확인합니다.</div>
   <button class="btn" data-a="to2"${req().length?"":" disabled"}>필수 케어 제출</button>`;
   if(P.step===2&&P.view==="main")return `<button class="back" data-a="to1">‹ 입력으로</button><div class="step">02 · 후보 비교</div><h3>업무별로 확인했어요</h3>
   ${["A","B"].map(c=>{const d=CAND[c];return `<div class="card"><div class="who"><span class="av ${c==="B"?"p":""}"></span>${d.n} <span class="tag-demo">시연용</span></div>
   ${req().map(k=>`<div class="row">${PN[k]}${bdg(c,k)}</div>`).join("")||'<div class="small">선택한 필수 업무가 없어요.</div>'}
   <div class="small">가능 시간: ${d.t}</div>
   <button class="btn ghost" data-a="detail" data-c="${c}" style="margin-top:4px;padding:10px">후보 상세 보기</button></div>`}).join("")}
-  <div class="small">‘항목 확인’은 해당 업무의 경험 근거를 확인했다는 뜻이며, 안전 보증이 아닙니다.</div>`;
+  <div class="small">‘항목 확인’은 해당 업무의 근거를 확인했다는 뜻이며, 안전 보증이 아닙니다.</div>`;
   if(P.step===2){const c=P.cand,d=CAND[c];return `<button class="back" data-a="to2">‹ 후보 목록</button><div class="step">02 · 후보 상세</div>
   <div class="who" style="font-size:19px"><span class="av ${c==="B"?"p":""}" style="width:36px;height:36px"></span>${d.n} <span class="tag-demo">시연용</span></div>
   <div class="card">${req().map(k=>`<div class="row">${TN[k]}${bdg(c,k)}</div>${ev(c,k)?"":`<div class="small">확정 전에 확인이 필요해요. <button class="vbtn" data-a="verify" data-k="${k}"${P.verify[c+k]?" disabled":""}>${P.verify[c+k]?"확인 요청됨":"확인 요청하기"}</button></div>`}`).join("")}</div>
   <div class="card"><div class="small">확인 근거 요약</div><div>${d.sum}</div><div class="small">가능 시간: ${d.t}</div></div>
-  ${missing(c).length?`<div class="warn">미확인: ${missing(c).map(k=>TN[k]).join(", ")}. 추가 확인 전에는 확정할 수 없어요.</div>`:`<div class="ok">요청한 업무의 경험 근거가 모두 확인되었어요.</div>`}
+  ${missing(c).length?`<div class="warn">미확인: ${missing(c).map(k=>TN[k]).join(", ")}. 추가 확인 전에는 예약을 확정할 수 없어요.</div>`:`<div class="ok">요청한 업무의 경험 근거가 모두 확인되었어요.</div>`}
   <button class="btn" data-a="to3">견적 보기</button>`}
   if(P.step===3){const c=P.cand,m=missing(c);return `<button class="back" data-a="detail" data-c="${c}">‹ 후보 상세</button><div class="step">03 · 총액·계획서</div><h3>한 장 견적 <span class="tag-demo">시연용 예시</span></h3>
-  <div class="card"><div class="small">${CAND[c].n} · 2박 3일 · 하루 3회(총 9회) · 회당 40분</div>
-   <div class="amt"><span>돌봄 인력 보수 (9회)</span><span>99,000원</span></div><div class="amt"><span>보험 적립·운영·수수료</span><span>41,000원</span></div>
-   <div class="total"><span>총액</span><span>140,000원</span></div><div class="small">확정 전에 바뀔 수 있어요. 안전을 100% 약속하지 않으며, 보험은 출시 전에 확인합니다.</div></div>
+  <div class="card"><div class="small">${CAND[c].n} · 2박 3일 · 하루 3회 × 40분 (총 9회)</div>
+   <div class="amt"><span>제공자 보수 (9회)</span><span>99,000원</span></div><div class="amt"><span>중개·운영 수수료</span><span>41,000원</span></div>
+   <div class="total"><span>총액</span><span>140,000원</span></div>
+   <div class="small">수수료에는 매칭·사전 만남 운영, 보험·사고 대비 적립, 결제 수수료가 포함돼요. 확정 요금이 아니라 시범 제안가예요.</div></div>
   <div class="card"><div class="small">포함 업무</div>${req().map(k=>`<div class="row"><span class="chk${ev(c,k)?"":" off"}">${ev(c,k)?"✓":"!"}</span>${TN[k]}</div>`).join("")}<div class="row"><span class="chk off">–</span>야간 상주 미포함</div></div>
-  ${m.length?`<div class="warn">아직 미확인: ${m.map(k=>PN[k]).join(", ")}. 최종 확정은 잠겨 있어요.</div>`:`<div class="small">계획서는 사전 만남 뒤 양측이 동의해야 확정돼요.</div>`}
+  ${m.length?`<div class="warn">아직 미확인: ${m.map(k=>PN[k]).join(", ")}. 최종 확정은 잠겨 있어요.</div>`:`<div class="small">계획서는 사전 만남 뒤 양측이 동의해야 확정되고, 그 뒤에 결제해요.</div>`}
   <button class="btn" data-a="to4">사전 만남 요청</button>`}
   const c=P.cand,m=missing(c);return `<button class="back" data-a="to3">‹ 견적으로</button><div class="step">04 · 사전 만남</div><h3>사전 만남을 요청했어요</h3>
-  <div class="ok">${CAND[c].n}에게 요청을 보냈어요(시연). 만난 뒤 양측이 동의해야 계획이 확정돼요.</div>
+  <div class="ok">${CAND[c].n}에게 요청을 보냈어요(시연). 만난 뒤 양측이 케어 계획서에 동의하면 확정되고, 그 뒤에 최종 결제해요.</div>
   <div class="card tl">
    <div class="t"><span class="dot">✓</span><div>요청<small>필수 케어 제출됨</small></div></div>
    <div class="t"><span class="dot">✓</span><div>후보 확인<small>${CAND[c].n} 선택</small></div></div>
    <div class="t"><span class="dot">✓</span><div>한 장 견적<small>140,000원 · 시연용</small></div></div>
    <div class="t now"><span class="dot">4</span><div>사전 만남<small>일정 조율 중</small></div></div>
-   <div class="t todo"><span class="dot">5</span><div>계획서 양측 확정<small>${m.length?"잠김 · 미확인 업무가 남아 있어요":"아직 미확정"}</small></div></div>
-   <div class="t todo"><span class="dot">6</span><div>방문 기록</div></div></div>
+   <div class="t todo"><span class="dot">5</span><div>계획서 양측 확정 · 최종 결제<small>${m.length?"잠김 · 미확인 업무가 남아 있어요":"아직 미확정"}</small></div></div>
+   <div class="t todo"><span class="dot">6</span><div>방문 수행 기록</div></div></div>
   <button class="btn ghost" data-a="reset">처음부터 다시</button>`;
 }
 
@@ -368,13 +454,13 @@ document.addEventListener("click",e=>{
   else if(a==="detail"){P.cand=t.dataset.c;go(2,"detail")}
   else if(a==="to1")go(1);else if(a==="to2")go(2);else if(a==="to3")go(3);else if(a==="to4")go(4);
   else if(a==="step")go(+t.dataset.s);
-  else if(a==="reset"){P.cand="A";P.verify={};P.tasks={med:true,feed:true,walk:true,toilet:false};P.win={m:true,e:true};go(1)}
+  else if(a==="reset"){P.cand="A";P.verify={};P.tasks={feed:true,toilet:true,mob:true,walk:false,med:false};P.win={m:true,e:true};go(1)}
 });
 
 /* 화면 크기에 맞춰 3D 장면을 꽉 차게, 마우스를 따라 살짝 기울어짐 */
 const world=$("world"),scene=$("scene");
 function fit(){
-  const w=scene.clientWidth,h=innerWidth>980?innerHeight:Math.min(innerHeight*0.9,w*0.98);
+  const w=scene.clientWidth,h=innerWidth>980?scene.clientHeight:Math.min(innerHeight*0.9,w*0.98);
   const k=Math.min(w/900,h/880)*0.98;
   world.style.setProperty("--k",k.toFixed(3));
   if(innerWidth<=980)scene.style.height=(880*k)+"px";else scene.style.height="";
