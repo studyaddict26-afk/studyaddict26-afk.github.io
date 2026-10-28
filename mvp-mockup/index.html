@@ -124,16 +124,67 @@ button.btn[disabled]{background:var(--gray);color:var(--gray-ink);cursor:not-all
   .menu button.on,.menu button:hover{transform:none}
   .scene{height:auto;min-height:0;padding:10px 0 30px}
 }
+
+/* ---------- nav / sections / signup ---------- */
+html{scroll-behavior:smooth;scroll-padding-top:60px}
+.nav{position:sticky;top:0;z-index:20;background:rgba(247,245,240,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid #E3E1D8}
+.navin{max-width:1360px;margin:0 auto;padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.navin b{font-weight:900;letter-spacing:-.01em}.navin b small{font-weight:500;color:var(--ink-soft);font-size:12px}
+.navin nav{display:flex;gap:20px;font-size:14px;font-weight:500}
+.navin a{color:var(--teal);text-decoration:none}.navin a:hover{text-decoration:underline}
+.page{min-height:calc(100vh - 56px)}
+.cta{display:flex;align-items:center;gap:14px;margin-top:2px}
+.cta span{font-size:13px;color:var(--ink-soft)}
+.btn-cta{display:inline-flex;align-items:center;justify-content:center;font:inherit;font-weight:700;font-size:15px;padding:11px 22px;border-radius:12px;background:var(--teal);color:#fff;border:0;text-decoration:none;cursor:pointer;transition:filter .15s}
+.btn-cta:hover{filter:brightness(1.12)}.btn-cta[disabled]{opacity:.55;cursor:default}
+.sections{max-width:1100px;margin:0 auto;padding:0 32px}
+.sec{padding:76px 0;border-top:1px solid #E3E1D8}
+.lab{font-size:13px;font-weight:700;color:var(--teal);letter-spacing:.04em}
+.sec h2{margin-top:8px;font-size:clamp(24px,2.4vw,32px);line-height:1.35;font-weight:900;letter-spacing:-.02em}
+.items{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:28px}
+.it{background:rgba(255,255,255,.7);border:1px solid #ECE9E1;border-top:3px solid var(--teal);border-radius:16px;padding:18px 20px 20px}
+.it .no{font-size:13px;font-weight:700;color:var(--teal);display:block}
+.it h3{margin-top:4px;font-size:18px;font-weight:700}
+.it p{margin-top:6px;color:var(--ink-soft);font-size:15px;line-height:1.65}
+.note{margin-top:18px;font-size:13px;color:var(--ink-soft);line-height:1.6}
+.flow{margin-top:26px;padding-top:18px;border-top:1px solid #E3E1D8;font-size:16px}
+.flow b{color:var(--teal);margin-right:10px}.flow i{font-style:normal;color:#9AA29F;margin:0 4px}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px;margin-top:28px}
+.two.su{margin-top:0;align-items:start}
+.cap{font-size:13px;color:var(--ink-soft)}
+.price{margin-top:4px;font-size:38px;font-weight:900;font-variant-numeric:tabular-nums}.price small{font-size:14px;font-weight:500;color:var(--ink-soft)}
+.rows{margin-top:10px}.rows>div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid #E3E1D8;font-variant-numeric:tabular-nums}
+.rows>div:first-child{border-top:0}.rows span{color:var(--ink-soft)}
+.rows.ben>div{display:block}.rows.ben b{display:block}.rows.ben span{font-size:14px}
+#form{display:flex;flex-direction:column;gap:6px}
+#form label{font-size:14px;color:var(--ink-soft);margin-top:8px}
+.field{width:100%;font:inherit;color:var(--ink);background:#fff;border:1px solid #D9D6CC;border-radius:10px;padding:10px 12px}
+.field:focus-visible{outline:2px solid var(--teal);outline-offset:1px}
+#form .agree{display:flex;gap:8px;align-items:flex-start;margin-top:12px}
+#form .agree input{margin-top:6px}#form .agree span{font-size:13px}
+#form .btn-cta{align-self:flex-start;margin-top:12px}
+#msg{font-size:14px;color:var(--ink-soft);min-height:1.5em;margin-top:6px}
+.foot{max-width:1100px;margin:0 auto;padding:30px 32px 50px;border-top:1px solid #E3E1D8;font-size:13px;color:var(--ink-soft);line-height:1.6}
+@media (max-width:980px){
+  .navin{padding:0 20px}.navin nav{gap:12px;font-size:13px}
+  .sections,.foot{padding-left:20px;padding-right:20px}
+  .items,.two{grid-template-columns:minmax(0,1fr)}.two{gap:30px}
+  .sec{padding:52px 0}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
-<div class="page">
+<header class="nav"><div class="navin"><b>WATCH DOG <small>(가칭)</small></b>
+  <nav aria-label="섹션"><a href="#demo">앱 체험</a><a href="#problem">문제</a><a href="#solution">해결</a><a href="#offer">혜택</a><a href="#signup">신청</a></nav></div></header>
+<div class="page" id="demo">
   <section class="left">
-    <div class="brand">시니어 펫 케어 · 콘셉트 목업</div>
+    <div class="brand">노령 반려동물 방문 돌봄 · 제천 시범 준비 중</div>
     <h1>투약부터 보행까지,<em>노령 반려동물 필수 케어 전문 매칭 플랫폼</em></h1>
-    <p class="sub">필요한 돌봄부터 확인하고, 총액과 케어 계획까지 함께 정해요. 오른쪽 폰의 버튼을 직접 눌러 보세요.</p>
+    <p class="sub">필요한 케어를 해 본 사람만 보여 주고, 예약 전에 총액과 케어 계획을 확정합니다. 오른쪽 폰의 버튼을 직접 눌러 보세요.</p>
+    <div class="cta"><a class="btn-cta" href="#signup">사전예약 신청</a><span>무료 · 결제 없음</span></div>
     <ol class="menu" id="menu"></ol>
-    <p class="disc"><b>콘셉트 목업</b> · 인물·프로필·가격은 시연용 예시입니다. 방문형 서비스이며 방문 사이에는 상주하지 않습니다.</p>
+    <p class="disc"><b>콘셉트 목업</b> · 인물·프로필·가격은 시연용 예시입니다. 방문형 서비스이며 방문 사이에는 상주하지 않습니다. 서비스명은 가칭입니다.</p>
   </section>
 
   <section class="scene" id="scene">
@@ -144,7 +195,7 @@ button.btn[disabled]{background:var(--gray);color:var(--gray-ink);cursor:not-all
         <div class="slab" style="transform:translateZ(-14px)"></div><div class="slab" style="transform:translateZ(-19px);background:#15181A"></div>
         <div class="face"><div class="screen" id="ps"></div><div class="notch"></div><div class="glare"></div></div>
       </div>
-      <div class="glass g1"><small>필수 작업</small><ul id="g1"></ul></div>
+      <div class="glass g1"><small>필수 케어</small><ul id="g1"></ul></div>
       <div class="glass g2"><small>작업별 확인 근거</small><ul id="g2"></ul></div>
       <div class="glass g3" id="g3"><small>총 견적 · 시연용</small><div class="big">140,000원</div></div>
       <svg class="pet dog" viewBox="0 0 150 150" aria-hidden="true"><use href="#dog"/></svg>
@@ -152,6 +203,73 @@ button.btn[disabled]{background:var(--gray);color:var(--gray-ink);cursor:not-all
     </div></div>
   </section>
 </div>
+
+<main class="sections">
+  <section id="problem" class="sec">
+    <p class="lab">1 문제</p>
+    <h2>날짜는 정해졌는데, 맡길 곳이 안 정해져요</h2>
+    <div class="items">
+      <div class="it"><span class="no">1</span><h3>일일이 물어봐야 해요</h3><p>같은 질문을 여러 곳에 반복합니다.</p></div>
+      <div class="it"><span class="no">2</span><h3>'해 봤다'를 믿을 수 없어요</h3><p>"노견 가능"만으로는 알 수 없습니다.</p></div>
+      <div class="it"><span class="no">3</span><h3>총액은 직전에야 알아요</h3><p>추가 항목 때문에 비교가 어렵습니다.</p></div>
+    </div>
+    <p class="note">가상 예시: 확정까지 17일, 문의 15건. 실제 측정값이 아닙니다.</p>
+  </section>
+
+  <section id="solution" class="sec">
+    <p class="lab">2 해결</p>
+    <h2>케어 계획서 기반 매칭, 하나만 합니다</h2>
+    <div class="items">
+      <div class="it"><span class="no">1</span><h3>업무별 경험 확인</h3><p>식사·배변·보행 보조, 투약마다 해 본 경험을 표시합니다.</p></div>
+      <div class="it"><span class="no">2</span><h3>예약 전 총액 확정</h3><p>방문비, 이동비, 수수료를 합친 한 장 견적을 먼저 봅니다.</p></div>
+      <div class="it"><span class="no">3</span><h3>계획서와 수행 기록</h3><p>정한 케어를 문서로 남기고 방문마다 확인합니다.</p></div>
+    </div>
+    <p class="flow"><b>이용 순서</b> 케어 입력 5분 <i>→</i> 해 본 사람 확인 <i>→</i> 한 장 견적 <i>→</i> 사전 만남·계획서 확정</p>
+  </section>
+
+  <section id="offer" class="sec">
+    <p class="lab">3 가격과 혜택</p>
+    <h2>총액을 먼저 보여 드립니다</h2>
+    <div class="two">
+      <div>
+        <p class="cap">시범 제안가 · 2박 3일, 하루 3회 방문</p>
+        <p class="price">140,000원 <small>총액</small></p>
+        <div class="rows"><div><span>돌봄 인력 보수 (9회)</span><b>99,000원</b></div><div><span>보험 적립·운영·수수료</span><b>41,000원</b></div></div>
+        <p class="note">확정 전에 바뀔 수 있습니다. 안전을 100% 약속하지 않으며, 보험은 출시 전에 확인합니다.</p>
+      </div>
+      <div>
+        <p class="cap">사전예약 혜택</p>
+        <div class="rows ben">
+          <div><b>우선 매칭</b><span>첫 시범에서 요청을 먼저 매칭합니다.</span></div>
+          <div><b>첫 시범 참여</b><span>일정이 정해지면 가장 먼저 안내합니다.</span></div>
+          <div><b>입력 도움</b><span>필수 케어 입력을 함께 정리합니다.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="signup" class="sec">
+    <div class="two su">
+      <div>
+        <p class="lab">4 사전예약</p>
+        <h2>제천 첫 시범에 먼저 연락드릴게요</h2>
+        <p class="note">시범 운영 안내와 필수 케어 확인에만 사용합니다.</p>
+      </div>
+      <form id="form" novalidate>
+        <label for="name">이름</label><input id="name" class="field" autocomplete="name" required>
+        <label for="contact">연락처 (전화번호 또는 메신저 ID)</label><input id="contact" class="field" autocomplete="tel" required>
+        <label for="species">아이 종류</label>
+        <select id="species" class="field"><option>노견</option><option>노묘</option><option>그 외</option></select>
+        <label for="reason">필요한 이유</label>
+        <textarea id="reason" rows="3" class="field" placeholder="예: 11월 2박 3일 출장, 하루 2번 약을 먹여 줄 사람이 필요해요."></textarea>
+        <label class="agree"><input id="agree" type="checkbox"><span>이름, 연락처, 입력 내용을 시범 운영 안내에 사용하는 데 동의합니다.</span></label>
+        <button id="submit" class="btn-cta" type="submit">신청하기</button>
+        <p id="msg" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</main>
+<footer class="foot">WATCH DOG(가칭)은 제천 시범 운영을 준비하는 서비스입니다. 가격과 혜택은 시범 전에 확정됩니다. 이 페이지의 화면과 가격은 콘셉트 목업입니다.</footer>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
@@ -182,15 +300,16 @@ button.btn[disabled]{background:var(--gray);color:var(--gray-ink);cursor:not-all
 
 <script>
 /* 버튼은 화면 이동·표시만 바꾸고, 실제 기능(저장·결제·매칭)은 없음 */
-const P={step:1,view:"main",tasks:{feed:true,toilet:true,mob:true,med:false},win:{m:true,e:true},cand:"A",verify:{}};
+const P={step:1,view:"main",tasks:{med:true,feed:true,walk:true,toilet:false},win:{m:true,e:true},cand:"A",verify:{}};
 const CAND={
-  A:{n:"제공자 A",t:"월 08–10시 · 수 18–20시",ev:{feed:true,toilet:true,mob:false},sum:"식사·배변 업무 경험이 확인되었습니다(시연용 자료)."},
-  B:{n:"제공자 B",t:"화 08–10시 · 목 18–20시",ev:{feed:true,toilet:false,mob:true},sum:"식사·이동 보조 업무 경험이 확인되었습니다(시연용 자료)."}};
-const TN={feed:"식사 보조",toilet:"배변 정리",mob:"이동 보조"};
-const SH={feed:"식사",toilet:"배변",mob:"이동"};
+  A:{n:"돌봄 인력 A",t:"월 08–10시 · 수 18–20시",ev:{med:true,feed:true,walk:true,toilet:false},sum:"투약·식사·보행 보조 경험이 확인되었습니다(시연용 자료)."},
+  B:{n:"돌봄 인력 B",t:"화 08–10시 · 목 18–20시",ev:{med:false,feed:true,walk:true,toilet:true},sum:"식사·보행·배변 패드 케어 경험이 확인되었습니다(시연용 자료)."}};
+const TN={med:"하루 2회 약 먹이기",feed:"식사 보조",walk:"보행 보조",toilet:"배변 패드 케어"};
+const PN={med:"투약",feed:"식사 보조",walk:"보행 보조",toilet:"배변 패드"};
+const SH={med:"투약",feed:"식사",walk:"보행",toilet:"배변"};
 const STEPS=[["01","필수 케어 입력","반려동물·부재 일정·필요한 업무"],["02","후보 비교","업무별 경험 확인·미확인"],["03","총액·계획서","방문 횟수·시간·추가비·수수료"],["04","사전 만남","만난 뒤 양측이 확정"]];
 const $=id=>document.getElementById(id);
-const req=()=>["feed","toilet","mob"].filter(k=>P.tasks[k]);
+const req=()=>["med","feed","walk","toilet"].filter(k=>P.tasks[k]);
 const ev=(c,k)=>CAND[c].ev[k]||P.verify[c+k]==="done";
 const missing=c=>req().filter(k=>!ev(c,k));
 const bdg=(c,k)=>ev(c,k)?'<span class="badge">항목 확인</span>':(P.verify[c+k]==="req"?'<span class="badge un">확인 요청됨</span>':'<span class="badge un">미확인</span>');
@@ -198,14 +317,12 @@ const bdg=(c,k)=>ev(c,k)?'<span class="badge">항목 확인</span>':(P.verify[c+
 function screen(){
   if(P.step===1)return `<div class="step">01 · 필수 케어 입력</div><h3>필요한 돌봄을 알려 주세요</h3>
   <div class="card"><div class="who"><span class="av p"></span>보리 · 노견 · 13세 <span class="tag-demo">시연용</span></div><div class="small">보호자 집 방문 · 부재 3일</div></div>
-  <div class="card">${["feed","toilet","mob"].map(k=>`<div class="row tg ${P.tasks[k]?"":"off"}" data-a="task" data-k="${k}"><span class="chk">✓</span>${TN[k]}</div>`).join("")}
-   <div class="row tg ${P.tasks.med?"":"off"}" data-a="task" data-k="med"><span class="chk ${P.tasks.med?"off":""}">${P.tasks.med?"!":"✓"}</span>복약 관련 요청<span class="badge un">운영자 확인 필요</span></div></div>
+  <div class="card">${["med","feed","walk","toilet"].map(k=>`<div class="row tg ${P.tasks[k]?"":"off"}" data-a="task" data-k="${k}"><span class="chk">✓</span>${TN[k]}</div>`).join("")}</div>
   <div class="card"><div class="small">희망 방문 시간</div><div><button class="chip ${P.win.m?"":"off"}" data-a="win" data-k="m">오전 08–10시</button> <button class="chip ${P.win.e?"":"off"}" data-a="win" data-k="e">저녁 18–20시</button></div></div>
-  <div class="small">복약은 아직 도입 전이라, 요청하시면 운영자가 먼저 확인합니다.</div>
   <button class="btn" data-a="to2"${req().length?"":" disabled"}>필수 케어 제출</button>`;
   if(P.step===2&&P.view==="main")return `<button class="back" data-a="to1">‹ 입력으로</button><div class="step">02 · 후보 비교</div><h3>업무별로 확인했어요</h3>
   ${["A","B"].map(c=>{const d=CAND[c];return `<div class="card"><div class="who"><span class="av ${c==="B"?"p":""}"></span>${d.n} <span class="tag-demo">시연용</span></div>
-  ${req().map(k=>`<div class="row">${SH[k]}${bdg(c,k)}</div>`).join("")||'<div class="small">선택한 필수 업무가 없어요.</div>'}
+  ${req().map(k=>`<div class="row">${PN[k]}${bdg(c,k)}</div>`).join("")||'<div class="small">선택한 필수 업무가 없어요.</div>'}
   <div class="small">가능 시간: ${d.t}</div>
   <button class="btn ghost" data-a="detail" data-c="${c}" style="margin-top:4px;padding:10px">후보 상세 보기</button></div>`}).join("")}
   <div class="small">‘항목 확인’은 해당 업무의 경험 근거를 확인했다는 뜻이며, 안전 보증이 아닙니다.</div>`;
@@ -216,11 +333,11 @@ function screen(){
   ${missing(c).length?`<div class="warn">미확인: ${missing(c).map(k=>TN[k]).join(", ")}. 추가 확인 전에는 확정할 수 없어요.</div>`:`<div class="ok">요청한 업무의 경험 근거가 모두 확인되었어요.</div>`}
   <button class="btn" data-a="to3">견적 보기</button>`}
   if(P.step===3){const c=P.cand,m=missing(c);return `<button class="back" data-a="detail" data-c="${c}">‹ 후보 상세</button><div class="step">03 · 총액·계획서</div><h3>한 장 견적 <span class="tag-demo">시연용 예시</span></h3>
-  <div class="card"><div class="small">${CAND[c].n} · 3일 · 9회 · 회당 40분</div>
-   <div class="amt"><span>방문 돌봄 (9회)</span><span>108,000원</span></div><div class="amt"><span>서비스 수수료</span><span>20,000원</span></div><div class="amt"><span>이동 추가비</span><span>12,000원</span></div>
-   <div class="total"><span>총액</span><span>140,000원</span></div></div>
+  <div class="card"><div class="small">${CAND[c].n} · 2박 3일 · 하루 3회(총 9회) · 회당 40분</div>
+   <div class="amt"><span>돌봄 인력 보수 (9회)</span><span>99,000원</span></div><div class="amt"><span>보험 적립·운영·수수료</span><span>41,000원</span></div>
+   <div class="total"><span>총액</span><span>140,000원</span></div><div class="small">확정 전에 바뀔 수 있어요. 안전을 100% 약속하지 않으며, 보험은 출시 전에 확인합니다.</div></div>
   <div class="card"><div class="small">포함 업무</div>${req().map(k=>`<div class="row"><span class="chk${ev(c,k)?"":" off"}">${ev(c,k)?"✓":"!"}</span>${TN[k]}</div>`).join("")}<div class="row"><span class="chk off">–</span>야간 상주 미포함</div></div>
-  ${m.length?`<div class="warn">아직 미확인: ${m.map(k=>SH[k]).join(", ")}. 최종 확정은 잠겨 있어요.</div>`:`<div class="small">계획서는 사전 만남 뒤 양측이 동의해야 확정돼요.</div>`}
+  ${m.length?`<div class="warn">아직 미확인: ${m.map(k=>PN[k]).join(", ")}. 최종 확정은 잠겨 있어요.</div>`:`<div class="small">계획서는 사전 만남 뒤 양측이 동의해야 확정돼요.</div>`}
   <button class="btn" data-a="to4">사전 만남 요청</button>`}
   const c=P.cand,m=missing(c);return `<button class="back" data-a="to3">‹ 견적으로</button><div class="step">04 · 사전 만남</div><h3>사전 만남을 요청했어요</h3>
   <div class="ok">${CAND[c].n}에게 요청을 보냈어요(시연). 만난 뒤 양측이 동의해야 계획이 확정돼요.</div>
@@ -238,8 +355,8 @@ function draw(swap){
   const el=$("ps");el.innerHTML=screen();el.scrollTop=0;
   if(swap){el.classList.remove("swap");void el.offsetWidth;el.classList.add("swap")}
   $("menu").innerHTML=STEPS.map((x,i)=>`<li><button data-a="step" data-s="${i+1}" class="${P.step===i+1?"on":""}"><b>${x[0]}</b><span>${x[1]}<small>${x[2]}</small></span></button></li>`).join("");
-  $("g1").innerHTML=req().map(k=>`<li>${TN[k]}</li>`).join("")||'<li class="un">선택한 업무 없음</li>';
-  $("g2").innerHTML=req().map(k=>`<li class="${ev(P.cand,k)?"":"un"}">${SH[k]} · ${ev(P.cand,k)?"확인":"미확인"}</li>`).join("")||'<li class="un">–</li>';
+  $("g1").innerHTML=req().map(k=>`<li>${PN[k]}</li>`).join("")||'<li class="un">선택한 업무 없음</li>';
+  $("g2").innerHTML=req().map(k=>`<li class="${ev(P.cand,k)?"":"un"}">${PN[k]} · ${ev(P.cand,k)?"확인":"미확인"}</li>`).join("")||'<li class="un">–</li>';
   $("g3").classList.toggle("hot",P.step>=3);
 }
 function go(step,view,swap=true){P.step=step;P.view=view||"main";draw(swap)}
@@ -251,7 +368,7 @@ document.addEventListener("click",e=>{
   else if(a==="detail"){P.cand=t.dataset.c;go(2,"detail")}
   else if(a==="to1")go(1);else if(a==="to2")go(2);else if(a==="to3")go(3);else if(a==="to4")go(4);
   else if(a==="step")go(+t.dataset.s);
-  else if(a==="reset"){P.cand="A";P.verify={};P.tasks={feed:true,toilet:true,mob:true,med:false};P.win={m:true,e:true};go(1)}
+  else if(a==="reset"){P.cand="A";P.verify={};P.tasks={med:true,feed:true,walk:true,toilet:false};P.win={m:true,e:true};go(1)}
 });
 
 /* 화면 크기에 맞춰 3D 장면을 꽉 차게, 마우스를 따라 살짝 기울어짐 */
@@ -267,6 +384,30 @@ let rx=4,ry=-12;
 function tilt(x,y){world.style.setProperty("--rx",(rx+(0.5-y)*8).toFixed(2)+"deg");world.style.setProperty("--ry",(ry+(x-0.5)*14).toFixed(2)+"deg")}
 document.addEventListener("mousemove",e=>tilt(e.clientX/innerWidth,e.clientY/innerHeight));
 tilt(.5,.5);fit();draw(false);
+
+/* ---------- 사전예약 폼 ----------
+   서버가 없으므로 입력 내용은 이 브라우저(localStorage)에만 저장됩니다.
+   실제 접수를 받으려면 아래 SIGNUP_ENDPOINT에 폼 접수 주소를 넣으세요(JSON POST). */
+const SIGNUP_ENDPOINT="";
+document.getElementById("form").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const v=id=>document.getElementById(id).value.trim(),msg=$("msg"),btn=$("submit");
+  if(!v("name")||!v("contact")||!v("reason")){msg.textContent="이름, 연락처, 필요한 이유를 모두 적어 주세요.";return}
+  if(!$("agree").checked){msg.textContent="개인정보 사용 동의에 체크해 주세요.";return}
+  const rec={name:v("name"),contact:v("contact"),species:v("species"),reason:v("reason"),createdAt:new Date().toISOString()};
+  btn.disabled=true;msg.textContent="접수 중입니다.";
+  try{
+    if(SIGNUP_ENDPOINT){
+      const r=await fetch(SIGNUP_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(rec)});
+      if(!r.ok)throw new Error("send");
+      e.target.reset();msg.textContent="신청이 접수됐어요. 일정이 정해지면 연락처로 안내드릴게요.";
+    }else{
+      try{const l=JSON.parse(localStorage.getItem("signups")||"[]");l.push(rec);localStorage.setItem("signups",JSON.stringify(l))}catch(_){}
+      e.target.reset();msg.textContent="시연용 화면이라 신청 내용은 이 브라우저에만 저장됐어요. 실제 접수는 아직 연결되어 있지 않습니다.";
+    }
+  }catch(err){msg.textContent="접수 중 문제가 생겼어요. 잠시 뒤 다시 시도해 주세요. 입력 내용은 남아 있습니다."}
+  btn.disabled=false;
+});
 </script>
 </body>
 </html>
