@@ -20,26 +20,26 @@ html,body{min-height:100%}
 body{font-family:var(--font);color:var(--ink);word-break:keep-all;background:#ECE9E1;overflow-x:hidden;padding:0 clamp(12px,3vw,40px) 40px}
 
 /* ---------- page layout (fills the screen) ---------- */
-.page{display:grid;grid-template-columns:minmax(340px,42%) minmax(0,1fr);align-items:center;gap:0 8px;padding:56px clamp(24px,4vw,64px) 36px}
-.left{display:flex;flex-direction:column;gap:18px;padding:40px 0;max-width:520px}
+.page{height:clamp(560px,calc(100vh - 112px),860px);display:grid;grid-template-columns:minmax(340px,44%) minmax(0,1fr);align-items:center;gap:0 8px;padding:0 clamp(24px,4vw,56px)}
+.left{display:flex;flex-direction:column;gap:12px;padding:0;max-width:540px}
 .brand{font-size:13px;font-weight:700;letter-spacing:.14em;color:var(--teal)}
-.left h1{font-size:clamp(28px,2.5vw,40px);line-height:1.2;font-weight:900;letter-spacing:-.03em}
+.left h1{font-size:clamp(26px,2.3vw,36px);line-height:1.2;font-weight:900;letter-spacing:-.03em}
 .left h1 em{font-style:normal;color:var(--teal);display:block}
-.left .sub{font-size:16px;line-height:1.6;color:var(--ink-soft);font-weight:500}
-.menu{list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:4px}
-.menu button{width:100%;text-align:left;font:inherit;display:flex;align-items:center;gap:14px;padding:11px 16px;border-radius:16px;border:1.5px solid rgba(15,94,92,.14);background:rgba(255,255,255,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);cursor:pointer;color:var(--ink);transition:transform .2s,background .2s,box-shadow .2s}
-.menu button:hover{transform:translateX(6px);background:#fff}
-.menu button b{font-size:13px;letter-spacing:.1em;color:var(--teal);width:26px;flex:none}
-.menu button span{display:flex;flex-direction:column;gap:1px;font-size:16px;font-weight:700}
-.menu button small{font-size:13px;font-weight:500;color:var(--ink-soft)}
-.menu button.on{background:var(--teal);border-color:var(--teal);color:#fff;box-shadow:0 14px 24px -14px rgba(15,94,92,.7);transform:translateX(6px)}
+.left .sub{font-size:15px;line-height:1.6;color:var(--ink-soft);font-weight:500}
+.menu{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:2px}
+.menu button{width:100%;text-align:left;font:inherit;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;border:1.5px solid rgba(15,94,92,.14);background:rgba(255,255,255,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);cursor:pointer;color:var(--ink);transition:transform .2s,background .2s,box-shadow .2s}
+.menu button:hover{background:#fff}
+.menu button b{font-size:12px;letter-spacing:.08em;color:var(--teal);width:20px;flex:none}
+.menu button span{display:flex;flex-direction:column;gap:1px;font-size:15px;font-weight:700}
+.menu button small{font-size:12px;line-height:1.35;font-weight:500;color:var(--ink-soft)}
+.menu button.on{background:var(--teal);border-color:var(--teal);color:#fff;box-shadow:0 14px 24px -14px rgba(15,94,92,.7)}
 .menu button.on b,.menu button.on small{color:#CFEDEA}
 .menu button:focus-visible{outline:3px solid var(--peach);outline-offset:2px}
-.disc{font-size:13px;line-height:1.6;color:var(--ink-soft)}
+.disc{font-size:12px;line-height:1.6;color:var(--ink-soft)}
 .disc b{color:var(--teal)}
 
 /* ---------- 3D scene ---------- */
-.scene{min-width:0;overflow:hidden;position:relative;height:700px;display:flex;align-items:center;justify-content:center;perspective:2000px}
+.scene{min-width:0;overflow:hidden;position:relative;height:100%;display:flex;align-items:center;justify-content:center;perspective:2000px}
 .world{width:900px;height:880px;flex:none;position:relative;transform-style:preserve-3d;transform:scale(var(--k,1)) rotateX(var(--rx,4deg)) rotateY(var(--ry,-12deg));transition:transform .12s ease-out}
 .bob{position:absolute;inset:0;transform-style:preserve-3d;animation:bob 6s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
@@ -114,7 +114,8 @@ button.btn[disabled]{background:var(--gray);color:var(--gray-ink);cursor:not-all
 @media (max-width:980px){
   .page{grid-template-columns:minmax(0,1fr);padding:0 20px}
   .left{padding:36px 0 0;max-width:none}
-  .menu{flex-direction:row;overflow-x:auto;gap:8px;padding-bottom:4px}
+  .page{height:auto;padding:28px 20px 0}
+  .menu{display:flex;flex-direction:row;overflow-x:auto;gap:8px;padding-bottom:4px}
   .menu button{width:auto;flex:none;padding:10px 14px}
   .menu button small{display:none}
   .menu button.on,.menu button:hover{transform:none}
@@ -197,7 +198,7 @@ html{scroll-behavior:smooth;scroll-padding-top:84px}
 </style>
 </head>
 <body>
-<header class="nav"><div class="navin"><b>WATCH DOG <small>(가칭)</small></b>
+<header class="nav"><div class="navin"><b>WATCH DOG</b>
   <nav aria-label="섹션"><a href="#demo">앱 체험</a><a href="#problem">문제</a><a href="#solution">해결</a><a href="#trust">운영 원칙</a><a href="#offer">가격</a><a href="#signup">신청</a></nav></div></header>
 <div class="sheet">
 <div class="page" id="demo">
@@ -207,7 +208,7 @@ html{scroll-behavior:smooth;scroll-padding-top:84px}
     <p class="sub">필요한 케어를 해 본 사람만 보여 주고, 예약 전에 총액과 케어 계획을 확정합니다. 오른쪽 폰의 버튼을 직접 눌러 보세요.</p>
     <div class="cta"><a class="btn-cta" href="#signup">사전예약 신청</a><span>무료 · 결제 없음</span></div>
     <ol class="menu" id="menu"></ol>
-    <p class="disc"><b>콘셉트 목업</b> · 인물·프로필·가격은 시연용 예시입니다. 방문형 서비스이며 방문 사이에는 상주하지 않습니다. 서비스명은 가칭입니다.</p>
+    <p class="disc"><b>콘셉트 목업</b> · 인물·프로필·가격은 시연용 예시입니다. 방문형 서비스이며 방문 사이에는 상주하지 않습니다.</p>
   </section>
 
   <section class="scene" id="scene">
@@ -350,7 +351,7 @@ html{scroll-behavior:smooth;scroll-padding-top:84px}
     </div>
   </section>
 </main>
-<footer class="foot">WATCH DOG(가칭)은 제천 시범 운영을 준비하는 서비스입니다. 이 페이지의 화면, 인물, 가격은 콘셉트 목업이며 실제 서비스 실적이나 확정 요금이 아닙니다.</footer>
+<footer class="foot">WATCH DOG은 제천 시범 운영을 준비하는 서비스입니다. 이 페이지의 화면, 인물, 가격은 콘셉트 목업이며 실제 서비스 실적이나 확정 요금이 아닙니다.</footer>
 </div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
