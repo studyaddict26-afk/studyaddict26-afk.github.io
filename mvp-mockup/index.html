@@ -4,9 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>시니어 펫 케어 MVP 목업</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
 <style>
 :root{
-  --offwhite:#F7F5F0; --ivory:#FBF8F1; --paper:#FFFFFF;
+  --offwhite:#F7F5F0; --paper:#FFFFFF;
   --ink:#1B2B2A; --ink-soft:#5E6B69;
   --teal:#0F5E5C; --teal-deep:#0A4745; --teal-soft:#DCEEEC;
   --sage:#A9C0A6; --sage-soft:#E6EEE3;
@@ -15,127 +16,143 @@
   --font:"Noto Sans KR","Apple SD Gothic Neo",system-ui,-apple-system,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
-body{font-family:var(--font);background:#222;color:var(--ink);display:flex;flex-direction:column;align-items:center;overflow:hidden;height:100vh;word-break:keep-all}
-.viewport{flex:1;width:100%;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.stage{width:1920px;height:1080px;flex:none;position:relative;overflow:hidden;transform-origin:center center}
-.scene{position:absolute;inset:0;display:none}
-.scene.on{display:block}
+html,body{min-height:100%}
+body{font-family:var(--font);color:var(--ink);word-break:keep-all;background:
+  radial-gradient(1100px 700px at 78% 28%,#fff 0,transparent 70%),
+  radial-gradient(800px 600px at 8% 100%,#E3EDE1 0,transparent 70%),
+  radial-gradient(700px 500px at 100% 100%,#FBE6D8 0,transparent 70%),
+  var(--offwhite);overflow-x:hidden}
 
-/* ---------- common ---------- */
-.headline{position:absolute;left:96px;top:72px;width:760px;z-index:20}
-.headline h1{font-size:56px;line-height:1.22;font-weight:900;letter-spacing:-.03em;color:var(--ink)}
-.headline h1 em{font-style:normal;color:var(--teal)}
-.headline p{max-width:620px;margin-top:20px;font-size:28px;line-height:1.5;color:var(--ink-soft);font-weight:500}
-.disc{position:absolute;left:96px;bottom:44px;font-size:20px;color:var(--ink-soft);z-index:20;font-weight:500}
+/* ---------- page layout (fills the screen) ---------- */
+.page{min-height:100vh;display:grid;grid-template-columns:minmax(380px,42%) minmax(0,1fr);align-items:center;gap:0 12px;padding:0 clamp(24px,4vw,72px)}
+.left{display:flex;flex-direction:column;gap:22px;padding:40px 0;max-width:620px}
+.brand{font-size:14px;font-weight:700;letter-spacing:.14em;color:var(--teal)}
+.left h1{font-size:clamp(34px,3.3vw,56px);line-height:1.2;font-weight:900;letter-spacing:-.03em}
+.left h1 em{font-style:normal;color:var(--teal);display:block}
+.left .sub{font-size:clamp(17px,1.5vw,22px);line-height:1.6;color:var(--ink-soft);font-weight:500}
+.menu{list-style:none;display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.menu button{width:100%;text-align:left;font:inherit;display:flex;align-items:center;gap:16px;padding:14px 18px;border-radius:20px;border:1.5px solid rgba(15,94,92,.14);background:rgba(255,255,255,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);cursor:pointer;color:var(--ink);transition:transform .2s,background .2s,box-shadow .2s}
+.menu button:hover{transform:translateX(6px);background:#fff}
+.menu button b{font-size:13px;letter-spacing:.1em;color:var(--teal);width:26px;flex:none}
+.menu button span{display:flex;flex-direction:column;gap:2px;font-size:18px;font-weight:700}
+.menu button small{font-size:14px;font-weight:500;color:var(--ink-soft)}
+.menu button.on{background:var(--teal);border-color:var(--teal);color:#fff;box-shadow:0 18px 30px -16px rgba(15,94,92,.7);transform:translateX(10px)}
+.menu button.on b,.menu button.on small{color:#CFEDEA}
+.menu button:focus-visible{outline:3px solid var(--peach);outline-offset:2px}
+.disc{font-size:14px;line-height:1.6;color:var(--ink-soft)}
 .disc b{color:var(--teal)}
 
-.phone{position:absolute;width:340px;height:700px;border-radius:52px;padding:12px;transform-style:preserve-3d}
-.phone .bezel{position:absolute;inset:0;border-radius:52px}
-.screen{position:relative;width:100%;height:100%;border-radius:40px;background:var(--offwhite);overflow:hidden;padding:44px 18px 18px;display:flex;flex-direction:column;gap:11px;font-size:14px;color:var(--ink)}
-.screen::before{content:"";position:absolute;top:12px;left:50%;width:92px;height:22px;border-radius:12px;background:#15181A;transform:translateX(-50%)}
-.step{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--teal)}
-.screen h3{font-size:20px;font-weight:900;letter-spacing:-.02em;line-height:1.2}
-.card{background:var(--paper);border-radius:18px;padding:12px 14px;border:1px solid #ECE9E1;display:flex;flex-direction:column;gap:7px}
+/* ---------- 3D scene ---------- */
+.scene{min-width:0;overflow:hidden;position:relative;height:100vh;min-height:620px;display:flex;align-items:center;justify-content:center;perspective:2000px}
+.world{width:900px;height:880px;flex:none;position:relative;transform-style:preserve-3d;transform:scale(var(--k,1)) rotateX(var(--rx,4deg)) rotateY(var(--ry,-12deg));transition:transform .12s ease-out}
+.bob{position:absolute;inset:0;transform-style:preserve-3d;animation:bob 6s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.floor{position:absolute;left:150px;top:790px;width:600px;height:90px;border-radius:50%;background:radial-gradient(closest-side,rgba(15,60,58,.32),transparent);transform:translateZ(-60px) rotateX(70deg);filter:blur(6px)}
+.phone{position:absolute;left:260px;top:50px;width:380px;height:780px;transform-style:preserve-3d}
+.slab{position:absolute;inset:0;border-radius:58px;background:#1F2223}
+.face{position:absolute;inset:0;border-radius:58px;padding:12px;background:linear-gradient(145deg,#3A3E40,#202324);box-shadow:inset 0 0 0 2px #53595C,inset 0 3px 8px rgba(255,255,255,.22);transform:translateZ(1px)}
+.screen{position:relative;width:100%;height:100%;border-radius:46px;background:var(--offwhite);overflow-y:auto;overflow-x:hidden;padding:48px 18px 18px;display:flex;flex-direction:column;gap:11px;font-size:15px;scrollbar-width:none}
+.screen::-webkit-scrollbar{display:none}
+.notch{position:absolute;top:24px;left:50%;width:96px;height:24px;border-radius:12px;background:#15181A;transform:translateX(-50%) translateZ(2px);z-index:3}
+.glare{position:absolute;inset:12px;border-radius:46px;pointer-events:none;background:linear-gradient(115deg,rgba(255,255,255,.28) 0,rgba(255,255,255,0) 32%);transform:translateZ(3px);z-index:4}
+.screen.swap{animation:swap .35s ease-out}
+@keyframes swap{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+
+.glass{position:absolute;z-index:5;padding:16px 22px;border-radius:24px;background:rgba(255,255,255,.55);backdrop-filter:blur(14px) saturate(1.3);-webkit-backdrop-filter:blur(14px) saturate(1.3);border:1.5px solid rgba(255,255,255,.9);box-shadow:0 30px 50px -22px rgba(15,94,92,.45);font-weight:700;color:var(--ink);transition:box-shadow .3s}
+.glass small{display:block;font-size:14px;letter-spacing:.06em;color:var(--teal);margin-bottom:6px;font-weight:700}
+.glass ul{list-style:none;display:flex;flex-direction:column;gap:5px;font-weight:500;font-size:19px}
+.glass li::before{content:"✓ ";color:var(--teal);font-weight:900}
+.glass li.un::before{content:"– ";color:var(--gray-ink)}
+.glass li.un{color:var(--gray-ink)}
+.g1{left:20px;top:210px;transform:translateZ(90px)}
+.g2{left:668px;top:330px;transform:translateZ(110px)}
+.g3{left:662px;top:700px;transform:translateZ(130px)}
+.g3 .big{font-size:34px;font-weight:900;color:var(--teal);letter-spacing:-.02em}
+.g3.hot{box-shadow:0 0 0 4px rgba(244,185,149,.9),0 30px 50px -22px rgba(15,94,92,.45)}
+.pet{position:absolute;z-index:6;width:150px;height:150px;filter:drop-shadow(0 16px 14px rgba(40,60,50,.25))}
+.pet.dog{left:10px;top:640px;transform:translateZ(120px)}
+.pet.cat{left:690px;top:90px;transform:translateZ(100px)}
+
+/* ---------- screen contents ---------- */
+.step{font-size:11.5px;font-weight:700;letter-spacing:.1em;color:var(--teal)}
+.screen h3{font-size:21px;font-weight:900;letter-spacing:-.02em;line-height:1.25}
+.card{background:var(--paper);border-radius:18px;padding:12px 14px;border:1px solid #ECE9E1;display:flex;flex-direction:column;gap:8px}
 .row{display:flex;align-items:center;gap:8px;font-weight:500}
 .chk{width:20px;height:20px;border-radius:7px;background:var(--teal);color:#fff;font-size:13px;line-height:20px;text-align:center;font-weight:900;flex:none}
 .chk.off{background:var(--gray);color:var(--gray-ink)}
-.chip{display:inline-block;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--sage-soft);color:#3F5D3E}
-.chip.peach{background:var(--peach-soft);color:#9A5326}
-.badge{margin-left:auto;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--teal-soft);color:var(--teal-deep);white-space:nowrap}
+.chip{display:inline-block;font:inherit;font-size:13px;font-weight:700;padding:4px 11px;border-radius:999px;background:var(--sage-soft);color:#3F5D3E;border:0;cursor:pointer}
+.chip.off{background:var(--gray);color:var(--gray-ink)}
+.badge{margin-left:auto;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--teal-soft);color:var(--teal-deep);white-space:nowrap}
 .badge.un{background:var(--gray);color:var(--gray-ink)}
-.btn{margin-top:auto;background:var(--teal);color:#fff;text-align:center;font-weight:700;font-size:15px;padding:13px;border-radius:16px}
-.btn.ghost{background:var(--paper);color:var(--teal);border:1.5px solid var(--teal)}
-.small{font-size:12px;color:var(--ink-soft);line-height:1.45;font-weight:500}
-.tag-demo{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;padding:1px 7px;border-radius:6px;background:var(--peach-soft);color:#9A5326}
+.small{font-size:12.5px;color:var(--ink-soft);line-height:1.5;font-weight:500}
+.tag-demo{display:inline-block;font-size:11px;font-weight:700;padding:1px 8px;border-radius:6px;background:var(--peach-soft);color:#9A5326;vertical-align:2px}
 .who{display:flex;align-items:center;gap:8px;font-weight:700}
 .av{width:30px;height:30px;border-radius:50%;background:var(--sage);flex:none}
 .av.p{background:var(--peach)}
 .amt{display:flex;justify-content:space-between;font-weight:500}
 .total{display:flex;justify-content:space-between;align-items:baseline;font-weight:900;font-size:17px;border-top:1px dashed #D9D5CA;padding-top:8px}
-.total span:last-child{color:var(--teal);font-size:20px}
-
-/* ---------- Scene A : glass ---------- */
-#sceneA{background:
-  radial-gradient(900px 600px at 78% 18%,#fff 0,transparent 70%),
-  radial-gradient(700px 500px at 20% 95%,#E9F0E7 0,transparent 70%),
-  var(--offwhite)}
-#sceneA .rig{position:absolute;left:0;top:150px;width:1920px;height:860px;perspective:2400px;perspective-origin:50% 40%}
-#sceneA .phone{top:170px;background:#2A2D2F;box-shadow:0 60px 80px -30px rgba(20,40,40,.45),0 0 0 2px #4A4F52 inset}
-#sceneA .phone .bezel{box-shadow:inset 0 0 0 3px rgba(255,255,255,.12),inset 0 2px 6px rgba(255,255,255,.25)}
-#sceneA .pl{left:330px;transform:scale(.88) rotateY(32deg) rotateZ(-3deg) rotateX(6deg) translateZ(-60px)}
-#sceneA .pc{left:790px;top:70px;transform:scale(1.2) translateZ(60px);z-index:5}
-#sceneA .pr{left:1250px;transform:scale(.88) rotateY(-32deg) rotateZ(3deg) rotateX(6deg) translateZ(-60px)}
-.glass{position:absolute;z-index:12;padding:16px 22px;border-radius:24px;background:rgba(255,255,255,.42);backdrop-filter:blur(16px) saturate(1.3);-webkit-backdrop-filter:blur(16px) saturate(1.3);border:1.5px solid rgba(255,255,255,.8);box-shadow:0 24px 50px -20px rgba(15,94,92,.35);font-size:20px;font-weight:700;color:var(--ink)}
-.glass small{display:block;font-size:14px;font-weight:700;letter-spacing:.1em;color:var(--teal);margin-bottom:6px}
-.glass ul{list-style:none;display:flex;flex-direction:column;gap:5px;font-weight:500;font-size:19px}
-.glass li::before{content:"✓ ";color:var(--teal);font-weight:900}
-.glass li.un::before{content:"– ";color:var(--gray-ink)}
-.glass li.un{color:var(--gray-ink)}
-.g1{left:130px;top:640px}
-.g2{left:1580px;top:560px}
-.g3{left:1590px;top:900px}
-.g3 .big{font-size:36px;font-weight:900;color:var(--teal);letter-spacing:-.02em}
-.pets{position:absolute;right:96px;top:70px;display:flex;gap:22px;z-index:13}
-.pets svg{width:150px;height:150px;filter:drop-shadow(0 14px 14px rgba(40,60,50,.22))}
-
-
-#sceneA .phone{cursor:default}
-.hint{position:absolute;right:96px;top:245px;font-size:20px;font-weight:700;color:var(--teal);z-index:20;background:rgba(255,255,255,.75);border:1.5px solid var(--teal);border-radius:999px;padding:8px 18px;pointer-events:none}
-.screen{overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
-.screen::-webkit-scrollbar{display:none}
-.screen::before{z-index:3}
-.phone button.btn{border:0;font:inherit;font-weight:700;font-size:15px;cursor:pointer;width:100%;flex:none}
-.phone button.btn.ghost{border:1.5px solid var(--teal)}
-.phone button.btn:active{transform:scale(.98)}
-.phone button.btn[disabled]{background:var(--gray);color:var(--gray-ink);cursor:not-allowed;border:0}
+.total span:last-child{color:var(--teal);font-size:21px}
+button.btn{margin-top:auto;border:0;font:inherit;font-weight:700;font-size:16px;cursor:pointer;width:100%;flex:none;background:var(--teal);color:#fff;text-align:center;padding:14px;border-radius:16px;transition:transform .1s,filter .15s}
+button.btn:hover{filter:brightness(1.1)}
+button.btn:active{transform:scale(.98)}
+button.btn.ghost{background:var(--paper);color:var(--teal);border:1.5px solid var(--teal)}
+button.btn[disabled]{background:var(--gray);color:var(--gray-ink);cursor:not-allowed;border:0;filter:none}
 .back{align-self:flex-start;font:inherit;font-size:13px;font-weight:700;color:var(--teal);background:none;border:0;cursor:pointer;padding:0;flex:none}
 .tg{cursor:pointer;user-select:none}
 .tg.off .chk{background:var(--gray);color:transparent}
-.chip{cursor:pointer;border:0;font-family:inherit}
-.chip.off{background:var(--gray);color:var(--gray-ink)}
-.warn{background:var(--peach-soft);color:#7A3F17;border-radius:14px;padding:9px 12px;font-size:12.5px;line-height:1.45;font-weight:500}
-.ok{background:var(--teal-soft);color:var(--teal-deep);border-radius:14px;padding:9px 12px;font-size:12.5px;line-height:1.45;font-weight:500}
-.vbtn{font:inherit;font-size:12px;font-weight:700;color:var(--teal);background:var(--paper);border:1.5px solid var(--teal);border-radius:999px;padding:3px 10px;cursor:pointer}
+.warn{background:var(--peach-soft);color:#7A3F17;border-radius:14px;padding:10px 12px;font-size:13px;line-height:1.5;font-weight:500}
+.ok{background:var(--teal-soft);color:var(--teal-deep);border-radius:14px;padding:10px 12px;font-size:13px;line-height:1.5;font-weight:500}
+.vbtn{font:inherit;font-size:12px;font-weight:700;color:var(--teal);background:var(--paper);border:1.5px solid var(--teal);border-radius:999px;padding:3px 11px;cursor:pointer}
 .vbtn[disabled]{color:var(--gray-ink);border-color:var(--gray);cursor:default}
 .tl{display:flex;flex-direction:column;padding:4px 2px}
-.tl .t{display:flex;gap:12px;align-items:flex-start;padding-bottom:12px;position:relative;font-weight:700;font-size:13.5px}
+.tl .t{display:flex;gap:12px;align-items:flex-start;padding-bottom:13px;position:relative;font-weight:700;font-size:14px}
 .tl .t::before{content:"";position:absolute;left:10px;top:22px;bottom:0;width:2px;background:#E6E3DB}
 .tl .t:last-child::before{display:none}
 .tl .dot{width:22px;height:22px;border-radius:50%;background:var(--teal);color:#fff;font-size:12px;line-height:22px;text-align:center;flex:none}
 .tl .t.todo{color:var(--gray-ink);font-weight:500}
 .tl .t.todo .dot{background:var(--gray);color:var(--gray-ink)}
 .tl .t.now .dot{background:var(--peach);color:#3A2012;box-shadow:0 0 0 4px var(--peach-soft)}
-.tl .t small{display:block;font-weight:500;color:var(--ink-soft);font-size:11.5px}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(244,185,149,.95),0 60px 80px -30px rgba(20,40,40,.45)}100%{box-shadow:0 0 0 26px rgba(244,185,149,0),0 60px 80px -30px rgba(20,40,40,.45)}}
-#sceneA .phone.pulse{animation:pulse .9s ease-out}
+.tl .t small{display:block;font-weight:500;color:var(--ink-soft);font-size:12px}
+
+/* ---------- small screens ---------- */
+@media (max-width:980px){
+  .page{grid-template-columns:minmax(0,1fr);padding:0 20px}
+  .left{padding:36px 0 0;max-width:none}
+  .menu{flex-direction:row;overflow-x:auto;gap:8px;padding-bottom:4px}
+  .menu button{width:auto;flex:none;padding:10px 14px}
+  .menu button small{display:none}
+  .menu button.on,.menu button:hover{transform:none}
+  .scene{height:auto;min-height:0;padding:10px 0 30px}
+}
 </style>
 </head>
 <body>
-<div class="viewport" id="vp"><div class="stage" id="stage">
-<div class="scene on" id="sceneA">
-  <div class="headline">
-    <h1>우리 아이 케어,<br><em>해 본 사람만</em> 보여 드려요.</h1>
-    <p>필요한 돌봄부터 확인하고, 총액과 케어 계획까지 함께 정해요.</p>
-  </div>
-  <div class="pets" aria-hidden="true">
-    <svg viewBox="0 0 150 150"><use href="#dog"/></svg>
-    <svg viewBox="0 0 150 150"><use href="#cat"/></svg>
-  </div>
-  <div class="hint">폰 안의 버튼을 직접 눌러 보세요</div>
-  <div class="glass g1"><small>REQUIRED TASKS</small><ul id="g1"></ul></div>
-  <div class="glass g2"><small>EVIDENCE BY TASK</small><ul id="g2"></ul></div>
-  <div class="glass g3"><small>TOTAL QUOTE · DEMO</small><div class="big">KRW 140,000</div></div>
-  <div class="rig">
-    <div class="phone pl" id="ph1"><div class="bezel"></div><div class="screen" id="s1"></div></div>
-    <div class="phone pc" id="ph2"><div class="bezel"></div><div class="screen" id="s2"></div></div>
-    <div class="phone pr" id="ph3"><div class="bezel"></div><div class="screen" id="s3"></div></div>
-  </div>
-  <div class="disc"><b>콘셉트 목업</b> · 인물·프로필·가격은 시연용 예시 · 방문형 서비스이며 방문 사이 상주하지 않습니다</div>
-</div>
-</div></div>
+<div class="page">
+  <section class="left">
+    <div class="brand">시니어 펫 케어 · 콘셉트 목업</div>
+    <h1>우리 아이 케어,<em>해 본 사람만 보여 드려요.</em></h1>
+    <p class="sub">필요한 돌봄부터 확인하고, 총액과 케어 계획까지 함께 정해요. 오른쪽 폰의 버튼을 직접 눌러 보세요.</p>
+    <ol class="menu" id="menu"></ol>
+    <p class="disc"><b>콘셉트 목업</b> · 인물·프로필·가격은 시연용 예시입니다. 방문형 서비스이며 방문 사이에는 상주하지 않습니다.</p>
+  </section>
 
-<!-- pet figures (shared) -->
+  <section class="scene" id="scene">
+    <div class="world" id="world"><div class="bob">
+      <div class="floor"></div>
+      <div class="phone">
+        <div class="slab" style="transform:translateZ(-4px)"></div><div class="slab" style="transform:translateZ(-9px)"></div>
+        <div class="slab" style="transform:translateZ(-14px)"></div><div class="slab" style="transform:translateZ(-19px);background:#15181A"></div>
+        <div class="face"><div class="screen" id="ps"></div><div class="notch"></div><div class="glare"></div></div>
+      </div>
+      <div class="glass g1"><small>필수 작업</small><ul id="g1"></ul></div>
+      <div class="glass g2"><small>작업별 확인 근거</small><ul id="g2"></ul></div>
+      <div class="glass g3" id="g3"><small>총 견적 · 시연용</small><div class="big">140,000원</div></div>
+      <svg class="pet dog" viewBox="0 0 150 150" aria-hidden="true"><use href="#dog"/></svg>
+      <svg class="pet cat" viewBox="0 0 150 150" aria-hidden="true"><use href="#cat"/></svg>
+    </div></div>
+  </section>
+</div>
+
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <g id="dog">
@@ -164,79 +181,92 @@ body{font-family:var(--font);background:#222;color:var(--ink);display:flex;flex-
 </svg>
 
 <script>
-const stage=document.getElementById('stage'),vp=document.getElementById('vp');
-function fit(){const s=Math.min(vp.clientWidth/1920,vp.clientHeight/1080);stage.style.transform='scale('+s+')';stage.style.margin=(-(1080*(1-s))/2)+'px '+(-(1920*(1-s))/2)+'px'}
-addEventListener('resize',fit);fit();
-
-/* 상태: 버튼은 화면 이동·표시만 바꾸고, 실제 기능은 없음 */
-const P={tasks:{feed:true,toilet:true,mob:true,med:false},win:{m:true,e:true},submitted:false,cand:"A",v2:"list",v3:"quote",verify:{}};
-const CAND={A:{n:"Caregiver A",t:"Mon 08–10 · Wed 18–20",ev:{feed:true,toilet:true,mob:false},sum:"Feeding and toileting records confirmed (demo data)."},
-            B:{n:"Caregiver B",t:"Tue 08–10 · Thu 18–20",ev:{feed:true,toilet:false,mob:true},sum:"Feeding and mobility records confirmed (demo data)."}};
-const TN={feed:"Feeding assistance",toilet:"Toileting cleanup",mob:"Mobility assistance"};
-const SH={feed:"Feeding",toilet:"Toileting",mob:"Mobility"};
+/* 버튼은 화면 이동·표시만 바꾸고, 실제 기능(저장·결제·매칭)은 없음 */
+const P={step:1,view:"main",tasks:{feed:true,toilet:true,mob:true,med:false},win:{m:true,e:true},cand:"A",verify:{}};
+const CAND={
+  A:{n:"제공자 A",t:"월 08–10시 · 수 18–20시",ev:{feed:true,toilet:true,mob:false},sum:"식사·배변 업무 경험이 확인되었습니다(시연용 자료)."},
+  B:{n:"제공자 B",t:"화 08–10시 · 목 18–20시",ev:{feed:true,toilet:false,mob:true},sum:"식사·이동 보조 업무 경험이 확인되었습니다(시연용 자료)."}};
+const TN={feed:"식사 보조",toilet:"배변 정리",mob:"이동 보조"};
+const SH={feed:"식사",toilet:"배변",mob:"이동"};
+const STEPS=[["01","필수 케어 입력","반려동물·부재 일정·필요한 업무"],["02","후보 비교","업무별 경험 확인·미확인"],["03","총액·계획서","방문 횟수·시간·추가비·수수료"],["04","사전 만남","만난 뒤 양측이 확정"]];
 const $=id=>document.getElementById(id);
 const req=()=>["feed","toilet","mob"].filter(k=>P.tasks[k]);
 const ev=(c,k)=>CAND[c].ev[k]||P.verify[c+k]==="done";
 const missing=c=>req().filter(k=>!ev(c,k));
-const bdg=(c,k)=>ev(c,k)?'<span class="badge">Confirmed</span>':(P.verify[c+k]==="req"?'<span class="badge un">Requested</span>':'<span class="badge un">Not confirmed</span>');
+const bdg=(c,k)=>ev(c,k)?'<span class="badge">항목 확인</span>':(P.verify[c+k]==="req"?'<span class="badge un">확인 요청됨</span>':'<span class="badge un">미확인</span>');
 
-function s1(){return `<div class="step">01 · CARE REQUEST</div><h3>Required care</h3>
-  <div class="card"><div class="who"><span class="av p"></span>Bori · Senior dog · 13 yrs <span class="tag-demo">DEMO</span></div><div class="small">Home visit · Away 3 days</div></div>
+function screen(){
+  if(P.step===1)return `<div class="step">01 · 필수 케어 입력</div><h3>필요한 돌봄을 알려 주세요</h3>
+  <div class="card"><div class="who"><span class="av p"></span>보리 · 노견 · 13세 <span class="tag-demo">시연용</span></div><div class="small">보호자 집 방문 · 부재 3일</div></div>
   <div class="card">${["feed","toilet","mob"].map(k=>`<div class="row tg ${P.tasks[k]?"":"off"}" data-a="task" data-k="${k}"><span class="chk">✓</span>${TN[k]}</div>`).join("")}
-   <div class="row tg ${P.tasks.med?"":"off"}" data-a="task" data-k="med"><span class="chk ${P.tasks.med?"off":""}">${P.tasks.med?"!":"✓"}</span>Medication request<span class="badge un">Operator review</span></div></div>
-  <div class="card"><div class="small">Preferred visit windows</div><div><button class="chip ${P.win.m?"":"off"}" data-a="win" data-k="m">Morning 08–10</button> <button class="chip ${P.win.e?"":"off"}" data-a="win" data-k="e">Evening 18–20</button></div></div>
-  <button class="btn" data-a="submit"${req().length?"":" disabled"}>${P.submitted?"Submitted ✓ · see candidates":"Submit required care"}</button>`}
-function candCard(c){const d=CAND[c];return `<div class="card"><div class="who"><span class="av ${c==="B"?"p":""}"></span>${d.n} <span class="tag-demo">DEMO</span></div>
-  ${req().map(k=>`<div class="row">${SH[k]}${bdg(c,k)}</div>`).join("")||'<div class="small">No required tasks selected.</div>'}
-  <div class="small">Available: ${d.t}</div>
-  <button class="btn ghost" data-a="detail" data-c="${c}" style="margin-top:4px;padding:9px">View details</button></div>`}
-function s2(){
-  if(P.v2==="list")return `<div class="step">02 · CANDIDATES</div><h3>Task-by-task evidence</h3>${candCard("A")}${candCard("B")}<div class="small">No overall badge or score. Each task shows its own evidence status.</div>`;
-  const c=P.cand,d=CAND[c];return `<button class="back" data-a="list">‹ Candidates</button><div class="step">02 · CANDIDATE DETAIL</div>
-  <div class="who" style="font-size:18px"><span class="av ${c==="B"?"p":""}" style="width:34px;height:34px"></span>${d.n} <span class="tag-demo">DEMO</span></div>
-  <div class="card">${req().map(k=>`<div class="row">${TN[k]}${bdg(c,k)}</div>${ev(c,k)?"":`<div class="small">Must be checked before confirmation. <button class="vbtn" data-a="verify" data-k="${k}"${P.verify[c+k]?" disabled":""}>${P.verify[c+k]?"Verification requested":"Ask to verify"}</button></div>`}`).join("")}</div>
-  <div class="card"><div class="small">Evidence summary</div><div>${d.sum}</div><div class="small">Available: ${d.t}</div></div>
-  ${missing(c).length?`<div class="warn">Unconfirmed: ${missing(c).map(k=>TN[k]).join(", ")}. This caregiver cannot be finalized until checked.</div>`:`<div class="ok">All requested tasks have confirmed evidence.</div>`}
-  <button class="btn" data-a="quote">See sample quote</button>`}
-function s3(){const c=P.cand,m=missing(c);
-  if(P.v3==="quote")return `<div class="step">03 · QUOTE &amp; PLAN</div><h3>Sample quote <span class="tag-demo">DEMO</span></h3>
-  <div class="card"><div class="small">${CAND[c].n} · 3 days · 9 visits · 40 min per visit</div>
-   <div class="amt"><span>Care visits (9)</span><span>108,000</span></div><div class="amt"><span>Service fee</span><span>20,000</span></div><div class="amt"><span>Travel add-on</span><span>12,000</span></div>
-   <div class="total"><span>Total (KRW)</span><span>140,000</span></div></div>
-  <div class="card">${req().map(k=>`<div class="row"><span class="chk${ev(c,k)?"":" off"}">${ev(c,k)?"✓":"!"}</span>${TN[k]}</div>`).join("")}<div class="row"><span class="chk off">–</span>No overnight presence</div></div>
-  ${m.length?`<div class="warn">Not yet confirmed: ${m.map(k=>SH[k]).join(", ")}. Final confirmation stays locked.</div>`:`<div class="small">Draft plan · Not confirmed until both parties agree after the pre-meeting.</div>`}
-  <button class="btn" data-a="premeet">Request pre-meeting</button>`;
-  return `<button class="back" data-a="toquote">‹ Quote</button><div class="step">04 · PRE-MEETING</div><h3>Pre-meeting requested</h3>
-  <div class="ok">Request sent to ${CAND[c].n} (demo). The plan is not final until both parties agree after the pre-meeting.</div>
+   <div class="row tg ${P.tasks.med?"":"off"}" data-a="task" data-k="med"><span class="chk ${P.tasks.med?"off":""}">${P.tasks.med?"!":"✓"}</span>복약 관련 요청<span class="badge un">운영자 확인 필요</span></div></div>
+  <div class="card"><div class="small">희망 방문 시간</div><div><button class="chip ${P.win.m?"":"off"}" data-a="win" data-k="m">오전 08–10시</button> <button class="chip ${P.win.e?"":"off"}" data-a="win" data-k="e">저녁 18–20시</button></div></div>
+  <div class="small">복약은 아직 도입 전이라, 요청하시면 운영자가 먼저 확인합니다.</div>
+  <button class="btn" data-a="to2"${req().length?"":" disabled"}>필수 케어 제출</button>`;
+  if(P.step===2&&P.view==="main")return `<button class="back" data-a="to1">‹ 입력으로</button><div class="step">02 · 후보 비교</div><h3>업무별로 확인했어요</h3>
+  ${["A","B"].map(c=>{const d=CAND[c];return `<div class="card"><div class="who"><span class="av ${c==="B"?"p":""}"></span>${d.n} <span class="tag-demo">시연용</span></div>
+  ${req().map(k=>`<div class="row">${SH[k]}${bdg(c,k)}</div>`).join("")||'<div class="small">선택한 필수 업무가 없어요.</div>'}
+  <div class="small">가능 시간: ${d.t}</div>
+  <button class="btn ghost" data-a="detail" data-c="${c}" style="margin-top:4px;padding:10px">후보 상세 보기</button></div>`}).join("")}
+  <div class="small">‘항목 확인’은 해당 업무의 경험 근거를 확인했다는 뜻이며, 안전 보증이 아닙니다.</div>`;
+  if(P.step===2){const c=P.cand,d=CAND[c];return `<button class="back" data-a="to2">‹ 후보 목록</button><div class="step">02 · 후보 상세</div>
+  <div class="who" style="font-size:19px"><span class="av ${c==="B"?"p":""}" style="width:36px;height:36px"></span>${d.n} <span class="tag-demo">시연용</span></div>
+  <div class="card">${req().map(k=>`<div class="row">${TN[k]}${bdg(c,k)}</div>${ev(c,k)?"":`<div class="small">확정 전에 확인이 필요해요. <button class="vbtn" data-a="verify" data-k="${k}"${P.verify[c+k]?" disabled":""}>${P.verify[c+k]?"확인 요청됨":"확인 요청하기"}</button></div>`}`).join("")}</div>
+  <div class="card"><div class="small">확인 근거 요약</div><div>${d.sum}</div><div class="small">가능 시간: ${d.t}</div></div>
+  ${missing(c).length?`<div class="warn">미확인: ${missing(c).map(k=>TN[k]).join(", ")}. 추가 확인 전에는 확정할 수 없어요.</div>`:`<div class="ok">요청한 업무의 경험 근거가 모두 확인되었어요.</div>`}
+  <button class="btn" data-a="to3">견적 보기</button>`}
+  if(P.step===3){const c=P.cand,m=missing(c);return `<button class="back" data-a="detail" data-c="${c}">‹ 후보 상세</button><div class="step">03 · 총액·계획서</div><h3>한 장 견적 <span class="tag-demo">시연용 예시</span></h3>
+  <div class="card"><div class="small">${CAND[c].n} · 3일 · 9회 · 회당 40분</div>
+   <div class="amt"><span>방문 돌봄 (9회)</span><span>108,000원</span></div><div class="amt"><span>서비스 수수료</span><span>20,000원</span></div><div class="amt"><span>이동 추가비</span><span>12,000원</span></div>
+   <div class="total"><span>총액</span><span>140,000원</span></div></div>
+  <div class="card"><div class="small">포함 업무</div>${req().map(k=>`<div class="row"><span class="chk${ev(c,k)?"":" off"}">${ev(c,k)?"✓":"!"}</span>${TN[k]}</div>`).join("")}<div class="row"><span class="chk off">–</span>야간 상주 미포함</div></div>
+  ${m.length?`<div class="warn">아직 미확인: ${m.map(k=>SH[k]).join(", ")}. 최종 확정은 잠겨 있어요.</div>`:`<div class="small">계획서는 사전 만남 뒤 양측이 동의해야 확정돼요.</div>`}
+  <button class="btn" data-a="to4">사전 만남 요청</button>`}
+  const c=P.cand,m=missing(c);return `<button class="back" data-a="to3">‹ 견적으로</button><div class="step">04 · 사전 만남</div><h3>사전 만남을 요청했어요</h3>
+  <div class="ok">${CAND[c].n}에게 요청을 보냈어요(시연). 만난 뒤 양측이 동의해야 계획이 확정돼요.</div>
   <div class="card tl">
-   <div class="t"><span class="dot">✓</span><div>Request<small>Required care submitted</small></div></div>
-   <div class="t"><span class="dot">✓</span><div>Candidate check<small>${CAND[c].n} selected</small></div></div>
-   <div class="t"><span class="dot">✓</span><div>One-page quote<small>KRW 140,000 · demo</small></div></div>
-   <div class="t now"><span class="dot">4</span><div>Pre-meeting<small>Waiting for schedule</small></div></div>
-   <div class="t todo"><span class="dot">5</span><div>Both parties confirm<small>${m.length?"Locked · unconfirmed task remains":"Not confirmed"}</small></div></div>
-   <div class="t todo"><span class="dot">6</span><div>Visit log</div></div></div>
-  <button class="btn ghost" data-a="reset">Start over</button>`}
-function draw(){
-  [[1,s1],[2,s2],[3,s3]].forEach(([n,f])=>{const el=$("s"+n),y=el.scrollTop;el.innerHTML=f();el.scrollTop=y});
-  $("g1").innerHTML=req().map(k=>`<li>${SH[k]}</li>`).join("")||'<li class="un">None selected</li>';
-  $("g2").innerHTML=req().map(k=>`<li class="${ev(P.cand,k)?"":"un"}">${SH[k]} · ${ev(P.cand,k)?"Confirmed":"Not confirmed"}</li>`).join("")||'<li class="un">–</li>';
+   <div class="t"><span class="dot">✓</span><div>요청<small>필수 케어 제출됨</small></div></div>
+   <div class="t"><span class="dot">✓</span><div>후보 확인<small>${CAND[c].n} 선택</small></div></div>
+   <div class="t"><span class="dot">✓</span><div>한 장 견적<small>140,000원 · 시연용</small></div></div>
+   <div class="t now"><span class="dot">4</span><div>사전 만남<small>일정 조율 중</small></div></div>
+   <div class="t todo"><span class="dot">5</span><div>계획서 양측 확정<small>${m.length?"잠김 · 미확인 업무가 남아 있어요":"아직 미확정"}</small></div></div>
+   <div class="t todo"><span class="dot">6</span><div>방문 기록</div></div></div>
+  <button class="btn ghost" data-a="reset">처음부터 다시</button>`;
 }
-function pulse(n){const p=$("ph"+n);p.classList.remove("pulse");void p.offsetWidth;p.classList.add("pulse")}
-stage.addEventListener("click",e=>{
+
+function draw(swap){
+  const el=$("ps");el.innerHTML=screen();el.scrollTop=0;
+  if(swap){el.classList.remove("swap");void el.offsetWidth;el.classList.add("swap")}
+  $("menu").innerHTML=STEPS.map((x,i)=>`<li><button data-a="step" data-s="${i+1}" class="${P.step===i+1?"on":""}"><b>${x[0]}</b><span>${x[1]}<small>${x[2]}</small></span></button></li>`).join("");
+  $("g1").innerHTML=req().map(k=>`<li>${TN[k]}</li>`).join("")||'<li class="un">선택한 업무 없음</li>';
+  $("g2").innerHTML=req().map(k=>`<li class="${ev(P.cand,k)?"":"un"}">${SH[k]} · ${ev(P.cand,k)?"확인":"미확인"}</li>`).join("")||'<li class="un">–</li>';
+  $("g3").classList.toggle("hot",P.step>=3);
+}
+function go(step,view,swap=true){P.step=step;P.view=view||"main";draw(swap)}
+document.addEventListener("click",e=>{
   const t=e.target.closest("[data-a]");if(!t)return;const a=t.dataset.a;
-  if(a==="task")P.tasks[t.dataset.k]=!P.tasks[t.dataset.k];
-  else if(a==="win")P.win[t.dataset.k]=!P.win[t.dataset.k];
-  else if(a==="submit"){P.submitted=true;P.v2="list";pulse(2)}
-  else if(a==="detail"){P.cand=t.dataset.c;P.v2="detail";P.v3="quote"}
-  else if(a==="list")P.v2="list";
-  else if(a==="verify")P.verify[P.cand+t.dataset.k]="req";
-  else if(a==="quote"){P.v3="quote";pulse(3)}
-  else if(a==="premeet")P.v3="meet";
-  else if(a==="toquote")P.v3="quote";
-  else if(a==="reset"){P.submitted=false;P.v2="list";P.v3="quote";P.cand="A";P.verify={};P.tasks={feed:true,toilet:true,mob:true,med:false};P.win={m:true,e:true}}
-  draw();
+  if(a==="task"){P.tasks[t.dataset.k]=!P.tasks[t.dataset.k];draw()}
+  else if(a==="win"){P.win[t.dataset.k]=!P.win[t.dataset.k];draw()}
+  else if(a==="verify"){P.verify[P.cand+t.dataset.k]="req";draw()}
+  else if(a==="detail"){P.cand=t.dataset.c;go(2,"detail")}
+  else if(a==="to1")go(1);else if(a==="to2")go(2);else if(a==="to3")go(3);else if(a==="to4")go(4);
+  else if(a==="step")go(+t.dataset.s);
+  else if(a==="reset"){P.cand="A";P.verify={};P.tasks={feed:true,toilet:true,mob:true,med:false};P.win={m:true,e:true};go(1)}
 });
-draw();
+
+/* 화면 크기에 맞춰 3D 장면을 꽉 차게, 마우스를 따라 살짝 기울어짐 */
+const world=$("world"),scene=$("scene");
+function fit(){
+  const w=scene.clientWidth,h=innerWidth>980?innerHeight:Math.min(innerHeight*0.9,w*0.98);
+  const k=Math.min(w/900,h/880)*0.97;
+  world.style.setProperty("--k",k.toFixed(3));
+  if(innerWidth<=980)scene.style.height=(880*k)+"px";else scene.style.height="";
+}
+addEventListener("resize",fit);
+let rx=4,ry=-12;
+function tilt(x,y){world.style.setProperty("--rx",(rx+(0.5-y)*8).toFixed(2)+"deg");world.style.setProperty("--ry",(ry+(x-0.5)*14).toFixed(2)+"deg")}
+document.addEventListener("mousemove",e=>tilt(e.clientX/innerWidth,e.clientY/innerHeight));
+tilt(.5,.5);fit();draw(false);
 </script>
 </body>
 </html>
