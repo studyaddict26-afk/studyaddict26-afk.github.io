@@ -108,12 +108,58 @@ body{font-family:var(--font);background:#222;color:var(--ink);display:flex;flex-
 .sym{position:absolute;width:86px;height:86px;border-radius:28px;display:flex;align-items:center;justify-content:center;z-index:9}
 .sym svg{width:50px;height:50px}
 .scope{position:absolute;right:96px;bottom:44px;font-size:20px;font-weight:700;color:var(--teal);z-index:20;text-align:right}
+
+/* ---------- interactive prototype ---------- */
+.bar .try{background:var(--peach);border-color:var(--peach);color:#3A2012;margin-left:12px}
+.bar .try:hover{filter:brightness(1.05)}
+.phone,.fcard{cursor:pointer}
+.hint{position:absolute;right:96px;top:245px;font-size:20px;font-weight:700;color:var(--teal);z-index:20;background:rgba(255,255,255,.7);border:1.5px solid var(--teal);border-radius:999px;padding:8px 18px;pointer-events:none}
+.proto{position:fixed;inset:0;z-index:50;background:rgba(14,22,22,.86);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;gap:56px;padding:20px}
+.proto[hidden]{display:none}
+.pclose{position:absolute;top:14px;right:16px;font:inherit;font-weight:700;font-size:15px;color:#fff;background:#2c3a3a;border:1px solid #4a5b5b;border-radius:999px;padding:8px 16px;cursor:pointer}
+.psteps{list-style:none;display:flex;flex-direction:column;gap:10px;width:260px}
+.psteps li button{width:100%;text-align:left;font:inherit;color:#cfd9d8;background:transparent;border:1px solid #3b4a4a;border-radius:14px;padding:12px 16px;cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.psteps li button b{font-size:12px;letter-spacing:.12em;color:#7FC4BF}
+.psteps li button span{font-size:17px;font-weight:700}
+.psteps li button.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.psteps li button.on b{color:#CFEDEA}
+.psteps .note{font-size:13px;color:#8FA09F;line-height:1.5;margin-top:6px}
+.pwrap{flex:none;display:flex;align-items:center;justify-content:center}
+.pphone{width:380px;height:780px;border-radius:58px;padding:12px;background:#2A2D2F;box-shadow:0 40px 80px -20px rgba(0,0,0,.6),0 0 0 2px #4A4F52 inset;transform-origin:center center;flex:none}
+.pphone .screen{height:100%;border-radius:46px;font-size:15px;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+.pphone .screen::-webkit-scrollbar{display:none}
+.pphone .screen::before{z-index:3}
+.back{align-self:flex-start;font:inherit;font-size:14px;font-weight:700;color:var(--teal);background:none;border:0;cursor:pointer;padding:0}
+.pphone button.btn{border:0;font:inherit;font-weight:700;font-size:16px;cursor:pointer;width:100%;flex:none}
+.pphone button.btn.ghost{border:1.5px solid var(--teal)}
+.pphone button.btn:active{transform:scale(.98)}
+.pphone button.btn[disabled]{background:var(--gray);color:var(--gray-ink);cursor:not-allowed;border:0}
+.tg{cursor:pointer;user-select:none}
+.tg .chk{transition:background .15s}
+.tg.off .chk{background:var(--gray);color:transparent}
+.chip{cursor:pointer;border:0;font-family:inherit}
+.chip.off{background:var(--gray);color:var(--gray-ink)}
+.warn{background:var(--peach-soft);color:#7A3F17;border-radius:14px;padding:10px 12px;font-size:13px;line-height:1.45;font-weight:500}
+.ok{background:var(--teal-soft);color:var(--teal-deep);border-radius:14px;padding:10px 12px;font-size:13px;line-height:1.45;font-weight:500}
+.vbtn{font:inherit;font-size:12px;font-weight:700;color:var(--teal);background:var(--paper);border:1.5px solid var(--teal);border-radius:999px;padding:3px 10px;cursor:pointer}
+.vbtn[disabled]{color:var(--gray-ink);border-color:var(--gray);cursor:default}
+.tl{display:flex;flex-direction:column;gap:0;padding:4px 2px}
+.tl .t{display:flex;gap:12px;align-items:flex-start;padding-bottom:14px;position:relative;font-weight:700}
+.tl .t::before{content:"";position:absolute;left:10px;top:22px;bottom:0;width:2px;background:var(--line,#E6E3DB)}
+.tl .t:last-child::before{display:none}
+.tl .dot{width:22px;height:22px;border-radius:50%;background:var(--teal);color:#fff;font-size:12px;line-height:22px;text-align:center;flex:none}
+.tl .t.todo{color:var(--gray-ink);font-weight:500}
+.tl .t.todo .dot{background:var(--gray);color:var(--gray-ink)}
+.tl .t.now .dot{background:var(--peach);color:#3A2012;box-shadow:0 0 0 4px var(--peach-soft)}
+.tl .t small{display:block;font-weight:500;color:var(--ink-soft);font-size:12px}
+@media (max-width:900px){.psteps{display:none}}
 </style>
 </head>
 <body>
 <div class="bar" role="tablist" aria-label="시안 선택">
   <button role="tab" aria-selected="true" data-t="A">A · 신뢰 중심 글래스모피즘</button>
   <button role="tab" aria-selected="false" data-t="B">B · 따뜻한 돌봄 클레이</button>
+  <button class="try" id="tryBtn">▶ 앱 화면 체험하기</button>
 </div>
 <div class="viewport" id="vp"><div class="stage" id="stage">
 
@@ -191,6 +237,7 @@ body{font-family:var(--font);background:#222;color:var(--ink);display:flex;flex-
       <div class="btn">Request pre-meeting</div>
     </div></div>
   </div>
+  <div class="hint">폰 화면을 눌러 직접 체험해 보세요 ▶</div>
   <div class="disc"><b>콘셉트 목업</b> · 인물·프로필·가격은 시연용 예시 · 방문형 서비스이며 방문 사이 상주하지 않습니다</div>
 </div>
 
@@ -257,11 +304,19 @@ body{font-family:var(--font);background:#222;color:var(--ink);display:flex;flex-
     <div class="sym clay" style="left:1560px;top:790px;background:var(--teal-soft)"><svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="18" fill="#fff" stroke="#0F5E5C" stroke-width="4"/><path d="M25 14v12l8 5" stroke="#0F5E5C" stroke-width="4" stroke-linecap="round" fill="none"/></svg></div>
     <div class="sym clay" style="left:1660px;top:660px;background:var(--sage-soft)"><svg viewBox="0 0 50 50"><rect x="9" y="6" width="32" height="38" rx="8" fill="#fff"/><path d="M16 18l4 4 8-8M16 32h18" stroke="#0F5E5C" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
   </div>
+  <div class="hint">폰 화면을 눌러 직접 체험해 보세요 ▶</div>
   <div class="disc"><b>콘셉트 목업</b> · 인물·프로필·가격은 시연용 예시</div>
   <div class="scope">방문형 돌봄 · 종일·야간 상주 아님</div>
 </div>
 
 </div></div>
+
+
+<div class="proto" id="proto" hidden role="dialog" aria-label="앱 화면 체험">
+  <button class="pclose" id="pclose">✕ 닫기 (Esc)</button>
+  <ol class="psteps" id="psteps"></ol>
+  <div class="pwrap"><div class="pphone" id="pphone"><div class="screen" id="ps"></div></div></div>
+</div>
 
 <!-- pet figures (shared) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -298,6 +353,81 @@ addEventListener('resize',fit);fit();
 document.querySelectorAll('.bar button').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('.bar button').forEach(x=>x.setAttribute('aria-selected',x===b));
   document.querySelectorAll('.scene').forEach(s=>s.classList.toggle('on',s.id==='scene'+b.dataset.t));
+});
+
+/* ---------- prototype ---------- */
+const P={step:1,view:"main",tasks:{feed:true,toilet:true,mob:true,med:false},win:{m:true,e:true},cand:"A",verify:{}};
+const CAND={A:{n:"Caregiver A",t:"Mon 08–10 · Wed 18–20",ev:{feed:true,toilet:true,mob:false},sum:"Feeding and toileting records confirmed (demo data)."},
+            B:{n:"Caregiver B",t:"Tue 08–10 · Thu 18–20",ev:{feed:true,toilet:false,mob:true},sum:"Feeding and mobility records confirmed (demo data)."}};
+const TN={feed:"Feeding assistance",toilet:"Toileting cleanup",mob:"Mobility assistance"};
+const STEPS=[["01","Care request"],["02","Candidates"],["03","Quote & plan"],["04","Pre-meeting"]];
+const $=id=>document.getElementById(id);
+const req=()=>["feed","toilet","mob"].filter(k=>P.tasks[k]);
+const ev=(c,k)=>CAND[c].ev[k]||P.verify[c+k]==="done";
+const missing=c=>req().filter(k=>!ev(c,k));
+const bdg=(c,k)=>ev(c,k)?'<span class="badge">Confirmed</span>':(P.verify[c+k]==="req"?'<span class="badge un">Requested</span>':'<span class="badge un">Not confirmed</span>');
+function go(step,view){P.step=step;P.view=view||"main";draw()}
+function candCard(c){const d=CAND[c];return `<div class="card"><div class="who"><span class="av ${c==="B"?"p":""}"></span>${d.n} <span class="tag-demo">DEMO</span></div>
+  ${req().map(k=>`<div class="row">${TN[k].split(" ")[0]}${bdg(c,k)}</div>`).join("")||'<div class="small">No required tasks selected.</div>'}
+  <div class="small">Available: ${d.t}</div>
+  <button class="btn ghost" data-a="detail" data-c="${c}" style="margin-top:4px;padding:10px">View details</button></div>`}
+function screen(){
+  if(P.step===1)return `<div class="step">01 · CARE REQUEST</div><h3>Required care</h3>
+  <div class="card"><div class="who"><span class="av p"></span>Bori · Senior dog · 13 yrs <span class="tag-demo">DEMO</span></div><div class="small">Home visit · Away 3 days</div></div>
+  <div class="card">${["feed","toilet","mob"].map(k=>`<div class="row tg ${P.tasks[k]?"":"off"}" data-a="task" data-k="${k}"><span class="chk">✓</span>${TN[k]}</div>`).join("")}
+   <div class="row tg ${P.tasks.med?"":"off"}" data-a="task" data-k="med"><span class="chk ${P.tasks.med?"off":""}">${P.tasks.med?"!":"✓"}</span>Medication request<span class="badge un">Operator review</span></div></div>
+  <div class="card"><div class="small">Preferred visit windows</div><div><button class="chip ${P.win.m?"":"off"}" data-a="win" data-k="m">Morning 08–10</button> <button class="chip ${P.win.e?"":"off"}" data-a="win" data-k="e">Evening 18–20</button></div></div>
+  <div class="small">Medication-related requests are reviewed by an operator and are not offered as a launch service.</div>
+  <button class="btn" data-a="to2"${req().length?"":" disabled"}>Submit required care</button>`;
+  if(P.step===2&&P.view==="main")return `<button class="back" data-a="to1">‹ Back</button><div class="step">02 · CANDIDATES</div><h3>Task-by-task evidence</h3>
+  ${candCard("A")}${candCard("B")}<div class="small">No overall badge or score. Each task shows its own evidence status.</div>`;
+  if(P.step===2){const c=P.cand,d=CAND[c];return `<button class="back" data-a="to2">‹ Candidates</button><div class="step">02 · CANDIDATE DETAIL</div>
+  <div class="who" style="font-size:19px"><span class="av ${c==="B"?"p":""}" style="width:38px;height:38px"></span>${d.n} <span class="tag-demo">DEMO</span></div>
+  <div class="card">${req().map(k=>`<div class="row">${TN[k]}${bdg(c,k)}</div>${ev(c,k)?"":`<div class="small">Must be checked before confirmation. <button class="vbtn" data-a="verify" data-k="${k}"${P.verify[c+k]?" disabled":""}>${P.verify[c+k]?"Verification requested":"Ask to verify"}</button></div>`}`).join("")}</div>
+  <div class="card"><div class="small">Evidence summary</div><div>${d.sum}</div><div class="small">Available: ${d.t}</div></div>
+  ${missing(c).length?`<div class="warn">Unconfirmed: ${missing(c).map(k=>TN[k]).join(", ")}. This caregiver cannot be finalized until checked.</div>`:`<div class="ok">All requested tasks have confirmed evidence.</div>`}
+  <button class="btn" data-a="to3">See sample quote</button>`}
+  if(P.step===3){const c=P.cand,m=missing(c);return `<button class="back" data-a="detail" data-c="${c}">‹ Candidate</button><div class="step">03 · QUOTE &amp; PLAN</div><h3>Sample quote <span class="tag-demo">DEMO</span></h3>
+  <div class="card"><div class="small">${CAND[c].n} · 3 days · 9 visits · 40 min per visit</div>
+   <div class="amt"><span>Care visits (9)</span><span>108,000</span></div><div class="amt"><span>Service fee</span><span>20,000</span></div><div class="amt"><span>Travel add-on</span><span>12,000</span></div>
+   <div class="total"><span>Total (KRW)</span><span>140,000</span></div></div>
+  <div class="card"><div class="small">Included tasks</div>${req().map(k=>`<div class="row"><span class="chk${ev(c,k)?"":" off"}">${ev(c,k)?"✓":"!"}</span>${TN[k]}</div>`).join("")}<div class="row"><span class="chk off">–</span>No overnight presence</div></div>
+  ${m.length?`<div class="warn">Not yet confirmed: ${m.map(k=>TN[k]).join(", ")}. Final confirmation stays locked.</div>`:""}
+  <button class="btn" data-a="to4">Request pre-meeting</button>`}
+  const c=P.cand,m=missing(c);return `<button class="back" data-a="to3">‹ Quote</button><div class="step">04 · PRE-MEETING</div><h3>Pre-meeting requested</h3>
+  <div class="ok">Request sent to ${CAND[c].n} (demo). The plan is not final until both parties agree after the pre-meeting.</div>
+  <div class="card tl">
+   <div class="t"><span class="dot">✓</span><div>Request<small>Required care submitted</small></div></div>
+   <div class="t"><span class="dot">✓</span><div>Candidate check<small>${CAND[c].n} selected</small></div></div>
+   <div class="t"><span class="dot">✓</span><div>One-page quote<small>KRW 140,000 · demo</small></div></div>
+   <div class="t now"><span class="dot">4</span><div>Pre-meeting<small>Waiting for schedule</small></div></div>
+   <div class="t todo"><span class="dot">5</span><div>Both parties confirm<small>${m.length?"Locked · unconfirmed task remains":"Not confirmed"}</small></div></div>
+   <div class="t todo"><span class="dot">6</span><div>Visit log</div></div></div>
+  <button class="btn ghost" data-a="to1">Start over</button>`;
+}
+function fitP(){const k=Math.min(1,(innerHeight-40)/780);$("pphone").style.transform="scale("+k+")";$("pphone").style.margin=(-(780*(1-k))/2)+"px 0"}
+function draw(){
+  $("ps").innerHTML=screen();$("ps").scrollTop=0;
+  $("psteps").innerHTML=STEPS.map((x,i)=>`<li><button data-a="step" data-s="${i+1}" class="${P.step===i+1?"on":""}"><b>${x[0]}</b><span>${x[1]}</span></button></li>`).join("")+'<li class="note">Concept demo. All profiles and prices are sample data; buttons only move between screens.</li>';
+  fitP();
+}
+function openP(step){P.step=step;P.view="main";$("proto").hidden=false;draw()}
+$("proto").addEventListener("click",e=>{
+  const t=e.target.closest("[data-a]");if(!t)return;const a=t.dataset.a;
+  if(a==="task"){P.tasks[t.dataset.k]=!P.tasks[t.dataset.k];draw()}
+  else if(a==="win"){P.win[t.dataset.k]=!P.win[t.dataset.k];draw()}
+  else if(a==="to1")go(1);else if(a==="to2")go(2);else if(a==="to3")go(3);else if(a==="to4")go(4);
+  else if(a==="detail"){P.cand=t.dataset.c;go(2,"detail")}
+  else if(a==="verify"){P.verify[P.cand+t.dataset.k]="req";draw()}
+  else if(a==="step")go(+t.dataset.s);
+});
+$("pclose").onclick=()=>{$("proto").hidden=true};
+addEventListener("keydown",e=>{if(e.key==="Escape")$("proto").hidden=true});
+addEventListener("resize",()=>{if(!$("proto").hidden)fitP()});
+$("tryBtn").onclick=()=>openP(1);
+document.querySelectorAll(".phone,.fcard").forEach(el=>{
+  const stepOf=el.classList.contains("pl")||el.classList.contains("l")?1:(el.classList.contains("pr")||el.classList.contains("r")?3:2);
+  el.onclick=()=>openP(stepOf);
 });
 </script>
 </body>
