@@ -24,26 +24,26 @@ body{font-family:var(--font);color:var(--ink);word-break:keep-all;background:
   var(--offwhite);overflow-x:hidden}
 
 /* ---------- page layout (fills the screen) ---------- */
-.page{min-height:100vh;display:grid;grid-template-columns:minmax(380px,42%) minmax(0,1fr);align-items:center;gap:0 12px;padding:0 clamp(24px,4vw,72px)}
-.left{display:flex;flex-direction:column;gap:22px;padding:40px 0;max-width:620px}
-.brand{font-size:14px;font-weight:700;letter-spacing:.14em;color:var(--teal)}
-.left h1{font-size:clamp(34px,3.3vw,56px);line-height:1.2;font-weight:900;letter-spacing:-.03em}
+.page{max-width:1360px;margin:0 auto;min-height:100vh;display:grid;grid-template-columns:minmax(340px,40%) minmax(0,1fr);align-items:center;gap:0 8px;padding:0 32px}
+.left{display:flex;flex-direction:column;gap:18px;padding:40px 0;max-width:520px}
+.brand{font-size:13px;font-weight:700;letter-spacing:.14em;color:var(--teal)}
+.left h1{font-size:clamp(28px,2.5vw,40px);line-height:1.2;font-weight:900;letter-spacing:-.03em}
 .left h1 em{font-style:normal;color:var(--teal);display:block}
-.left .sub{font-size:clamp(17px,1.5vw,22px);line-height:1.6;color:var(--ink-soft);font-weight:500}
-.menu{list-style:none;display:flex;flex-direction:column;gap:10px;margin-top:6px}
-.menu button{width:100%;text-align:left;font:inherit;display:flex;align-items:center;gap:16px;padding:14px 18px;border-radius:20px;border:1.5px solid rgba(15,94,92,.14);background:rgba(255,255,255,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);cursor:pointer;color:var(--ink);transition:transform .2s,background .2s,box-shadow .2s}
+.left .sub{font-size:16px;line-height:1.6;color:var(--ink-soft);font-weight:500}
+.menu{list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.menu button{width:100%;text-align:left;font:inherit;display:flex;align-items:center;gap:14px;padding:11px 16px;border-radius:16px;border:1.5px solid rgba(15,94,92,.14);background:rgba(255,255,255,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);cursor:pointer;color:var(--ink);transition:transform .2s,background .2s,box-shadow .2s}
 .menu button:hover{transform:translateX(6px);background:#fff}
 .menu button b{font-size:13px;letter-spacing:.1em;color:var(--teal);width:26px;flex:none}
-.menu button span{display:flex;flex-direction:column;gap:2px;font-size:18px;font-weight:700}
-.menu button small{font-size:14px;font-weight:500;color:var(--ink-soft)}
-.menu button.on{background:var(--teal);border-color:var(--teal);color:#fff;box-shadow:0 18px 30px -16px rgba(15,94,92,.7);transform:translateX(10px)}
+.menu button span{display:flex;flex-direction:column;gap:1px;font-size:16px;font-weight:700}
+.menu button small{font-size:13px;font-weight:500;color:var(--ink-soft)}
+.menu button.on{background:var(--teal);border-color:var(--teal);color:#fff;box-shadow:0 14px 24px -14px rgba(15,94,92,.7);transform:translateX(6px)}
 .menu button.on b,.menu button.on small{color:#CFEDEA}
 .menu button:focus-visible{outline:3px solid var(--peach);outline-offset:2px}
-.disc{font-size:14px;line-height:1.6;color:var(--ink-soft)}
+.disc{font-size:13px;line-height:1.6;color:var(--ink-soft)}
 .disc b{color:var(--teal)}
 
 /* ---------- 3D scene ---------- */
-.scene{min-width:0;overflow:hidden;position:relative;height:100vh;min-height:620px;display:flex;align-items:center;justify-content:center;perspective:2000px}
+.scene{min-width:0;overflow:hidden;position:relative;height:min(100vh,780px);min-height:560px;display:flex;align-items:center;justify-content:center;perspective:2000px}
 .world{width:900px;height:880px;flex:none;position:relative;transform-style:preserve-3d;transform:scale(var(--k,1)) rotateX(var(--rx,4deg)) rotateY(var(--ry,-12deg));transition:transform .12s ease-out}
 .bob{position:absolute;inset:0;transform-style:preserve-3d;animation:bob 6s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
@@ -258,7 +258,7 @@ document.addEventListener("click",e=>{
 const world=$("world"),scene=$("scene");
 function fit(){
   const w=scene.clientWidth,h=innerWidth>980?innerHeight:Math.min(innerHeight*0.9,w*0.98);
-  const k=Math.min(w/900,h/880)*0.97;
+  const k=Math.min(w/900,h/880)*0.98;
   world.style.setProperty("--k",k.toFixed(3));
   if(innerWidth<=980)scene.style.height=(880*k)+"px";else scene.style.height="";
 }
