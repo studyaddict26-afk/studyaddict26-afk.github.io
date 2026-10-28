@@ -3307,7 +3307,11 @@
   #view-home .home-brand-row { margin-top: auto; padding: 10px 0 12px 0; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
   #view-home .home-brand-inner { max-width: 1480px; padding: 0 40px; align-items: center; }
   #view-home .home-brand-text { font-size: 1.3rem; }
-  #view-home .consult-dday { margin-left: 16px; }
+  #view-home .home-dday-group { margin-left: 16px; display: flex; align-items: baseline; gap: 14px; white-space: nowrap; min-width: 0; }
+  #view-home .home-dday-extra { font-size: 0.8rem; color: var(--ink-soft); cursor: pointer; }
+  #view-home .home-dday-extra[hidden] { display: none; }
+  #view-home .home-dday-extra:hover { color: var(--ink); }
+  @media (max-width: 700px) { #view-home .home-dday-extra { display: none; } }
   #view-home .hwo-stat-val { font-size: 0.72rem; font-weight: 500; }
   #view-home .hwo-stat-label { font-size: 0.62rem; }
   #view-home .rh-tile-score-big { font-weight: 500; } /* 오늘의 공부 점수(N/2점)도 볼드 없이 — 모바일 포함 */
@@ -3332,15 +3336,16 @@
   .hd-right-top { grid-column: 2; grid-row: 1; display: flex; gap: var(--ln-gap); min-width: 0; min-height: 0; }
   .hd-right-top .home-academy-compact { flex: 1 1 0; min-width: 0; justify-content: center; }
   .hd-right-top .home-notice-box { flex: 1 1 0; min-width: 0; }
+  .hd-right-top .home-academy-compact, .hd-right-top .home-notice-box { border-radius: 12px; }
   .home-dash .home-promo-slot { grid-column: 1; grid-row: 2; align-self: end; height: calc(var(--ln-cal-h) - var(--ln-nav-h) - var(--ln-gap)); display: flex; gap: var(--ln-gap); align-items: stretch; min-height: 0; }
   .home-dash .home-promo-slot .rh-tile { flex: 1 1 0; min-width: 0; padding: 14px 16px; border-radius: 12px; }
   .home-dash .home-week-overview { border-radius: 12px; }
   .hd-today-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--ln-gap); }
   .hd-today-col .rh-tile { flex: 1 1 0; min-height: 0; }
   .home-pledge-box { flex: 1 1 0; min-height: 0; box-sizing: border-box; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
-  .hp-head { flex: none; display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .hp-head { flex: none; position: relative; display: flex; align-items: baseline; justify-content: center; gap: 8px; }
   .hp-title { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
-  .hp-saved { font-size: 0.66rem; color: var(--ink-soft); }
+  .hp-saved { position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: 0.66rem; color: var(--ink-soft); }
   /* 다짐은 굵은 붓글씨 느낌(East Sea Dokdo)으로, 글이 짧을수록 크게 · 가운데에 놓는다(너무 꽉 차지 않게 글자 크기를 제한) */
   .home-pledge-box textarea { flex: 1; min-height: 0; resize: none; box-sizing: border-box; width: 100%; border: none; border-radius: 8px; background: var(--cream); padding: 10px 14px; font-family: "East Sea Dokdo", "Nanum Brush Script", cursive; font-size: 1.9rem; line-height: 1.15; text-align: center; color: #17181A; overflow: hidden; -webkit-text-stroke: 0.7px #17181A; }
   .home-pledge-box textarea::placeholder { font-size: 1.3rem; color: var(--ink-soft); }
@@ -3419,17 +3424,24 @@
     display: flex; flex-direction: column; gap: 16px;
   }
   .mex-dday-row { display: flex; gap: 10px; }
-  .mex-dday-card { flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 14px 16px; }
-  .mex-dday-top { display: flex; flex-direction: column; gap: 8px; }
+  .mex-dday-card { flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 10px 14px; display: flex; flex-direction: column; justify-content: center; }
+  /* 가로로 배치해 카드 높이를 절반쯤으로: 왼쪽 = 이름 · 날짜, 오른쪽 = D-숫자 */
+  .mex-dday-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 10px; row-gap: 1px; align-items: center; }
+  .mex-dday-top .mex-dday-name, .mex-dday-top .mex-dday-name-row { grid-column: 1; grid-row: 1; margin-top: 0; }
+  .mex-dday-top .mex-dday-date { grid-column: 1; grid-row: 2; }
+  .mex-dday-top .mex-dday-num { grid-column: 2; grid-row: 1 / span 2; font-size: 1.15rem; }
   .mex-dday-date { font-size: 0.68rem; color: var(--ink-soft); font-weight: 600; }
   .mex-dday-name { font-size: 0.8rem; font-weight: 800; color: var(--ink); margin-top: 2px; }
   .mex-dday-name-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
   .mex-dday-edit-btn { flex: none; background: none; border: none; color: var(--ink-soft); font-family: inherit; font-size: 0.66rem; font-weight: 700; cursor: pointer; text-decoration: underline; padding: 0; }
   .mex-dday-edit-btn:hover { color: var(--green-deep); }
   .mex-dday-num { font-size: 1.25rem; font-weight: 800; color: var(--green-deep); }
-  .mex-dday-bar { height: 4px; border-radius: 2px; background: var(--line); margin-top: 10px; overflow: hidden; }
+  .mex-dday-bar { height: 3px; border-radius: 2px; background: var(--line); margin-top: 8px; overflow: hidden; }
   .mex-dday-bar-fill { height: 100%; background: var(--green-deep); }
-  .mex-dday-card.mex-dday-setup { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; justify-content: center; }
+  .mex-dday-card.mex-dday-setup { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; text-align: left; column-gap: 10px; row-gap: 1px; }
+  .mex-dday-card.mex-dday-setup .mex-dday-name { grid-column: 1; margin-top: 0; }
+  .mex-dday-card.mex-dday-setup .mex-dday-setup-desc { grid-column: 1; }
+  .mex-dday-card.mex-dday-setup .mex-dday-setup-btn { grid-column: 2; grid-row: 1 / span 2; }
   .mex-dday-setup-desc { font-size: 0.68rem; color: var(--ink-soft); font-weight: 600; }
   .mex-dday-setup-btn {
     background: var(--green-deep); color: #fff; border: none; border-radius: 999px; padding: 7px 14px;
@@ -6651,6 +6663,16 @@
           <option value="기타">기타</option>
         </select>
       </div>
+      <div style="display:flex; gap:12px;">
+        <div class="mex-field" style="flex:1; min-width:0;">
+          <label>시험 시간(분)</label>
+          <input type="number" id="exsimNaeshinMinutesPick" min="1" max="300" inputmode="numeric" placeholder="예: 50">
+        </div>
+        <div class="mex-field" style="flex:1; min-width:0;">
+          <label>문항 개수</label>
+          <input type="number" id="exsimNaeshinCountPick" min="1" max="100" inputmode="numeric" placeholder="예: 20">
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -6797,7 +6819,7 @@
   <section class="view on" id="view-home">
     <div class="home-brand-row">
       <div class="home-brand-inner">
-        <span class="consult-dday" id="homeDday"></span>
+        <div class="home-dday-group"><span class="consult-dday" id="homeDday"></span><span class="home-dday-extra" id="homeDdayMock"></span><span class="home-dday-extra" id="homeDdayNaeshin"></span></div>
         <div class="home-brand-center">
           <svg class="home-brand-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
             <rect width="40" height="40" rx="10" fill="#0A1A44"/>
@@ -8809,7 +8831,11 @@
       <div style="padding:20px; display:flex; flex-direction:column; gap:14px;">
         <div class="mex-field">
           <label>내신 시험 시작일</label>
-          <input type="date" id="mexNaeshinDdayInput">
+          <input type="date" id="mexNaeshinDdayInput" onchange="const e=document.getElementById('mexNaeshinDdayEndInput'); if(e.value < this.value) e.value = this.value;">
+        </div>
+        <div class="mex-field">
+          <label>내신 시험 종료일</label>
+          <input type="date" id="mexNaeshinDdayEndInput">
         </div>
         <button type="button" class="exsim-picker-submit-btn" style="width:100%; padding:12px; font-size:0.86rem;" onclick="mexSaveNaeshinDday()">저장</button>
       </div>
@@ -10704,6 +10730,24 @@
   }
   // "Holo Study" 헤더의 "2027 수능 D-53" 표시 — 메가스터디 상단바 참고, 실제 수능 날짜
   // (MEX_SUNEUNG_DATE)로 계산한다.
+  // 홈 맨 위 왼쪽: 수능 디데이 오른쪽에 모의고사 · 내신 디데이를 함께 보여준다(누르면 '모의고사·내신 관리' 화면).
+  function homeRenderExtraDday() {
+    const mockEl = document.getElementById("homeDdayMock"), naeEl = document.getElementById("homeDdayNaeshin");
+    if (!mockEl || !naeEl) return;
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const diff = d => Math.round((new Date(d + "T00:00:00") - today) / 86400000);
+    const label = n => n > 0 ? "D-" + n : (n === 0 ? "D-DAY" : "D+" + Math.abs(n));
+    // 모의고사: 다음 일정이 발표돼 있을 때만, 내신: 일정을 입력했을 때만 보여준다(없으면 칸 자체를 숨김)
+    let mock = "", nae = "";
+    try { const next = mexNextNationalMock(); if (next) mock = "모의고사 " + label(diff(next.date)); } catch (e) {}
+    try {
+      const r = mexNaeshinRange();
+      if (r) nae = "내신 " + (diff(r.start) > 0 ? label(diff(r.start)) : (diff(r.end) >= 0 ? "시험 중" : "종료"));
+    } catch (e) {}
+    mockEl.textContent = mock; mockEl.hidden = !mock;
+    naeEl.textContent = nae; naeEl.hidden = !nae;
+    [mockEl, naeEl].forEach(el => { el.onclick = () => go("mockexam"); });
+  }
   function renderConsultDday() {
     const els = document.querySelectorAll(".consult-dday");
     if (!els.length) return;
@@ -10713,6 +10757,7 @@
     const num = dday > 0 ? "D-" + dday : (dday === 0 ? "D-DAY" : "D+" + Math.abs(dday));
     const text = MEX_SUNEUNG_DATE.slice(0, 4) + " 수능 " + num;
     els.forEach(el => { el.textContent = text; });
+    homeRenderExtraDday();
   }
   let currentView = "home";
   function go(view) {
@@ -13564,6 +13609,8 @@
   function exsimOpenNaeshinSubjectPicker() {
     document.getElementById("exsimNaeshinName").value = exsimNaeshinName;
     document.getElementById("exsimNaeshinSubject").value = exsimNaeshinSubjectCategory;
+    document.getElementById("exsimNaeshinMinutesPick").value = exsimNaeshinMinutes;
+    document.getElementById("exsimNaeshinCountPick").value = exsimNaeshinCount;
     document.getElementById("exsimNaeshinSubjectPickerOverlay").classList.add("on");
   }
   function exsimCloseNaeshinSubjectPicker() {
@@ -13574,6 +13621,11 @@
     const subjectInput = document.getElementById("exsimNaeshinSubject");
     if (!nameInput.value.trim()) { showToast("시험지 이름을 입력해주세요"); nameInput.focus(); return; }
     if (!subjectInput.value) { showToast("과목을 선택해주세요"); subjectInput.focus(); return; }
+    const minsInput = document.getElementById("exsimNaeshinMinutesPick"), cntInput = document.getElementById("exsimNaeshinCountPick");
+    if (!minsInput.value.trim()) { showToast("시험 시간(분)을 입력해주세요"); minsInput.focus(); return; }
+    if (!cntInput.value.trim()) { showToast("문항 개수를 입력해주세요"); cntInput.focus(); return; }
+    exsimNaeshinMinutes = Math.max(1, Math.min(300, Number(minsInput.value) || 50));
+    exsimNaeshinCount = Math.max(1, Math.min(100, Number(cntInput.value) || 20));
     exsimNaeshinName = nameInput.value.trim();
     exsimNaeshinSubjectCategory = subjectInput.value;
     exsimCloseNaeshinSubjectPicker();
@@ -14776,11 +14828,25 @@
   // "대학수학능력시험"은 2028학년도 수능(2027.11.18) 기준 — 2022 개정 교육과정이 실제로 처음
   // 적용되는 시험이라 이걸 기준으로 잡았다(그 전 2027학년도 수능은 구 교육과정).
   const MEX_SUNEUNG_DATE = "2027-11-18";
-  const MEX_MOCKEXAM_DATE = "2026-10-20"; // 다음 전국연합학력평가 — 국가가 미리 공지하는 고정 일정
+  // 전국 모의고사(교육청 학평 · 평가원 모의평가) 일정 — 모의고사 디데이 카드는 이 목록에서 "오늘 이후 가장 가까운 날짜"를 자동으로 고른다.
+  // 지난 일정은 저절로 건너뛰고, 새 일정이 공식 발표되면 아래에 한 줄만 추가하면 된다(발표 전 날짜는 넣지 않는다).
+  // 2026: 서울 3/24 · 경기 5/7 · 평가원 6/4 · 인천 7/8 · 평가원 9/2 · 서울 10/20 (출처: 각 교육청 · 평가원 발표)
+  const MEX_NATIONAL_MOCKS = [
+    { name: "3월 학평", date: "2026-03-24" },
+    { name: "5월 학평", date: "2026-05-07" },
+    { name: "6월 모평", date: "2026-06-04" },
+    { name: "7월 학평", date: "2026-07-08" },
+    { name: "9월 모평", date: "2026-09-02" },
+    { name: "10월 학평", date: "2026-10-20" }
+  ];
+  function mexNextNationalMock() {
+    const today = getCalendarDateKey();
+    return MEX_NATIONAL_MOCKS.filter(x => x.date >= today).sort((a, b) => a.date < b.date ? -1 : 1)[0] || null;
+  }
   function mexNaeshinDdayKey() {
     return "mexNaeshinDday_" + (localStorage.getItem("holoStudentId") || "guest");
   }
-  function mexDdayCardHtml(label, dateStr) {
+  function mexDdayCardHtml(label, dateStr, subName) {
     const today = new Date(); today.setHours(0, 0, 0, 0);
     const target = new Date(dateStr + "T00:00:00");
     const dday = Math.round((target - today) / 86400000);
@@ -14788,24 +14854,33 @@
     const pct = Math.max(2, Math.min(100, 100 - Math.max(0, dday) / 200 * 100));
     return '<div class="mex-dday-card">' +
       '<div class="mex-dday-top">' +
-        '<div class="mex-dday-date">' + dateStr.replace(/-/g, ".") + '</div>' +
+        '<div class="mex-dday-date">' + dateStr.replace(/-/g, ".") + (subName ? " · " + escapeHtml(subName) : "") + '</div>' +
         '<div class="mex-dday-name">' + escapeHtml(label) + '</div>' +
         '<div class="mex-dday-num">' + num + '</div>' +
       '</div>' +
       '<div class="mex-dday-bar"><div class="mex-dday-bar-fill" style="width:' + pct + '%"></div></div>' +
     '</div>';
   }
+  // 내신 시험 일정: {start, end} JSON으로 저장. 예전에 "날짜 한 개"만 저장한 값은 시작일=종료일로 읽는다.
+  function mexNaeshinRange() {
+    const raw = localStorage.getItem(mexNaeshinDdayKey());
+    if (!raw) return null;
+    if (raw[0] === "{") { try { const o = JSON.parse(raw); if (o && o.start) return { start: o.start, end: o.end || o.start }; } catch (e) {} return null; }
+    return { start: raw, end: raw };
+  }
   function mexNaeshinDdayCardHtml() {
-    const saved = localStorage.getItem(mexNaeshinDdayKey());
-    if (saved) {
+    const range = mexNaeshinRange();
+    if (range) {
       const today = new Date(); today.setHours(0, 0, 0, 0);
-      const target = new Date(saved + "T00:00:00");
-      const dday = Math.round((target - today) / 86400000);
-      const num = dday > 0 ? "D-" + dday : (dday === 0 ? "D-DAY" : "D+" + Math.abs(dday));
-      const pct = Math.max(2, Math.min(100, 100 - Math.max(0, dday) / 200 * 100));
+      const start = new Date(range.start + "T00:00:00"), end = new Date(range.end + "T00:00:00");
+      const toStart = Math.round((start - today) / 86400000);
+      // 시작 전 = D-숫자, 시험 기간 중 = "시험 중", 끝난 뒤 = "종료"
+      const num = toStart > 0 ? "D-" + toStart : (today <= end ? "시험 중" : "종료");
+      const pct = toStart > 0 ? Math.max(2, Math.min(100, 100 - toStart / 200 * 100)) : 100;
+      const dateLabel = range.start.replace(/-/g, ".") + (range.end !== range.start ? " ~ " + range.end.slice(5).replace("-", ".") : "");
       return '<div class="mex-dday-card">' +
         '<div class="mex-dday-top">' +
-          '<div class="mex-dday-date">' + saved.replace(/-/g, ".") + '</div>' +
+          '<div class="mex-dday-date">' + dateLabel + '</div>' +
           '<div class="mex-dday-name-row"><span class="mex-dday-name">내신 디데이</span>' +
             '<button type="button" class="mex-dday-edit-btn" onclick="mexOpenNaeshinDdaySetup()">수정</button></div>' +
           '<div class="mex-dday-num">' + num + '</div>' +
@@ -14819,28 +14894,42 @@
       '<button type="button" class="mex-dday-setup-btn" onclick="mexOpenNaeshinDdaySetup()">설정하기 →</button>' +
     '</div>';
   }
+  function mexMockDdayCardHtml() {
+    const next = mexNextNationalMock();
+    if (next) return mexDdayCardHtml("모의고사 디데이", next.date, next.name);
+    return '<div class="mex-dday-card mex-dday-setup">' +
+      '<div class="mex-dday-name">모의고사 디데이</div>' +
+      '<div class="mex-dday-setup-desc">아직 발표 전입니다.</div>' +
+    '</div>';
+  }
   function mexRenderDday() {
     const el = document.getElementById("mexDdayRow");
     if (!el) return;
     el.innerHTML =
       mexDdayCardHtml("수능 디데이", MEX_SUNEUNG_DATE) +
-      mexDdayCardHtml("모의고사 디데이", MEX_MOCKEXAM_DATE) +
+      mexMockDdayCardHtml() +
       mexNaeshinDdayCardHtml();
   }
   function mexOpenNaeshinDdaySetup() {
-    const saved = localStorage.getItem(mexNaeshinDdayKey());
-    document.getElementById("mexNaeshinDdayInput").value = saved || getLocalDateKey();
+    const range = mexNaeshinRange();
+    const todayKey = getLocalDateKey();
+    document.getElementById("mexNaeshinDdayInput").value = range ? range.start : todayKey;
+    document.getElementById("mexNaeshinDdayEndInput").value = range ? range.end : todayKey;
     document.getElementById("mexNaeshinDdayOverlay").classList.add("on");
   }
   function mexCloseNaeshinDdaySetup() {
     document.getElementById("mexNaeshinDdayOverlay").classList.remove("on");
   }
   function mexSaveNaeshinDday() {
-    const val = document.getElementById("mexNaeshinDdayInput").value;
-    if (!val) { showToast("날짜를 선택해주세요"); return; }
-    localStorage.setItem(mexNaeshinDdayKey(), val);
+    const start = document.getElementById("mexNaeshinDdayInput").value;
+    const end = document.getElementById("mexNaeshinDdayEndInput").value;
+    if (!start) { showToast("시험 시작일을 선택해주세요"); return; }
+    if (!end) { showToast("시험 종료일을 선택해주세요"); return; }
+    if (end < start) { showToast("종료일은 시작일보다 빠를 수 없어요"); return; }
+    localStorage.setItem(mexNaeshinDdayKey(), JSON.stringify({ start: start, end: end }));
     mexCloseNaeshinDdaySetup();
     mexRenderDday();
+    renderConsultDday();
     showToast("내신 시험 일정이 저장됐어요!");
   }
 
@@ -19955,12 +20044,7 @@
   // ── 시험 일정 ──
   // 수능·교육청 모의고사는 모든 선생님에게 똑같이 고정으로 보여준다(아래 날짜는 예시 — 실제 일정으로 고쳐 쓰면 된다).
   // 학교별 내신 일정은 학생별로 teacherStudentLinks 문서의 exams 배열({school, name, date})에 저장한다.
-  const TD_NATIONAL_EXAMS = [
-    { name: "10월 교육청 모의고사", date: "2026-10-21" },
-    { name: "3월 교육청 모의고사", date: "2027-03-24" },
-    { name: "6월 교육청 모의고사", date: "2027-06-03" },
-    { name: "9월 교육청 모의고사", date: "2027-09-01" }
-  ];
+  const TD_NATIONAL_EXAMS = MEX_NATIONAL_MOCKS; // 학생 화면의 모의고사 디데이와 같은 일정표(공식 발표된 날짜만)
   function tdAllExams() {
     const all = [];
     tdData.links.forEach(l => (l.exams || []).forEach((x, i) => all.push({ studentId: l.studentId, studentName: l.studentName, idx: i, school: x.school || "", name: x.name, date: x.date })));
