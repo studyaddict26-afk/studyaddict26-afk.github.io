@@ -15,7 +15,6 @@
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&display=swap" rel="stylesheet">
 <style>
   :root {
     --cream: #F7F5F0;
@@ -3341,15 +3340,7 @@
   .home-dash .home-promo-slot .rh-tile { flex: 1 1 0; min-width: 0; padding: 14px 16px; border-radius: 12px; }
   .home-dash .home-week-overview { border-radius: 12px; }
   .hd-today-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--ln-gap); }
-  .hd-today-col .rh-tile { flex: 1 1 0; min-height: 0; }
-  .home-pledge-box { flex: 1 1 0; min-height: 0; box-sizing: border-box; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
-  .hp-head { flex: none; position: relative; display: flex; align-items: baseline; justify-content: center; gap: 8px; }
-  .hp-title { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
-  .hp-saved { position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: 0.66rem; color: var(--ink-soft); }
-  /* 다짐은 굵은 붓글씨 느낌(East Sea Dokdo)으로, 글이 짧을수록 크게 · 가운데에 놓는다(너무 꽉 차지 않게 글자 크기를 제한) */
-  .home-pledge-box textarea { flex: 1; min-height: 0; resize: none; box-sizing: border-box; width: 100%; border: none; border-radius: 8px; background: var(--cream); padding: 10px 14px; font-family: "East Sea Dokdo", "Nanum Brush Script", cursive; font-size: 1.9rem; line-height: 1.15; text-align: center; color: #17181A; overflow: hidden; -webkit-text-stroke: 0.7px #17181A; }
-  .home-pledge-box textarea::placeholder { font-size: 1.3rem; color: var(--ink-soft); }
-  .home-pledge-box textarea:focus { outline: 1px solid var(--green); }
+  .home-dash .home-promo-slot .hd-today-col .rh-tile { flex: 0 0 calc((100% - var(--ln-gap)) / 2); min-height: 0; } /* 오늘의 다짐을 없애도 오늘의 공부 카드 높이는 그대로(칸 절반) */
   .hd-stack { flex: 0 0 calc((100% - 2 * var(--ln-gap)) / 3); min-width: 0; display: flex; flex-direction: column; gap: var(--ln-gap); } /* 폭 = 위 버튼 하나(시험 시뮬레이션)와 같음 */
   .hd-stack .home-schedule-box { flex: 1 1 0; min-height: 0; border-radius: 12px; padding: 10px 12px; }
   .home-notice-box {
@@ -3386,7 +3377,7 @@
     #view-home .home-schedule-title { font-size: 0.74rem; }
     #view-home .home-schedule-date { font-size: 0.6rem; margin-bottom: 6px; }
     #view-home .hps-title { font-size: calc(0.54rem * var(--hs, 1)); }
-    #view-home .hp-title, #view-home .hn-notice-title, .hd-right-top .hac-eyebrow { font-size: 0.74rem; }
+    #view-home .hn-notice-title, .hd-right-top .hac-eyebrow { font-size: 0.74rem; }
     #view-home .hn-notice-empty { font-size: 0.68rem; }
     #view-home .hd-right-top .hac-title { font-size: 0.6rem; }
     #view-home .hac-btn { font-size: 0.66rem; }
@@ -6929,10 +6920,6 @@
           </div>
         </div>
       </div>
-        <div class="home-pledge-box">
-          <div class="hp-head"><span class="hp-title">오늘의 다짐</span><span class="hp-saved" id="hpSaved"></span></div>
-          <textarea id="hpText" maxlength="200" placeholder="오늘 하루 다짐을 적어 보세요" oninput="hpSave()"></textarea>
-        </div>
       </div>
       <div class="hd-stack">
       <div class="home-schedule-box">
@@ -10827,7 +10814,7 @@
     }
     loadChatHistory(view);
     if (view === "todayrecord") initTodayRecord();
-    if (view === "home") { chatInit(); hpLoad(); }
+    if (view === "home") { chatInit(); }
     if (view === "plannerPage") initPlannerPage();
     if (view === "mypage") initMypage();
     if (view === "reports") loadReports();
@@ -11261,7 +11248,6 @@
       loadHomeScheduleToday();
       loadHomePlannerToday();
       chatInit();
-      hpLoad();
     }
   }, 0);
 
@@ -12229,43 +12215,6 @@
   // 넘어가고(그 날짜로 이미 저장돼 있으므로) "오늘의 학습 기록"에는 새 빈 하루가 나타난다.
   // 서버(valtown.ts)의 kstTodayStr()도 반드시 같은 규칙이어야 한다 — 하나만 고치면 프론트가
   // 보내는 날짜와 서버가 아는 "오늘"이 어긋난다.
-  // ── 홈 "오늘의 다짐": 하루(새벽 6시 기준)마다 따로, 이 기기 브라우저에 저장 ──
-  function hpKey() { return "holoPledge:" + (localStorage.getItem("holoStudentId") || "") + ":" + getLocalDateKey(); }
-  function hpLoad() {
-    const el = document.getElementById("hpText");
-    if (!el) return;
-    let v = "";
-    try { v = localStorage.getItem(hpKey()) || ""; } catch (e) {}
-    el.value = v; hpFit();
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(hpFit);
-    const s = document.getElementById("hpSaved"); if (s) s.textContent = "";
-  }
-  // 다짐 글자 크기 · 세로 가운데: 글이 짧으면 크게, 길면 작게(최대 2.3rem ~ 최소 1.2rem), 남는 높이의 절반을 위 여백으로
-  function hpFit() {
-    const el = document.getElementById("hpText");
-    if (!el || !el.clientHeight) return;
-    const len = el.value.length;
-    const rem = len <= 8 ? 2.3 : len <= 16 ? 2 : len <= 30 ? 1.7 : len <= 60 ? 1.4 : 1.2;
-    el.style.fontSize = rem + "rem";
-    // 같은 글자 · 폭의 보이지 않는 복사본으로 글 높이를 재서, 남는 높이의 절반을 위 여백으로 준다
-    let m = document.getElementById("hpMirror");
-    if (!m) { m = document.createElement("div"); m.id = "hpMirror"; document.body.appendChild(m); }
-    const cs = getComputedStyle(el);
-    m.style.cssText = "position:absolute;visibility:hidden;left:-9999px;top:0;white-space:pre-wrap;word-break:break-word;box-sizing:border-box;" +
-      "width:" + el.clientWidth + "px;padding:0 " + cs.paddingLeft + ";font-family:" + cs.fontFamily + ";font-size:" + cs.fontSize + ";line-height:" + cs.lineHeight + ";text-align:center;";
-    m.textContent = el.value || " ";
-    const free = el.clientHeight - 20 - m.offsetHeight;
-    el.style.paddingTop = (10 + Math.max(0, free / 2)) + "px";
-  }
-  let hpTimer = null, hpHideTimer = null;
-  function hpSave() {
-    hpFit(); clearTimeout(hpTimer);
-    hpTimer = setTimeout(() => {
-      const el = document.getElementById("hpText"), s = document.getElementById("hpSaved");
-      try { localStorage.setItem(hpKey(), el.value); if (s) s.textContent = "저장됨"; } catch (e) { if (s) s.textContent = "저장 실패"; }
-      clearTimeout(hpHideTimer); hpHideTimer = setTimeout(() => { if (s) s.textContent = ""; }, 1500); // 잠깐 떴다가 사라진다
-    }, 400);
-  }
   function getLocalDateKey() {
     const d = new Date();
     if (d.getHours() < 6) d.setDate(d.getDate() - 1);
