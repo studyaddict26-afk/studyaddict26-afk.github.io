@@ -10742,7 +10742,7 @@
     try { const next = mexNextNationalMock(); if (next) mock = "모의고사 " + label(diff(next.date)); } catch (e) {}
     try {
       const r = mexNaeshinRange();
-      if (r) nae = "내신 " + (diff(r.start) > 0 ? label(diff(r.start)) : (diff(r.end) >= 0 ? "시험 중" : "종료"));
+      if (r && diff(r.end) >= 0) nae = "내신 " + (diff(r.start) > 0 ? label(diff(r.start)) : "시험 중"); // 끝난 내신은 홈에서 숨김
     } catch (e) {}
     mockEl.textContent = mock; mockEl.hidden = !mock;
     naeEl.textContent = nae; naeEl.hidden = !nae;
