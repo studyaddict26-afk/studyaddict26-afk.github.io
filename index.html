@@ -3396,6 +3396,30 @@
     #view-home .hd-ai .chat-pane-note { font-size: 0.62rem; }
   }
 
+  /* 공부중독 AI: 새 채팅 · 이전 채팅 목록(AI 박스 안에서 왼쪽에서 열리는 목록) */
+  .hd-ai .record-chat-pane { position: relative; }
+  .hd-ai .chat-pane-title-row { align-items: center; }
+  .chat-side-btn { flex: none; width: 26px; height: 26px; padding: 0; border: none; background: none; border-radius: 6px; color: var(--ink-soft); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+  .chat-side-btn:hover { background: rgba(23,24,26,0.06); color: var(--ink); }
+  .chat-new-btn { margin-left: auto; flex: none; background: none; border: 1px solid var(--line-dark); border-radius: 8px; padding: 4px 10px; font-family: inherit; font-size: 0.7rem; font-weight: 700; color: var(--ink); cursor: pointer; }
+  .chat-new-btn:hover { background: #fff; }
+  .chat-conv-backdrop { position: absolute; inset: 0; z-index: 4; background: rgba(23,24,26,0.12); opacity: 0; pointer-events: none; transition: opacity 0.18s ease; }
+  .chat-conv-backdrop.on { opacity: 1; pointer-events: auto; }
+  .chat-conv-panel { position: absolute; left: 0; top: 0; bottom: 0; z-index: 5; width: min(260px, 78%); background: #fff; border-right: 1px solid var(--line); transform: translateX(-100%); transition: transform 0.18s ease; display: flex; flex-direction: column; }
+  .chat-conv-panel.on { transform: none; }
+  .chat-conv-head { flex: none; padding: 14px 16px 8px; font-size: 0.78rem; font-weight: 700; color: var(--ink); }
+  .chat-conv-list { flex: 1; min-height: 0; overflow-y: auto; padding: 0 8px 12px; }
+  .chat-conv-item { display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 8px; cursor: pointer; }
+  .chat-conv-item:hover { background: var(--cream); }
+  .chat-conv-item.on { background: var(--green-soft); }
+  .chat-conv-item .t { flex: 1; min-width: 0; font-size: 0.74rem; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chat-conv-item .d { flex: none; font-size: 0.62rem; color: var(--ink-soft); }
+  .chat-conv-item .x { flex: none; display: none; width: 18px; height: 18px; padding: 0; border: none; background: none; border-radius: 4px; color: var(--ink-soft); font-size: 0.9rem; line-height: 1; cursor: pointer; align-items: center; justify-content: center; }
+  .chat-conv-item:hover .x { display: inline-flex; }
+  .chat-conv-item .x:hover { color: #D63B3B; background: rgba(214,59,59,0.08); }
+  .chat-conv-empty { padding: 12px 8px; font-size: 0.72rem; color: var(--ink-soft); }
+  @media (prefers-reduced-motion: reduce) { .chat-conv-panel, .chat-conv-backdrop { transition: none; } }
+
   /* ── 작은 허브 페이지 (내 학습 기록 / 우리 동네 내신 기출) ── */
   .hub-page-wrap {
     max-width: 700px; width: 100%; margin: 32px auto 0 auto; padding: 0 24px 48px 24px;
@@ -6847,7 +6871,7 @@
             </span>
             <span class="hwo-title">공부 점수 누적 현황</span>
           </span>
-          <button type="button" class="hwo-report-link" onclick="go('reports')">이번 주 분석지 확인하기 <span class="arrow">›</span></button>
+          <button type="button" class="hwo-report-link" onclick="go('recordhub')">누적 공부 기록 확인하기 <span class="arrow">›</span></button>
         </div>
         <div class="hwo-body">
           <div class="hwo-chart-col">
@@ -6863,11 +6887,11 @@
     </div>
 
     <div class="home-nav-grid">
-      <button type="button" class="home-nav-btn" onclick="go('recordhub')">
-        <span class="hn-title">누적 공부 기록</span> <span class="hn-arrow">›</span>
+      <button type="button" class="home-nav-btn" onclick="mexGoList('naeshin')">
+        <span class="hn-title">내신 관리</span> <span class="hn-arrow">›</span>
       </button>
-      <button type="button" class="home-nav-btn" onclick="go('mockexam')">
-        <span class="hn-title">모의고사 · 내신 관리</span> <span class="hn-arrow">›</span>
+      <button type="button" class="home-nav-btn" onclick="mexGoList('mock')">
+        <span class="hn-title">모의고사 관리</span> <span class="hn-arrow">›</span>
       </button>
       <button type="button" class="home-nav-btn" onclick="go('examhub')">
         <span class="hn-title">시험 시뮬레이션</span> <span class="hn-arrow">›</span>
@@ -6964,8 +6988,15 @@
         <div class="hd-ai">
       <div class="record-chat-pane ln-chat">
         <div class="chat-pane-title-row">
+          <button type="button" class="chat-side-btn" id="chatSideBtn" onclick="chatToggleConvPanel()" aria-label="이전 채팅 보기" title="이전 채팅"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button>
           <h3 class="record-pane-title">공부중독 AI</h3>
           <span class="chat-pane-note">공부하다 궁금한 건 과목 상관없이 무엇이든 물어보세요.</span>
+          <button type="button" class="chat-new-btn" onclick="chatNewConv()">+ 새 채팅</button>
+        </div>
+        <div class="chat-conv-backdrop" id="chatConvBackdrop" onclick="chatToggleConvPanel(false)"></div>
+        <div class="chat-conv-panel" id="chatConvPanel">
+          <div class="chat-conv-head">이전 채팅</div>
+          <div class="chat-conv-list" id="chatConvList"></div>
         </div>
     <div class="chat-wrap" id="chat-chat">
       <div class="msg bot">
@@ -10796,7 +10827,7 @@
     }
     loadChatHistory(view);
     if (view === "todayrecord") initTodayRecord();
-    if (view === "home") { loadChatHistory("chat"); hpLoad(); }
+    if (view === "home") { chatInit(); hpLoad(); }
     if (view === "plannerPage") initPlannerPage();
     if (view === "mypage") initMypage();
     if (view === "reports") loadReports();
@@ -11229,7 +11260,7 @@
       loadTodayTileStatus();
       loadHomeScheduleToday();
       loadHomePlannerToday();
-      loadChatHistory("chat");
+      chatInit();
       hpLoad();
     }
   }, 0);
@@ -13169,6 +13200,112 @@
     closePhotoPanel(subject);
     send(subject, combined);
     resetPhotoPanel(subject);
+  }
+
+  // ── 공부중독 AI: 새 채팅 · 이전 채팅 (Claude · GPT처럼 왼쪽 목록에서 지난 채팅을 열 수 있다) ──
+  // 한 채팅 = 같은 convId로 서버(holo_chat_history)에 쌓인 대화. 이어서 쓰는 채팅 id는 이 기기에 기억해 둔다.
+  let chatConvId = null, chatInitFor = null, CHAT_GREETING_HTML = null, chatConvList = [];
+  function chatStudentId() { return localStorage.getItem("holoStudentId") || ""; }
+  function chatConvKey() { return "holoChatConv:" + chatStudentId(); }
+  function chatNewId() { return "c" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+  function chatApi(body) {
+    return fetch(CHAT_API_URL, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(Object.assign({ subject: "chat", studentId: chatStudentId() }, body)),
+    }).then(res => res.json());
+  }
+  function chatSaveActive() {
+    try {
+      if (chatConvId) localStorage.setItem(chatConvKey(), JSON.stringify({ id: chatConvId, date: getLocalDateKey() }));
+      else localStorage.removeItem(chatConvKey());
+    } catch (e) {}
+  }
+  function chatEnsureConvId() {
+    if (!chatConvId) { chatConvId = chatNewId(); chatSaveActive(); }
+    return chatConvId;
+  }
+  function chatShowGreeting() {
+    const el = document.getElementById("chat-chat");
+    if (el && CHAT_GREETING_HTML !== null) el.innerHTML = CHAT_GREETING_HTML;
+    chatHistory["chat"] = [];
+  }
+  function chatRenderMessages(messages) {
+    const el = document.getElementById("chat-chat");
+    el.innerHTML = "";
+    messages.forEach(m => addMsg("chat", m.role === "assistant" ? "bot" : "user", m.role === "assistant" ? formatAiAnswer(m.content) : escapeHtml(m.content)));
+    el.scrollTop = 1e9;
+    chatHistory["chat"] = messages.map(m => ({ role: m.role, content: m.content }));
+  }
+  // 홈이 열릴 때(학생이 바뀌면 다시): 오늘 쓰던 채팅이 있으면 이어서 보여 주고, 없으면 새 채팅(인사말)으로 시작한다.
+  function chatInit() {
+    const sid = chatStudentId();
+    const el = document.getElementById("chat-chat");
+    if (!sid || !el || chatInitFor === sid) return;
+    chatInitFor = sid;
+    if (CHAT_GREETING_HTML === null) CHAT_GREETING_HTML = el.innerHTML;
+    chatConvId = null; chatShowGreeting();
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(chatConvKey()) || "null"); } catch (e) {}
+    if (saved && saved.id && saved.date === getLocalDateKey()) { chatOpenConv(saved.id, true); return; }
+    // 이 기능이 생기기 전에 오늘 나눈 대화(날짜별 묶음 d_날짜)가 있으면 그것도 이어서 보여 준다.
+    chatApi({ action: "conv_list" }).then(d => {
+      const top = (d.convs || [])[0];
+      if (top && top.id === "d_" + getLocalDateKey() && !chatConvId) chatOpenConv(top.id, true);
+    }).catch(() => {});
+  }
+  function chatOpenConv(id, silent) {
+    chatToggleConvPanel(false);
+    return chatApi({ action: "conv_get", convId: id }).then(d => {
+      if (!d.messages) throw new Error("no messages");
+      chatConvId = id; chatSaveActive();
+      if (d.messages.length) chatRenderMessages(d.messages); else chatShowGreeting();
+      chatMarkActive();
+    }).catch(() => { if (!silent) showToast("채팅을 불러오지 못했어요."); });
+  }
+  function chatNewConv() {
+    chatConvId = null; chatSaveActive(); chatShowGreeting();
+    chatToggleConvPanel(false); chatMarkActive();
+    const q = document.getElementById("q-chat"); if (q) q.focus();
+  }
+  function chatToggleConvPanel(force) {
+    const p = document.getElementById("chatConvPanel"), b = document.getElementById("chatConvBackdrop");
+    if (!p) return;
+    const open = typeof force === "boolean" ? force : !p.classList.contains("on");
+    p.classList.toggle("on", open); b.classList.toggle("on", open);
+    if (open) chatLoadConvList();
+  }
+  function chatLoadConvList() {
+    const list = document.getElementById("chatConvList");
+    list.innerHTML = '<div class="chat-conv-empty">불러오는 중…</div>';
+    chatApi({ action: "conv_list" }).then(d => {
+      if (!d.convs) throw new Error("no convs");
+      chatConvList = d.convs; chatRenderConvList();
+    }).catch(() => { list.innerHTML = '<div class="chat-conv-empty">이전 채팅을 불러오지 못했어요.</div>'; });
+  }
+  function chatFmtDate(iso) {
+    const d = new Date(iso);
+    return isNaN(d) ? "" : (d.getMonth() + 1) + "월 " + d.getDate() + "일";
+  }
+  function chatRenderConvList() {
+    const list = document.getElementById("chatConvList");
+    if (!chatConvList.length) { list.innerHTML = '<div class="chat-conv-empty">이전 채팅이 없어요.</div>'; return; }
+    list.innerHTML = chatConvList.map(c =>
+      '<div class="chat-conv-item' + (c.id === chatConvId ? " on" : "") + '" data-id="' + escapeHtml(c.id) + '" onclick="chatOpenConv(this.dataset.id)">' +
+        '<span class="t">' + escapeHtml(c.title || "새 채팅") + '</span><span class="d">' + chatFmtDate(c.lastAt) + '</span>' +
+        '<button type="button" class="x" aria-label="이 채팅 지우기" onclick="event.stopPropagation();chatDeleteConv(this.parentNode.dataset.id)">×</button>' +
+      '</div>'
+    ).join("");
+  }
+  function chatMarkActive() {
+    document.querySelectorAll("#chatConvList .chat-conv-item").forEach(el => el.classList.toggle("on", el.dataset.id === chatConvId));
+  }
+  function chatDeleteConv(id) {
+    if (!confirm("이 채팅을 지울까요? 지운 채팅은 다시 볼 수 없어요. (그날의 학습 기록과 점수는 그대로예요)")) return;
+    chatApi({ action: "conv_delete", convId: id }).then(d => {
+      if (d.error) throw new Error(d.error);
+      chatConvList = chatConvList.filter(c => c.id !== id); chatRenderConvList();
+      if (id === chatConvId) chatNewConv();
+    }).catch(() => showToast("지우지 못했어요. 잠시 후 다시 시도해주세요."));
   }
 
   function loadChatHistory(subject) {
@@ -15821,6 +15958,8 @@
           // "AI 홀로" 사용도 계획/일기와 같은 새벽 6시 기준 학습일로 묶이도록, 이 메시지가
           // 속한 날짜를 같이 보낸다(서버는 이 값을 holo_worries.chat_date에 저장한다).
           date: getLocalDateKey(),
+          // 공부중독 AI의 "새 채팅" 단위 — 서버가 같은 convId의 대화를 한 채팅으로 묶는다.
+          convId: subject === "chat" ? chatEnsureConvId() : undefined,
           // 학생 프로필(관 유형/학년) — AI가 매번 "하이엔드관이세요 N수관이세요?" 같은
           // 기본 정보를 되묻지 않고 답변에 참고하도록 매 요청에 함께 실어 보낸다.
           studentBranch: localStorage.getItem("holoStudentBranch") || null,
