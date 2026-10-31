@@ -2986,7 +2986,15 @@
   }
   .pp-plan-edit-btn:hover { opacity: 0.7; }
   .pp-plan-edit-btn.on { color: var(--ink-soft); }
+  /* 플래너 박스 제목은 수정하기 버튼 자리와 상관없이 박스 가로 한가운데에 둔다(버튼은 오른쪽 끝에 따로 붙인다). */
+  .pp-plan-inner .pp-plan-date-row, .pp-note-box .pp-plan-date-row { position: relative; justify-content: center; }
+  .pp-plan-inner .pp-plan-date-row .sched-sidebar-date, .pp-note-box .pp-plan-date-row .sched-sidebar-date { flex: none; }
+  .pp-plan-inner .pp-plan-date-row .pp-plan-edit-btn, .pp-note-box .pp-plan-date-row .pp-plan-edit-btn { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
   .pp-plan-blocks { display: flex; flex-direction: column; gap: 12px; height: 108px; overflow-y: auto; }
+  /* 오전 · 오후 · 저녁: 제목을 왼쪽에, 그 시간대 계획은 오른쪽에 쓴다(제목 아래로 내려쓰지 않는다). "+ 추가하기"는 제목 바로 아래. */
+  .pp-plan-blocks .planner-block { flex-direction: row; align-items: flex-start; gap: 12px; }
+  .pp-plan-blocks .planner-block-head-row { flex: 0 0 56px; flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 2px; padding-top: 5px; }
+  .pp-plan-blocks .planner-tasks { flex: 1; min-width: 0; }
   /* 플래너 박스: 누런 칸을 흰 박스 가장자리 가까이까지 넓히고, 계획 목록도 누런 칸의 남는 높이를 끝까지 채운다(넘치면 칸 안에서만 스크롤). */
   .pp-layout .sched-sidebar { padding: 0; border: none; background: none; border-radius: 0; }
   .pp-layout .sched-sidebar-inner { margin-bottom: 0; padding: 12px 12px 10px; }
@@ -11527,9 +11535,6 @@
 
   function loadPpDate(dateStr, onDone) {
     ppSelectedDate = dateStr;
-    // 메모 제목에 고른 날짜를 넣는다: "26.10.31 특이사항"
-    const noteLabel = document.getElementById("ppNoteLabel");
-    if (noteLabel) { const [ny, nm, nd] = dateStr.split("-"); noteLabel.textContent = ny.slice(2) + "." + nm + "." + nd + " 특이사항"; }
     setPpNoteEditMode(false);
     const noteBtn = document.getElementById("ppNoteEditBtn");
     if (noteBtn) noteBtn.style.display = dateStr < getLocalDateKey() ? "none" : "";
