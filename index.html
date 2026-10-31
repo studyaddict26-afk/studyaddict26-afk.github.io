@@ -2859,6 +2859,18 @@
   .home-schedule-title:hover .arrow { transform: translateX(2px); }
   /* 홈 화면 "내 플래너 관리하기" 박스 안, 오늘 계획을 오전/오후/저녁으로 간단히 보여주는 목록 */
   .home-planner-blocks { display: flex; flex-direction: column; flex: 1; min-height: 0; justify-content: flex-start; overflow-y: auto; }
+  /* 홈 공부 계획 세우기: 누런 박스 대신 동그라미 하나 — 입력했으면 파란 체크, 아직이면 점선 동그라미 + 미입력 */
+  .hp-plan-inner { background: transparent; padding: 0; align-items: center; justify-content: center; }
+  .hp-plan-inner .home-schedule-date { margin-bottom: 8px; }
+  .hp-status { flex: 1; min-height: 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+  .hp-circle { flex: none; width: min(92px, 100%); aspect-ratio: 1; max-height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .hp-circle.done { background: var(--cream); }
+  .hp-circle.done svg { width: 50%; height: 50%; display: block; }
+  .hp-circle.empty { background: transparent; border: 1.5px dashed #B9B5A8; }
+  .hp-circle.empty span { font-size: 0.8rem; font-weight: 700; color: #B45309; }
+  .hp-circle.loading { background: var(--cream); }
+  .hp-status-text { flex: none; font-size: 0.7rem; font-weight: 600; color: var(--ink-soft); }
+  .hp-status-text.done { color: var(--ink); }
   .hps-block { display: flex; flex-direction: column; gap: calc(4px * var(--hs, 1)); flex: none; }
   .hps-title { font-size: calc(0.62rem * var(--hs, 1)); font-weight: 700; letter-spacing: 0.08em; color: var(--ink-soft); }
   .hps-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: calc(3px * var(--hs, 1)); flex: none; }
@@ -6953,23 +6965,11 @@
         <div class="home-schedule-head">
           <a class="home-schedule-title" href="#" onclick="go('plannerPage');return false;">공부 계획 세우기 <span class="arrow">›</span></a>
         </div>
-        <div class="home-schedule-inner">
+        <div class="home-schedule-inner hp-plan-inner">
           <div class="home-schedule-date" id="homePlannerDate">확인 중…</div>
-          <div class="home-planner-blocks" id="homePlannerBlocks">
-            <div class="hps-block">
-              <div class="hps-title">오전</div>
-              <ul class="hps-list" id="homePlannerList-오전"></ul>
-            </div>
-            <div class="hps-divider"></div>
-            <div class="hps-block">
-              <div class="hps-title">오후</div>
-              <ul class="hps-list" id="homePlannerList-오후"></ul>
-            </div>
-            <div class="hps-divider"></div>
-            <div class="hps-block">
-              <div class="hps-title">저녁</div>
-              <ul class="hps-list" id="homePlannerList-저녁"></ul>
-            </div>
+          <div class="hp-status" id="homePlannerStatus">
+            <div class="hp-circle" id="hpCircle"></div>
+            <div class="hp-status-text" id="hpStatusText">확인 중…</div>
           </div>
         </div>
       </div>
@@ -11233,7 +11233,7 @@
   // 모바일(세로로 쌓이는 레이아웃)에서는 의미가 없어서 지정한 높이를 다시 지운다.
   // 홈 "공부 계획 세우기" · "내 스케줄 관리하기" 누런 칸: 항목이 많아 칸을 넘치면 글자 크기를 단계적으로 줄여(최소 50%) 스크롤 없이 한눈에 보이게 한다.
   function homeFitLists() {
-    ["homePlannerBlocks", "homeScheduleLog"].forEach(id => {
+    ["homeScheduleLog"].forEach(id => {
       const el = document.getElementById(id);
       if (!el || !el.clientHeight) return;
       let s = 1;
@@ -12354,6 +12354,18 @@
       '<li>' + (it.subject ? '<span class="planner-task-subject">[' + escapeHtml(it.subject) + ']</span> ' : '') + escapeHtml(it.text) + '</li>'
     ).join(""); // 항목이 없으면 그냥 빈 목록 — "아직 없어요" 같은 안내 문구를 넣지 않는다
   }
+  // 홈 "공부 계획 세우기" 박스: 오늘 계획을 입력했으면 파란 체크, 아직이면 점선 동그라미 + "미입력"으로 보여 준다.
+  const HP_CHECK_SVG = '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M6 52 L24 41 L40 64 C56 40 76 18 96 8 C80 36 62 66 46 92 L36 92 Z" fill="#17307A"/></svg>';
+  function renderHomePlannerStatus(items) {
+    const circle = document.getElementById("hpCircle"), text = document.getElementById("hpStatusText");
+    if (!circle || !text) return;
+    if (items === null) { circle.className = "hp-circle loading"; circle.innerHTML = ""; text.className = "hp-status-text"; text.textContent = "확인 중…"; return; }
+    const done = items.some(it => it.active);
+    circle.className = "hp-circle " + (done ? "done" : "empty");
+    circle.innerHTML = done ? HP_CHECK_SVG : "<span>미입력</span>";
+    text.className = "hp-status-text " + (done ? "done" : "empty");
+    text.textContent = done ? "오늘 계획 입력 완료" : "오늘 계획을 세워 보세요";
+  }
   function loadHomePlannerToday() {
     const dateEl = document.getElementById("homePlannerDate");
     if (dateEl) dateEl.textContent = formatStudyDateLabel(); // 새벽 6시 기준 "오늘"(학습일)
@@ -12363,8 +12375,9 @@
       .then(data => {
         const items = data.items || [];
         PLAN_BLOCKS.forEach(block => renderHomePlannerList(block, items));
+        renderHomePlannerStatus(items);
       })
-      .catch(() => { PLAN_BLOCKS.forEach(block => renderHomePlannerList(block, [])); })
+      .catch(() => { PLAN_BLOCKS.forEach(block => renderHomePlannerList(block, [])); renderHomePlannerStatus(null); })
       .finally(() => syncHomeCardHeights());
   }
 
