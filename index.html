@@ -3254,9 +3254,16 @@
   .sched-empty-msg { color: var(--ink-soft); font-size: 0.8rem; }
   .sched-adhoc-view-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
   .sched-adhoc-view-list li { font-size: 0.84rem; color: var(--ink); line-height: 1.6; }
+  /* 돌발 스케줄 목록: 날짜(왼쪽) | 얇은 세로선 | 내용(오른쪽), 줄 사이에는 가로선 */
+  .sched-adhoc-view-list { gap: 0; }
+  .sched-adhoc-view-list li.sched-adhoc-row { display: flex; align-items: flex-start; gap: 14px; padding: 10px 0; }
+  .sched-adhoc-view-list li.sched-adhoc-row + li.sched-adhoc-row { border-top: 1px solid rgba(23,24,26,0.12); }
+  .sched-adhoc-date { flex: 0 0 64px; font-size: 0.8rem; font-weight: 700; color: var(--ink); }
+  .sched-adhoc-text { flex: 1; min-width: 0; border-left: 1px solid rgba(23,24,26,0.12); padding-left: 14px; }
 
   .sched-fixed-view-hint { font-size: 0.76rem; color: var(--ink-soft); margin: -8px 0 16px; }
-  .sched-fixed-view { display: flex; flex-direction: column; gap: 10px; }
+  .sched-fixed-view { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  @media (max-width: 520px) { .sched-fixed-view { grid-template-columns: 1fr; } }
   .sched-fixed-view-day {
     display: flex; align-items: center; gap: 14px;
     border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
@@ -12323,7 +12330,7 @@
       return;
     }
     el.innerHTML = fillScheduleEventGaps(events).map(e =>
-      '<li><span class="sched-grid-label">' + escapeHtml(e.label) + '</span><span class="sched-grid-value">' + (e.time ? formatTimeLabel(e.time) : "__시 __분") + '</span></li>'
+      '<li><span class="sched-grid-label">' + escapeHtml(e.label) + '</span><span class="sched-grid-value">' + (e.time ? formatTimeLabel(e.time) : "없음") + '</span></li>'
     ).join("");
   }
   function renderScheduleEventList(el, events) {
@@ -12333,7 +12340,7 @@
       return;
     }
     el.innerHTML = fillScheduleEventGaps(events).map(e =>
-      '<li><span class="hsl-label sched-log-label">' + escapeHtml(e.label) + '</span><span class="hsl-time sched-log-time">' + (e.time ? formatTimeLabel(e.time) : "__시 __분") + '</span></li>'
+      '<li><span class="hsl-label sched-log-label">' + escapeHtml(e.label) + '</span><span class="hsl-time sched-log-time">' + (e.time ? formatTimeLabel(e.time) : "없음") + '</span></li>'
     ).join("");
   }
 
@@ -12541,8 +12548,8 @@
         listEl.innerHTML = items.map(it => {
           const shortDate = String(it.event_date || "").slice(2).split("-").join(".");
           const reasonPart = it.note ? escapeHtml(it.note) + "으로 인해 " : "";
-          return '<li>' + shortDate + ' ' + reasonPart +
-            formatTimeLabel(it.start_time) + ' 외출 후 ' + formatTimeLabel(it.end_time) + ' 재입실</li>';
+          return '<li class="sched-adhoc-row"><span class="sched-adhoc-date">' + shortDate + '</span><span class="sched-adhoc-text">' + reasonPart +
+            formatTimeLabel(it.start_time) + ' 외출 후 ' + formatTimeLabel(it.end_time) + ' 재입실</span></li>';
         }).join("");
       })
       .catch(() => { listEl.innerHTML = '<li class="sched-empty-msg">불러오지 못했어요.</li>'; });
