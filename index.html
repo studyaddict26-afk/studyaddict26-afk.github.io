@@ -2951,8 +2951,10 @@
   .pp-layout .sched-left-col { flex: 0 0 var(--pp-left-w); }
   /* 달력 박스는 왼쪽 칸 전체 폭으로 넓어지고, 달력은 예전 크기(--pp-cal-w) 그대로 왼쪽에 두며 남는 오른쪽 자리에 특이사항 메모를 넣는다.
      메모가 빠진 플래너 박스는 그만큼 길어져서(min-height) 예전 박스 높이를 그대로 유지한다. */
-  .pp-layout .sched-sidebar { min-height: 285px; }
-  .pp-layout .sched-timetable-box { flex-direction: row; align-items: flex-start; gap: 14px; }
+  /* 달력 박스는 무조건 고정 크기(6줄짜리 달도 들어가는 높이), 플래너 박스가 남는 높이를 쓰고 내용이 많으면 그 안에서만 스크롤한다. */
+  .pp-layout .sched-sidebar { flex: 1 1 0; min-height: 0; }
+  .pp-layout .sched-sidebar-inner { min-height: 0; }
+  .pp-layout .sched-timetable-box { flex: none; height: 214px; box-sizing: border-box; flex-direction: row; align-items: flex-start; gap: 14px; }
   .pp-layout .pp-calendar { flex: 0 0 calc(var(--pp-cal-w) - 30px); min-width: 0; }
   .pp-layout .pp-note-box { flex: 1; min-width: 0; align-self: stretch; display: flex; flex-direction: column; justify-content: center; gap: 6px; } /* 제목 + 입력칸을 달력 박스 안에서 세로 가운데로 */
   .pp-layout .pp-note-box .planner-special-note-input { flex: 0 0 calc((100% - 30px) / 2); min-height: 40px; max-height: none; resize: none; padding: 8px 10px; background: var(--cream); border: none; border-radius: 8px; }
@@ -2985,6 +2987,10 @@
   .pp-layout .sched-sidebar { padding: 6px; }
   .pp-layout .sched-sidebar-inner { margin-bottom: 0; padding: 12px 12px 10px; }
   .pp-layout .pp-plan-blocks { height: auto; flex: 1; min-height: 0; }
+  @media (max-width: 760px) { /* 세로로 쌓이는 좁은 화면: 높이를 정해 줄 칸이 없으므로 플래너 박스에 고정 높이 */
+    .pp-layout .sched-sidebar { flex: none; }
+    .pp-layout .pp-plan-blocks { flex: none; height: 160px; }
+  }
   .pp-plan-empty { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--ink-soft); font-size: 0.8rem; }
   .pp-plan-blocks .planner-block-head { font-size: 0.72rem; }
   .pp-plan-blocks .planner-task-text { font-size: 0.72rem; }
@@ -3375,7 +3381,8 @@
   .hd-today-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--ln-gap); }
   .home-dash .home-promo-slot .hd-today-col .rh-tile { flex: 0 0 calc((100% - var(--ln-gap)) / 2); min-height: 0; } /* 오늘의 다짐을 없애도 오늘의 공부 카드 높이는 그대로(칸 절반) */
   .hd-stack { flex: 0 0 calc((100% - 2 * var(--ln-gap)) / 3); min-width: 0; display: flex; flex-direction: column; gap: var(--ln-gap); } /* 폭 = 위 버튼 하나(시험 시뮬레이션)와 같음 */
-  .hd-stack .home-schedule-box { flex: 1 1 0; min-height: 0; border-radius: 12px; padding: 10px 12px; }
+  .hd-stack .home-schedule-box { flex: 1 1 0; min-height: 0; border-radius: 12px; padding: 10px 12px; cursor: pointer; transition: border-color 0.15s; }
+  .hd-stack .home-schedule-box:hover { border-color: var(--green); }
   .home-notice-box {
     box-sizing: border-box; background: #F4F4F5; border: 1px solid var(--line);
     padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;
@@ -6961,9 +6968,9 @@
       </div>
       </div>
       <div class="hd-stack">
-      <div class="home-schedule-box">
+      <div class="home-schedule-box" onclick="homeBoxGo(event,'plannerPage')">
         <div class="home-schedule-head">
-          <a class="home-schedule-title" href="#" onclick="go('plannerPage');return false;">공부 계획 세우기 <span class="arrow">›</span></a>
+          <a class="home-schedule-title" href="#">공부 계획 세우기 <span class="arrow">›</span></a>
         </div>
         <div class="home-schedule-inner hp-plan-inner">
           <div class="hp-status" id="homePlannerStatus">
@@ -6972,9 +6979,9 @@
           </div>
         </div>
       </div>
-      <div class="home-schedule-box">
+      <div class="home-schedule-box" onclick="homeBoxGo(event,'scheduleManage')">
         <div class="home-schedule-head">
-          <a class="home-schedule-title" href="#" onclick="go('scheduleManage');return false;">내 스케줄 관리하기 <span class="arrow">›</span></a>
+          <a class="home-schedule-title" href="#">내 스케줄 관리하기 <span class="arrow">›</span></a>
         </div>
         <div class="home-schedule-inner">
           <div class="home-schedule-date" id="homeScheduleDate">확인 중…</div>
@@ -12364,6 +12371,11 @@
     circle.innerHTML = done ? HP_CHECK_SVG : "<span>미입력</span>";
     text.className = "hp-status-text " + (done ? "done" : "empty");
     text.textContent = done ? "오늘 계획 입력 완료" : "오늘 계획을 세워 보세요";
+  }
+  // 홈의 "공부 계획 세우기" · "내 스케줄 관리하기" 박스: 제목뿐 아니라 박스 어디를 눌러도 그 페이지로 간다.
+  function homeBoxGo(e, view) {
+    if (e) e.preventDefault(); // 제목 링크(href="#")의 기본 이동을 막는다
+    go(view);
   }
   function loadHomePlannerToday() {
 
