@@ -2937,10 +2937,18 @@
      왼쪽 위 박스(플래너 + 특이사항)는 그만큼 넓어지고, 아래 달력 박스는 예전 폭(230px) 그대로. */
   .pp-layout.sched-manage-layout { --pp-cal-w: 230px; --pp-left-w: calc(var(--pp-cal-w) + 184px); }
   .pp-layout .sched-left-col { flex: 0 0 var(--pp-left-w); }
-  .pp-layout .sched-timetable-box { align-self: flex-start; width: var(--pp-cal-w); box-sizing: border-box; }
+  /* 달력 박스는 왼쪽 칸 전체 폭으로 넓어지고, 달력은 예전 크기(--pp-cal-w) 그대로 왼쪽에 두며 남는 오른쪽 자리에 특이사항 메모를 넣는다.
+     메모가 빠진 플래너 박스는 그만큼 길어져서(min-height) 예전 박스 높이를 그대로 유지한다. */
+  .pp-layout .sched-sidebar { min-height: 285px; }
+  .pp-layout .sched-timetable-box { flex-direction: row; align-items: flex-start; gap: 14px; }
+  .pp-layout .pp-calendar { flex: 0 0 calc(var(--pp-cal-w) - 30px); min-width: 0; }
+  .pp-layout .pp-note-box { flex: 1; min-width: 0; align-self: stretch; display: flex; flex-direction: column; gap: 6px; }
+  .pp-layout .pp-note-box .planner-special-note-input { flex: 1; min-height: 60px; max-height: none; resize: none; padding: 6px 8px; }
   @media (max-width: 900px) {
     .pp-layout.sched-manage-layout { --pp-left-w: var(--pp-cal-w); }
-    .pp-layout .sched-timetable-box { align-self: stretch; width: auto; }
+    .pp-layout .sched-timetable-box { flex-direction: column; align-items: stretch; }
+    .pp-layout .pp-calendar { flex: none; }
+    .pp-layout .pp-note-box .planner-special-note-input { flex: none; min-height: 40px; }
   }
   .pp-plan-inner { gap: 10px; }
   /* 계획 항목이 많아져도 박스 세로 길이는 고정 — 그 안에서만 스크롤된다. */
@@ -3693,12 +3701,12 @@
   .exlv-passage-group { display: flex; flex-direction: column; gap: 7px; }
   .exlv-passage-group-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .exlv-passage-group-title { font-size: 0.66rem; font-weight: 700; color: rgba(255,255,255,0.72); letter-spacing: 0.02em; }
-  .exlv-passage-group-total { font-size: 0.62rem; font-weight: 700; color: var(--green); white-space: nowrap; }
+  .exlv-passage-group-total { font-size: 0.62rem; font-weight: 700; color: #8DB3FF; white-space: nowrap; } /* 검은 배경에서 잘 보이는 밝은 파랑 */
   .exlv-passage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
   .exlv-passage-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 9px; padding: 7px 8px 7px 11px; }
   .exlv-passage-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
   .exlv-passage-label { font-size: 0.66rem; font-weight: 600; color: rgba(255,255,255,0.78); }
-  .exlv-passage-dur { font-size: 0.58rem; font-weight: 600; color: var(--green); }
+  .exlv-passage-dur { font-size: 0.58rem; font-weight: 600; color: #8DB3FF; }
   .exlv-passage-btn { flex: none; font-family: inherit; font-size: 0.58rem; font-weight: 700; color: #fff; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22); border-radius: 999px; padding: 5px 9px; cursor: pointer; white-space: nowrap; letter-spacing: 0.01em; }
   .exlv-passage-btn.running { background: var(--green-deep); border-color: var(--green-deep); }
   .exlv-passage-btn.resumable { background: rgba(230,168,44,0.22); border-color: rgba(230,168,44,0.55); color: #ffd580; }
@@ -5632,7 +5640,7 @@
     transition: background 0.1s;
   }
   .input-plus-menu .input-plus-item:hover { background: var(--cream); }
-  .input-plus-item .ico { flex: none; width: 15px; height: 15px; color: var(--ink-soft); }
+  .input-plus-item .ico { flex: none; width: 15px; height: 15px; color: var(--ink-soft); font-size: 0.8rem; line-height: 15px; text-align: center; }
   .input-plus-item .ico svg { display: block; width: 100%; height: 100%; }
   .faq-question-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
   .faq-question-item {
@@ -5657,7 +5665,8 @@
     flex: 1; border: none; outline: none; resize: none; font-size: 0.82rem; line-height: 1.5; max-height: 120px; padding: 6px 0;
     font-family: inherit; background: transparent; color: var(--ink);
   }
-  .input-box:has(textarea) { align-items: flex-end; }
+  .input-box:has(textarea) { align-items: center; }
+  .input-box.multi { align-items: flex-end; } /* 여러 줄이 되면 + · 보내기 버튼을 아래쪽에 붙인다 */
   .input-box input {
     flex: 1; border: none; outline: none; font-size: 0.82rem;
     font-family: inherit; background: transparent; color: var(--ink);
@@ -7537,14 +7546,14 @@
               </div>
               <div class="pp-plan-blocks" id="ppPlanBlocks"></div>
             </div>
-            <div class="pp-note-box">
-              <div class="planner-special-note-label">&lt;특이사항 메모&gt;</div>
-              <textarea id="ppSpecialNoteInput" class="planner-special-note-input" placeholder="예시: 가족 일정 있어서 공부 시간 부족" oninput="schedulePpSpecialNoteSave()"></textarea>
-            </div>
           </aside>
 
           <div class="sched-timetable-box">
             <div class="pp-calendar" id="ppCalendar"></div>
+            <div class="pp-note-box">
+              <div class="planner-special-note-label">&lt;특이사항 메모&gt;</div>
+              <textarea id="ppSpecialNoteInput" class="planner-special-note-input" placeholder="예시: 가족 일정 있어서 공부 시간 부족" oninput="schedulePpSpecialNoteSave()"></textarea>
+            </div>
           </div>
         </div>
 
@@ -7555,14 +7564,17 @@
           </div>
           <div id="ppPlanChatBody">
             <div class="chat-wrap" id="chat-plan"></div>
-            <div class="sched-chat-quick-row">
-              <button type="button" class="sched-chat-quick-btn" onclick="todayPlanQuickPrompt()">📅 오늘 계획 세우기</button>
-              <button type="button" class="sched-chat-quick-btn" onclick="send('plan', '나중 날짜의 계획을 미리 세우고 싶어요.')">🗓️ 나중 계획 미리 세우기</button>
-              <button type="button" class="sched-chat-quick-btn" onclick="habitQuickPrompt()">📝 내 습관 또는 문제점 입력해두기</button>
-              <button type="button" class="sched-chat-quick-btn" onclick="planCheckQuickPrompt()">✅ 지금 계획 괜찮은지 봐주세요</button>
-            </div>
             <div class="input-zone">
               <div class="input-box">
+                <div class="input-plus-wrap">
+                  <button type="button" class="input-plus-btn" id="inputPlusBtn-plan" onclick="toggleInputPlusMenu('plan')" aria-label="더보기">+</button>
+                  <div class="input-plus-menu" id="inputPlusMenu-plan">
+                    <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('plan');todayPlanQuickPrompt()"><span class="ico">📅</span>오늘 계획 세우기</button>
+                    <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('plan');send('plan', '나중 날짜의 계획을 미리 세우고 싶어요.')"><span class="ico">🗓️</span>나중 계획 미리 세우기</button>
+                    <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('plan');habitQuickPrompt()"><span class="ico">📝</span>내 습관 또는 문제점 입력해두기</button>
+                    <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('plan');planCheckQuickPrompt()"><span class="ico">✅</span>지금 계획 괜찮은지 봐주세요</button>
+                  </div>
+                </div>
                 <input id="q-plan" type="text" placeholder="예: 수학을 언제 공부하는 게 좋을까요?" autocomplete="off">
                 <button onclick="send('plan')">보내기</button>
               </div>
@@ -13269,7 +13281,7 @@
     document.querySelectorAll("#chatConvList .chat-conv-item").forEach(el => el.classList.toggle("on", el.dataset.id === chatConvId));
   }
   function chatDeleteConv(id) {
-    if (!confirm("이 채팅을 지울까요? 지운 채팅은 다시 볼 수 없어요. (그날의 학습 기록과 점수는 그대로예요)")) return;
+    if (!confirm("이 채팅을 지울까요? 지운 채팅은 다시 볼 수 없어요. (채팅을 지워도 대화 내용이 분석지에 반영될 수 있습니다)")) return;
     chatApi({ action: "conv_delete", convId: id }).then(d => {
       if (d.error) throw new Error(d.error);
       chatConvList = chatConvList.filter(c => c.id !== id); chatRenderConvList();
@@ -14452,6 +14464,15 @@
     const types = exsimLoadNoiseTypes();
     if (types.length) exsimScheduleEffectNoise(types);
   }
+  // 시험이 끝날 때(자동 종료 · 종료 확인 · 시작 전에 닫기) 이미 재생 중이던 소음 소리도 바로 멈춘다.
+  // exsimStopNoise()는 "다음 소음 예약"만 끊는다 — 소음을 끄기만 할 때 울리던 종소리까지 끊기지 않게 따로 둔다.
+  const exsimSynthSources = new Set();
+  function exsimStopPlayingNoise() {
+    exsimSynthSources.forEach(function (s) { try { s.stop(); } catch (e) {} });
+    exsimSynthSources.clear();
+    const audio = document.getElementById("exlvEffectAudio");
+    if (audio) { try { audio.pause(); audio.currentTime = 0; } catch (e) {} }
+  }
   function exsimStopNoise() {
     if (exsimEffectTimer) { clearTimeout(exsimEffectTimer); exsimEffectTimer = null; }
   }
@@ -14525,6 +14546,8 @@
       const vol = Number(localStorage.getItem("exsimNoiseVol") || "15") / 100;
       gain.gain.value = vol * 0.5;
       src.connect(filter).connect(gain).connect(exsimAudioCtx.destination);
+      exsimSynthSources.add(src);
+      src.onended = function () { exsimSynthSources.delete(src); };
       src.start(0);
     } catch (e) { console.error(e); }
   }
@@ -14546,6 +14569,7 @@
   function exsimCloseLiveOnly() {
     clearInterval(exsimTimerHandle);
     exsimStopNoise();
+    exsimStopPlayingNoise();
     exsimTutCancel();
     document.getElementById("exsimLive").classList.remove("on");
     exsimState = null;
@@ -14553,6 +14577,7 @@
   function exsimFinishSession() {
     clearInterval(exsimTimerHandle);
     exsimStopNoise();
+    exsimStopPlayingNoise(); // 재생 중이던 소음도 끊고, 아래에서 시험 끝 종소리만 울린다
     exsimPlayPhaseAnnouncement("end");
     const state = exsimState;
     // 아직 "풀이 끝"을 안 누르고 풀던 지문이 있으면, 그 지문의 진행 중이던 시간도 여기서
@@ -15971,7 +15996,10 @@
       send(s);
     });
     if (qEl.tagName === "TEXTAREA") {
-      const fit = () => { qEl.style.height = "auto"; qEl.style.height = Math.min(qEl.scrollHeight, 120) + "px"; };
+      const fit = () => {
+        qEl.style.height = "auto"; qEl.style.height = Math.min(qEl.scrollHeight, 120) + "px";
+        const box = qEl.closest(".input-box"); if (box) box.classList.toggle("multi", qEl.scrollHeight > 40);
+      };
       qEl.addEventListener("input", fit);
       qEl._fit = fit;
     }
