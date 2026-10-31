@@ -7557,8 +7557,8 @@
           <div class="sched-timetable-box">
             <div class="pp-calendar" id="ppCalendar"></div>
             <div class="pp-note-box">
-              <div class="planner-special-note-label">&lt;특이사항 메모&gt;</div>
-              <textarea id="ppSpecialNoteInput" class="planner-special-note-input" placeholder="예시: 가족 일정 있어서 공부 시간 부족" oninput="schedulePpSpecialNoteSave()"></textarea>
+              <div class="planner-special-note-label" id="ppNoteLabel">특이사항</div>
+              <textarea id="ppSpecialNoteInput" class="planner-special-note-input" placeholder="여행으로 인해 공부 시간 부족" oninput="schedulePpSpecialNoteSave()"></textarea>
             </div>
           </div>
         </div>
@@ -11515,6 +11515,9 @@
 
   function loadPpDate(dateStr, onDone) {
     ppSelectedDate = dateStr;
+    // 메모 제목에 고른 날짜를 넣는다: "26.10.31 특이사항"
+    const noteLabel = document.getElementById("ppNoteLabel");
+    if (noteLabel) { const [ny, nm, nd] = dateStr.split("-"); noteLabel.textContent = ny.slice(2) + "." + nm + "." + nd + " 특이사항"; }
     const dateEl = document.getElementById("ppSidebarDate");
     if (dateEl) {
       const [y, m, d] = dateStr.split("-").map(Number);
