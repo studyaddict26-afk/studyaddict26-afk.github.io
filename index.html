@@ -3008,7 +3008,9 @@
   /* 플래너 박스: 누런 칸을 흰 박스 가장자리 가까이까지 넓히고, 계획 목록도 누런 칸의 남는 높이를 끝까지 채운다(넘치면 칸 안에서만 스크롤). */
   .pp-layout .sched-sidebar { padding: 0; border: none; background: none; border-radius: 0; }
   .pp-layout .sched-sidebar-inner { margin-bottom: 0; padding: 12px 12px 10px; }
-  .pp-layout .pp-plan-blocks { height: auto; flex: 1; min-height: 0; }
+  .pp-layout .pp-plan-blocks { height: auto; flex: 1; min-height: 0; overflow-y: auto; }
+  .pp-plan-blocks > * { flex-shrink: 0; }
+  .pp-layout .sched-sidebar, .pp-layout .sched-sidebar-inner { overflow: hidden; }
   @media (max-width: 760px) { /* 세로로 쌓이는 좁은 화면: 높이를 정해 줄 칸이 없으므로 플래너 박스에 고정 높이 */
     .pp-layout .sched-sidebar { flex: none; }
     .pp-layout .pp-plan-blocks { flex: none; height: 160px; }
@@ -3229,7 +3231,7 @@
   .sched-chat-col {
     flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column;
     background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
-    overflow: hidden;
+    overflow: hidden; position: relative;
   }
   .sched-chat-col .chat-wrap, .sched-chat-col .input-zone { max-width: none; }
   /* 공부 계획 세우기 · 스케줄 챗봇 대화 글씨를 한 단계 줄인다(답변 0.85→0.78rem, 내 말풍선 0.76→0.7rem). */
@@ -3455,6 +3457,7 @@
   /* 공부중독 AI: 새 채팅 · 이전 채팅 목록(AI 박스 안에서 왼쪽에서 열리는 목록) */
   .hd-ai .record-chat-pane { position: relative; }
   .hd-ai .chat-pane-title-row { align-items: center; }
+  .sched-chat-col .chat-pane-title-row { align-items: center; }
   .chat-side-btn { flex: none; width: 26px; height: 26px; padding: 0; border: none; background: none; border-radius: 6px; color: var(--ink-soft); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
   .chat-side-btn:hover { background: rgba(23,24,26,0.06); color: var(--ink); }
   .chat-new-btn { margin-left: auto; flex: none; background: none; border: 1px solid var(--line-dark); border-radius: 8px; padding: 4px 10px; font-family: inherit; font-size: 0.7rem; font-weight: 700; color: var(--ink); cursor: pointer; }
@@ -7598,8 +7601,14 @@
 
         <div class="sched-chat-col">
           <div class="chat-pane-title-row">
+            <button type="button" class="chat-side-btn" onclick="ppToggleConvPanel()" aria-label="이전 채팅 보기" title="이전 채팅"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button>
             <h3 class="record-pane-title" id="ppChatPaneTitle"><span class="pp-pane-ico">📝</span> 내 계획 관리하기</h3>
-            <button type="button" class="pp-hw-toggle-btn" id="ppHwToggleBtn" onclick="togglePpHomeworkView()">숙제 관리하기 →</button>
+            <button type="button" class="chat-new-btn" onclick="ppNewConv()">+ 새 채팅</button>
+          </div>
+          <div class="chat-conv-backdrop" id="ppConvBackdrop" onclick="ppToggleConvPanel(false)"></div>
+          <div class="chat-conv-panel" id="ppConvPanel">
+            <div class="chat-conv-head"><button type="button" class="chat-side-btn" onclick="ppToggleConvPanel(false)" aria-label="목록 닫기" title="목록 닫기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button><span>이전 채팅</span></div>
+            <div class="chat-conv-list" id="ppConvList"></div>
           </div>
           <div id="ppPlanChatBody">
             <div class="chat-wrap" id="chat-plan"></div>
@@ -7614,36 +7623,10 @@
                     <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('plan');planCheckQuickPrompt()"><span class="ico">✅</span>지금 계획 괜찮은지 봐주세요</button>
                   </div>
                 </div>
-                <input id="q-plan" type="text" placeholder="예: 수학을 언제 공부하는 게 좋을까요?" autocomplete="off">
+                <input id="q-plan" type="text" placeholder="예: 내 공부 습관 바탕으로, 공부 계획 수립 조언해줘" autocomplete="off">
                 <button onclick="send('plan')">보내기</button>
               </div>
             </div>
-          </div>
-          <div id="ppHomeworkBody" class="pp-hw-body" style="display:none;">
-            <div class="pp-hw-todo-box">
-              <div class="hwo-top-row">
-                <span class="hwo-title-group">
-                  <span class="hwo-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.5 12.5l2.2 2.2L16 9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </span>
-                  <span class="hwo-title">To Do List</span>
-                </span>
-                <button type="button" class="hwo-report-link" onclick="return false;">선생님 코멘트 모아보기 <span class="arrow">›</span></button>
-              </div>
-              <div class="hwo-body">
-                <div class="pp-hw-todo-list-col">
-                  <ul class="pp-hw-todo-list" id="ppHwTodoList"></ul>
-                </div>
-                <div class="pp-hw-stat-col">
-                  <div class="hwo-stat-pair">
-                    <div class="hwo-stat-row"><span class="hwo-stat-label">이번 주 누적 숙제</span><span class="hwo-stat-val" id="ppHwWeekCount">0개</span></div>
-                    <div class="hwo-stat-row"><span class="hwo-stat-label">전체 누적</span><span class="hwo-stat-val" id="ppHwTotalCount">0개</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="pp-hw-subject-tabs" id="ppHwSubjectTabs"></div>
-            <div id="ppHwDetail"></div>
           </div>
         </div>
       </div>
@@ -11537,7 +11520,7 @@
   let ppDateHadItemsOnLoad = false;
 
   function initPlannerPage() {
-    loadChatHistory("plan");
+    ppChatInit();
     const today = getLocalDateKey();
     const now = new Date();
     ppCalYear = now.getFullYear();
@@ -11938,14 +11921,6 @@
   const PP_HW_PAST_WEEKS_COUNT = 11;
   let ppShowingHomework = false;
   let ppHwSubject = Object.keys(PP_HW_DATA)[0];
-  function togglePpHomeworkView() {
-    ppShowingHomework = !ppShowingHomework;
-    document.getElementById("ppPlanChatBody").style.display = ppShowingHomework ? "none" : "";
-    document.getElementById("ppHomeworkBody").style.display = ppShowingHomework ? "" : "none";
-    document.getElementById("ppChatPaneTitle").innerHTML = ppShowingHomework ? '<span class="pp-pane-ico">📚</span> 숙제 관리하기' : '<span class="pp-pane-ico">📝</span> 내 계획 관리하기';
-    document.getElementById("ppHwToggleBtn").textContent = ppShowingHomework ? "내 계획 관리하기 →" : "숙제 관리하기 →";
-    if (ppShowingHomework) renderPpHwAll();
-  }
   function ppHwFormatMD(dateStr) {
     const [, m, d] = dateStr.split("-").map(Number);
     return m + "/" + d;
@@ -13345,6 +13320,95 @@
       if (id === chatConvId) chatNewConv();
     }).catch(() => showToast("지우지 못했어요. 잠시 후 다시 시도해주세요."));
   }
+  // ── 내 계획 관리하기 챗봇: 새 채팅 · 이전 채팅 (공부중독 AI와 같은 방식, 서버는 subject로 구분) ──
+  let ppConvId = null, ppInitFor = null, ppConvList = [];
+  function ppConvKey() { return "holoPlanConv:" + chatStudentId(); }
+  function ppApi(body) { return chatApi(Object.assign({ subject: "plan" }, body)); }
+  function ppSaveActive() {
+    try {
+      if (ppConvId) localStorage.setItem(ppConvKey(), JSON.stringify({ id: ppConvId, date: getLocalDateKey() }));
+      else localStorage.removeItem(ppConvKey());
+    } catch (e) {}
+  }
+  function ppEnsureConvId() {
+    if (!ppConvId) { ppConvId = chatNewId(); ppSaveActive(); }
+    return ppConvId;
+  }
+  function ppClearChat() {
+    const el = document.getElementById("chat-plan");
+    if (el) el.innerHTML = "";
+    chatHistory["plan"] = [];
+  }
+  // 계획 페이지가 열릴 때(학생이 바뀌면 다시): 오늘 쓰던 채팅이 있으면 이어서 보여 주고, 없으면 빈 새 채팅으로 시작한다.
+  function ppChatInit() {
+    const sid = chatStudentId();
+    if (!sid || ppInitFor === sid) return;
+    ppInitFor = sid;
+    ppConvId = null; ppClearChat();
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(ppConvKey()) || "null"); } catch (e) {}
+    if (saved && saved.id && saved.date === getLocalDateKey()) { ppOpenConv(saved.id, true); return; }
+    // 이 기능이 생기기 전에 오늘 나눈 대화(날짜별 묶음 d_날짜)가 있으면 그것도 이어서 보여 준다.
+    ppApi({ action: "conv_list" }).then(d => {
+      const top = (d.convs || [])[0];
+      if (top && top.id === "d_" + getLocalDateKey() && !ppConvId) ppOpenConv(top.id, true);
+    }).catch(() => {});
+  }
+  function ppOpenConv(id, silent) {
+    ppToggleConvPanel(false);
+    return ppApi({ action: "conv_get", convId: id }).then(d => {
+      if (!d.messages) throw new Error("no messages");
+      ppConvId = id; ppSaveActive();
+      ppClearChat();
+      const el = document.getElementById("chat-plan");
+      d.messages.forEach(m => addMsg("plan", m.role === "assistant" ? "bot" : "user", m.role === "assistant" ? formatAiAnswer(m.content) : escapeHtml(m.content)));
+      el.scrollTop = 1e9;
+      chatHistory["plan"] = d.messages.map(m => ({ role: m.role, content: m.content }));
+      ppMarkActive();
+    }).catch(() => { if (!silent) showToast("채팅을 불러오지 못했어요."); });
+  }
+  function ppNewConv() {
+    ppConvId = null; ppSaveActive(); ppClearChat();
+    ppToggleConvPanel(false); ppMarkActive();
+    const q = document.getElementById("q-plan"); if (q) q.focus();
+  }
+  function ppToggleConvPanel(force) {
+    const p = document.getElementById("ppConvPanel"), b = document.getElementById("ppConvBackdrop");
+    if (!p) return;
+    const open = typeof force === "boolean" ? force : !p.classList.contains("on");
+    p.classList.toggle("on", open); b.classList.toggle("on", open);
+    if (open) ppLoadConvList();
+  }
+  function ppLoadConvList() {
+    const list = document.getElementById("ppConvList");
+    list.innerHTML = '<div class="chat-conv-empty">불러오는 중…</div>';
+    ppApi({ action: "conv_list" }).then(d => {
+      if (!d.convs) throw new Error("no convs");
+      ppConvList = d.convs; ppRenderConvList();
+    }).catch(() => { list.innerHTML = '<div class="chat-conv-empty">이전 채팅을 불러오지 못했어요.</div>'; });
+  }
+  function ppRenderConvList() {
+    const list = document.getElementById("ppConvList");
+    if (!ppConvList.length) { list.innerHTML = '<div class="chat-conv-empty">이전 채팅이 없어요.</div>'; return; }
+    list.innerHTML = ppConvList.map(c =>
+      '<div class="chat-conv-item' + (c.id === ppConvId ? " on" : "") + '" data-id="' + escapeHtml(c.id) + '" onclick="ppOpenConv(this.dataset.id)">' +
+        '<span class="t">' + escapeHtml(c.title || "새 채팅") + '</span><span class="d">' + chatFmtDate(c.lastAt) + '</span>' +
+        '<button type="button" class="x" aria-label="이 채팅 지우기" onclick="event.stopPropagation();ppDeleteConv(this.parentNode.dataset.id)">×</button>' +
+      '</div>'
+    ).join("");
+  }
+  function ppMarkActive() {
+    document.querySelectorAll("#ppConvList .chat-conv-item").forEach(el => el.classList.toggle("on", el.dataset.id === ppConvId));
+  }
+  function ppDeleteConv(id) {
+    if (!confirm("이 채팅을 지울까요? 지운 채팅은 다시 볼 수 없어요. (채팅을 지워도 대화 내용이 분석지에 반영될 수 있습니다)")) return;
+    ppApi({ action: "conv_delete", convId: id }).then(d => {
+      if (d.error) throw new Error(d.error);
+      ppConvList = ppConvList.filter(c => c.id !== id); ppRenderConvList();
+      if (id === ppConvId) ppNewConv();
+    }).catch(() => showToast("지우지 못했어요. 잠시 후 다시 시도해주세요."));
+  }
+
 
   function loadChatHistory(subject) {
     if (!AI_SUBJECTS.includes(subject) || historyLoaded[subject]) return;
@@ -16010,7 +16074,7 @@
           // 속한 날짜를 같이 보낸다(서버는 이 값을 holo_worries.chat_date에 저장한다).
           date: getLocalDateKey(),
           // 공부중독 AI의 "새 채팅" 단위 — 서버가 같은 convId의 대화를 한 채팅으로 묶는다.
-          convId: subject === "chat" ? chatEnsureConvId() : undefined,
+          convId: subject === "chat" ? chatEnsureConvId() : subject === "plan" ? ppEnsureConvId() : undefined,
           // 학생 프로필(관 유형/학년) — AI가 매번 "하이엔드관이세요 N수관이세요?" 같은
           // 기본 정보를 되묻지 않고 답변에 참고하도록 매 요청에 함께 실어 보낸다.
           studentBranch: localStorage.getItem("holoStudentBranch") || null,
