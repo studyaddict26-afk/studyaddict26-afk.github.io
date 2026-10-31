@@ -6966,7 +6966,6 @@
           <a class="home-schedule-title" href="#" onclick="go('plannerPage');return false;">공부 계획 세우기 <span class="arrow">›</span></a>
         </div>
         <div class="home-schedule-inner hp-plan-inner">
-          <div class="home-schedule-date" id="homePlannerDate">확인 중…</div>
           <div class="hp-status" id="homePlannerStatus">
             <div class="hp-circle" id="hpCircle"></div>
             <div class="hp-status-text" id="hpStatusText">확인 중…</div>
@@ -12367,8 +12366,8 @@
     text.textContent = done ? "오늘 계획 입력 완료" : "오늘 계획을 세워 보세요";
   }
   function loadHomePlannerToday() {
-    const dateEl = document.getElementById("homePlannerDate");
-    if (dateEl) dateEl.textContent = formatStudyDateLabel(); // 새벽 6시 기준 "오늘"(학습일)
+
+
     const studentId = localStorage.getItem("holoStudentId");
     if (!studentId) return;
     planApi({ action: "plan_list", date: getLocalDateKey() })
