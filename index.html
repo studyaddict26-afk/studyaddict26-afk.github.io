@@ -2942,13 +2942,15 @@
   .pp-layout .sched-sidebar { min-height: 285px; }
   .pp-layout .sched-timetable-box { flex-direction: row; align-items: flex-start; gap: 14px; }
   .pp-layout .pp-calendar { flex: 0 0 calc(var(--pp-cal-w) - 30px); min-width: 0; }
-  .pp-layout .pp-note-box { flex: 1; min-width: 0; align-self: stretch; display: flex; flex-direction: column; gap: 6px; }
-  .pp-layout .pp-note-box .planner-special-note-input { flex: 1; min-height: 60px; max-height: none; resize: none; padding: 6px 8px; }
+  .pp-layout .pp-note-box { flex: 1; min-width: 0; align-self: stretch; display: flex; flex-direction: column; justify-content: center; gap: 6px; } /* 제목 + 입력칸을 달력 박스 안에서 세로 가운데로 */
+  .pp-layout .pp-note-box .planner-special-note-input { flex: 0 0 calc((100% - 30px) / 2); min-height: 40px; max-height: none; resize: none; padding: 8px 10px; background: var(--cream); border: none; border-radius: 8px; }
+  .pp-layout .pp-note-box .planner-special-note-input:focus { box-shadow: 0 0 0 1px var(--green); }
   @media (max-width: 900px) {
     .pp-layout.sched-manage-layout { --pp-left-w: var(--pp-cal-w); }
     .pp-layout .sched-timetable-box { flex-direction: column; align-items: stretch; }
     .pp-layout .pp-calendar { flex: none; }
-    .pp-layout .pp-note-box .planner-special-note-input { flex: none; min-height: 40px; }
+    .pp-layout .pp-note-box { justify-content: flex-start; }
+    .pp-layout .pp-note-box .planner-special-note-input { flex: none; height: 60px; }
   }
   .pp-plan-inner { gap: 10px; }
   /* 계획 항목이 많아져도 박스 세로 길이는 고정 — 그 안에서만 스크롤된다. */
@@ -2967,6 +2969,10 @@
   .pp-plan-edit-btn:hover { opacity: 0.7; }
   .pp-plan-edit-btn.on { color: var(--ink-soft); }
   .pp-plan-blocks { display: flex; flex-direction: column; gap: 12px; height: 108px; overflow-y: auto; }
+  /* 플래너 박스: 누런 칸을 흰 박스 가장자리 가까이까지 넓히고, 계획 목록도 누런 칸의 남는 높이를 끝까지 채운다(넘치면 칸 안에서만 스크롤). */
+  .pp-layout .sched-sidebar { padding: 6px; }
+  .pp-layout .sched-sidebar-inner { margin-bottom: 0; padding: 12px 12px 10px; }
+  .pp-layout .pp-plan-blocks { height: auto; flex: 1; min-height: 0; }
   .pp-plan-empty { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--ink-soft); font-size: 0.8rem; }
   .pp-plan-blocks .planner-block-head { font-size: 0.72rem; }
   .pp-plan-blocks .planner-task-text { font-size: 0.72rem; }
