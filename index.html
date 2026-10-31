@@ -2948,22 +2948,26 @@
   /* 챗봇 박스는 "오늘 계획 세우기" 버튼의 오른쪽 끝 선에서 시작한다(예전 챗봇 시작선에서 184px 오른쪽).
      왼쪽 위 박스(플래너 + 특이사항)는 그만큼 넓어지고, 아래 달력 박스는 예전 폭(230px) 그대로. */
   .pp-layout.sched-manage-layout { --pp-cal-w: 230px; --pp-left-w: calc(var(--pp-cal-w) + 184px); }
-  .pp-layout .sched-left-col { flex: 0 0 var(--pp-left-w); }
+  /* 왼쪽 칸은 흰 박스 하나(위: 달력 + 특이사항 메모, 아래: 플래너). 안쪽 두 구역은 카드 모양을 벗고 이 큰 박스 안에 들어간다. */
+  .pp-layout .sched-left-col { flex: 0 0 var(--pp-left-w); background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px; box-sizing: border-box; gap: 14px; }
   /* 달력 박스는 왼쪽 칸 전체 폭으로 넓어지고, 달력은 예전 크기(--pp-cal-w) 그대로 왼쪽에 두며 남는 오른쪽 자리에 특이사항 메모를 넣는다.
      메모가 빠진 플래너 박스는 그만큼 길어져서(min-height) 예전 박스 높이를 그대로 유지한다. */
   /* 달력 박스는 무조건 고정 크기(6줄짜리 달도 들어가는 높이), 플래너 박스가 남는 높이를 쓰고 내용이 많으면 그 안에서만 스크롤한다. */
   .pp-layout .sched-sidebar { flex: 1 1 0; min-height: 0; }
   .pp-layout .sched-sidebar-inner { min-height: 0; }
-  .pp-layout .sched-timetable-box { flex: none; height: 214px; box-sizing: border-box; flex-direction: row; align-items: flex-start; gap: 14px; }
+  .pp-layout .sched-timetable-box { flex: none; height: 164px; box-sizing: border-box; flex-direction: row; align-items: flex-start; gap: 14px; background: none; border: none; border-radius: 0; padding: 0; } /* 달력은 6줄짜리 달도 들어가는 고정 높이 */
   .pp-layout .pp-calendar { flex: 0 0 calc(var(--pp-cal-w) - 30px); min-width: 0; }
-  .pp-layout .pp-note-box { flex: 1; min-width: 0; align-self: stretch; display: flex; flex-direction: column; justify-content: center; gap: 6px; } /* 제목 + 입력칸을 달력 박스 안에서 세로 가운데로 */
-  .pp-layout .pp-note-box .planner-special-note-input { flex: 0 0 calc((100% - 30px) / 2); min-height: 40px; max-height: none; resize: none; padding: 8px 10px; background: var(--cream); border: none; border-radius: 8px; }
-  .pp-layout .pp-note-box .planner-special-note-input:focus { box-shadow: 0 0 0 1px var(--green); }
+  /* 특이사항 메모: 플래너 박스처럼 누런 칸 안에 제목 줄(날짜 + 수정하기)과 내용을 넣는다 */
+  .pp-layout .pp-note-box { flex: 1; min-width: 0; align-self: stretch; display: flex; flex-direction: column; background: var(--cream); border-radius: 8px; padding: 12px 12px 10px; box-sizing: border-box; }
+  .pp-layout .pp-note-box .pp-plan-date-row { margin-bottom: 8px; }
+  .pp-layout .pp-note-box .planner-special-note-input { flex: 1; min-height: 0; max-height: none; resize: none; padding: 0; background: transparent; border: none; border-radius: 0; font-size: 0.74rem; line-height: 1.5; }
+  .pp-layout .pp-note-box .planner-special-note-input:focus { outline: none; box-shadow: none; }
+  .pp-layout .pp-note-box .planner-special-note-input[readonly] { cursor: default; }
   @media (max-width: 900px) {
     .pp-layout.sched-manage-layout { --pp-left-w: var(--pp-cal-w); }
-    .pp-layout .sched-timetable-box { flex-direction: column; align-items: stretch; }
+    .pp-layout .sched-timetable-box { flex-direction: column; align-items: stretch; height: auto; }
     .pp-layout .pp-calendar { flex: none; }
-    .pp-layout .pp-note-box { justify-content: flex-start; }
+    .pp-layout .pp-note-box { min-height: 110px; }
     .pp-layout .pp-note-box .planner-special-note-input { flex: none; height: 60px; }
   }
   .pp-plan-inner { gap: 10px; }
@@ -2984,7 +2988,7 @@
   .pp-plan-edit-btn.on { color: var(--ink-soft); }
   .pp-plan-blocks { display: flex; flex-direction: column; gap: 12px; height: 108px; overflow-y: auto; }
   /* 플래너 박스: 누런 칸을 흰 박스 가장자리 가까이까지 넓히고, 계획 목록도 누런 칸의 남는 높이를 끝까지 채운다(넘치면 칸 안에서만 스크롤). */
-  .pp-layout .sched-sidebar { padding: 6px; }
+  .pp-layout .sched-sidebar { padding: 0; border: none; background: none; border-radius: 0; }
   .pp-layout .sched-sidebar-inner { margin-bottom: 0; padding: 12px 12px 10px; }
   .pp-layout .pp-plan-blocks { height: auto; flex: 1; min-height: 0; }
   @media (max-width: 760px) { /* 세로로 쌓이는 좁은 화면: 높이를 정해 줄 칸이 없으므로 플래너 박스에 고정 높이 */
@@ -3001,17 +3005,17 @@
   .pp-calendar { display: flex; flex-direction: column; }
   .pp-cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
   .pp-cal-nav {
-    font-family: inherit; font-size: 0.95rem; font-weight: 800; color: var(--ink-soft);
+    font-family: inherit; font-size: 0.85rem; font-weight: 800; color: var(--ink-soft);
     background: none; border: none; cursor: pointer; padding: 2px 8px; border-radius: 6px;
     transition: background 0.15s, color 0.15s;
   }
   .pp-cal-nav:hover { background: var(--cream); color: var(--ink); }
-  .pp-cal-label { font-size: 0.8rem; font-weight: 800; color: var(--ink); }
+  .pp-cal-label { font-size: 0.74rem; font-weight: 800; color: var(--ink); }
   .pp-cal-weekdays, .pp-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
-  .pp-cal-weekdays span { text-align: center; font-size: 0.62rem; font-weight: 700; color: var(--ink-soft); padding-bottom: 4px; }
+  .pp-cal-weekdays span { text-align: center; font-size: 0.56rem; font-weight: 700; color: var(--ink-soft); padding-bottom: 3px; }
   .pp-cal-cell {
-    text-align: center; font-size: 0.7rem; font-family: inherit; color: var(--ink);
-    background: none; border: none; border-radius: 999px; padding: 5px 0; cursor: pointer;
+    text-align: center; font-size: 0.64rem; font-family: inherit; color: var(--ink);
+    background: none; border: none; border-radius: 999px; padding: 4px 0; cursor: pointer;
     transition: background 0.15s, color 0.15s;
   }
   .pp-cal-cell:hover { background: var(--cream); }
@@ -7550,6 +7554,16 @@
 
       <div class="sched-manage-layout pp-layout">
         <div class="sched-left-col">
+          <div class="sched-timetable-box">
+            <div class="pp-calendar" id="ppCalendar"></div>
+            <div class="pp-note-box">
+              <div class="pp-plan-date-row">
+                <div class="sched-sidebar-date" id="ppNoteLabel">특이사항</div>
+                <button type="button" class="pp-plan-edit-btn" id="ppNoteEditBtn" onclick="togglePpNoteEditMode()">수정하기</button>
+              </div>
+              <textarea id="ppSpecialNoteInput" class="planner-special-note-input" placeholder="여행으로 인해 공부 시간 부족" oninput="schedulePpSpecialNoteSave()" readonly></textarea>
+            </div>
+          </div>
           <aside class="sched-sidebar">
             <div class="sched-sidebar-inner pp-plan-inner">
               <div class="pp-plan-date-row">
@@ -7559,14 +7573,6 @@
               <div class="pp-plan-blocks" id="ppPlanBlocks"></div>
             </div>
           </aside>
-
-          <div class="sched-timetable-box">
-            <div class="pp-calendar" id="ppCalendar"></div>
-            <div class="pp-note-box">
-              <div class="planner-special-note-label" id="ppNoteLabel">특이사항</div>
-              <textarea id="ppSpecialNoteInput" class="planner-special-note-input" placeholder="여행으로 인해 공부 시간 부족" oninput="schedulePpSpecialNoteSave()"></textarea>
-            </div>
-          </div>
         </div>
 
         <div class="sched-chat-col">
@@ -11524,6 +11530,9 @@
     // 메모 제목에 고른 날짜를 넣는다: "26.10.31 특이사항"
     const noteLabel = document.getElementById("ppNoteLabel");
     if (noteLabel) { const [ny, nm, nd] = dateStr.split("-"); noteLabel.textContent = ny.slice(2) + "." + nm + "." + nd + " 특이사항"; }
+    setPpNoteEditMode(false);
+    const noteBtn = document.getElementById("ppNoteEditBtn");
+    if (noteBtn) noteBtn.style.display = dateStr < getLocalDateKey() ? "none" : "";
     const dateEl = document.getElementById("ppSidebarDate");
     if (dateEl) {
       const [y, m, d] = dateStr.split("-").map(Number);
@@ -11825,6 +11834,16 @@
   // 메모를 보여준다("오늘의 학습 기록"의 특이사항 메모와는 같은 날짜일 때만 같은 값). 날짜를
   // 바꿀 때마다(loadPpDate) 다시 불러와야 하고, 텍스트가 없어도 이전 날짜 값이 남아있지
   // 않도록 매번 값을 덮어써야 한다.
+  // 특이사항 메모: 평소에는 읽기만 되고, "수정하기"를 누르면 쓸 수 있다(플래너 박스와 같은 방식, 지난 날짜는 수정 버튼 없이 읽기만).
+  let ppNoteEditMode = false;
+  function setPpNoteEditMode(on) {
+    ppNoteEditMode = on;
+    const input = document.getElementById("ppSpecialNoteInput"), btn = document.getElementById("ppNoteEditBtn");
+    if (input) input.readOnly = !on;
+    if (btn) { btn.textContent = on ? "완료" : "수정하기"; btn.classList.toggle("on", on); }
+    if (on && input) { input.focus(); input.setSelectionRange(input.value.length, input.value.length); }
+  }
+  function togglePpNoteEditMode() { setPpNoteEditMode(!ppNoteEditMode); }
   function loadPpSpecialNote(dateStr) {
     const date = dateStr || ppSelectedDate;
     planApi({ action: "special_note_get", date: date })
