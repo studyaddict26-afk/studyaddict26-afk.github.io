@@ -2947,7 +2947,7 @@
   /* ── 내 플래너 관리하기 (내 스케줄 관리하기와 같은 레이아웃, 왼쪽 칸만 살짝 더 넓게) ── */
   /* 챗봇 박스는 "오늘 계획 세우기" 버튼의 오른쪽 끝 선에서 시작한다(예전 챗봇 시작선에서 184px 오른쪽).
      왼쪽 위 박스(플래너 + 특이사항)는 그만큼 넓어지고, 아래 달력 박스는 예전 폭(230px) 그대로. */
-  .pp-layout.sched-manage-layout { --pp-cal-w: 230px; --pp-left-w: calc(var(--pp-cal-w) + 184px); }
+  .pp-layout.sched-manage-layout { --pp-left-w: 380px; }
   /* 왼쪽 칸은 흰 박스 하나(위: 달력 + 특이사항 메모, 아래: 플래너). 안쪽 두 구역은 카드 모양을 벗고 이 큰 박스 안에 들어간다. */
   .pp-layout .sched-left-col { flex: 0 0 var(--pp-left-w); background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px; box-sizing: border-box; gap: 14px; }
   /* 달력 박스는 왼쪽 칸 전체 폭으로 넓어지고, 달력은 예전 크기(--pp-cal-w) 그대로 왼쪽에 두며 남는 오른쪽 자리에 특이사항 메모를 넣는다.
@@ -2955,22 +2955,82 @@
   /* 달력 박스는 무조건 고정 크기(6줄짜리 달도 들어가는 높이), 플래너 박스가 남는 높이를 쓰고 내용이 많으면 그 안에서만 스크롤한다. */
   .pp-layout .sched-sidebar { flex: 1 1 0; min-height: 0; }
   .pp-layout .sched-sidebar-inner { min-height: 0; }
-  .pp-layout .sched-timetable-box { flex: none; height: 164px; box-sizing: border-box; flex-direction: row; align-items: flex-start; gap: 14px; background: none; border: none; border-radius: 0; padding: 0; } /* 달력은 6줄짜리 달도 들어가는 고정 높이 */
-  .pp-layout .pp-calendar { flex: 0 0 calc(var(--pp-cal-w) - 30px); min-width: 0; }
-  /* 특이사항 메모: 플래너 박스처럼 누런 칸 안에 제목 줄(날짜 + 수정하기)과 내용을 넣는다 */
-  .pp-layout .pp-note-box { flex: 1; min-width: 0; align-self: stretch; display: flex; flex-direction: column; background: var(--cream); border-radius: 8px; padding: 12px 12px 10px; box-sizing: border-box; }
-  .pp-layout .pp-note-box .pp-plan-date-row { margin-bottom: 8px; }
-  .pp-layout .pp-note-box .planner-special-note-input { flex: 1; min-height: 0; max-height: none; resize: none; padding: 0; background: transparent; border: none; border-radius: 0; font-size: 0.74rem; line-height: 1.5; }
-  .pp-layout .pp-note-box .planner-special-note-input:focus { outline: none; box-shadow: none; }
-  .pp-layout .pp-note-box { overflow: hidden; }
-  .pp-layout .pp-note-box .planner-special-note-input { overflow-x: hidden; }
-  .pp-layout .pp-note-box:focus-within { box-shadow: 0 0 0 1px var(--green); } /* 바로 쓸 수 있는 칸이라 쓰는 동안만 테두리 강조 */
+  .pp-plan-box-title { grid-column: 1; justify-self: start; font-size: 0.68rem; font-weight: 700; color: var(--ink); white-space: nowrap; }
+  /* 학습 플래너 · 날짜 · 수정하기를 한 줄에: 제목은 왼쪽, 날짜와 수정하기는 오른쪽 */
+  .pp-layout .pp-plan-inner .pp-plan-date-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .pp-layout .pp-plan-inner .pp-plan-date-row .pp-date-btn { grid-column: 2; }
+  .pp-layout .pp-plan-inner .pp-plan-date-row .pp-plan-edit-btn { position: static; transform: none; grid-column: 3; justify-self: end; font-size: 0.68rem; font-weight: 700; color: var(--ink); }
+  .pp-layout .pp-plan-inner .pp-plan-date-row .pp-plan-edit-btn.on { color: var(--ink); }
+  /* 날짜 선택 버튼: 누르면 달력이 팝업으로 뜬다 */
+  .pp-date-btn { display: inline-flex; align-items: center; gap: 5px; font-family: inherit; font-size: 0.7rem; font-weight: 700; color: var(--ink); background: #fff; border: 1px solid var(--line-dark); border-radius: 8px; padding: 5px 8px; white-space: nowrap; cursor: pointer; }
+  .pp-date-btn:hover { background: var(--cream); }
+  .pp-date-btn svg { color: var(--ink-soft); }
+  .pp-date-caret { font-size: 0.6rem; color: var(--ink-soft); }
+  /* 특이사항 메모: 플래너 박스 맨 아래, 얇은 선으로 구분 */
+  .pp-layout .pp-note-box { flex: none; display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+  .pp-note-label { font-size: 0.7rem; font-weight: 800; color: var(--ink-soft); text-align: center; }
+  .pp-layout .pp-note-box .planner-special-note-input { min-height: 56px; max-height: none; height: 56px; resize: none; padding: 7px 10px; background: var(--cream); border: 1px solid var(--line); border-radius: 8px; font-size: 0.74rem; line-height: 1.5; overflow-x: hidden; }
+  .pp-layout .pp-note-box .planner-special-note-input:focus { outline: none; border-color: var(--line-dark); box-shadow: none; }
+  /* 달력 팝업 */
+  .pp-cal-pop { display: none; position: fixed; inset: 0; z-index: 90; align-items: center; justify-content: center; background: rgba(23,24,26,0.35); padding: 16px; }
+  .pp-cal-pop.on { display: flex; }
+  .pp-cal-pop-card { position: relative; background: var(--paper); border-radius: 14px; padding: 40px 22px 20px; width: 100%; max-width: 320px; box-shadow: 0 12px 40px rgba(0,0,0,0.18); }
+  .pp-cal-pop .pp-cal-label { font-size: 0.86rem; }
+  .pp-cal-pop .pp-cal-weekdays span { font-size: 0.66rem; }
+  .pp-cal-pop .pp-cal-cell { font-size: 0.8rem; }
+  /* 오른쪽 흰 박스: 내 공부 계획 만들기(습관 + 5단계) */
+  .pp-guide-col { flex: 1; min-width: 0; min-height: 0; overflow-y: auto; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 18px 22px 20px; box-sizing: border-box; }
+  .pp-guide-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+  .pp-guide-title { margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--ink); white-space: nowrap; }
+  .pp-guide-sub { flex: 1; min-width: 0; font-size: 0.68rem; color: var(--ink-soft); }
+  .pp-guide-status { font-size: 0.66rem; color: var(--ink-soft); white-space: nowrap; }
+  /* 6칸 격자: 한 화면에 스크롤 없이 다 들어가도록 칸을 나란히 배치한다. */
+  .pp-guide-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px 12px; }
+  .pg-6 { grid-column: span 6; } .pg-3 { grid-column: span 3; } .pg-2 { grid-column: span 2; }
+  .pg-group { font-size: 0.8rem; font-weight: 800; color: var(--ink); padding-bottom: 5px; border-bottom: 1px solid var(--line); }
+  .pg-group.pg-gap, .pg-cell.pg-gap { margin-top: 6px; }
+  .pg-cell { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .pg-step3 { margin-top: 2px; }
+  .pg-label { display: flex; align-items: baseline; gap: 6px; font-size: 0.74rem; color: var(--ink); white-space: nowrap; }
+  .pg-label b { font-weight: 700; }
+  .pg-label em { font-style: normal; font-weight: 400; color: var(--ink-soft); font-size: 0.64rem; overflow: hidden; text-overflow: ellipsis; }
+  .pg-no { color: var(--green-deep); font-weight: 800; }
+  .ppg-input { width: 100%; box-sizing: border-box; font-family: inherit; font-size: 0.76rem; line-height: 1.45; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 6px 9px; resize: none; }
+  .ppg-input:focus { outline: none; border-color: var(--line-dark); }
+  .ppg-input::placeholder { color: var(--ink-soft); font-size: 0.7rem; }
+  .pp-guide-hint { margin: 0; font-size: 0.72rem; color: var(--ink-soft); line-height: 1.55; }
+  .pp-guide-link { font-family: inherit; font-size: inherit; font-weight: 700; color: var(--green-deep); background: none; border: none; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+  /* AI로 작성하기: 공부중독 AI 박스와 같은 모양(연한 회색 바탕 · 사이드바 · 새 채팅 · 입력창).
+     AI가 보기 버튼을 내놓고, '직접 입력'을 눌렀을 때만 입력창에 쓸 수 있다. */
+  .pp-guide-sub { margin-right: auto; }
+  .pp-guide-head .chat-new-btn { margin-left: 0; }
+  .pp-guide-head .pp-ppg-toggle { margin-left: 0; }
+  .pp-guide-head .pp-ppg-new, .pp-guide-head .pp-ppg-side { display: none; }
+  .pp-ppg-chat { display: none; flex: 1; min-height: 0; flex-direction: column; }
+  .pp-guide-col.ai-mode { display: flex; flex-direction: column; overflow: hidden; position: relative; background: #F4F4F5; padding: 0; }
+  .pp-guide-col.ai-mode .pp-guide-head { padding: 14px 20px 0; margin-bottom: 0; align-items: center; flex: none; }
+  .pp-guide-col.ai-mode .pp-guide-sub, .pp-guide-col.ai-mode .pp-guide-status { display: none; }
+  .pp-guide-col.ai-mode .pp-guide-title { font-size: 0.78rem; margin-right: auto; }
+  .pp-guide-col.ai-mode .pp-ppg-side { display: inline-flex; }
+  .pp-guide-col.ai-mode .pp-ppg-new { display: inline-block; }
+  .pp-guide-col.ai-mode .pp-ppg-chat { display: flex; }
+  .pp-guide-col.ai-mode .pp-guide-grid { display: none; }
+  .pp-guide-col .chat-wrap { max-width: none; padding: 28px 20px 24px; gap: 16px; }
+  .pp-guide-col .input-zone { max-width: none; background: transparent; padding: 12px 20px 14px; }
+  .pp-guide-col .input-box { max-width: none; width: auto; margin: 0; }
+  .pp-guide-col .input-box.locked { background: #FAFAFA; }
+  .pp-guide-col .input-box.locked textarea { cursor: default; }
+  .pp-guide-col .input-box.locked button { background: var(--line-dark); cursor: default; }
+  .pp-guide-col .msg .bubble { font-size: 0.78rem; line-height: 1.6; }
+  .pp-guide-col .msg.user .bubble { font-size: 0.7rem; }
+  .pp-guide-col .plan-check-choice-btn.on { border-color: var(--ink); background: var(--cream); font-weight: 700; }
+  .pp-guide-col .plan-check-choice-btn.ppg-direct { border-style: dashed; }
+  .ppg-confirm { align-self: flex-start; font-family: inherit; font-size: 0.74rem; font-weight: 700; color: #fff; background: var(--ink); border: none; border-radius: 8px; padding: 7px 14px; cursor: pointer; }
+  .ppg-skip { font-family: inherit; font-size: 0.7rem; color: var(--ink-soft); background: none; border: none; padding: 0 2px; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+  .ppg-actions { display: flex; align-items: center; gap: 12px; }
   @media (max-width: 900px) {
-    .pp-layout.sched-manage-layout { --pp-left-w: var(--pp-cal-w); }
-    .pp-layout .sched-timetable-box { flex-direction: column; align-items: stretch; height: auto; }
-    .pp-layout .pp-calendar { flex: none; }
-    .pp-layout .pp-note-box { min-height: 110px; }
-    .pp-layout .pp-note-box .planner-special-note-input { flex: none; height: 60px; }
+    .pp-layout.sched-manage-layout { --pp-left-w: 320px; }
+    .pg-3, .pg-2 { grid-column: span 6; }
   }
   .pp-plan-inner { gap: 10px; }
   /* 계획 항목이 많아져도 박스 세로 길이는 고정 — 그 안에서만 스크롤된다. */
@@ -2994,8 +3054,8 @@
   .pp-plan-inner .pp-plan-date-row .pp-plan-edit-btn, .pp-note-box .pp-plan-date-row .pp-plan-edit-btn { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
   .pp-plan-blocks { display: flex; flex-direction: column; gap: 12px; height: 108px; overflow-y: auto; }
   /* 오전 · 오후 · 저녁: 제목을 왼쪽에, 그 시간대 계획은 오른쪽에 쓴다(제목 아래로 내려쓰지 않는다). "+ 추가하기"는 제목 바로 아래. */
-  .pp-plan-blocks .planner-block { flex-direction: row; align-items: flex-start; gap: 12px; }
-  .pp-plan-blocks .planner-block-head-row { flex: 0 0 56px; flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 2px; padding-top: 5px; }
+  .pp-plan-blocks .planner-block { flex-direction: row; align-items: flex-start; gap: 6px; }
+  .pp-plan-blocks .planner-block-head-row { flex: 0 0 74px; margin-left: -12px; text-align: center; flex-direction: column; align-items: center; justify-content: flex-start; gap: 2px; padding-top: 5px; }
   .pp-plan-blocks .planner-tasks { flex: 1; min-width: 0; }
   /* 제목 칸과 내용 사이에 세로 실선 하나, 오전 · 오후 · 저녁 사이에는 가로 실선(얇게) */
   .pp-plan-blocks { gap: 0; }
@@ -3020,9 +3080,6 @@
   .pp-plan-blocks .planner-task-text { font-size: 0.66rem; }
   .pp-plan-blocks .planner-task-subject { font-size: 0.6rem; }
   .pp-plan-blocks .planner-orig-empty { font-size: 0.66rem; color: var(--ink-soft); padding: 2px 0; }
-  .pp-note-box { flex: none; }
-  .pp-note-box .planner-special-note-input { min-height: 20px; max-height: 40px; padding: 4px 8px; }
-  .pp-note-box .planner-special-note-input::placeholder { font-size: 0.68rem; }
   .pp-calendar { display: flex; flex-direction: column; }
   .pp-cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
   .pp-cal-nav {
@@ -3262,11 +3319,13 @@
   .sched-adhoc-text { flex: 1; min-width: 0; border-left: 1px solid rgba(23,24,26,0.12); padding-left: 14px; }
 
   .sched-fixed-view-hint { font-size: 0.76rem; color: var(--ink-soft); margin: -8px 0 16px; }
-  .sched-fixed-view { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  @media (max-width: 520px) { .sched-fixed-view { grid-template-columns: 1fr; } }
+  .sched-fixed-view { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  #sched-panel-fixed { max-width: 720px; }
+  @media (max-width: 700px) { .sched-fixed-view { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 460px) { .sched-fixed-view { grid-template-columns: 1fr; } }
   .sched-fixed-view-day {
-    display: flex; align-items: center; gap: 14px;
-    border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+    display: flex; align-items: center; gap: 10px;
+    border: 1px solid var(--line); border-radius: 10px; padding: 12px;
   }
   .sched-fixed-view-day-label { flex: none; width: 20px; font-size: 0.82rem; font-weight: 800; color: var(--green-deep); }
   .sched-fixed-view-events { flex: 1; min-width: 0; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
@@ -3308,7 +3367,7 @@
     display: flex; align-items: flex-start; gap: 12px;
     max-width: 980px; width: 100%; margin: 24px auto 28px auto; padding: 0 24px; box-sizing: border-box;
   }
-  .home-week-overview {
+  .home-week-overview { cursor: pointer;
     flex: 0 0 596px; padding: 10px 18px 10px 18px;
     box-sizing: border-box; background: var(--paper); border: 1px solid var(--line); border-radius: 0;
     display: flex; flex-direction: column; gap: 6px;
@@ -6014,6 +6073,16 @@
     padding: 18px; overflow-y: auto;
   }
   .record-plan-diary-row { display: flex; gap: 18px; min-height: 0; flex: 1; align-items: stretch; }
+  /* 오늘의 학습 기록: 큰 흰 박스를 화면 높이만큼 늘리지 않고 내용 높이만큼만 쓴다(화면이 낮을 때만 박스 안에서 스크롤). */
+  #view-todayrecord .record-plan-diary-card { flex: 0 1 auto; }
+  #view-todayrecord .record-plan-diary-row { flex: 0 1 auto; }
+  /* 오늘의 학습 기록: 플래너 + 공부일기 박스를 화면 가로·세로 가운데에 둔다(남는 위아래 공간을 똑같이 나눔). */
+  #view-todayrecord .record-split { flex: 0 1 auto; margin: auto; }
+  /* 특이사항 메모(왼쪽)와 자유롭게 기록하는 칸(오른쪽 맨 아래)은 제목 줄 · 입력칸 높이와 아래 끝을 똑같이 맞춘다. */
+  #view-todayrecord .planner-special-note, #view-todayrecord .record-diary-col .diary-q-field:last-child { flex: none; margin-top: 0; gap: 0; }
+  #view-todayrecord .planner-special-note-label { justify-content: center; }
+  #view-todayrecord .planner-special-note-label, #view-todayrecord .record-diary-col .diary-q-field:last-child label { display: flex; align-items: center; height: 18px; margin-bottom: 6px; line-height: 1; }
+  #view-todayrecord .planner-special-note-input, #view-todayrecord .record-diary-col .diary-q-field:last-child textarea { height: 60px !important; min-height: 60px !important; max-height: 60px !important; resize: none; }
   .record-plan-diary-row .record-planner-pane { flex: 1 1 0; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
   .record-diary-col {
     flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 14px; min-height: 0;
@@ -6936,7 +7005,7 @@
       <div class="hd-left">
       <div class="hd-topleft">
     <div class="home-top-row">
-      <div class="home-week-overview">
+      <div class="home-week-overview" onclick="homeBoxGo(event,'recordhub')">
         <div class="hwo-top-row">
           <span class="hwo-title-group">
             <span class="hwo-icon">
@@ -6944,7 +7013,7 @@
             </span>
             <span class="hwo-title">공부 점수 누적 현황</span>
           </span>
-          <button type="button" class="hwo-report-link" onclick="go('recordhub')">누적 공부 기록 확인하기 <span class="arrow">›</span></button>
+          <button type="button" class="hwo-report-link">누적 공부 기록 확인하기 <span class="arrow">›</span></button>
         </div>
         <div class="hwo-body">
           <div class="hwo-chart-col">
@@ -6961,7 +7030,7 @@
 
     <div class="home-nav-grid">
       <button type="button" class="home-nav-btn" onclick="mexGoList('naeshin')">
-        <span class="hn-title">내신 관리</span> <span class="hn-arrow">›</span>
+        <span class="hn-title">내신 - 생기부 관리</span> <span class="hn-arrow">›</span>
       </button>
       <button type="button" class="home-nav-btn" onclick="mexGoList('mock')">
         <span class="hn-title">모의고사 관리</span> <span class="hn-arrow">›</span>
@@ -7586,55 +7655,79 @@
 
       <div class="sched-manage-layout pp-layout">
         <div class="sched-left-col">
-          <div class="sched-timetable-box">
-            <div class="pp-calendar" id="ppCalendar"></div>
-            <div class="pp-note-box">
-              <div class="pp-plan-date-row">
-                <div class="sched-sidebar-date" id="ppNoteLabel">특이사항</div>
-              </div>
-              <textarea id="ppSpecialNoteInput" class="planner-special-note-input" placeholder="여행으로 인해 공부 시간 부족" oninput="schedulePpSpecialNoteSave()" spellcheck="false"></textarea>
-            </div>
-          </div>
           <aside class="sched-sidebar">
             <div class="sched-sidebar-inner pp-plan-inner">
               <div class="pp-plan-date-row">
-                <div class="sched-sidebar-date" id="ppSidebarDate">-</div>
-                <button type="button" class="pp-plan-edit-btn" id="ppPlanEditBtn" onclick="togglePpPlanEditMode()">수정하기</button>
+                <div class="pp-plan-box-title">학습 플래너</div>
+                <button type="button" class="pp-date-btn" onclick="ppToggleCalPop(true)" aria-label="날짜 선택">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+                  <span id="ppSidebarDate">-</span>
+                  <span class="pp-date-caret">▾</span>
+                </button>
+                <button type="button" class="pp-plan-edit-btn" id="ppPlanEditBtn" onclick="togglePpPlanEditMode()">수정하기 →</button>
               </div>
               <div class="pp-plan-blocks" id="ppPlanBlocks"></div>
+              <div class="pp-note-box">
+                <div class="pp-note-label" id="ppNoteLabel">특이사항</div>
+                <textarea id="ppSpecialNoteInput" class="planner-special-note-input" placeholder="예: 여행으로 인해 공부 시간 부족" oninput="schedulePpSpecialNoteSave()" spellcheck="false"></textarea>
+              </div>
             </div>
           </aside>
         </div>
 
-        <div class="sched-chat-col">
-          <div class="chat-pane-title-row">
-            <button type="button" class="chat-side-btn" onclick="ppToggleConvPanel()" aria-label="이전 채팅 보기" title="이전 채팅"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button>
-            <h3 class="record-pane-title" id="ppChatPaneTitle"><span class="pp-pane-ico">📝</span> 내 계획 관리하기</h3>
-            <button type="button" class="chat-new-btn" onclick="ppNewConv()">+ 새 채팅</button>
+        <div class="pp-guide-col">
+          <div class="pp-guide-head">
+            <button type="button" class="chat-side-btn pp-ppg-side" onclick="ppgToggleConvPanel()" aria-label="이전 채팅 보기" title="이전 채팅"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button>
+            <h3 class="pp-guide-title">공부 계획 5단계</h3>
+            <span class="pp-guide-sub">작성하면 자동 저장됩니다</span>
+            <span class="pp-guide-status" id="ppGuideStatus"></span>
+            <button type="button" class="chat-new-btn pp-ppg-toggle" id="ppGuideAiBtn" onclick="ppGuideToggleAi()">AI로 작성하기</button>
+            <button type="button" class="chat-new-btn pp-ppg-new" id="ppgNewBtn" onclick="ppgNewThread()">+ 새 채팅</button>
           </div>
-          <div class="chat-conv-backdrop" id="ppConvBackdrop" onclick="ppToggleConvPanel(false)"></div>
-          <div class="chat-conv-panel" id="ppConvPanel">
-            <div class="chat-conv-head"><button type="button" class="chat-side-btn" onclick="ppToggleConvPanel(false)" aria-label="목록 닫기" title="목록 닫기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button><span>이전 채팅</span></div>
-            <div class="chat-conv-list" id="ppConvList"></div>
+          <div class="chat-conv-backdrop" id="ppgConvBackdrop" onclick="ppgToggleConvPanel(false)"></div>
+          <div class="chat-conv-panel" id="ppgConvPanel">
+            <div class="chat-conv-head"><button type="button" class="chat-side-btn" onclick="ppgToggleConvPanel(false)" aria-label="목록 닫기" title="목록 닫기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button><span>이전 채팅</span></div>
+            <div class="chat-conv-list" id="ppgConvList"></div>
           </div>
-          <div id="ppPlanChatBody">
-            <div class="chat-wrap" id="chat-plan"></div>
+          <div class="pp-ppg-chat" id="ppgChatWrap">
+            <div class="chat-wrap" id="chat-ppg"></div>
             <div class="input-zone">
-              <div class="input-box">
-                <div class="input-plus-wrap">
-                  <button type="button" class="input-plus-btn" id="inputPlusBtn-plan" onclick="toggleInputPlusMenu('plan')" aria-label="더보기">+</button>
-                  <div class="input-plus-menu" id="inputPlusMenu-plan">
-                    <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('plan');todayPlanQuickPrompt()"><span class="ico">📅</span>오늘 계획 세우기</button>
-                    <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('plan');send('plan', '나중 날짜의 계획을 미리 세우고 싶어요.')"><span class="ico">🗓️</span>나중 계획 미리 세우기</button>
-                    <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('plan');habitQuickPrompt()"><span class="ico">📝</span>내 습관 또는 문제점 입력해두기</button>
-                    <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('plan');planCheckQuickPrompt()"><span class="ico">✅</span>지금 계획 괜찮은지 봐주세요</button>
-                  </div>
-                </div>
-                <input id="q-plan" type="text" placeholder="예: 내 공부 습관 바탕으로, 공부 계획 수립 조언해줘" autocomplete="off">
-                <button onclick="send('plan')">보내기</button>
+              <div class="input-box" id="ppgInputBox">
+                <textarea id="q-ppg" rows="1" disabled placeholder="아래 보기에서 골라주세요. 직접 쓰려면 '직접 입력'을 눌러주세요" autocomplete="off"></textarea>
+                <button type="button" id="ppgSendBtn" onclick="ppgSend()">보내기</button>
               </div>
             </div>
           </div>
+          <div class="pp-guide-grid">
+            <div class="pg-group pg-6" id="ppGuideHabit"><span class="pg-no">1단계</span> 내 공부 습관</div>
+            <label class="pg-cell pg-3"><span class="pg-label"><b>장점</b><em>잘하고 있는 것</em></span>
+              <textarea class="ppg-input" data-k="pros" rows="2" placeholder="예: 아침에 집중이 잘 돼요"></textarea></label>
+            <label class="pg-cell pg-3"><span class="pg-label"><b>단점</b><em>고치고 싶은 것</em></span>
+              <textarea class="ppg-input" data-k="cons" rows="2" placeholder="예: 저녁에 폰을 자주 봐요"></textarea></label>
+
+            <label class="pg-cell pg-3 pg-gap"><span class="pg-label"><b class="pg-no">2단계</b><b>목표 설정</b></span>
+              <textarea class="ppg-input" data-k="goal" rows="2" placeholder="이번 시험 · 이번 달 목표"></textarea></label>
+            <label class="pg-cell pg-3 pg-gap"><span class="pg-label"><b class="pg-no">3단계</b><b>공부 분량</b></span>
+              <textarea class="ppg-input" data-k="amount" rows="2" placeholder="목표를 위해 과목별로 필요한 분량"></textarea></label>
+
+            <div class="pg-group pg-6 pg-gap"><span class="pg-no">4단계</span> 루틴 · 메인 · 서브로 나누기</div>
+            <label class="pg-cell pg-2"><span class="pg-label"><b>루틴</b><em>매일 공부</em></span>
+              <textarea class="ppg-input" data-k="routine" rows="2" placeholder="예: 영단어 30개"></textarea></label>
+            <label class="pg-cell pg-2"><span class="pg-label"><b>메인</b><em>가장 핵심적인 공부</em></span>
+              <textarea class="ppg-input" data-k="main" rows="2" placeholder="예: 수학 문제집"></textarea></label>
+            <label class="pg-cell pg-2"><span class="pg-label"><b>서브</b><em>일주일에 한두 번 공부</em></span>
+              <textarea class="ppg-input" data-k="sub" rows="2" placeholder="예: 과학 개념 정리"></textarea></label>
+
+            <label class="pg-cell pg-6 pg-gap"><span class="pg-label"><b class="pg-no">5단계</b><b>다짐</b></span>
+              <textarea class="ppg-input" data-k="pledge" rows="2" placeholder="나만의 다짐을 적어보세요"></textarea></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="pp-cal-pop" id="ppCalPop" onclick="ppToggleCalPop(false)">
+        <div class="pp-cal-pop-card" onclick="event.stopPropagation()">
+          <button type="button" class="sched-modal-close" onclick="ppToggleCalPop(false)" aria-label="닫기">×</button>
+          <div class="pp-calendar" id="ppCalendar"></div>
         </div>
       </div>
     </div>
@@ -11527,7 +11620,7 @@
   let ppDateHadItemsOnLoad = false;
 
   function initPlannerPage() {
-    ppChatInit();
+    ppGuideLoad();
     const today = getLocalDateKey();
     const now = new Date();
     ppCalYear = now.getFullYear();
@@ -11552,7 +11645,7 @@
     const editBtn = document.getElementById("ppPlanEditBtn");
     if (editBtn) {
       editBtn.style.display = dateStr < today ? "none" : "";
-      editBtn.textContent = "수정하기";
+      editBtn.textContent = "수정하기 →";
       editBtn.classList.remove("on");
     }
     if (dateStr >= today) {
@@ -11658,7 +11751,7 @@
     renderPpPlanBlocks();
     const btn = document.getElementById("ppPlanEditBtn");
     if (btn) {
-      btn.textContent = ppPlanEditMode ? "완료" : "수정하기";
+      btn.textContent = ppPlanEditMode ? "완료" : "수정하기 →";
       btn.classList.toggle("on", ppPlanEditMode);
     }
   }
@@ -11877,7 +11970,7 @@
       const isToday = dateStr === today;
       const isSelected = dateStr === ppSelectedDate;
       const cls = "pp-cal-cell" + (isToday ? " today" : "") + (isSelected ? " selected" : "");
-      cells += '<button type="button" class="' + cls + '" data-ymd="' + dateStr + '" onclick="loadPpDate(\'' + dateStr + '\')">' + d + '</button>';
+      cells += '<button type="button" class="' + cls + '" data-ymd="' + dateStr + '" onclick="loadPpDate(\'' + dateStr + '\');ppToggleCalPop(false)">' + d + '</button>';
     }
     el.innerHTML =
       '<div class="pp-cal-head">' +
@@ -13327,94 +13420,297 @@
       if (id === chatConvId) chatNewConv();
     }).catch(() => showToast("지우지 못했어요. 잠시 후 다시 시도해주세요."));
   }
-  // ── 내 계획 관리하기 챗봇: 새 채팅 · 이전 채팅 (공부중독 AI와 같은 방식, 서버는 subject로 구분) ──
-  let ppConvId = null, ppInitFor = null, ppConvList = [];
-  function ppConvKey() { return "holoPlanConv:" + chatStudentId(); }
-  function ppApi(body) { return chatApi(Object.assign({ subject: "plan" }, body)); }
-  function ppSaveActive() {
+  // ── 공부 계획 세우기: 날짜 선택 달력 팝업 + 내 공부 계획 만들기(습관 · 5단계) ──
+  function ppToggleCalPop(on) {
+    const pop = document.getElementById("ppCalPop");
+    if (!pop) return;
+    if (on && ppSelectedDate) {
+      const [y, m] = ppSelectedDate.split("-").map(Number);
+      ppCalYear = y; ppCalMonth = m;
+      renderPpCalendar();
+    }
+    pop.classList.toggle("on", !!on);
+  }
+  document.addEventListener("keydown", e => { if (e.key === "Escape") ppToggleCalPop(false); });
+  // 적는 대로 이 기기에 자동 저장(학생별). 서버에 저장하는 기능은 아직 없다.
+  function ppGuideKey() { return "holoPlanGuide:" + (localStorage.getItem("holoStudentId") || "anon"); }
+  let ppGuideTimer = null;
+  function ppGuideLoad() {
+    let data = {};
+    try { data = JSON.parse(localStorage.getItem(ppGuideKey()) || "{}") || {}; } catch (e) {}
+    document.querySelectorAll(".ppg-input").forEach(el => {
+      el.value = data[el.dataset.k] || "";
+      if (!el._ppgBound) {
+        el._ppgBound = true;
+        el.addEventListener("input", () => {
+          clearTimeout(ppGuideTimer);
+          ppGuideTimer = setTimeout(ppGuideSave, 600);
+        });
+      }
+    });
+  }
+  function ppGuideSave() {
+    const data = {};
+    document.querySelectorAll(".ppg-input").forEach(el => { data[el.dataset.k] = el.value; });
+    try { localStorage.setItem(ppGuideKey(), JSON.stringify(data)); } catch (e) {}
+    const st = document.getElementById("ppGuideStatus");
+    if (st) st.textContent = "저장됨";
+  }
+  function ppGuideGoHabit() {
+    const el = document.getElementById("ppGuideHabit");
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  // ── AI로 작성하기: 공부 계획 5단계를 AI가 내놓는 질문 + 보기 버튼으로 채운다 ──
+  // 기본은 보기 버튼 고르기. '직접 입력'을 눌렀을 때만 입력창이 열리고, 쓴 답이 질문과 맞는지 AI가
+  // 판단해서 안 맞으면 안내한 뒤 같은 질문의 보기를 다시 보여준다. 대화는 이 기기에 저장된다(새 채팅 · 이전 채팅).
+  const PPG_QS = [
+    { step: "1단계 · 내 공부 습관", q: "내 공부의 장점은 뭐예요? 해당하는 걸 모두 골라주세요.", multi: true, key: "pros",
+      opts: ["집중력이 좋아요", "계획을 잘 지켜요", "아침에 공부가 잘 돼요", "밤에 공부가 잘 돼요", "꾸준히 해요", "오래 앉아 있을 수 있어요", "모르는 건 바로 질문해요"] },
+    { step: "1단계 · 내 공부 습관", q: "고치고 싶은 점은 뭐예요? 해당하는 걸 모두 골라주세요.", multi: true, key: "cons",
+      opts: ["폰을 자주 봐요", "쉽게 지쳐요", "계획을 자주 미뤄요", "집중이 오래 안 가요", "자주 졸려요", "쉬는 시간이 길어져요", "어려운 문제는 피하게 돼요"] },
+    { step: "2단계 · 목표 설정", q: "가장 가까운 목표는 뭐예요?", key: "goalA",
+      opts: ["다가오는 내신 시험", "다가오는 모의고사", "수능", "부족한 과목 보충", "공부 습관 만들기"] },
+    { step: "2단계 · 목표 설정", q: "어느 정도를 목표로 하나요?", key: "goalB",
+      opts: ["지금 성적 유지하기", "한 등급 올리기", "두 등급 이상 올리기", "한 과목 확실히 끌어올리기"] },
+    { step: "3단계 · 공부 분량", q: "이번에 공부할 과목을 모두 골라주세요.", multi: true, key: "subjects",
+      opts: ["국어", "수학", "영어", "탐구", "한국사"] },
+    { step: "3단계 · 공부 분량", q: "하루에 공부할 수 있는 시간은 어느 정도예요?", key: "hours",
+      opts: ["2시간 정도", "4시간 정도", "6시간 정도", "8시간 이상"] },
+    { step: "4단계 · 루틴 · 메인 · 서브", q: "매일 꾸준히 할 공부(루틴)를 골라주세요.", multi: true, key: "routine",
+      opts: ["영단어 외우기", "수학 계산 연습", "국어 비문학 1지문", "영어 듣기", "오늘 배운 것 복습", "오답 정리"] },
+    { step: "4단계 · 루틴 · 메인 · 서브", q: "가장 핵심이 되는 공부(메인)를 골라주세요.", multi: true, key: "main",
+      opts: ["수학 문제 풀이", "국어 기출 풀이", "영어 독해", "탐구 개념 + 문제", "내신 교재 공부"] },
+    { step: "4단계 · 루틴 · 메인 · 서브", q: "일주일에 한두 번 할 공부(서브)를 골라주세요.", multi: true, key: "sub",
+      opts: ["한국사", "탐구 개념 정리", "오답 노트 정리", "모의고사 풀이", "약한 과목 보충"] },
+    { step: "5단계 · 다짐", q: "나의 다짐을 골라주세요.", multi: true, key: "pledge",
+      opts: ["하루 목표 분량은 꼭 끝내기", "폰은 쉬는 시간에만 보기", "계획이 밀려도 포기하지 않기", "주말에 밀린 공부 정리하기", "자기 전에 계획 점검하기"] },
+  ];
+  const PPG_NO_MSG = "질문과 맞지 않는 답변 같아요. 아래 보기에서 고르거나, '직접 입력'을 눌러 질문에 맞게 다시 적어주세요.";
+  let ppgThreads = [], ppgThread = null, ppgInputOn = false, ppgBusy = false, ppgFor = null;
+  function ppgKey() { return "holoPpgThreads:" + (localStorage.getItem("holoStudentId") || "anon"); }
+  function ppgLoadThreads() {
+    try { ppgThreads = JSON.parse(localStorage.getItem(ppgKey()) || "[]") || []; } catch (e) { ppgThreads = []; }
+  }
+  function ppgPersist() {
+    if (!ppgThread) return;
+    ppgThread.at = Date.now();
+    ppgThreads = [ppgThread].concat(ppgThreads.filter(t => t.id !== ppgThread.id)).slice(0, 30);
+    try { localStorage.setItem(ppgKey(), JSON.stringify(ppgThreads)); } catch (e) {}
+  }
+  function ppgBlankThread() {
+    return { id: "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), at: Date.now(), ans: {}, qi: -1, sel: [], log: [{ r: "b", k: "start" }] };
+  }
+  function ppgTitle(t) {
+    const us = (t.log || []).filter(e => e.r === "u" && e.t !== "시작하기");
+    return us.length ? us[0].t.slice(0, 24) : "새 채팅";
+  }
+  function ppGuideToggleAi() {
+    const col = document.querySelector(".pp-guide-col");
+    const on = !col.classList.contains("ai-mode");
+    col.classList.toggle("ai-mode", on);
+    document.getElementById("ppGuideAiBtn").textContent = on ? "직접 작성하기" : "AI로 작성하기";
+    ppgToggleConvPanel(false);
+    if (on) ppgEnter();
+  }
+  // AI로 작성하기를 켤 때(학생이 바뀌면 다시): 가장 최근 채팅을 이어서 보여 주고, 없으면 새 채팅으로 시작한다.
+  function ppgEnter() {
+    const sid = localStorage.getItem("holoStudentId") || "anon";
+    if (ppgFor !== sid) { ppgFor = sid; ppgThread = null; ppgLoadThreads(); }
+    if (!ppgThread) ppgThread = ppgThreads[0] || ppgBlankThread();
+    ppgInputOn = false;
+    ppgRender();
+  }
+  function ppgNewThread() {
+    if (ppgBusy) return;
+    ppgThread = ppgBlankThread(); ppgInputOn = false;
+    ppgPersist(); ppgToggleConvPanel(false); ppgRender();
+  }
+  function ppgCard(head, body) { return '<div class="plan-check-choice">' + head + body + '</div>'; }
+  function ppgBtn(label, onclick, cls) {
+    return '<button type="button" class="plan-check-choice-btn' + (cls ? " " + cls : "") + '" onclick="' + onclick + '">' + escapeHtml(label) + '</button>';
+  }
+  function ppgQHtml(qi, active) {
+    const d = PPG_QS[qi];
+    const head = '<div class="plan-check-choice-picked">[' + escapeHtml(d.step) + ']</div><div class="plan-check-choice-q">' + escapeHtml(d.q) + '</div>';
+    if (!active) return ppgCard(head, "");
+    const sel = ppgThread.sel;
+    let btns = d.opts.map((o, oi) => ppgBtn(o, "ppgPick(" + qi + "," + oi + ")", d.multi && sel.includes(o) ? "on" : "")).join("");
+    if (d.multi) btns += sel.map((s, si) => d.opts.includes(s) ? "" : ppgBtn(s + " ✕", "ppgDropCustom(" + qi + "," + si + ")", "on")).join("");
+    btns += ppgBtn("직접 입력", "ppgDirect()", "ppg-direct");
+    const actions = '<div class="ppg-actions">' + (d.multi ? '<button type="button" class="ppg-confirm" onclick="ppgDone(' + qi + ')">선택 완료</button>' : "") +
+      '<button type="button" class="ppg-skip" onclick="ppgSkip(' + qi + ')">건너뛰기</button></div>';
+    return ppgCard(head, '<div class="plan-check-choice-opts ts-choice-row">' + btns + '</div>' + actions);
+  }
+  function ppgRender() {
+    const chat = document.getElementById("chat-ppg"), t = ppgThread;
+    if (!chat || !t) return;
+    chat.innerHTML = "";
+    const last = t.log.length - 1;
+    t.log.forEach((e, i) => {
+      if (e.r === "u") addMsg("ppg", "user", escapeHtml(e.t));
+      else if (e.k === "text") addMsg("ppg", "bot", escapeHtml(e.t));
+      else if (e.k === "start") {
+        const body = (i === last && t.qi === -1) ? '<div class="plan-check-choice-opts ts-choice-row">' + ppgBtn("시작하기", "ppgBegin()") + '</div>' : "";
+        addMsg("ppg", "bot", ppgCard('<div class="plan-check-choice-q">공부 계획 5단계를 같이 만들어볼게요. 질문마다 알맞은 보기를 골라주세요. 보기에 없으면 \'직접 입력\'을 눌러 적을 수 있어요. 고른 내용은 자동으로 칸에 채워져요.</div>', body));
+      }
+      else if (e.k === "q") addMsg("ppg", "bot", ppgQHtml(e.qi, i === last && t.qi === e.qi));
+      else if (e.k === "done") addMsg("ppg", "bot", ppgCard('<div class="plan-check-choice-q">5단계를 모두 채웠어요! \'직접 작성하기\'로 가면 칸에 채워진 내용을 확인하고 고칠 수 있어요.</div>',
+        '<div class="plan-check-choice-opts ts-choice-row">' + ppgBtn("내용 확인하기", "ppGuideToggleAi()") + '</div>'));
+    });
+    if (ppgBusy) addMsg("ppg", "bot", '<span class="typing"><span></span><span></span><span></span></span>');
+    chat.scrollTop = chat.scrollHeight;
+    ppgSyncInput();
+  }
+  function ppgSyncInput() {
+    const ta = document.getElementById("q-ppg"), box = document.getElementById("ppgInputBox"), btn = document.getElementById("ppgSendBtn");
+    if (!ta) return;
+    const open = ppgInputOn && !ppgBusy && ppgThread && ppgThread.qi >= 0 && ppgThread.qi < PPG_QS.length;
+    ta.disabled = !open; btn.disabled = !open;
+    box.classList.toggle("locked", !open);
+    ta.placeholder = open ? "질문에 맞게 직접 입력해주세요" : "아래 보기에서 골라주세요. 직접 쓰려면 '직접 입력'을 눌러주세요";
+    if (open) ta.focus();
+  }
+  function ppgBegin() {
+    const t = ppgThread; if (!t || t.qi !== -1) return;
+    t.log.push({ r: "u", t: "시작하기" });
+    t.qi = 0; t.log.push({ r: "b", k: "q", qi: 0 });
+    ppgPersist(); ppgRender();
+  }
+  function ppgPick(qi, oi) {
+    const t = ppgThread, d = PPG_QS[qi];
+    if (ppgBusy || !t || t.qi !== qi) return;
+    if (!d.multi) { ppgAnswer([d.opts[oi]]); return; }
+    const o = d.opts[oi], at = t.sel.indexOf(o);
+    if (at >= 0) t.sel.splice(at, 1); else t.sel.push(o);
+    ppgPersist(); ppgRender();
+  }
+  function ppgDropCustom(qi, si) {
+    if (ppgBusy || !ppgThread || ppgThread.qi !== qi) return;
+    ppgThread.sel.splice(si, 1); ppgPersist(); ppgRender();
+  }
+  function ppgDone(qi) {
+    const t = ppgThread;
+    if (ppgBusy || !t || t.qi !== qi) return;
+    if (!t.sel.length) { showToast("하나 이상 골라주세요. 해당하는 게 없으면 건너뛰기를 눌러주세요."); return; }
+    ppgAnswer(t.sel.slice());
+  }
+  function ppgSkip(qi) { if (!ppgBusy && ppgThread && ppgThread.qi === qi) ppgAnswer([]); }
+  function ppgDirect() {
+    if (ppgBusy || !ppgThread || ppgThread.qi < 0) return;
+    ppgInputOn = true; ppgSyncInput();
+  }
+  // 한 질문의 답이 정해졌을 때: 기록 · 칸 채우기 · 다음 질문. echo=false면 학생이 직접 쓴 말풍선이 이미 있어서 다시 남기지 않는다.
+  function ppgAnswer(list, echo) {
+    const t = ppgThread, d = PPG_QS[t.qi];
+    t.ans[d.key] = list;
+    if (echo !== false) t.log.push({ r: "u", t: list.length ? list.join(", ") : "건너뛰기" });
+    t.qi++; t.sel = [];
+    t.log.push(t.qi >= PPG_QS.length ? { r: "b", k: "done" } : { r: "b", k: "q", qi: t.qi });
+    ppgApply(t.ans); ppgInputOn = false; ppgPersist(); ppgRender();
+  }
+  // 직접 입력한 답: 먼저 질문에 맞는지 판단하고, 맞으면 반영, 안 맞으면 안내 후 같은 질문의 보기를 다시 보여준다.
+  async function ppgSend() {
+    const ta = document.getElementById("q-ppg"), t = ppgThread;
+    if (!t || ppgBusy || !ppgInputOn || t.qi < 0 || t.qi >= PPG_QS.length) return;
+    const text = ta.value.trim().replace(/\s+/g, " ");
+    if (!text) return;
+    ta.value = ""; if (ta._fit) ta._fit();
+    const qi = t.qi, d = PPG_QS[qi];
+    t.log.push({ r: "u", t: text });
+    ppgBusy = true; ppgInputOn = false; ppgRender();
+    const verdict = await ppgJudge(qi, text);
+    ppgBusy = false;
+    if (ppgThread !== t || t.qi !== qi) { ppgRender(); return; }
+    if (verdict.ok) {
+      if (d.multi) {
+        if (!t.sel.includes(text)) t.sel.push(text);
+        t.log.push({ r: "b", k: "text", t: "'" + text + "'을(를) 담았어요. 더 고르거나 '선택 완료'를 눌러주세요." });
+        t.log.push({ r: "b", k: "q", qi: qi });
+      } else {
+        ppgAnswer([text], false); return;
+      }
+    } else {
+      t.log.push({ r: "b", k: "text", t: verdict.msg || PPG_NO_MSG });
+      t.log.push({ r: "b", k: "q", qi: qi });
+    }
+    ppgPersist(); ppgRender();
+  }
+  // 질문에 맞는 답인지 판단. 뜻 없는 입력은 서버를 부르지 않고 바로 거르고, 나머지는 공부중독 AI에게 묻는다
+  // (학생 정보를 보내지 않아 대화 기록에는 남지 않는다). AI를 못 불러오면 막지 않고 그대로 받아들인다.
+  async function ppgJudge(qi, text) {
+    if (text.length < 2 || !/[가-힣a-zA-Z0-9]/.test(text) || /^[ㄱ-ㅎㅏ-ㅣ\s.!?~]+$/.test(text)) return { ok: false, msg: PPG_NO_MSG };
+    const d = PPG_QS[qi];
+    const prompt = "[판정 요청] 당신은 지금 학생의 '공부 계획 만들기' 질문에 대한 답변이 그 질문에 맞는지만 판정합니다. 다른 말은 하지 마세요.\n" +
+      "- 질문과 조금이라도 관련 있는 공부 관련 답이면 OK입니다. 뜻을 알 수 없는 글자, 질문과 전혀 상관없는 말(예: 점심 메뉴, 장난, 욕설)이면 NO입니다.\n" +
+      "- 첫 줄에는 반드시 OK 또는 NO 만 쓰세요.\n" +
+      "- NO이면 둘째 줄에 학생에게 보여줄 안내를 한 문장으로 쓰세요(왜 맞지 않는지와 어떤 내용을 적으면 되는지, 존댓말).\n\n" +
+      "단계: " + d.step + "\n질문: " + d.q + "\n보기 예시: " + d.opts.join(", ") + "\n학생 답변: " + text;
+    const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 20000);
     try {
-      if (ppConvId) localStorage.setItem(ppConvKey(), JSON.stringify({ id: ppConvId, date: getLocalDateKey() }));
-      else localStorage.removeItem(ppConvKey());
-    } catch (e) {}
+      const res = await fetch(CHAT_API_URL, {
+        method: "POST", headers: { "Content-Type": "application/json" }, signal: ctrl.signal,
+        body: JSON.stringify({ subject: "plan", studentId: null, messages: [{ role: "user", content: prompt }] }),
+      });
+      const data = await res.json();
+      if (data.error || !data.answer) return { ok: true };
+      const lines = String(data.answer).trim().split("\n").map(s => s.trim()).filter(Boolean);
+      if ((lines[0] || "").toUpperCase().startsWith("NO")) return { ok: false, msg: lines.slice(1).join(" ").replace(/[`*#]/g, "") || PPG_NO_MSG };
+      return { ok: true };
+    } catch (e) {
+      return { ok: true };
+    } finally {
+      clearTimeout(timer);
+    }
   }
-  function ppEnsureConvId() {
-    if (!ppConvId) { ppConvId = chatNewId(); ppSaveActive(); }
-    return ppConvId;
-  }
-  function ppClearChat() {
-    const el = document.getElementById("chat-plan");
-    if (el) el.innerHTML = "";
-    chatHistory["plan"] = [];
-  }
-  // 계획 페이지가 열릴 때(학생이 바뀌면 다시): 오늘 쓰던 채팅이 있으면 이어서 보여 주고, 없으면 빈 새 채팅으로 시작한다.
-  function ppChatInit() {
-    const sid = chatStudentId();
-    if (!sid || ppInitFor === sid) return;
-    ppInitFor = sid;
-    ppConvId = null; ppClearChat();
-    let saved = null;
-    try { saved = JSON.parse(localStorage.getItem(ppConvKey()) || "null"); } catch (e) {}
-    if (saved && saved.id && saved.date === getLocalDateKey()) { ppOpenConv(saved.id, true); return; }
-    // 이 기능이 생기기 전에 오늘 나눈 대화(날짜별 묶음 d_날짜)가 있으면 그것도 이어서 보여 준다.
-    ppApi({ action: "conv_list" }).then(d => {
-      const top = (d.convs || [])[0];
-      if (top && top.id === "d_" + getLocalDateKey() && !ppConvId) ppOpenConv(top.id, true);
-    }).catch(() => {});
-  }
-  function ppOpenConv(id, silent) {
-    ppToggleConvPanel(false);
-    return ppApi({ action: "conv_get", convId: id }).then(d => {
-      if (!d.messages) throw new Error("no messages");
-      ppConvId = id; ppSaveActive();
-      ppClearChat();
-      const el = document.getElementById("chat-plan");
-      d.messages.forEach(m => addMsg("plan", m.role === "assistant" ? "bot" : "user", m.role === "assistant" ? formatAiAnswer(m.content) : escapeHtml(m.content)));
-      el.scrollTop = 1e9;
-      chatHistory["plan"] = d.messages.map(m => ({ role: m.role, content: m.content }));
-      ppMarkActive();
-    }).catch(() => { if (!silent) showToast("채팅을 불러오지 못했어요."); });
-  }
-  function ppNewConv() {
-    ppConvId = null; ppSaveActive(); ppClearChat();
-    ppToggleConvPanel(false); ppMarkActive();
-    const q = document.getElementById("q-plan"); if (q) q.focus();
-  }
-  function ppToggleConvPanel(force) {
-    const p = document.getElementById("ppConvPanel"), b = document.getElementById("ppConvBackdrop");
+  // 이전 채팅(사이드바)
+  function ppgToggleConvPanel(force) {
+    const p = document.getElementById("ppgConvPanel"), b = document.getElementById("ppgConvBackdrop");
     if (!p) return;
     const open = typeof force === "boolean" ? force : !p.classList.contains("on");
     p.classList.toggle("on", open); b.classList.toggle("on", open);
-    if (open) ppLoadConvList();
+    if (open) ppgRenderList();
   }
-  function ppLoadConvList() {
-    const list = document.getElementById("ppConvList");
-    list.innerHTML = '<div class="chat-conv-empty">불러오는 중…</div>';
-    ppApi({ action: "conv_list" }).then(d => {
-      if (!d.convs) throw new Error("no convs");
-      ppConvList = d.convs; ppRenderConvList();
-    }).catch(() => { list.innerHTML = '<div class="chat-conv-empty">이전 채팅을 불러오지 못했어요.</div>'; });
+  function ppgRenderList() {
+    const list = document.getElementById("ppgConvList");
+    if (!ppgThreads.length) { list.innerHTML = '<div class="chat-conv-empty">이전 채팅이 없어요.</div>'; return; }
+    list.innerHTML = ppgThreads.map(c =>
+      '<div class="chat-conv-item' + (ppgThread && c.id === ppgThread.id ? " on" : "") + '" data-id="' + escapeHtml(c.id) + '" onclick="ppgOpenThread(this.dataset.id)">' +
+        '<span class="t">' + escapeHtml(ppgTitle(c)) + '</span><span class="d">' + chatFmtDate(new Date(c.at).toISOString()) + '</span>' +
+        '<button type="button" class="x" aria-label="이 채팅 지우기" onclick="event.stopPropagation();ppgDeleteThread(this.parentNode.dataset.id)">×</button>' +
+      '</div>').join("");
   }
-  function ppRenderConvList() {
-    const list = document.getElementById("ppConvList");
-    if (!ppConvList.length) { list.innerHTML = '<div class="chat-conv-empty">이전 채팅이 없어요.</div>'; return; }
-    list.innerHTML = ppConvList.map(c =>
-      '<div class="chat-conv-item' + (c.id === ppConvId ? " on" : "") + '" data-id="' + escapeHtml(c.id) + '" onclick="ppOpenConv(this.dataset.id)">' +
-        '<span class="t">' + escapeHtml(c.title || "새 채팅") + '</span><span class="d">' + chatFmtDate(c.lastAt) + '</span>' +
-        '<button type="button" class="x" aria-label="이 채팅 지우기" onclick="event.stopPropagation();ppDeleteConv(this.parentNode.dataset.id)">×</button>' +
-      '</div>'
-    ).join("");
+  function ppgOpenThread(id) {
+    const t = ppgThreads.find(c => c.id === id);
+    if (!t || ppgBusy) return;
+    ppgThread = t; ppgInputOn = false; ppgToggleConvPanel(false); ppgRender();
   }
-  function ppMarkActive() {
-    document.querySelectorAll("#ppConvList .chat-conv-item").forEach(el => el.classList.toggle("on", el.dataset.id === ppConvId));
+  function ppgDeleteThread(id) {
+    if (!confirm("이 채팅을 지울까요? 지운 채팅은 다시 볼 수 없어요. (이미 칸에 채워진 내용은 그대로예요)")) return;
+    ppgThreads = ppgThreads.filter(c => c.id !== id);
+    try { localStorage.setItem(ppgKey(), JSON.stringify(ppgThreads)); } catch (e) {}
+    if (ppgThread && ppgThread.id === id) { ppgThread = ppgBlankThread(); ppgPersist(); ppgRender(); }
+    ppgRenderList();
   }
-  function ppDeleteConv(id) {
-    if (!confirm("이 채팅을 지울까요? 지운 채팅은 다시 볼 수 없어요. (채팅을 지워도 대화 내용이 분석지에 반영될 수 있습니다)")) return;
-    ppApi({ action: "conv_delete", convId: id }).then(d => {
-      if (d.error) throw new Error(d.error);
-      ppConvList = ppConvList.filter(c => c.id !== id); ppRenderConvList();
-      if (id === ppConvId) ppNewConv();
-    }).catch(() => showToast("지우지 못했어요. 잠시 후 다시 시도해주세요."));
+  document.addEventListener("keydown", e => {
+    if (e.target && e.target.id === "q-ppg" && e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); ppgSend(); }
+  });
+  // 고른 보기를 직접 작성 화면의 칸에 채운다(건너뛴 질문은 그 칸을 건드리지 않는다).
+  function ppgApply(a) {
+    const set = {};
+    const j = k => (a[k] || []).join(", ");
+    if (a.pros && a.pros.length) set.pros = j("pros");
+    if (a.cons && a.cons.length) set.cons = j("cons");
+    if ((a.goalA && a.goalA.length) || (a.goalB && a.goalB.length)) set.goal = [j("goalA"), j("goalB")].filter(Boolean).join(" · ");
+    if ((a.subjects && a.subjects.length) || (a.hours && a.hours.length)) set.amount = [a.subjects && a.subjects.length ? "과목: " + j("subjects") : "", a.hours && a.hours.length ? "하루 " + j("hours") : ""].filter(Boolean).join(" / ");
+    ["routine", "main", "sub", "pledge"].forEach(k => { if (a[k] && a[k].length) set[k] = j(k); });
+    Object.keys(set).forEach(k => {
+      const el = document.querySelector('.ppg-input[data-k="' + k + '"]');
+      if (el && set[k]) el.value = set[k];
+    });
+    ppGuideSave();
   }
+
+
 
 
   function loadChatHistory(subject) {
@@ -16081,7 +16377,7 @@
           // 속한 날짜를 같이 보낸다(서버는 이 값을 holo_worries.chat_date에 저장한다).
           date: getLocalDateKey(),
           // 공부중독 AI의 "새 채팅" 단위 — 서버가 같은 convId의 대화를 한 채팅으로 묶는다.
-          convId: subject === "chat" ? chatEnsureConvId() : subject === "plan" ? ppEnsureConvId() : undefined,
+          convId: subject === "chat" ? chatEnsureConvId() : undefined,
           // 학생 프로필(관 유형/학년) — AI가 매번 "하이엔드관이세요 N수관이세요?" 같은
           // 기본 정보를 되묻지 않고 답변에 참고하도록 매 요청에 함께 실어 보낸다.
           studentBranch: localStorage.getItem("holoStudentBranch") || null,
