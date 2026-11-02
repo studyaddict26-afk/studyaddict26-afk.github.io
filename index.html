@@ -3386,6 +3386,7 @@
   }
   .hwo-icon svg { width: 13px; height: 13px; }
   .hwo-title { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
+  .hwo-title-arrow { margin-left: 2px; font-weight: 800; }
   .hwo-report-link {
     flex: none; font-family: inherit; background: none; border: none; cursor: pointer;
     font-size: 0.72rem; font-weight: 700; color: var(--green-deep); padding: 0;
@@ -7019,9 +7020,8 @@
             <span class="hwo-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z" stroke-linejoin="round"/><path d="M4 9h16M9 4v16"/></svg>
             </span>
-            <span class="hwo-title">공부 점수 누적 현황</span>
+            <span class="hwo-title">누적 공부 기록 확인하기 <span class="hwo-title-arrow">›</span></span>
           </span>
-          <button type="button" class="hwo-report-link">누적 공부 기록 확인하기 <span class="arrow">›</span></button>
         </div>
         <div class="hwo-body">
           <div class="hwo-chart-col">
@@ -7037,7 +7037,7 @@
     </div>
 
     <div class="home-nav-grid">
-      <button type="button" class="home-nav-btn" onclick="mexGoList('naeshin')">
+      <button type="button" class="home-nav-btn" onclick="showToast('준비중입니다')">
         <span class="hn-title">내신 - 생기부 관리</span> <span class="hn-arrow">›</span>
       </button>
       <button type="button" class="home-nav-btn" onclick="mexGoList('mock')">
