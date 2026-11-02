@@ -2954,7 +2954,8 @@
      왼쪽 위 박스(플래너 + 특이사항)는 그만큼 넓어지고, 아래 달력 박스는 예전 폭(230px) 그대로. */
   .pp-layout.sched-manage-layout { --pp-left-w: 380px; }
   /* 왼쪽 칸은 흰 박스 하나(위: 달력 + 특이사항 메모, 아래: 플래너). 안쪽 두 구역은 카드 모양을 벗고 이 큰 박스 안에 들어간다. */
-  .pp-layout .sched-left-col { flex: 0 0 var(--pp-left-w); background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px; box-sizing: border-box; gap: 14px; }
+  /* 왼쪽 칸은 흰 박스 없이 누런 플래너 박스만 두고, 박스에 얇은 테두리를 준다. */
+  .pp-layout .sched-left-col { flex: 0 0 var(--pp-left-w); background: none; border: none; border-radius: 0; padding: 0; box-sizing: border-box; gap: 0; }
   /* 달력 박스는 왼쪽 칸 전체 폭으로 넓어지고, 달력은 예전 크기(--pp-cal-w) 그대로 왼쪽에 두며 남는 오른쪽 자리에 특이사항 메모를 넣는다.
      메모가 빠진 플래너 박스는 그만큼 길어져서(min-height) 예전 박스 높이를 그대로 유지한다. */
   /* 달력 박스는 무조건 고정 크기(6줄짜리 달도 들어가는 높이), 플래너 박스가 남는 높이를 쓰고 내용이 많으면 그 안에서만 스크롤한다. */
@@ -3072,7 +3073,7 @@
   .pp-plan-blocks .planner-block:first-child .planner-block-head-row { padding-top: 5px; }
   /* 플래너 박스: 누런 칸을 흰 박스 가장자리 가까이까지 넓히고, 계획 목록도 누런 칸의 남는 높이를 끝까지 채운다(넘치면 칸 안에서만 스크롤). */
   .pp-layout .sched-sidebar { padding: 0; border: none; background: none; border-radius: 0; }
-  .pp-layout .sched-sidebar-inner { margin-bottom: 0; padding: 12px 12px 10px; }
+  .pp-layout .sched-sidebar-inner { margin-bottom: 0; padding: 14px 14px 12px; border: 1px solid var(--line); border-radius: 12px; box-sizing: border-box; }
   .pp-layout .pp-plan-blocks { height: auto; flex: 1; min-height: 0; overflow-y: auto; }
   .pp-plan-blocks > * { flex-shrink: 0; }
   .pp-layout .sched-sidebar, .pp-layout .sched-sidebar-inner { overflow: hidden; }
@@ -3491,7 +3492,7 @@
   .hn-notice-title { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
   .hn-notice-empty { font-size: 0.78rem; color: var(--ink-soft); }
   .hd-ai { grid-column: 2; grid-row: 2; display: flex; min-height: 0; min-width: 0; }
-  .hd-ai .record-chat-pane { flex: 1; min-height: 0; border-radius: 0; background: #F4F4F5; border-color: var(--line); } /* 커뮤니티 · 공지사항 · AI 세 칸은 같은 배경색 */
+  .hd-ai .record-chat-pane { flex: 1; min-height: 0; border-radius: 12px; overflow: hidden; background: #F4F4F5; border-color: var(--line); } /* 커뮤니티 · 공지사항 · AI 세 칸은 같은 배경색 */
   .hd-ai .record-chat-pane .chat-pane-title-row { flex: none; padding: 14px 20px 0; }
   .hd-ai .record-chat-pane .chat-wrap { max-width: none; padding: 38px 20px 30px; gap: 14px; }
   .hd-ai .record-chat-pane .input-zone { max-width: none; background: transparent; padding: 12px 20px 14px; }
@@ -6892,7 +6893,7 @@
       </div>
       <div class="exsim-noise-type-list" id="exsimNoiseTypeList"></div>
       <div class="exsim-noise-divider"></div>
-      <button type="button" class="exsim-noise-done-btn" onclick="exsimCloseNoisePanel()">선택 완료</button>
+      <button type="button" class="exsim-noise-done-btn" onclick="exsimNoiseDone()">선택 완료</button>
       <p class="exsim-noise-hint">*소음 기능을 사용할 때는 양쪽 이어폰을 모두 착용하는 것을 권장해요</p>
     </div>
   </div>
@@ -10793,9 +10794,19 @@
     examhub: "home", howto: "home", ranking: "home", mypage: "home", studymusic: "home", community: "home",
     academyTeacher: "academyHome",
   };
+  // "← 이전으로"는 항상 실제로 직전에 보던 페이지로 돌아간다(홈에서 바로 들어왔으면 홈, 시험 시뮬레이션을 거쳐 들어왔으면 그쪽).
+  // go()가 화면을 옮길 때마다 떠나는 화면을 기록해 두고, 기록이 없을 때만 위의 BACK_TARGET(정해진 상위 페이지)로 간다.
+  let navStack = [], navGoingBack = false;
   function goBack() {
     if (currentView === "mexlist" && mexCurrentExam) {
       mexBackToList();
+      return;
+    }
+    while (navStack.length && navStack[navStack.length - 1] === currentView) navStack.pop();
+    const prev = navStack.pop();
+    if (prev && document.getElementById("view-" + prev)) {
+      navGoingBack = true;
+      try { go(prev); } finally { navGoingBack = false; }
       return;
     }
     // 마이페이지는 Manager/Academy 공용 화면이라, 어느 쪽에서 들어왔는지에 따라 뒤로 갈 곳이 다르다.
@@ -10931,6 +10942,7 @@
   }
   let currentView = "home";
   function go(view) {
+    if (currentView && currentView !== view && !navGoingBack) { if (view === "home") navStack = []; else { navStack.push(currentView); if (navStack.length > 30) navStack.shift(); } }
     if (currentView === "consult-home" && view !== "consult-home") chomeStopAuto();
     currentView = view;
     document.querySelectorAll(".view").forEach(v => v.classList.remove("on"));
@@ -14377,6 +14389,9 @@
     { id: "202211-suneung", title: "2023학년도 수능", url: "listening/202211-suneung.mp3" },
     { id: "202111-suneung", title: "2022학년도 수능", url: "listening/202111-suneung.mp3" },
   ];
+  // 시험장 소음 · 영어 듣기 음원은 아직 다듬는 중이라 실제로 재생하지 않는다(소음 설정 · 음원 선택을 누르면 '아직 준비중입니다'만 안내).
+  // 다 준비되면 이 값을 true로 바꾸면 예전처럼 소리가 나온다. 종소리(예비령 · 본령 등)는 이 값과 무관하다.
+  const EXSIM_AUDIO_READY = false;
   let exsimSelectedListeningId = "";
   let exsimListeningFileName = null;
   let exsimListeningObjectUrl = null;
@@ -14391,6 +14406,7 @@
     return '<div class="exsim-selected-row"><span class="ico">🎧</span><span class="lbl">영어 듣기 음원</span><span class="val"><select class="exsim-listening-select" onchange="exsimSelectListeningAudio(this.value)">' + options + '</select></span></div>';
   }
   function exsimSelectListeningAudio(id) {
+    if (!EXSIM_AUDIO_READY && LISTENING_AUDIOS.some(a => a.id === id)) { showToast("아직 준비중입니다"); id = ""; }
     exsimSelectedListeningId = id;
     const audio = LISTENING_AUDIOS.find(a => a.id === id);
     exsimListeningObjectUrl = audio ? audio.url : null;
@@ -14440,6 +14456,11 @@
   function exsimCloseNoisePanel() {
     const el = document.getElementById("exsimNoiseOverlay");
     if (el) el.classList.remove("on");
+  }
+  // 시험장 소음 설정 팝업의 "선택 완료": 팝업을 닫고 아직 준비중이라는 안내를 보여준다.
+  function exsimNoiseDone() {
+    exsimCloseNoisePanel();
+    showToast("아직 준비중입니다");
   }
   function exsimSaveNoisePref() {
     const cb = document.getElementById("exsimNoiseDefaultOn");
@@ -14621,7 +14642,7 @@
     exsimState.running = true;
     const playBtn = document.getElementById("exlvPlayBtn");
     if (playBtn) playBtn.textContent = "❚❚";
-    if (localStorage.getItem("exsimNoiseDefaultOn") === "1") exsimToggleNoise();
+    if (localStorage.getItem("exsimNoiseDefaultOn") === "1") exsimToggleNoise(true);
     exsimState.lastPhase = exsimPhaseLabel();
     exsimPlayPhaseAnnouncement(exsimIsSimpleMode(exsimState.period) ? "start" : "pre");
     exsimUpdateDisplay();
@@ -14730,7 +14751,7 @@
     if (phaseChanged || (exsimState.passages && exsimState.passages.some(p => p.running))) exsimRenderPassages();
     if (phaseChanged) exsimUpdateEndBtn();
     // 영어 본령 시작 시점에 첨부한 듣기 음원을 한 번만 자동 재생
-    if (exsimState.period.hasListening && exsimListeningObjectUrl && !exsimState.listeningPlayed) {
+    if (EXSIM_AUDIO_READY && exsimState.period.hasListening && exsimListeningObjectUrl && !exsimState.listeningPlayed) {
       const startAtSec = (exsimState.startMin - exsimState.preMin) * 60;
       if (exsimState.elapsedSec >= startAtSec) {
         exsimState.listeningPlayed = true;
@@ -14938,7 +14959,8 @@
   // 재생한다. 진짜 녹음이 아니라 노이즈를 짧게 합성해 흉내만 낸 것 — 나중에 실제 음원 파일이
   // 생기면 exsimPlayEffectBurst() 안의 합성 부분만 <audio> 재생 코드로 바꾸면 된다.
   let exsimAudioCtx = null, exsimEffectTimer = null;
-  function exsimToggleNoise() {
+  function exsimToggleNoise(silent) {
+    if (!EXSIM_AUDIO_READY) { if (!silent) showToast("아직 준비중입니다"); return; }
     if (!exsimState) return;
     exsimState.noiseOn = !exsimState.noiseOn;
     const btn = document.getElementById("exlvNoiseBtn");
@@ -14951,6 +14973,7 @@
     }
   }
   function exsimStartNoise() {
+    if (!EXSIM_AUDIO_READY) return;
     try {
       if (!exsimAudioCtx) exsimAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (exsimAudioCtx.state === "suspended") exsimAudioCtx.resume();
@@ -15005,6 +15028,7 @@
     desk: [],
   };
   function exsimPlayEffectBurst(type) {
+    if (!EXSIM_AUDIO_READY) return;
     const files = NOISE_EFFECT_FILES[type];
     if (files && files.length) {
       const url = files[Math.floor(Math.random() * files.length)];
