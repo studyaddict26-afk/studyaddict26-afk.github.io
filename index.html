@@ -2764,6 +2764,11 @@
     transition: background 0.18s, border-color 0.18s, box-shadow 0.18s;
   }
   .home-nav-btn:hover { background: var(--cream); border-color: var(--line-dark); box-shadow: 0 2px 12px rgba(23,24,26,0.05); }
+  /* 홈 왼쪽 칸(공부 점수 누적 현황 · 버튼 3개 · 오늘의 공부)은 마우스를 올리거나 누르면 모두 같은 누런색으로 바뀐다. */
+  .home-nav-btn:active { background: var(--cream); border-color: var(--line-dark); }
+  .home-dash .home-week-overview, .home-dash .hd-today-col .rh-tile { transition: background 0.18s, border-color 0.18s, box-shadow 0.18s; }
+  .home-dash .home-week-overview:hover, .home-dash .home-week-overview:active,
+  .home-dash .hd-today-col .rh-tile:hover, .home-dash .hd-today-col .rh-tile:active { background: var(--cream); border-color: var(--line-dark); box-shadow: 0 2px 12px rgba(23,24,26,0.05); }
   .home-nav-btn .hn-title {
     font-size: 0.88rem; font-weight: 600; letter-spacing: -0.01em; color: var(--ink);
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -3476,7 +3481,9 @@
   .home-dash .home-promo-slot .hd-today-col .rh-tile { flex: 0 0 calc((100% - var(--ln-gap)) / 2); min-height: 0; } /* 오늘의 다짐을 없애도 오늘의 공부 카드 높이는 그대로(칸 절반) */
   .hd-stack { flex: 0 0 calc((100% - 2 * var(--ln-gap)) / 3); min-width: 0; display: flex; flex-direction: column; gap: var(--ln-gap); } /* 폭 = 위 버튼 하나(시험 시뮬레이션)와 같음 */
   .hd-stack .home-schedule-box { flex: 1 1 0; min-height: 0; border-radius: 12px; padding: 10px 12px; cursor: pointer; transition: border-color 0.15s; }
-  .hd-stack .home-schedule-box:hover { border-color: var(--green); }
+  .hd-stack .home-schedule-box:hover, .hd-stack .home-schedule-box:active { background: var(--cream); border-color: var(--line-dark); box-shadow: 0 2px 12px rgba(23,24,26,0.05); }
+  .hd-stack .home-schedule-box { transition: background 0.18s, border-color 0.18s, box-shadow 0.18s; }
+  .hd-stack .home-schedule-box .home-schedule-title:hover { background: none; color: inherit; } /* 제목만 누렇게 되지 않고 박스 전체가 바뀐다 */
   .home-notice-box {
     box-sizing: border-box; background: #F4F4F5; border: 1px solid var(--line);
     padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;
@@ -13438,8 +13445,9 @@
   function ppGuideLoad() {
     let data = {};
     try { data = JSON.parse(localStorage.getItem(ppGuideKey()) || "{}") || {}; } catch (e) {}
+    const fill = d => document.querySelectorAll(".ppg-input").forEach(el => { el.value = d[el.dataset.k] || ""; });
+    fill(data);
     document.querySelectorAll(".ppg-input").forEach(el => {
-      el.value = data[el.dataset.k] || "";
       if (!el._ppgBound) {
         el._ppgBound = true;
         el.addEventListener("input", () => {
@@ -13448,6 +13456,14 @@
         });
       }
     });
+    // 서버에 저장된 내용이 있으면(다른 기기에서 쓴 것 포함) 그걸 보여준다. 서버가 아직 준비되지 않았거나 실패하면 이 기기에 저장된 내용을 그대로 쓴다.
+    const sid = localStorage.getItem("holoStudentId");
+    if (sid) chatApi({ action: "plan_guide_get" }).then(d => {
+      if (d && d.data && typeof d.data === "object" && localStorage.getItem("holoStudentId") === sid) {
+        fill(d.data);
+        try { localStorage.setItem(ppGuideKey(), JSON.stringify(d.data)); } catch (e) {}
+      }
+    }).catch(() => {});
   }
   function ppGuideSave() {
     const data = {};
@@ -13455,6 +13471,7 @@
     try { localStorage.setItem(ppGuideKey(), JSON.stringify(data)); } catch (e) {}
     const st = document.getElementById("ppGuideStatus");
     if (st) st.textContent = "저장됨";
+    if (localStorage.getItem("holoStudentId")) chatApi({ action: "plan_guide_save", data: data }).catch(() => {});
   }
   function ppGuideGoHabit() {
     const el = document.getElementById("ppGuideHabit");
@@ -13491,11 +13508,42 @@
   function ppgLoadThreads() {
     try { ppgThreads = JSON.parse(localStorage.getItem(ppgKey()) || "[]") || []; } catch (e) { ppgThreads = []; }
   }
+  // 서버(공부중독 AI와 같은 대화 기록)에 이 채팅의 새 말을 덧붙인다 — 그래야 홈의 공부중독 AI "이전 채팅"에도 보이고 같은 AI가 이어서 볼 수 있다.
+  function ppgLogText(e) {
+    if (e.r === "u" || e.k === "text") return e.t;
+    if (e.k === "start") return "공부 계획 5단계를 같이 만들어볼게요. 질문마다 알맞은 보기를 골라주세요.";
+    if (e.k === "q") { const d = PPG_QS[e.qi]; return "[" + d.step + "] " + d.q + " (보기: " + d.opts.join(", ") + ")"; }
+    if (e.k === "done") return "5단계를 모두 채웠어요!";
+    return "";
+  }
+  async function ppgSync() {
+    const t = ppgThread;
+    if (!t || t.readonly || t._syncing || !localStorage.getItem("holoStudentId")) return;
+    if (!t.log.some(e => e.r === "u" && e.t !== "시작하기")) return; // 학생이 아직 아무것도 고르지 않은 새 채팅은 남기지 않는다
+    const from = t.synced || 0, items = t.log.slice(from, from + 40);
+    if (!items.length) return;
+    const msgs = items.filter(e => !(e.r === "u" && e.t === "시작하기"))
+      .map(e => ({ role: e.r === "u" ? "user" : "assistant", content: ppgLogText(e) })).filter(m => m.content);
+    t._syncing = true;
+    try {
+      if (msgs.length) {
+        const d = await chatApi({ action: "conv_append", convId: t.id, date: getLocalDateKey(), messages: msgs });
+        if (!d || d.error || !d.ok) throw new Error("append");
+      }
+      t.synced = from + items.length;
+      try { localStorage.setItem(ppgKey(), JSON.stringify(ppgThreads)); } catch (e) {}
+    } catch (e) {
+      t._syncing = false; return;
+    }
+    t._syncing = false;
+    if (t.synced < t.log.length) ppgSync();
+  }
   function ppgPersist() {
-    if (!ppgThread) return;
+    if (!ppgThread || ppgThread.readonly) return;
     ppgThread.at = Date.now();
     ppgThreads = [ppgThread].concat(ppgThreads.filter(t => t.id !== ppgThread.id)).slice(0, 30);
     try { localStorage.setItem(ppgKey(), JSON.stringify(ppgThreads)); } catch (e) {}
+    ppgSync();
   }
   function ppgBlankThread() {
     return { id: "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), at: Date.now(), ans: {}, qi: -1, sel: [], log: [{ r: "b", k: "start" }] };
@@ -13548,7 +13596,7 @@
     const last = t.log.length - 1;
     t.log.forEach((e, i) => {
       if (e.r === "u") addMsg("ppg", "user", escapeHtml(e.t));
-      else if (e.k === "text") addMsg("ppg", "bot", escapeHtml(e.t));
+      else if (e.k === "text") addMsg("ppg", "bot", t.readonly ? formatAiAnswer(e.t) : escapeHtml(e.t));
       else if (e.k === "start") {
         const body = (i === last && t.qi === -1) ? '<div class="plan-check-choice-opts ts-choice-row">' + ppgBtn("시작하기", "ppgBegin()") + '</div>' : "";
         addMsg("ppg", "bot", ppgCard('<div class="plan-check-choice-q">공부 계획 5단계를 같이 만들어볼게요. 질문마다 알맞은 보기를 골라주세요. 보기에 없으면 \'직접 입력\'을 눌러 적을 수 있어요. 고른 내용은 자동으로 칸에 채워져요.</div>', body));
@@ -13649,7 +13697,7 @@
     try {
       const res = await fetch(CHAT_API_URL, {
         method: "POST", headers: { "Content-Type": "application/json" }, signal: ctrl.signal,
-        body: JSON.stringify({ subject: "plan", studentId: null, messages: [{ role: "user", content: prompt }] }),
+        body: JSON.stringify({ subject: "chat", studentId: null, messages: [{ role: "user", content: prompt }] }),
       });
       const data = await res.json();
       if (data.error || !data.answer) return { ok: true };
@@ -13662,32 +13710,54 @@
       clearTimeout(timer);
     }
   }
-  // 이전 채팅(사이드바)
+  // 이전 채팅(사이드바) — 공부중독 AI와 같은 목록(서버)을 보여준다. 서버에 못 닿으면 이 기기에 저장된 채팅만 보여준다.
+  let ppgConvs = null;
   function ppgToggleConvPanel(force) {
     const p = document.getElementById("ppgConvPanel"), b = document.getElementById("ppgConvBackdrop");
     if (!p) return;
     const open = typeof force === "boolean" ? force : !p.classList.contains("on");
     p.classList.toggle("on", open); b.classList.toggle("on", open);
-    if (open) ppgRenderList();
+    if (open) ppgLoadList();
+  }
+  function ppgLoadList() {
+    document.getElementById("ppgConvList").innerHTML = '<div class="chat-conv-empty">불러오는 중…</div>';
+    const done = () => ppgRenderList();
+    if (!localStorage.getItem("holoStudentId")) { ppgConvs = null; done(); return; }
+    chatApi({ action: "conv_list" }).then(d => { ppgConvs = Array.isArray(d.convs) ? d.convs : null; done(); }).catch(() => { ppgConvs = null; done(); });
   }
   function ppgRenderList() {
     const list = document.getElementById("ppgConvList");
-    if (!ppgThreads.length) { list.innerHTML = '<div class="chat-conv-empty">이전 채팅이 없어요.</div>'; return; }
-    list.innerHTML = ppgThreads.map(c =>
+    const hasUser = t => (t.log || []).some(e => e.r === "u" && e.t !== "시작하기");
+    const rows = [];
+    const seen = new Set((ppgConvs || []).map(c => c.id));
+    ppgThreads.filter(t => hasUser(t) && !seen.has(t.id)).forEach(t => rows.push({ id: t.id, title: ppgTitle(t), at: t.at }));
+    (ppgConvs || []).forEach(c => rows.push({ id: c.id, title: c.title || "새 채팅", at: c.lastAt }));
+    if (!rows.length) { list.innerHTML = '<div class="chat-conv-empty">이전 채팅이 없어요.</div>'; return; }
+    list.innerHTML = rows.map(c =>
       '<div class="chat-conv-item' + (ppgThread && c.id === ppgThread.id ? " on" : "") + '" data-id="' + escapeHtml(c.id) + '" onclick="ppgOpenThread(this.dataset.id)">' +
-        '<span class="t">' + escapeHtml(ppgTitle(c)) + '</span><span class="d">' + chatFmtDate(new Date(c.at).toISOString()) + '</span>' +
+        '<span class="t">' + escapeHtml(c.title) + '</span><span class="d">' + chatFmtDate(typeof c.at === "number" ? new Date(c.at).toISOString() : c.at) + '</span>' +
         '<button type="button" class="x" aria-label="이 채팅 지우기" onclick="event.stopPropagation();ppgDeleteThread(this.parentNode.dataset.id)">×</button>' +
       '</div>').join("");
   }
+  // 이 기기에 저장된 5단계 채팅이면 이어서 고를 수 있게 열고, 아니면(홈의 공부중독 AI 대화 · 다른 기기에서 한 채팅) 대화 내용만 읽기 전용으로 보여준다.
   function ppgOpenThread(id) {
-    const t = ppgThreads.find(c => c.id === id);
-    if (!t || ppgBusy) return;
-    ppgThread = t; ppgInputOn = false; ppgToggleConvPanel(false); ppgRender();
+    if (ppgBusy) return;
+    const local = ppgThreads.find(c => c.id === id);
+    if (local) { ppgThread = local; ppgInputOn = false; ppgToggleConvPanel(false); ppgRender(); return; }
+    chatApi({ action: "conv_get", convId: id }).then(d => {
+      if (!Array.isArray(d.messages)) throw new Error("no messages");
+      const log = d.messages.map(m => m.role === "assistant" ? { r: "b", k: "text", t: m.content } : { r: "u", t: m.content });
+      log.push({ r: "b", k: "text", t: "이 채팅은 읽기만 할 수 있어요. '+ 새 채팅'을 누르면 공부 계획 5단계를 새로 시작할 수 있어요." });
+      ppgThread = { id: id, readonly: true, qi: -2, sel: [], ans: {}, log: log };
+      ppgInputOn = false; ppgToggleConvPanel(false); ppgRender();
+    }).catch(() => showToast("채팅을 불러오지 못했어요."));
   }
   function ppgDeleteThread(id) {
-    if (!confirm("이 채팅을 지울까요? 지운 채팅은 다시 볼 수 없어요. (이미 칸에 채워진 내용은 그대로예요)")) return;
+    if (!confirm("이 채팅을 지울까요? 지운 채팅은 다시 볼 수 없어요. 공부중독 AI의 이전 채팅에서도 함께 지워져요. (이미 칸에 채워진 내용은 그대로예요)")) return;
     ppgThreads = ppgThreads.filter(c => c.id !== id);
     try { localStorage.setItem(ppgKey(), JSON.stringify(ppgThreads)); } catch (e) {}
+    if (ppgConvs) ppgConvs = ppgConvs.filter(c => c.id !== id);
+    if (localStorage.getItem("holoStudentId")) chatApi({ action: "conv_delete", convId: id }).catch(() => {});
     if (ppgThread && ppgThread.id === id) { ppgThread = ppgBlankThread(); ppgPersist(); ppgRender(); }
     ppgRenderList();
   }
