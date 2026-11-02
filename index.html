@@ -2860,6 +2860,20 @@
     transition: background 0.15s, color 0.15s;
   }
   .home-schedule-title:hover { background: var(--cream); color: var(--ink-soft); }
+  /* 홈 영어 단어 Test 박스: 오늘의 공부 박스처럼 제목 아래에 상태 두 줄(라벨 + 상태 글씨) */
+  .home-eng-status { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 9px; padding: 0 2px; }
+  .home-eng-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 8px; }
+  .rh-tile-status-val.fail { color: #B91C1C; background: #FEECEC; border-color: #F5C6C6; }
+  /* 영어 단어 현황 팝업 */
+  .eng-pop-card { max-width: 340px; }
+  .eng-pop-title { margin: 0 0 4px; font-size: 0.95rem; font-weight: 800; color: var(--ink); }
+  .eng-pop-sub { margin: 0 0 16px; font-size: 0.72rem; color: var(--ink-soft); line-height: 1.5; }
+  .eng-pop-group + .eng-pop-group { margin-top: 14px; }
+  .eng-pop-label { font-size: 0.78rem; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+  .eng-pop-opts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .eng-pop-opt { font-family: inherit; font-size: 0.78rem; color: var(--ink); background: #fff; border: 1px solid var(--line-dark); border-radius: 8px; padding: 8px 14px; cursor: pointer; }
+  .eng-pop-opt:hover { background: var(--cream); }
+  .eng-pop-opt.on { background: var(--cream); border-color: var(--ink); font-weight: 700; }
   .home-schedule-title .arrow { color: var(--green); font-weight: 800; transition: transform 0.15s; }
   .home-schedule-title:hover .arrow { transform: translateX(2px); }
   /* 홈 화면 "내 플래너 관리하기" 박스 안, 오늘 계획을 오전/오후/저녁으로 간단히 보여주는 목록 */
@@ -3479,7 +3493,7 @@
   .home-dash .home-promo-slot { grid-column: 1; grid-row: 2; align-self: end; height: calc(var(--ln-cal-h) - var(--ln-nav-h) - var(--ln-gap)); display: flex; gap: var(--ln-gap); align-items: stretch; min-height: 0; }
   .home-dash .home-promo-slot .rh-tile { flex: 1 1 0; min-width: 0; padding: 14px 16px; border-radius: 12px; }
   .home-dash .home-week-overview { border-radius: 12px; }
-  .hd-today-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--ln-gap); }
+  .hd-today-col { flex: 0 0 calc((100% - 2 * var(--ln-gap)) / 3); min-width: 0; display: flex; flex-direction: column; gap: var(--ln-gap); } /* 오늘의 공부 박스는 공부 계획 박스(.hd-stack)와 같은 폭 · 같은 높이 */
   .home-dash .home-promo-slot .hd-today-col .rh-tile { flex: 0 0 calc((100% - var(--ln-gap)) / 2); min-height: 0; } /* 오늘의 다짐을 없애도 오늘의 공부 카드 높이는 그대로(칸 절반) */
   .hd-stack { flex: 0 0 calc((100% - 2 * var(--ln-gap)) / 3); min-width: 0; display: flex; flex-direction: column; gap: var(--ln-gap); } /* 폭 = 위 버튼 하나(시험 시뮬레이션)와 같음 */
   .hd-stack .home-schedule-box { flex: 1 1 0; min-height: 0; border-radius: 12px; padding: 10px 12px; cursor: pointer; transition: border-color 0.15s; }
@@ -3498,6 +3512,39 @@
   .hd-ai .record-chat-pane .chat-wrap { max-width: none; padding: 38px 20px 30px; gap: 14px; }
   .hd-ai .record-chat-pane .input-zone { max-width: none; background: transparent; padding: 12px 20px 14px; }
   .hd-ai .record-chat-pane .input-box { max-width: none; width: auto; margin: 0; }
+  /* 홈 박스 · 버튼의 제목 글씨는 모두 "공부 계획 세우기" 제목과 같은 모양(0.88rem · 보통 굵기 · 검정 · 초록 굵은 › 화살표)으로 통일한다. */
+  .home-dash .home-nav-btn .hn-title,
+  .home-dash .rh-tile-title,
+  .home-dash .hwo-title { font-size: 0.88rem; font-weight: 600; color: var(--ink); letter-spacing: 0; white-space: nowrap; }
+  .home-dash .home-nav-btn .hn-arrow,
+  .home-dash .rh-tile-arrow,
+  .home-dash .hwo-title-arrow { color: var(--green); font-weight: 800; font-size: inherit; margin-left: 0; }
+  .home-dash .home-nav-btn .hn-arrow, .home-dash .rh-tile-arrow { font-size: 0.88rem; line-height: 1.2; }
+  /* 오늘의 공부 박스는 공부 계획 · 내 스케줄 박스처럼 아이콘 없이 제목을 가운데에 둔다 */
+  .home-dash .home-promo-slot .rh-tile-icon { display: none; }
+  .home-dash .home-promo-slot .rh-tile-head-btn { justify-content: center; gap: 4px; }
+  .home-dash .home-promo-slot .rh-tile-head-left, .home-dash .home-promo-slot .rh-tile-head-right { gap: 0; }
+  .home-dash .home-promo-slot .rh-tile-head-right { margin-left: 0; }
+  .home-dash .home-promo-slot .rh-tile-head-left { flex: none; }
+  /* 오늘의 공부 박스 제목: 두 줄("오늘의 공부" / "2026년 11월 02일")을 가운데 정렬하고, › 화살표는 오른쪽 끝에 따로 둔다 */
+  .home-dash .home-promo-slot .rh-tile-head-btn { position: relative; }
+  .home-dash .home-promo-slot .rh-tile-head-right { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
+  .home-dash .home-promo-slot #rhTileTitle { white-space: nowrap; text-align: center; }
+  .rh-tile-date { font-size: 0.74rem; font-weight: 700; color: var(--ink); text-align: center; margin: 0 0 10px; }
+  .home-dash .home-promo-slot .rh-tile-status-wrap { flex-direction: column; align-items: center; justify-content: center; gap: 0; }
+  .home-dash .home-promo-slot .rh-tile-status { justify-content: center; }
+  /* 홈 왼쪽 아랫부분: 세 칸(오늘의 공부 · 공부 계획 · 내 스케줄)이 같은 크기로 한 줄에 놓인다.
+     위 버튼 줄은 모의고사 관리 · 시험 시뮬레이션 두 개가 같은 폭으로 줄 전체를 채운다.
+     (내신 - 생기부 관리 버튼은 지금 없앤 상태) */
+  @media (min-width: 901px) {
+    .home-dash .home-promo-slot { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: calc((100% - var(--ln-gap)) / 2); align-content: start; align-items: stretch; }
+    .home-dash .hd-today-col, .home-dash .hd-stack { display: contents; }
+    .home-dash .home-promo-slot .rh-tile, .home-dash .hd-stack .home-schedule-box { min-height: 0; min-width: 0; }
+    /* 첫 줄: 오늘의 공부 · 공부 계획 · 영어 단어 Test, 둘째 줄: 내 스케줄(영어 단어 Test 바로 아래, 오른쪽 칸) */
+    .home-dash .hd-stack .home-schedule-box:nth-child(1) { grid-column: 2; grid-row: 1; }
+    .home-dash .hd-stack .home-schedule-box:nth-child(2) { grid-column: 3; grid-row: 2; }
+    .home-dash .hd-stack .home-eng-test { grid-column: 3; grid-row: 1; }
+  }
   @media (max-width: 900px) {
     #view-home { height: auto; }
     .home-dash { grid-template-columns: 1fr; grid-template-rows: none; padding: 16px; }
@@ -3512,11 +3559,10 @@
 
   /* 태블릿 · 모바일(1100px 이하): 홈이 답답하지 않게 제목 · 요일 · 날짜 글자를 한 단계 줄인다 */
   @media (max-width: 1100px) {
-    #view-home .home-nav-btn .hn-title { font-size: 0.68rem; }
-    #view-home .hwo-title { font-size: 0.74rem; }
+    #view-home .home-nav-btn .hn-title, #view-home .rh-tile-title, #view-home .hwo-title, #view-home .home-nav-btn .hn-arrow, #view-home .rh-tile-arrow, #view-home .hwo-title-arrow { font-size: 0.74rem; }
+    #view-home .rh-tile-date { font-size: 0.68rem; }
     #view-home .hwo-report-link { font-size: 0.64rem; }
     #view-home .hwo-day-label { font-size: 0.6rem; }
-    #view-home .rh-tile-title { font-size: 0.8rem; }
     #view-home .home-schedule-title { font-size: 0.74rem; }
     #view-home .home-schedule-date { font-size: 0.6rem; margin-bottom: 6px; }
     #view-home .hps-title { font-size: calc(0.54rem * var(--hs, 1)); }
@@ -6638,6 +6684,28 @@
   </div>
 </div>
 <div id="print-area"></div>
+      <div class="pp-cal-pop" id="engVocabPop" onclick="engVocabClose()">
+        <div class="pp-cal-pop-card eng-pop-card" onclick="event.stopPropagation()">
+          <button type="button" class="sched-modal-close" onclick="engVocabClose()" aria-label="닫기">×</button>
+          <h3 class="eng-pop-title">영어 단어 현황</h3>
+          <p class="eng-pop-sub">오늘 한 것을 직접 골라주세요. 하루가 바뀌면(새벽 6시) 처음 상태로 돌아가요.</p>
+          <div class="eng-pop-group">
+            <div class="eng-pop-label">영단어 클래스카드</div>
+            <div class="eng-pop-opts">
+              <button type="button" class="eng-pop-opt" data-k="card" data-v="done" onclick="engVocabPick('card','done')">응시 완료</button>
+              <button type="button" class="eng-pop-opt" data-k="card" data-v="todo" onclick="engVocabPick('card','todo')">미응시</button>
+            </div>
+          </div>
+          <div class="eng-pop-group">
+            <div class="eng-pop-label">영단어 Test</div>
+            <div class="eng-pop-opts">
+              <button type="button" class="eng-pop-opt" data-k="test" data-v="pass" onclick="engVocabPick('test','pass')">통과</button>
+              <button type="button" class="eng-pop-opt" data-k="test" data-v="fail" onclick="engVocabPick('test','fail')">미통과</button>
+              <button type="button" class="eng-pop-opt" data-k="test" data-v="none" onclick="engVocabPick('test','none')">미응시</button>
+            </div>
+          </div>
+        </div>
+      </div>
 <div class="toast-msg" id="toastMsg"></div>
 
 <!-- ═══ 캐러셀 확대 보기 ═══ -->
@@ -7037,9 +7105,6 @@
     </div>
 
     <div class="home-nav-grid">
-      <button type="button" class="home-nav-btn" onclick="showToast('준비중입니다')">
-        <span class="hn-title">내신 - 생기부 관리</span> <span class="hn-arrow">›</span>
-      </button>
       <button type="button" class="home-nav-btn" onclick="mexGoList('mock')">
         <span class="hn-title">모의고사 관리</span> <span class="hn-arrow">›</span>
       </button>
@@ -7064,6 +7129,7 @@
           </span>
         </button>
         <div class="rh-tile-status-wrap">
+          <div class="rh-tile-date" id="rhTileDate"></div>
           <div class="rh-tile-status">
             <div class="rh-tile-status-row">
               <span class="rh-tile-status-label">실제로 이행한 계획</span>
@@ -7073,9 +7139,6 @@
               <span class="rh-tile-status-label">공부 일기</span>
               <span class="rh-tile-status-val pending" id="rhTileStatus-diary">확인 중…</span>
             </div>
-          </div>
-          <div class="rh-tile-score-col">
-            <div class="rh-tile-score-big rh-score-num s1" id="rhTileScoreBig">1/2점</div>
           </div>
         </div>
       </div>
@@ -7101,6 +7164,15 @@
           <ul class="home-schedule-log" id="homeScheduleLog">
             <li class="sched-empty-msg">확인 중…</li>
           </ul>
+        </div>
+      </div>
+      <div class="home-schedule-box home-eng-test" onclick="engVocabOpen(event)">
+        <div class="home-schedule-head">
+          <a class="home-schedule-title" href="#">영어 단어 Test <span class="arrow">›</span></a>
+        </div>
+        <div class="home-eng-status">
+          <div class="home-eng-row"><span class="rh-tile-status-label">영단어 클래스카드</span><span class="rh-tile-status-val pending" id="engStatus-card">미응시</span></div>
+          <div class="home-eng-row"><span class="rh-tile-status-label">영단어 Test</span><span class="rh-tile-status-val pending" id="engStatus-test">미응시</span></div>
         </div>
       </div>
       </div>
@@ -10796,6 +10868,9 @@
   };
   // "← 이전으로"는 항상 실제로 직전에 보던 페이지로 돌아간다(홈에서 바로 들어왔으면 홈, 시험 시뮬레이션을 거쳐 들어왔으면 그쪽).
   // go()가 화면을 옮길 때마다 떠나는 화면을 기록해 두고, 기록이 없을 때만 위의 BACK_TARGET(정해진 상위 페이지)로 간다.
+  // 모의고사 · 내신 관리 페이지(모의고사·내신 관리하기 허브 + 목록 · 채점)는 아직 준비중이라 어디서도 열리지 않고 '준비중입니다'만 안내한다.
+  // 페이지 코드는 그대로 두었으니, 다 준비되면 이 값을 true로 바꾸면 예전처럼 열린다.
+  const MEX_PAGES_READY = false;
   let navStack = [], navGoingBack = false;
   function goBack() {
     if (currentView === "mexlist" && mexCurrentExam) {
@@ -10942,6 +11017,7 @@
   }
   let currentView = "home";
   function go(view) {
+    if (!MEX_PAGES_READY && (view === "mockexam" || view === "mexlist")) { showToast("준비중입니다"); return; }
     if (currentView && currentView !== view && !navGoingBack) { if (view === "home") navStack = []; else { navStack.push(currentView); if (navStack.length > 30) navStack.shift(); } }
     if (currentView === "consult-home" && view !== "consult-home") chomeStopAuto();
     currentView = view;
@@ -10985,7 +11061,7 @@
     if (view === "cumulative") loadDayList();
     // "오늘의 학습 기록" 카드(계획/일기/AI 홀로 현황 + 점수)가 이제 홈 화면에 있어서, 홈에
     // 들어올 때도 recordhub와 똑같이 loadTodayTileStatus()로 채운다.
-    if (view === "home") { syncHomeCardHeights(); loadTodayTileStatus(); loadHomeScheduleToday(); loadHomePlannerToday(); loadHomeWeeklyOverview(); }
+    if (view === "home") { syncHomeCardHeights(); loadTodayTileStatus(); engVocabRender(); loadHomeScheduleToday(); loadHomePlannerToday(); loadHomeWeeklyOverview(); }
     if (view === "recordhub") { loadRecordHubStatus(); setRhWeekLabels(); loadRhWeekScore(); }
     if (view === "scheduleManage") loadScheduleManage();
     if (view === "examhub") initExamHub();
@@ -11236,6 +11312,43 @@
     val.classList.toggle("pending", !done); // 미제출/미사용일 때만 경고색(.pending)이 뜨도록
     val.textContent = done ? doneLabel : pendingLabel;
   }
+  // ── 홈 "영어 단어 Test" 박스: 영단어 클래스카드(응시 완료 / 미응시)와 영단어 Test(통과 / 미통과 / 미응시)를
+  // 학생이 직접 골라 기록한다. 하루(새벽 6시 기준)마다 처음 상태로 돌아가고, 이 기기에 저장된다(서버 · 선생님 연동은 아직 없음).
+  const ENG_VOCAB_LABEL = {
+    card: { done: "응시 완료", todo: "미응시" },
+    test: { pass: "통과", fail: "미통과", none: "미응시" },
+  };
+  function engVocabKey() { return "holoEngVocab:" + (localStorage.getItem("holoStudentId") || "anon") + ":" + getLocalDateKey(); }
+  function engVocabGet() {
+    let d = {};
+    try { d = JSON.parse(localStorage.getItem(engVocabKey()) || "{}") || {}; } catch (e) {}
+    return { card: ENG_VOCAB_LABEL.card[d.card] ? d.card : "todo", test: ENG_VOCAB_LABEL.test[d.test] ? d.test : "none" };
+  }
+  function engVocabRender() {
+    const d = engVocabGet();
+    const cardEl = document.getElementById("engStatus-card"), testEl = document.getElementById("engStatus-test");
+    if (cardEl) {
+      cardEl.textContent = ENG_VOCAB_LABEL.card[d.card];
+      cardEl.classList.toggle("done", d.card === "done"); cardEl.classList.toggle("pending", d.card !== "done");
+    }
+    if (testEl) {
+      testEl.textContent = ENG_VOCAB_LABEL.test[d.test];
+      testEl.classList.toggle("done", d.test === "pass"); testEl.classList.toggle("fail", d.test === "fail"); testEl.classList.toggle("pending", d.test === "none");
+    }
+    document.querySelectorAll(".eng-pop-opt").forEach(b => b.classList.toggle("on", d[b.dataset.k] === b.dataset.v));
+  }
+  function engVocabOpen(e) {
+    if (e) e.preventDefault();
+    engVocabRender();
+    document.getElementById("engVocabPop").classList.add("on");
+  }
+  function engVocabClose() { document.getElementById("engVocabPop").classList.remove("on"); }
+  function engVocabPick(k, v) {
+    const d = engVocabGet(); d[k] = v;
+    try { localStorage.setItem(engVocabKey(), JSON.stringify(d)); } catch (e) {}
+    engVocabRender();
+  }
+  document.addEventListener("keydown", e => { if (e.key === "Escape") engVocabClose(); });
   function loadTodayTileStatus() {
     const studentId = localStorage.getItem("holoStudentId");
     if (!studentId) return;
@@ -11326,7 +11439,9 @@
     if (el) el.textContent = text;
     // 홈 화면 "오늘의 학습 기록" 카드 제목도 같은 기준으로 "오늘의 공부 MM월 DD일"로 표시한다.
     const titleEl = document.getElementById("rhTileTitle");
-    if (titleEl) titleEl.textContent = "오늘의 공부 " + pad(d.getMonth() + 1) + "월 " + pad(d.getDate()) + "일";
+    if (titleEl) titleEl.textContent = "오늘의 공부";
+    const dateEl = document.getElementById("rhTileDate");
+    if (dateEl) dateEl.textContent = d.getFullYear() + "년 " + pad(d.getMonth() + 1) + "월 " + pad(d.getDate()) + "일";
     renderHomeDday();
   }
   // "오늘의 공부" 카드의 점수 밑에 뜨는 디데이 — 학생이 마이페이지에 등록해둔 디데이(최대
@@ -12723,7 +12838,18 @@
   }
   // 팝업 안에서 오늘 계획을 다 세우고 "계획 다 세웠어요" 버튼을 누르면 호출된다. 계획이
   // 하나도 없으면 닫지 않고 안내만 띄운다.
-  function confirmPlanGateDone() {
+  // 오전 · 오후 · 저녁 중 어디든 하나만 써도 된다. 입력줄에 쓰던 중이라 아직 등록 전인 항목(과목 · 내용을 다 쓴 줄)은
+  // 이 버튼을 누르는 순간 같이 등록하고, 등록이 끝난 뒤에 계획이 1개 이상인지 확인한다.
+  async function confirmPlanGateDone() {
+    for (const block of PLAN_BLOCKS) {
+      const subjInput = document.getElementById("plannerNewSubject-" + block);
+      const contInput = document.getElementById("plannerNewContent-" + block);
+      if (!subjInput || !contInput) continue;
+      const sv = subjInput.value.trim(), cv = contInput.value.trim();
+      if (sv && cv) submitNewPlanRow(block, true);
+      else if (sv || cv) { showToast("과목과 내용을 모두 입력해주세요."); return; }
+    }
+    if (plannerPendingAdds.length) { try { await Promise.all(plannerPendingAdds.splice(0)); } catch (e) {} }
     const activeItems = planItems.filter(it => it.active);
     if (!activeItems.length) {
       showToast("오늘 계획을 최소 1개 이상 입력해주세요.");
@@ -12808,6 +12934,7 @@
   }
   // 과목/내용 둘 다 입력해야 등록된다 — 하나라도 비어있으면 토스트로 알리고 그대로 둔다(포커스도 유지).
   // 등록되면 입력줄은 닫히고, 다시 추가하려면 "+ 추가하기"를 또 눌러야 한다.
+  const plannerPendingAdds = []; // 아직 서버에 등록 중인 새 항목들 — "계획 다 세웠어요"를 누를 때 이것들이 끝나길 기다린다
   // silent=true면(다른 곳 클릭해서 벗어나며 자동 저장하는 경우) 경고 토스트만 안 띄운다.
   function submitNewPlanRow(block, silent) {
     const subjInput = document.getElementById("plannerNewSubject-" + block);
@@ -12822,7 +12949,7 @@
     const studentId = localStorage.getItem("holoStudentId");
     if (!studentId) return;
     subjInput.value = ""; contInput.value = "";
-    planApi({ action: "plan_add", date: getLocalDateKey(), block: block, text: content, subject: subject, isInitial: !initialPlanLocked })
+    const addPromise = planApi({ action: "plan_add", date: getLocalDateKey(), block: block, text: content, subject: subject, isInitial: !initialPlanLocked })
       .then(data => {
         if (!data.ok) return;
         planItems.push({ id: Number(data.id), block: block, subject: subject, text: content, original_text: content, done: 0, active: 1, edited_at: null, is_initial: initialPlanLocked ? 0 : 1 });
@@ -12830,6 +12957,9 @@
         renderPlanner();
       })
       .catch(err => console.error(err));
+    plannerPendingAdds.push(addPromise);
+    addPromise.finally(() => { const i = plannerPendingAdds.indexOf(addPromise); if (i >= 0) plannerPendingAdds.splice(i, 1); });
+    return addPromise;
   }
   // 과목/내용 입력줄에서 포커스가 완전히 벗어났을 때(같은 줄의 다른 칸으로 옮긴 게 아니라 진짜로 벗어났을
   // 때): 둘 다 채워져 있으면 Enter를 안 눌렀어도 그냥 저장하고, 둘 다 비어있으면 입력줄을 닫는다.
@@ -15261,8 +15391,12 @@
     // 저장만 하고 닫는 대신, 방금 기록된 모의고사·내신의 채점 화면으로 바로 이동시킨다.
     const examId = mexAutoRecordFromExam(exsimEndData, examName);
     exsimCloseEnd();
-    mexGoList(isNaeshin ? "naeshin" : "mock");
-    mexOpenDetail(examId);
+    if (MEX_PAGES_READY) {
+      mexGoList(isNaeshin ? "naeshin" : "mock");
+      mexOpenDetail(examId);
+    } else {
+      showToast("기록이 저장됐어요. 채점 화면은 준비중입니다");
+    }
   }
 
   // ── 시험 시뮬레이션 허브: 스톱워치/타이머 (과목·랩타임 없는 독립 기능) ──
@@ -15587,6 +15721,7 @@
   let mexSubjectFilter = "all";
   let mexNewFormPeriod = null;
   function mexGoList(category) {
+    if (!MEX_PAGES_READY) { showToast("준비중입니다"); return; }
     mexCategory = category;
     mexSubjectFilter = "all";
     go("mexlist");
