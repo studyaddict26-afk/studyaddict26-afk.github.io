@@ -2860,6 +2860,24 @@
     transition: background 0.15s, color 0.15s;
   }
   .home-schedule-title:hover { background: var(--cream); color: var(--ink-soft); }
+  /* 홈 오른쪽 위의 학습 상담 홍보 포스터(예전 공부중독 커뮤니티 자리) — 누르면 송의준 선생님 소개 페이지(학습 컨설팅)로 간다.
+     마케팅 원칙: ① 대상을 콕 집어 말 걸기(학생 · 학부모) ② 가장 강한 증거(노베이스 → 전과목 1등급)를 헤드라인으로 ③ 행동 유도는 구체적인 버튼 하나. */
+  .home-poster {
+    position: relative; overflow: hidden; display: flex; align-items: stretch; text-align: left;
+    background: #0D2155; color: #fff; border: none; border-radius: 12px; padding: 0; cursor: pointer; font-family: inherit;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .home-poster:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(13,33,85,0.25); }
+  .hp-text { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 5px; padding: 12px 18px; position: relative; z-index: 1; }
+  .hp-eyebrow { font-size: 0.56rem; font-weight: 700; color: #FFD44D; }
+  .hp-headline { font-size: 0.82rem; font-weight: 800; line-height: 1.3; color: #fff; white-space: nowrap; }
+  .hp-sub { font-size: 0.64rem; line-height: 1.35; color: rgba(255,255,255,0.88); }
+  .hp-btn { align-self: flex-start; margin-top: 4px; font-size: 0.6rem; font-weight: 800; color: #0D2155; background: #FFD44D; border-radius: 6px; padding: 3px 9px; }
+  .hp-arrow { margin-left: 2px; transition: transform 0.15s; display: inline-block; }
+  .home-poster:hover .hp-arrow { transform: translateX(3px); }
+  .hp-photo { position: absolute; right: 0; bottom: 0; width: 30%; height: 100%; display: block; opacity: 0.4; z-index: 0; } /* 글씨 뒤에 깔리는 흐린 사람 모양 */
+  .hp-cutout { object-fit: contain; object-position: center bottom; padding: 8px 6px 0 0; box-sizing: border-box; } /* 배경 없는 회색 사람 누끼 이미지(gray-person-cutout.png) */
+  .hd-right-top .home-poster { flex: 1 1 0; min-width: 0; }
   /* 홈 영어 단어 Test 박스: 오늘의 공부 박스처럼 제목 아래에 상태 두 줄(라벨 + 상태 글씨) */
   .home-eng-status { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 9px; padding: 0 2px; }
   .home-eng-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 8px; }
@@ -3530,7 +3548,7 @@
   .home-dash .home-promo-slot .rh-tile-head-btn { position: relative; }
   .home-dash .home-promo-slot .rh-tile-head-right { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
   .home-dash .home-promo-slot #rhTileTitle { white-space: nowrap; text-align: center; }
-  .rh-tile-date { font-size: 0.74rem; font-weight: 700; color: var(--ink); text-align: center; margin: 0 0 10px; }
+  .rh-tile-date { font-size: 0.74rem; font-weight: 700; color: var(--ink-soft); text-align: center; margin: 0 0 10px; position: relative; top: -8px; } /* 색은 아래 상태 글씨(라벨)와 같게, 위치는 조금 위로 */
   .home-dash .home-promo-slot .rh-tile-status-wrap { flex-direction: column; align-items: center; justify-content: center; gap: 0; }
   .home-dash .home-promo-slot .rh-tile-status { justify-content: center; }
   /* 홈 왼쪽 아랫부분: 세 칸(오늘의 공부 · 공부 계획 · 내 스케줄)이 같은 크기로 한 줄에 놓인다.
@@ -3555,6 +3573,7 @@
     .hd-ai .record-chat-pane { min-height: 480px; }
     .home-dash .home-promo-slot { flex-direction: column; }
     .hd-right-top { flex-direction: column; }
+    .hd-right-top .home-poster { min-height: 110px; }
   }
 
   /* 태블릿 · 모바일(1100px 이하): 홈이 답답하지 않게 제목 · 요일 · 날짜 글자를 한 단계 줄인다 */
@@ -7180,11 +7199,14 @@
       </div>
       <div class="hd-right">
         <div class="hd-right-top">
-      <div class="home-academy-compact" id="homeAcademyPromo">
-        <div class="hac-eyebrow">공부중독 커뮤니티</div>
-        <div class="hac-title">같은 목표를 가진 사람들과 공부 고민을 나눠요</div>
-        <div class="hac-btn">커뮤니티 입장하기 →</div>
-      </div>
+      <button type="button" class="home-poster" onclick="go('consult-teacher')" aria-label="학습 상담 살펴보기">
+        <span class="hp-text">
+          <span class="hp-eyebrow">수학 · 국어가 막막한 학생과 학부모님께</span>
+          <span class="hp-headline">축구선수 출신 노베이스 → 수능 전과목 1등급</span>
+          <span class="hp-sub">하위권부터 최상위권까지 직접 경험한 선생님이 지도합니다</span>
+          <span class="hp-btn">내 상황 상담해보기 <span class="hp-arrow">→</span></span>
+        </span>
+      </button>
           <div class="home-notice-box">
             <div class="hn-notice-title">공지사항</div>
             <div class="hn-notice-empty">등록된 공지가 없어요.</div>
