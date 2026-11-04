@@ -6,6 +6,7 @@
 <title>홀로 | ROADMAP × STUDY ADDICT</title>
 <script src="vocab-data.js"></script>
 <script src="grammar-data.js"></script>
+<script src="grammar-ko.js"></script>
 <script>
   if (location.hash === "#admin") document.documentElement.setAttribute("data-boot", "admin");
   else if (location.hash === "#form") document.documentElement.setAttribute("data-boot", "form");
@@ -4021,7 +4022,7 @@
     background: var(--green-soft); border: 1.5px solid #C9D2E6; border-radius: 12px; padding: 9px; cursor: pointer;
   }
   .mex-new-btn:hover { background: #E4E9F5; }
-  .mex-top-row { display: flex; border: 1.5px solid #C9D2E6; border-radius: 12px; background: var(--green-soft); overflow: hidden; }
+  .mex-top-row { display: flex; border: 1.5px solid #C9D2E6; border-radius: 12px; background: var(--green-soft); overflow: hidden; margin-bottom: 28px; }
   .mex-top-row .mex-new-btn {
     width: auto; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     border: none; border-radius: 0; border-left: 1.5px solid #C9D2E6; background: none;
@@ -4037,7 +4038,19 @@
   #mexRecordsTab { display: flex; flex-direction: column; gap: 40px; }
   /* 내 모의고사 분석하기 — AI 호출 없이, 이미 기록된 점수·오답원인·풀이시간만으로 즉석 계산해서
      보여준다. 과목별 추이는 같은 과목 기록이 3개 이상 쌓였을 때만(너무 적으면 추이가 의미 없음). */
-  .mex-an5 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+  .mex-an5 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .mex-an5-name b { font-weight: 800; white-space: nowrap; }
+  .mex-an5-name span { margin-left: auto; white-space: nowrap; }
+  .mex-an5-x { flex: none; font-family: inherit; font-size: 1rem; line-height: 1; color: var(--ink-soft); background: none; border: none; padding: 0 0 0 4px; cursor: pointer; }
+  .mex-an5-x:hover { color: #C23B3B; }
+  .mex-an5-add { display: flex; align-items: stretch; justify-content: center; min-height: 140px; }
+  .mex-an5-add-btn { flex: 1; font-family: inherit; font-size: 0.8rem; font-weight: 700; color: var(--ink-soft); background: none; border: 1px dashed var(--line-dark); border-radius: 12px; cursor: pointer; }
+  .mex-an5-add-btn:hover { color: var(--green-deep); border-color: var(--green-deep); }
+  .mex-an5-add-list { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 6px; border: 1px dashed var(--line-dark); border-radius: 12px; padding: 10px; }
+  .mex-an5-add-list button { font-family: inherit; font-size: 0.78rem; font-weight: 700; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; cursor: pointer; display: flex; justify-content: space-between; }
+  .mex-an5-add-list button span { font-weight: 600; color: var(--ink-soft); font-size: 0.68rem; }
+  .mex-an5-add-list button:hover { border-color: var(--green-deep); }
+  .mex-an5-add-list button.cancel { background: none; border: none; color: var(--ink-soft); justify-content: center; padding: 3px; font-size: 0.7rem; }
   .mex-an5-box { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px 10px; display: flex; flex-direction: column; min-width: 0; }
   .mex-an5-name { font-size: 0.8rem; font-weight: 800; color: var(--ink); display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
   .mex-an5-name span { font-size: 0.6rem; font-weight: 600; color: var(--ink-soft); }
@@ -4835,6 +4848,7 @@
     opacity: 0; pointer-events: none; transition: opacity 0.6s ease;
   }
   .consult-splash.on { opacity: 1; pointer-events: auto; }
+  .consult-splash.cream { background: var(--cream); } /* 영어 단어·문법 전환 화면은 앱 배경과 같은 누런색 */
   .consult-splash.on .consult-splash-logo { animation: consultSplashPop 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
   .consult-splash-logo {
     display: flex; align-items: center; gap: 14px;
@@ -6505,18 +6519,52 @@
   .vocab-hint { margin: 14px 2px 4px; font-size: 0.76rem; line-height: 1.6; color: var(--ink-soft); }
   .vocab-group-title { margin: 22px 2px 10px; font-size: 0.8rem; font-weight: 800; color: var(--ink); }
   .vocab-days { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 8px; }
+  .vocab-levels { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 12px; }
+  .vocab-levels button { font-family: inherit; font-size: 0.8rem; font-weight: 700; color: var(--ink-soft); background: var(--paper); border: 1px solid var(--line); border-radius: 999px; padding: 7px 16px; cursor: pointer; }
+  .vocab-levels button.on { background: var(--green-deep); border-color: var(--green-deep); color: #fff; }
+  .vocab-levels button.idm { margin-left: auto; }
   .vocab-day { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; font-family: inherit; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 11px 6px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
   .vocab-day:hover { background: var(--cream); border-color: var(--line-dark); }
   .vocab-day .vd-name { font-size: 0.92rem; font-weight: 800; color: var(--ink); }
   .vocab-day .vd-sub { font-size: 0.64rem; color: var(--ink-soft); }
-  .vocab-day.done { border-color: var(--green-deep); }
-  .vocab-day .vd-check { position: absolute; top: 5px; right: 7px; font-size: 0.7rem; font-weight: 800; color: var(--green-deep); }
+  .vocab-day.done { background: #EAF4EA; border-color: #4C9A5B; }
+  .vocab-day.done:hover { background: #DFEFE0; }
+  .vocab-day.done .vd-name { color: #1F5E2E; }
+  .vocab-day .vd-check { position: absolute; top: 5px; right: 7px; font-size: 0.7rem; font-weight: 800; color: #2E9B4A; }
+  .vocab-day.vocab-day-rand { background: var(--green-deep); border-color: var(--green-deep); } .vocab-day.vocab-day-rand:hover { background: #17306f; } .vocab-day.vocab-day-rand .vd-name, .vocab-day.vocab-day-rand .vd-sub { color: #fff; }
+  .vocab-days.gr-days { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  @media (max-width: 560px) { .vocab-days.gr-days { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .vocab-days.gr-days .vocab-day { flex-direction: row; justify-content: space-between; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 8px; text-align: left; }
+  .vocab-days.gr-days .vd-name { font-size: 0.76rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .vocab-days.gr-days .vd-sub { font-size: 0.62rem; white-space: nowrap; flex: none; }
+  .vocab-days.gr-days .vocab-day-rand .vd-name, .vocab-days.gr-days .vocab-day-rand .vd-sub { color: #fff; }
+  .vocab-days.gr-days .vd-check { position: static; margin-left: 4px; }
   .vocab-random { margin-top: 20px; display: flex; justify-content: center; }
   .vocab-btn { font-family: inherit; font-size: 0.82rem; font-weight: 700; color: #fff; background: var(--ink); border: 1px solid var(--ink); border-radius: 10px; padding: 11px 22px; cursor: pointer; }
   .vocab-btn:hover { opacity: 0.88; }
   .vocab-btn.ghost { color: var(--ink); background: #fff; border-color: var(--line-dark); }
   .vocab-actions { display: flex; gap: 10px; justify-content: center; margin-top: 18px; }
   .vocab-actions .vocab-btn { min-width: 130px; }
+  .vlive { display: none; position: fixed; inset: 0; z-index: 300; background: var(--cream); overflow-y: auto; }
+  .vlive.on { display: block; animation: vliveIn 0.32s cubic-bezier(.2,.8,.2,1); }
+  .vocab-callout { display: flex; gap: 12px; align-items: flex-start; margin: 14px 0 18px; padding: 14px 16px; background: #EEF1FA; border: 1px solid #D5DBEE; border-radius: 12px; }
+  .vocab-callout .vc-ico { flex: none; width: 18px; height: 18px; margin-top: 2px; border-radius: 50%; background: var(--green-deep); color: #fff; font-size: 0.68rem; font-weight: 800; font-style: italic; display: flex; align-items: center; justify-content: center; }
+  .vocab-callout ul { margin: 0; padding-left: 16px; font-size: 0.78rem; line-height: 1.7; color: var(--ink); }
+  .vocab-callout li + li { margin-top: 2px; }
+  .vstudy-menu { display: flex; flex-direction: column; gap: 12px; margin-top: 30px; }
+  .vstudy-menu button { font-family: inherit; text-align: left; background: #fff; border: 1px solid var(--line-dark); border-radius: 12px; padding: 22px 22px; cursor: pointer; display: flex; flex-direction: column; gap: 6px; transition: background 0.15s, border-color 0.15s; }
+  .vstudy-menu button:hover { background: var(--cream); border-color: var(--green-deep); }
+  .vstudy-menu b { font-size: 1.02rem; font-weight: 800; color: var(--ink); }
+  .vstudy-menu span { font-size: 0.78rem; color: var(--ink-soft); }
+  .fc-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 6px; }
+  .fc { perspective: 700px; height: 92px; cursor: pointer; }
+  .fc-in { position: relative; width: 100%; height: 100%; transition: transform 0.45s; transform-style: preserve-3d; }
+  .fc.flip .fc-in { transform: rotateY(180deg); }
+  .fc-face { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 8px; box-sizing: border-box; background: #fff; border: 1px solid var(--line-dark); border-radius: 12px; font-size: 0.92rem; font-weight: 700; color: var(--ink); backface-visibility: hidden; -webkit-backface-visibility: hidden; word-break: keep-all; }
+  .fc-face.fc-back { transform: rotateY(180deg); background: #EEF1FA; border-color: var(--green-deep); font-size: 0.84rem; }
+  @media (max-width: 560px) { .fc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .vlive-body { width: 100%; max-width: 680px; margin: 0 auto; padding: 36px 20px 60px; box-sizing: border-box; }
+  @keyframes vliveIn { from { opacity: 0; transform: translateY(24px) scale(0.985); } to { opacity: 1; transform: none; } }
   .vocab-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
   .vocab-back { font-family: inherit; font-size: 0.76rem; font-weight: 700; color: var(--ink-soft); background: none; border: none; padding: 0; cursor: pointer; }
   .vocab-back:hover { color: var(--ink); }
@@ -6538,8 +6586,12 @@
   .vq-opts { display: flex; flex-direction: column; gap: 8px; margin-top: 22px; }
   .vq-opt { font-family: inherit; font-size: 0.92rem; font-weight: 600; color: var(--ink); background: #fff; border: 1px solid var(--line-dark); border-radius: 10px; padding: 13px 14px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
   .vq-opt:hover:not(:disabled) { background: var(--cream); }
+  .vq-opt { position: relative; }
   .vq-opt.correct { background: #EAF4EA; border-color: #4C9A5B; color: #1F5E2E; }
   .vq-opt.wrong { background: #FDECEC; border-color: #D96A6A; color: #9B2C2C; }
+  .vq-opt.correct::after, .vq-opt.wrong::after { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 1.1rem; font-weight: 800; line-height: 1; }
+  .vq-opt.correct::after { content: "✓"; color: #2E9B4A; }
+  .vq-opt.wrong::after { content: "✕"; color: #D93A3A; }
   .vq-opt.picked { background: var(--cream); border-color: var(--ink); }
   .vocab-done { text-align: center; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 34px 20px 26px; }
   .vd-title { font-size: 1.3rem; font-weight: 800; color: var(--ink); margin-bottom: 10px; }
@@ -7290,7 +7342,6 @@
           </span>
         </button>
         <div class="rh-tile-status-wrap">
-          <div class="rh-tile-date" id="rhTileDate"></div>
           <div class="rh-tile-status">
             <div class="rh-tile-status-row">
               <span class="rh-tile-status-label">실제로 이행한 계획</span>
@@ -7329,11 +7380,10 @@
       </div>
       <div class="home-schedule-box home-eng-test" onclick="event.preventDefault();go('vocab')">
         <div class="home-schedule-head">
-          <a class="home-schedule-title" href="#">영어 단어 Test <span class="arrow">›</span></a>
+          <a class="home-schedule-title" href="#">어휘력 Test <span class="arrow">›</span></a>
         </div>
         <div class="home-eng-status">
-          <div class="home-eng-row"><span class="rh-tile-status-label">영단어 클래스카드</span><span class="rh-tile-status-val pending" id="engStatus-card">미응시</span></div>
-          <div class="home-eng-row"><span class="rh-tile-status-label">영단어 Test</span><span class="rh-tile-status-val pending" id="engStatus-test">미응시</span></div>
+          <div class="home-eng-row"><span class="rh-tile-status-label">영어 단어 - 문법</span><span class="rh-tile-status-val pending" id="engStatus-test">미응시</span></div>
         </div>
       </div>
       </div>
@@ -8004,6 +8054,7 @@
     </div>
     <div class="vocab-wrap" id="vocabWrap"></div>
   </section>
+  <div class="vlive" id="vocabLive"><div class="vlive-body" id="vocabLiveBody"></div></div>
 
   <!-- ─── 우리 동네 내신 기출 공부하기 (허브) ─── -->
   <section class="view" id="view-examhub">
@@ -11094,7 +11145,36 @@
       name: 'Study Holo <span class="brand-accent">Manager</span>',
       tagline: "계획부터 분석까지, 학습을 관리합니다",
     },
+    vstudy: {
+      name: 'English',
+      tagline: "카드로 외우고, 3지선다로 확인해요",
+    },
+    vtest: {
+      name: 'TEST',
+      tagline: "얼마나 외웠는지 확인해 볼까요?",
+    },
+    vgrammar: {
+      name: 'Grammar',
+      tagline: "문법도 3지선다로 가볍게 풀어요",
+    },
   };
+  // 영어 단어·문법 공부/테스트를 시작할 때: 스플래시를 잠깐 보여주고 그 아래에서 전체 화면을 연 뒤 걷어낸다.
+  // 이미 전체 화면 안에서 이어지는 경우(다음 단계·다시 풀기)에는 스플래시 없이 바로 실행한다.
+  let vocabSplashBusy = false;
+  function vocabSplash(kind, fn) {
+    const lv = document.getElementById("vocabLive");
+    if (lv.classList.contains("on")) { fn(); return; }
+    if (vocabSplashBusy) return;
+    vocabSplashBusy = true;
+    const el = document.getElementById("consultSplash"), content = SPLASH_CONTENT[kind];
+    el.querySelector(".consult-splash-logo span").innerHTML = content.name;
+    el.querySelector(".consult-splash-tagline").textContent = content.tagline;
+    el.classList.add("cream", "on");
+    setTimeout(() => {
+      fn();
+      setTimeout(() => { el.classList.remove("on"); vocabSplashBusy = false; setTimeout(() => el.classList.remove("cream"), 700); }, 60);
+    }, 1300);
+  }
   function showProductSplash(product, targetView) {
     const el = document.getElementById("consultSplash");
     const content = SPLASH_CONTENT[product];
@@ -11518,24 +11598,42 @@
   // 공부: 카드 보기 → 단어 보고 뜻 고르기 → 뜻 보고 단어 고르기(모두 3지선다). 테스트: 두 유형을 섞어 3지선다로 풀고 점수로 통과 여부를 낸다.
   // 기록은 이 기기(localStorage)에 저장하고, 홈 "영어 단어 Test" 박스의 클래스카드/Test 상태가 여기서 자동으로 정해진다.
   // ══════════════════════════════════════════════════════════════
-  const VOCAB_DAY_WORDS = 50, VOCAB_DAY_IDIOMS = 45, VOCAB_TEST_N = 20, VOCAB_RANDOM_N = 30, VOCAB_PASS_RATE = 0.8;
-  let vocabSetsCache = null, vocabTab = "study", vocabRun = null;
+  const VOCAB_DAY_SIZE = 20, VOCAB_TEST_N = 20, VOCAB_RANDOM_N = 30, VOCAB_PASS_RATE = 0.8;
+  const VOCAB_LEVELS = [{ key: "1", name: "초급" }, { key: "2", name: "중급" }, { key: "3", name: "상급" }];
+  let vocabSetsCache = null, vocabTab = "study", vocabRun = null, vocabLevel = "1";
+  // 단어는 쉬운 순서(앞쪽)부터 초급·중급·상급 3등분하고, 숙어도 같은 비율로 나눠 각 단계에 섞어 넣는다. 하루 20개씩.
+  // "숙어만" 보기는 숙어 전체를 20개씩 따로 묶는다.
   function vocabSets() {
     if (vocabSetsCache) return vocabSetsCache;
     const words = [], idioms = [];
     (typeof HOLO_VOCAB !== "undefined" ? HOLO_VOCAB : []).forEach((e, i) => (e[1] === "idm" ? idioms : words).push(i));
     const out = [];
-    for (let i = 0; i < words.length; i += VOCAB_DAY_WORDS) out.push({ id: "w" + (i / VOCAB_DAY_WORDS + 1), label: "단어 DAY " + (i / VOCAB_DAY_WORDS + 1), kind: "word", items: words.slice(i, i + VOCAB_DAY_WORDS) });
-    for (let i = 0; i < idioms.length; i += VOCAB_DAY_IDIOMS) out.push({ id: "i" + (i / VOCAB_DAY_IDIOMS + 1), label: "숙어 DAY " + (i / VOCAB_DAY_IDIOMS + 1), kind: "idiom", items: idioms.slice(i, i + VOCAB_DAY_IDIOMS) });
+    VOCAB_LEVELS.forEach((lv, n) => {
+      const w = words.slice(Math.round(words.length * n / 3), Math.round(words.length * (n + 1) / 3));
+      const d = idioms.slice(Math.round(idioms.length * n / 3), Math.round(idioms.length * (n + 1) / 3));
+      const mixed = w.map((x, i) => ({ x: x, k: (i + 0.5) / w.length })).concat(d.map((x, i) => ({ x: x, k: (i + 0.5) / d.length }))).sort((a, b) => a.k - b.k).map(o => o.x);
+      for (let i = 0; i < mixed.length; i += VOCAB_DAY_SIZE) out.push({ id: "l" + lv.key + "-" + (i / VOCAB_DAY_SIZE + 1), level: lv.key, label: lv.name + " DAY " + (i / VOCAB_DAY_SIZE + 1), items: mixed.slice(i, i + VOCAB_DAY_SIZE) });
+    });
+    for (let i = 0; i < idioms.length; i += VOCAB_DAY_SIZE) out.push({ id: "i" + (i / VOCAB_DAY_SIZE + 1), level: "idiom", label: "숙어 DAY " + (i / VOCAB_DAY_SIZE + 1), items: idioms.slice(i, i + VOCAB_DAY_SIZE) });
     return (vocabSetsCache = out);
   }
+  function vocabSetLevel(k) { vocabLevel = k; vocabRenderHub(); }
   function vocabStateKey() { return "holoVocab:" + (localStorage.getItem("holoStudentId") || "anon"); }
   function vocabLoad() {
     let s = {};
     try { s = JSON.parse(localStorage.getItem(vocabStateKey()) || "{}") || {}; } catch (e) {}
-    return { studied: s.studied || {}, tests: Array.isArray(s.tests) ? s.tests : [] };
+    let start = s.start;
+    if (!start) { start = vocabMidKey(new Date()); try { s.start = start; localStorage.setItem(vocabStateKey(), JSON.stringify(s)); } catch (e) {} } // 처음 연 날이 DAY 1
+    return { studied: s.studied || {}, tests: Array.isArray(s.tests) ? s.tests : [], best: s.best || {}, count: s.count || {}, start: start };
   }
-  function vocabSave(s) { try { localStorage.setItem(vocabStateKey(), JSON.stringify({ studied: s.studied, tests: s.tests.slice(-60) })); } catch (e) {} }
+  function vocabSave(s) { try { localStorage.setItem(vocabStateKey(), JSON.stringify({ studied: s.studied, tests: s.tests.slice(-60), best: s.best, count: s.count, start: s.start })); } catch (e) {} }
+  // 테스트 날짜 규칙: 처음 연 날이 DAY 1, 다음 날이 DAY 2…(자정 기준). DAY n 테스트는 그 날짜 밤 12시 전에 응시해야 "응시 완료"로 기록된다.
+  function vocabMidKey(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  function vocabTodayDayNo(start) {
+    const a = String(start).split("-").map(Number), t = new Date();
+    return Math.round((Date.UTC(t.getFullYear(), t.getMonth(), t.getDate()) - Date.UTC(a[0], a[1] - 1, a[2])) / 86400000) + 1;
+  }
+  function vocabScopeDayNo(scope) { const m = /(\d+)$/.exec(String(scope)); return m ? Number(m[1]) : 0; }
   function vocabShuffle(a) { const r = a.slice(); for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; }
   const vocabE = i => HOLO_VOCAB[i];
   // 3지선다: 정답 1개 + 오답 2개(같은 종류 · 가능하면 같은 품사, 같은 뜻 묶음은 제외), 순서는 섞는다.
@@ -11553,66 +11651,86 @@
     return { idx: idx, type: type, opts: opts, answer: opts.findIndex(o => o.i === idx) };
   }
   function vocabPosLabel(p) { return { n: "명사", v: "동사", adj: "형용사", adv: "부사", prep: "전치사", conj: "접속사", pron: "대명사", idm: "숙어" }[p] || p; }
-  function vocabWrap() { return document.getElementById("vocabWrap"); }
+  function vocabWrap() { const lv = document.getElementById("vocabLive"); return lv && lv.classList.contains("on") ? document.getElementById("vocabLiveBody") : document.getElementById("vocabWrap"); }
+  function vocabLiveOpen() { const lv = document.getElementById("vocabLive"); if (!lv.classList.contains("on")) { lv.classList.add("on"); document.getElementById("vocabLiveBody").scrollTop = 0; } }
+  function vocabLiveClose() { document.getElementById("vocabLive").classList.remove("on"); }
 
   // ── 목록(허브) ──
-  function initVocab() { vocabRun = null; vocabRenderHub(); }
+  function initVocab() { vocabRun = null; vocabLiveClose(); vocabRenderHub(); }
   function vocabSetTab(t) { vocabTab = t; vocabRenderHub(); }
+  function vocabTabsHtml() {
+    const b = (k, t) => '<button type="button" class="' + (vocabTab === k ? "on" : "") + '" onclick="vocabSetTab(\'' + k + '\')">' + t + '</button>';
+    return '<div class="vocab-tabs">' + b("study", "단어 공부하기") + b("grammar", "문법 공부하기") + b("test", "TEST 응시하기") + '</div>';
+  }
   function vocabRenderHub() {
     if (vocabTab === "grammar") {
-      vocabWrap().innerHTML = '<div class="vocab-tabs"><button type="button" onclick="vocabSetTab(\'study\')">클래스카드</button><button type="button" onclick="vocabSetTab(\'test\')">테스트</button><button type="button" class="on">문법</button></div>' + grammarHubHtml();
+      vocabWrap().innerHTML = vocabTabsHtml() + grammarHubHtml();
       return;
     }
+    if (vocabTab === "study" && vocabLevel === "grammar") vocabLevel = "1"; // 문법 칸은 TEST 탭에만 있다
     const st = vocabLoad(), sets = vocabSets();
     const dayBtn = s => {
-      const done = st.studied[s.id];
-      return '<button type="button" class="vocab-day' + (done ? " done" : "") + '" onclick="' + (vocabTab === "study" ? "vocabStartStudy" : "vocabStartTest") + "('" + s.id + "')" + '"><span class="vd-name">' + s.label.replace(/^(단어|숙어) /, "") + '</span><span class="vd-sub">' + (s.kind === "idiom" ? "숙어 " : "단어 ") + s.items.length + '개</span>' + (done ? '<span class="vd-check">✓</span>' : "") + '</button>';
+      const b = st.best[s.id], isTest = vocabTab !== "study";
+      const done = isTest ? !!(b && b.pass) : !!st.studied[s.id];
+      return '<button type="button" class="vocab-day' + (done ? " done" : "") + '" onclick="' + (vocabTab === "study" ? "vocabStartStudy" : "vocabStartTest") + "('" + s.id + "')" + '"><span class="vd-name">' + s.label.replace(/^(초급|중급|상급|숙어) /, "") + '</span><span class="vd-sub">' + (isTest && b ? "최고 " + Math.round(b.score / b.total * 100) + "점" : s.items.length + "개") + '</span>' + (done ? '<span class="vd-check">✓</span>' : "") + '</button>';
     };
-    const group = kind => sets.filter(s => s.kind === kind).map(dayBtn).join("");
+    const levelRow = '<div class="vocab-levels">' + VOCAB_LEVELS.map(lv => '<button type="button" class="' + (vocabLevel === lv.key ? "on" : "") + '" onclick="vocabSetLevel(\'' + lv.key + '\')">' + lv.name + '</button>').join("") +
+      (vocabTab === "test" ? '<button type="button" class="' + (vocabLevel === "grammar" ? "on" : "") + '" onclick="vocabSetLevel(\'grammar\')">문법</button>' : "") +
+      '<button type="button" class="idm' + (vocabLevel === "idiom" ? " on" : "") + '" onclick="vocabSetLevel(\'idiom\')">' + (vocabTab === "test" ? "숙어만 따로 시험보기" : "숙어만 따로 공부하기") + '</button></div>';
+    const lvName = vocabLevel === "idiom" ? "필수 숙어" : (VOCAB_LEVELS.find(l => l.key === vocabLevel) || {}).name;
     vocabWrap().innerHTML =
-      '<div class="vocab-tabs"><button type="button" class="' + (vocabTab === "study" ? "on" : "") + '" onclick="vocabSetTab(\'study\')">클래스카드</button><button type="button" class="' + (vocabTab === "test" ? "on" : "") + '" onclick="vocabSetTab(\'test\')">테스트</button><button type="button" onclick="vocabSetTab(\'grammar\')">문법</button></div>' +
-      '<p class="vocab-hint">' + (vocabTab === "study" ? "DAY를 골라 카드로 외운 뒤, 단어 → 뜻 · 뜻 → 단어를 3지선다로 연습해요. 끝까지 하면 홈에 \"응시 완료\"로 표시돼요." : "DAY를 골라 " + VOCAB_TEST_N + "문제(3지선다)를 풀어요. " + Math.round(VOCAB_PASS_RATE * 100) + "% 이상이면 통과예요.") + '</p>' +
-      '<div class="vocab-group-title">단어</div><div class="vocab-days">' + group("word") + '</div>' +
-      '<div class="vocab-group-title">필수 숙어</div><div class="vocab-days">' + group("idiom") + '</div>' +
-      (vocabTab === "test" ? '<div class="vocab-random"><button type="button" class="vocab-btn" onclick="vocabStartTest(\'all\')">전체에서 무작위 ' + VOCAB_RANDOM_N + '문제</button></div>' : "");
+      vocabTabsHtml() +
+      (vocabTab === "study" ? '<p class="vocab-hint">객관식 3지선다로 영어 단어를 공부하세요!</p>'
+        : '<div class="vocab-callout"><span class="vc-ico">i</span><ul><li>매일 밤 12시 전까지 하나 이상의 test를 끝까지 응시하면 그날 응시 완료로 기록돼요.</li><li>시험 문제의 ' + Math.round(VOCAB_PASS_RATE * 100) + '% 이상 정답을 맞춰야 시험을 통과할 수 있습니다.</li><li>점수는 중요하지 않습니다. 통과할 때까지 반복해서 응시하세요.</li></ul></div>') +
+      levelRow +
+      (vocabTab === "test" && vocabLevel === "grammar" ? grammarTestGridHtml(st) : '<div class="vocab-days">' + sets.filter(s => s.level === vocabLevel).map(dayBtn).join("") + '<button type="button" class="vocab-day vocab-day-rand" onclick="' + (vocabTab === "study" ? "vocabStartStudy" : "vocabStartTest") + '(\'all\')"><span class="vd-name">전체 무작위</span><span class="vd-sub">' + VOCAB_RANDOM_N + '문제</span></button>' + '</div>') +
+      "";
+  }
+  // TEST 탭의 "문법" 칸 — 문법 세트도 여기서 응시한다(통과하면 ✓, 최고 점수 표시, 응시하면 오늘 응시 완료로 기록).
+  function grammarTestGridHtml(st) {
+    return '<div class="vocab-days gr-days">' + HOLO_GRAMMAR.map(g => {
+      const b = st.best["g:" + g.id];
+      return '<button type="button" class="vocab-day' + (b && b.pass ? " done" : "") + '" onclick="grammarStart(\'' + g.id + '\', true)"><span class="vd-name">' + escapeHtml(g.label) + '</span><span class="vd-sub">' + (b ? "최고 " + Math.round(b.score / b.total * 100) + "점" : g.qs.length + "문제") + '</span>' + (b && b.pass ? '<span class="vd-check">✓</span>' : "") + '</button>';
+    }).join("") + '<button type="button" class="vocab-day vocab-day-rand" onclick="grammarStart(\'all\', true)"><span class="vd-name">전체 무작위</span><span class="vd-sub">20문제</span></button></div>';
   }
 
   // ── 클래스카드 공부 ──
   function vocabStartStudy(id) {
-    const set = vocabSets().find(s => s.id === id); if (!set) return;
-    vocabRun = { mode: "study", set: set, step: "cards", queue: set.items.slice(), i: 0, flipped: false, retry: [], q: null, wrong: 0, correct: 0 };
-    vocabRenderStudy();
+    const set = id === "all" ? { id: "all", label: "전체 무작위", items: vocabShuffle(HOLO_VOCAB.map((_, i) => i)).slice(0, VOCAB_RANDOM_N) } : vocabSets().find(s => s.id === id); if (!set) return;
+    vocabRun = { mode: "study", set: set, step: "menu", queue: set.items.slice(), i: 0, flipped: false, retry: [], q: null, wrong: 0, correct: 0 };
+    vocabSplash("vstudy", function () { vocabLiveOpen(); vocabRenderStudy(); });
   }
-  function vocabStepTitle(step) { return { cards: "1. 카드 보기", q1: "2. 단어 보고 뜻 고르기", q2: "3. 뜻 보고 단어 고르기" }[step]; }
+  function vocabStepTitle(step) { return { q1: "1. 단어 보고 뜻 고르기", q2: "2. 뜻 보고 단어 고르기" }[step]; }
+  // DAY를 열면 먼저 "카드 보기 / 객관식 문제 풀어보기" 중에 고른다.
+  function vocabStudyMenuHtml(r) {
+    return '<div class="vocab-top"><button type="button" class="vocab-back" onclick="initVocab()">← 목록</button><span class="vocab-step">' + escapeHtml(r.set.label) + '</span><span class="vocab-count">' + r.set.items.length + '개</span></div>' +
+      '<div class="vstudy-menu"><button type="button" onclick="vocabShowCards()"><b>카드 보기</b><span>카드를 눌러 뜻을 확인해요</span></button>' +
+      '<button type="button" onclick="vocabStartQuiz()"><b>객관식 문제 풀어보기</b><span>3지선다로 공부해요</span></button></div>';
+  }
+  function vocabShowCards() {
+    const r = vocabRun; if (!r) return; r.step = "grid";
+    vocabWrap().innerHTML = '<div class="vocab-top"><button type="button" class="vocab-back" onclick="vocabBackToMenu()">← 뒤로</button><span class="vocab-step">' + escapeHtml(r.set.label) + ' · 카드 보기</span><span class="vocab-count">' + r.set.items.length + '개</span></div>' +
+      '<div class="fc-grid">' + r.set.items.map(i => { const e = vocabE(i); return '<div class="fc" onclick="this.classList.toggle(\'flip\')"><div class="fc-in"><div class="fc-face">' + escapeHtml(e[0]) + '</div><div class="fc-face fc-back">' + escapeHtml(e[2]) + '</div></div></div>'; }).join("") + '</div>';
+    document.getElementById("vocabLiveBody").scrollTop = 0;
+  }
+  function vocabBackToMenu() { const r = vocabRun; if (!r) return; r.step = "menu"; vocabWrap().innerHTML = vocabStudyMenuHtml(r); }
+  function vocabStartQuiz() {
+    const r = vocabRun; if (!r) return;
+    r.step = "q1"; r.queue = vocabShuffle(r.set.items); r.i = 0; r.retry = []; r.wrong = 0; r.correct = 0; vocabRenderStudy();
+  }
   function vocabProgress(r) { return '<div class="vocab-top"><button type="button" class="vocab-back" onclick="initVocab()">← 목록</button><span class="vocab-step">' + escapeHtml(r.set.label) + ' · ' + vocabStepTitle(r.step) + '</span><span class="vocab-count">' + Math.min(r.i + 1, r.queue.length) + ' / ' + r.queue.length + '</span></div><div class="vocab-bar"><i style="width:' + Math.round((r.i / Math.max(1, r.queue.length)) * 100) + '%"></i></div>'; }
   function vocabRenderStudy() {
     const r = vocabRun; if (!r) return;
+    if (r.step === "menu") { vocabWrap().innerHTML = vocabStudyMenuHtml(r); return; }
     if (r.i >= r.queue.length) {
-      if (r.retry.length && r.step !== "cards") { r.queue = r.queue.concat(r.retry); r.retry = []; } // 틀린 것은 한 번 더
-      else return vocabNextStep();
-      if (r.i >= r.queue.length) return vocabNextStep();
+      return vocabNextStep(); // 틀려도 되풀이하지 않고 정해진 개수만 풀고 다음 단계로
     }
-    const idx = r.queue[r.i];
-    if (r.step === "cards") {
-      const e = vocabE(idx);
-      vocabWrap().innerHTML = vocabProgress(r) +
-        '<div class="vocab-card' + (r.flipped ? " flipped" : "") + '" onclick="vocabFlip()"><div class="vc-pos">' + vocabPosLabel(e[1]) + '</div><div class="vc-main">' + escapeHtml(r.flipped ? e[2] : e[0]) + '</div><div class="vc-tip">' + (r.flipped ? "눌러서 단어 보기" : "눌러서 뜻 보기") + '</div></div>' +
-        '<div class="vocab-actions"><button type="button" class="vocab-btn ghost" onclick="vocabCardNext(false)">헷갈려요</button><button type="button" class="vocab-btn" onclick="vocabCardNext(true)">알아요</button></div>';
-    } else {
-      r.q = vocabQuestion(idx, r.step === "q1" ? "w2m" : "m2w");
-      vocabWrap().innerHTML = vocabProgress(r) + vocabQuestionHtml(r.q, true);
-    }
-  }
-  function vocabFlip() { if (vocabRun) { vocabRun.flipped = !vocabRun.flipped; vocabRenderStudy(); } }
-  function vocabCardNext(known) {
-    const r = vocabRun; if (!r) return;
-    if (!known && r.queue.length < r.set.items.length * 2) r.queue.push(r.queue[r.i]); // 헷갈린 카드는 뒤에서 다시 보여준다
-    r.i++; r.flipped = false; vocabRenderStudy();
+    r.q = vocabQuestion(r.queue[r.i], r.step === "q1" ? "w2m" : "m2w");
+    vocabWrap().innerHTML = vocabProgress(r) + vocabQuestionHtml(r.q, true);
   }
   function vocabNextStep() {
     const r = vocabRun; if (!r) return;
-    if (r.step === "cards") { r.step = "q1"; }
-    else if (r.step === "q1") { r.step = "q2"; }
+    if (r.step === "q1") { r.step = "q2"; }
     else { return vocabFinishStudy(); }
     r.queue = vocabShuffle(r.set.items); r.i = 0; r.retry = []; vocabRenderStudy();
   }
@@ -11634,8 +11752,8 @@
   }
   function vocabFinishStudy() {
     const r = vocabRun; if (!r) return;
-    const st = vocabLoad(); st.studied[r.set.id] = getLocalDateKey(); vocabSave(st); engVocabRender();
-    vocabWrap().innerHTML = '<div class="vocab-done"><div class="vd-title">' + escapeHtml(r.set.label) + ' 완료!</div><p>카드 보기 · 단어→뜻 · 뜻→단어까지 모두 끝냈어요.<br>이제 테스트로 얼마나 외웠는지 확인해 볼까요?</p><div class="vocab-actions"><button type="button" class="vocab-btn ghost" onclick="initVocab()">목록으로</button><button type="button" class="vocab-btn" onclick="vocabTab=\'test\';vocabStartTest(\'' + r.set.id + '\')">이 DAY 테스트 보기</button></div></div>';
+    const st = vocabLoad(); st.studied[r.set.id] = getLocalDateKey(); st.count[r.set.id] = (st.count[r.set.id] || 0) + 1; vocabSave(st); engVocabRender();
+    vocabWrap().innerHTML = '<div class="vocab-done"><div class="vd-title">' + st.count[r.set.id] * 100 + '% 공부 완료</div><p>' + escapeHtml(r.set.label) + ' ' + r.set.items.length + '개를 모두 공부했어요.<br>같은 DAY를 또 공부하면 200%, 300%… 계속 쌓여요.</p><div class="vocab-actions"><button type="button" class="vocab-btn" onclick="initVocab()">목록으로</button></div></div>';
     vocabRun = null;
   }
 
@@ -11647,7 +11765,7 @@
     else { const s = sets.find(x => x.id === id); if (!s) return; pool = s.items; label = s.label; n = Math.min(VOCAB_TEST_N, s.items.length); }
     const picked = vocabShuffle(pool).slice(0, n);
     vocabRun = { mode: "test", label: label, scope: id, qs: picked.map(i => vocabQuestion(i, Math.random() < 0.5 ? "w2m" : "m2w")), i: 0, answers: [] };
-    vocabRenderTest();
+    vocabSplash("vtest", function () { vocabLiveOpen(); vocabRenderTest(); });
   }
   function vocabRenderTest() {
     const r = vocabRun; if (!r) return;
@@ -11658,17 +11776,22 @@
   }
   function vocabTestAnswer(k) {
     const r = vocabRun, q = r.qs[r.i]; vocabLocked = true;
-    document.querySelectorAll(".vq-opt").forEach((b, n) => { b.classList.toggle("picked", n === k); b.disabled = true; });
+    const okT = k === q.answer;
+    document.querySelectorAll(".vq-opt").forEach((b, n) => { b.classList.toggle("correct", n === q.answer); if (n === k && !okT) b.classList.add("wrong"); b.disabled = true; });
     r.answers[r.i] = k;
-    setTimeout(() => { vocabLocked = false; if (vocabRun !== r) return; r.i++; vocabRenderTest(); }, 350); // 테스트는 정답을 바로 알려주지 않는다
+    setTimeout(() => { vocabLocked = false; if (vocabRun !== r) return; r.i++; vocabRenderTest(); }, okT ? 700 : 1300); // 고른 선지에 ✓/✕를 잠깐 보여준 뒤 넘어간다
   }
   function vocabFinishTest() {
     const r = vocabRun; if (!r) return;
     const total = r.qs.length, score = r.qs.filter((q, i) => r.answers[i] === q.answer).length, pass = score / total >= VOCAB_PASS_RATE;
-    const st = vocabLoad(); st.tests.push({ date: getLocalDateKey(), scope: r.scope, score: score, total: total, pass: pass }); vocabSave(st); engVocabRender();
+    const st = vocabLoad(), counted = true; // 하루(밤 12시 전) 안에 아무 DAY나 하나 끝까지 응시하면 응시 완료로 기록한다(여러 번 응시해도 상관없음)
+    st.tests.push({ date: getLocalDateKey(), scope: r.scope, score: score, total: total, pass: pass, counted: counted });
+    if (r.scope !== "all") { const pb = st.best[r.scope], cp = (counted && pass) || !!(pb && pb.pass), better = !pb || score / total >= pb.score / pb.total; st.best[r.scope] = better ? { score: score, total: total, pass: cp } : { score: pb.score, total: pb.total, pass: cp }; }
+    vocabSave(st); engVocabRender();
     const wrong = r.qs.map((q, i) => ({ q: q, a: r.answers[i] })).filter(x => x.a !== x.q.answer);
     vocabWrap().innerHTML =
       '<div class="vocab-result ' + (pass ? "pass" : "fail") + '"><div class="vr-label">' + escapeHtml(r.label) + ' 테스트 결과</div><div class="vr-score">' + score + ' <span>/ ' + total + '</span></div><div class="vr-verdict">' + (pass ? "통과" : "미통과") + ' · ' + Math.round(score / total * 100) + '%</div></div>' +
+      '<p class="vocab-hint" style="text-align:center">' + "오늘 응시 완료로 기록됐어요." + '</p>' +
       (wrong.length ? '<div class="vocab-group-title">틀린 문제 ' + wrong.length + '개</div><ul class="vocab-wrong">' + wrong.map(x => { const e = vocabE(x.q.idx); return '<li><b>' + escapeHtml(e[0]) + '</b><span>' + escapeHtml(e[2]) + '</span></li>'; }).join("") + '</ul>' : '<p class="vocab-hint">모두 맞혔어요!</p>') +
       '<div class="vocab-actions"><button type="button" class="vocab-btn ghost" onclick="initVocab()">목록으로</button><button type="button" class="vocab-btn" onclick="vocabStartTest(\'' + r.scope + '\')">다시 테스트</button></div>';
     vocabRun = null;
@@ -11679,20 +11802,18 @@
   function grammarSave(o) { try { localStorage.setItem(grammarKey(), JSON.stringify(o)); } catch (e) {} }
   function grammarHubHtml() {
     const rec = grammarLoad();
-    return '<p class="vocab-hint">수업 자료(to부정사 · ing/ed · that · 조동사 등)에서 뽑은 3지선다 문제예요. 한 문제씩 풀 때마다 정답과 해설을 바로 보여줘요.</p>' +
-      '<div class="vocab-days">' + HOLO_GRAMMAR.map(g => {
-        const r = rec[g.id], full = r && r.best === g.qs.length;
-        return '<button type="button" class="vocab-day' + (full ? " done" : "") + '" onclick="grammarStart(\'' + g.id + '\')"><span class="vd-name">' + escapeHtml(g.label) + '</span><span class="vd-sub">' + g.qs.length + '문제' + (r ? " · 최고 " + r.best + "점" : "") + '</span>' + (full ? '<span class="vd-check">✓</span>' : "") + '</button>';
-      }).join("") + '</div>' +
-      '<div class="vocab-random"><button type="button" class="vocab-btn" onclick="grammarStart(\'all\')">전체에서 무작위 20문제</button></div>';
+    return '<p class="vocab-hint" style="margin-bottom:20px">객관식 3지선다로 영어 문법을 공부하세요!</p><div class="vocab-days gr-days">' + HOLO_GRAMMAR.map(g => {
+        const r = rec[g.id], full = !!r; // 끝까지 한 번이라도 풀었으면 공부한 것으로 친다(점수는 보이지 않는다)
+        return '<button type="button" class="vocab-day' + (full ? " done" : "") + '" onclick="grammarStart(\'' + g.id + '\')"><span class="vd-name">' + escapeHtml(g.label) + '</span><span class="vd-sub">' + g.qs.length + '문제</span>' + (full ? '<span class="vd-check">✓</span>' : "") + '</button>';
+      }).join("") + '<button type="button" class="vocab-day vocab-day-rand" onclick="grammarStart(\x27all\x27)"><span class="vd-name">전체 무작위</span><span class="vd-sub">20문제</span></button></div>';
   }
-  function grammarStart(id) {
+  function grammarStart(id, asTest) {
     let pool, label;
     if (id === "all") { pool = []; HOLO_GRAMMAR.forEach(g => g.qs.forEach(q => pool.push(q))); pool = vocabShuffle(pool).slice(0, 20); label = "문법 전체 무작위"; }
     else { const g = HOLO_GRAMMAR.find(x => x.id === id); if (!g) return; pool = vocabShuffle(g.qs); label = g.label; }
-    const qs = pool.map(q => { const opts = vocabShuffle([{ t: q[1], ok: true }, { t: q[2] }, { t: q[3] }]); return { stem: q[0], opts: opts, answer: opts.findIndex(o => o.ok), ex: q[4] }; });
-    vocabRun = { mode: "grammar", scope: id, label: label, qs: qs, i: 0, score: 0, wrong: [], done: false };
-    grammarRender();
+    const qs = pool.map(q => { const opts = vocabShuffle([{ t: q[1], ok: true }, { t: q[2] }, { t: q[3] }]); return { stem: q[0], opts: opts, answer: opts.findIndex(o => o.ok), ex: q[4], ko: (typeof HOLO_GRAMMAR_KO !== "undefined" && HOLO_GRAMMAR_KO[q[0]]) || "" }; });
+    vocabRun = { mode: "grammar", scope: id, label: label, qs: qs, i: 0, score: 0, wrong: [], done: false, test: !!asTest };
+    vocabSplash(asTest ? "vtest" : "vgrammar", function () { vocabLiveOpen(); grammarRender(); });
   }
   function grammarRender() {
     const r = vocabRun; if (!r || r.mode !== "grammar") return;
@@ -11713,31 +11834,38 @@
     const ex = document.getElementById("grEx");
     ex.style.cssText = "display:block;margin-top:14px;font-size:0.8rem;line-height:1.6;color:var(--ink-soft)";
     ex.innerHTML = '<b style="color:' + (k === q.answer ? "var(--green-deep)" : "#B4452B") + '">' + (k === q.answer ? "정답" : "오답") + '</b> · ' + escapeHtml(q.ex) +
+      (q.ko ? '<div style="margin-top:8px"><b style="color:var(--green-deep)">해석</b> · ' + escapeHtml(q.ko) + '</div>' : "") +
       '<div class="vocab-actions" style="margin-top:12px"><button type="button" class="vocab-btn" onclick="grammarNext()">' + (r.i + 1 >= r.qs.length ? "결과 보기" : "다음 문제") + '</button></div>';
   }
   function grammarNext() { const r = vocabRun; if (!r || r.mode !== "grammar") return; r.done = false; r.i++; grammarRender(); }
   function grammarFinish() {
     const r = vocabRun; if (!r) return;
+    if (r.test) { // 문법 TEST: 단어 TEST와 같은 기록(오늘 응시 완료 · 세트별 최고 점수/통과)
+      const st = vocabLoad(), pass = r.score / r.qs.length >= VOCAB_PASS_RATE;
+      st.tests.push({ date: getLocalDateKey(), scope: "g:" + r.scope, score: r.score, total: r.qs.length, pass: pass, counted: true });
+      if (r.scope !== "all") { const k = "g:" + r.scope, pb = st.best[k], better = !pb || r.score / r.qs.length >= pb.score / pb.total; st.best[k] = better ? { score: r.score, total: r.qs.length, pass: pass || !!(pb && pb.pass) } : { score: pb.score, total: pb.total, pass: pb.pass || pass }; }
+      vocabSave(st); engVocabRender();
+    }
     if (r.scope !== "all") { const rec = grammarLoad(); rec[r.scope] = { best: Math.max(r.score, (rec[r.scope] || {}).best || 0), last: r.score, date: getLocalDateKey() }; grammarSave(rec); }
     vocabWrap().innerHTML =
-      '<div class="vocab-result ' + (r.score / r.qs.length >= VOCAB_PASS_RATE ? "pass" : "fail") + '"><div class="vr-label">' + escapeHtml(r.label) + ' 결과</div><div class="vr-score">' + r.score + ' <span>/ ' + r.qs.length + '</span></div><div class="vr-verdict">' + Math.round(r.score / r.qs.length * 100) + '%</div></div>' +
+      '<div class="vocab-result ' + (r.score / r.qs.length >= VOCAB_PASS_RATE ? "pass" : "fail") + '"><div class="vr-label">' + escapeHtml(r.label) + ' 결과</div><div class="vr-score">' + r.score + ' <span>/ ' + r.qs.length + '</span></div><div class="vr-verdict">' + Math.round(r.score / r.qs.length * 100) + '%</div></div>' + (r.test ? '<p class="vocab-hint" style="text-align:center">오늘 응시 완료로 기록됐어요.</p>' : "") +
       (r.wrong.length ? '<div class="vocab-group-title">틀린 문제 ' + r.wrong.length + '개</div><ul class="vocab-wrong">' + r.wrong.map(q => '<li style="display:block"><b>' + escapeHtml(q.stem) + '</b><span style="display:block;margin-top:4px">' + escapeHtml(q.opts[q.answer].t) + ' — ' + escapeHtml(q.ex) + '</span></li>').join("") + '</ul>' : '<p class="vocab-hint">모두 맞혔어요!</p>') +
-      '<div class="vocab-actions"><button type="button" class="vocab-btn ghost" onclick="initVocab()">목록으로</button><button type="button" class="vocab-btn" onclick="grammarStart(\'' + r.scope + '\')">다시 풀기</button></div>';
+      '<div class="vocab-actions"><button type="button" class="vocab-btn ghost" onclick="initVocab()">목록으로</button><button type="button" class="vocab-btn" onclick="grammarStart(\'' + r.scope + '\'' + (r.test ? ', true' : '') + ')">다시 풀기</button></div>';
     vocabRun = null;
   }
   // ── 홈 "영어 단어 Test" 박스: 영단어 클래스카드(응시 완료 / 미응시)와 영단어 Test(통과 / 미통과 / 미응시)를
   // 학생이 직접 골라 기록한다. 하루(새벽 6시 기준)마다 처음 상태로 돌아가고, 이 기기에 저장된다(서버 · 선생님 연동은 아직 없음).
   const ENG_VOCAB_LABEL = {
     card: { done: "응시 완료", todo: "미응시" },
-    test: { pass: "통과", fail: "미통과", none: "미응시" },
+    test: { done: "응시 완료", pass: "통과", fail: "미통과", none: "미응시" },
   };
   function engVocabKey() { return "holoEngVocab:" + (localStorage.getItem("holoStudentId") || "anon") + ":" + getLocalDateKey(); }
   // 홈 박스의 상태는 영어 단어 페이지의 기록에서 자동으로 정해진다: 오늘 클래스카드를 한 DAY라도 끝내면 "응시 완료", 오늘 마지막 테스트 결과로 "통과 / 미통과"(안 봤으면 "미응시").
   function engVocabGet() {
     const st = vocabLoad(), today = getLocalDateKey();
     const card = Object.keys(st.studied).some(k => st.studied[k] === today) ? "done" : "todo";
-    const todays = st.tests.filter(t => t.date === today);
-    return { card: card, test: todays.length ? (todays[todays.length - 1].pass ? "pass" : "fail") : "none" };
+    const todays = st.tests.filter(t => t.date === today && t.counted); // 그 날짜에 해당하는 DAY 테스트만 홈 기록으로 인정
+    return { card: card, test: todays.length ? "done" : "none" };
   }
   function engVocabRender() {
     const d = engVocabGet();
@@ -11748,7 +11876,7 @@
     }
     if (testEl) {
       testEl.textContent = ENG_VOCAB_LABEL.test[d.test];
-      testEl.classList.toggle("done", d.test === "pass"); testEl.classList.toggle("fail", d.test === "fail"); testEl.classList.toggle("pending", d.test === "none");
+      testEl.classList.toggle("done", d.test === "done" || d.test === "pass"); testEl.classList.toggle("fail", d.test === "fail"); testEl.classList.toggle("pending", d.test === "none");
     }
     document.querySelectorAll(".eng-pop-opt").forEach(b => b.classList.toggle("on", d[b.dataset.k] === b.dataset.v));
   }
@@ -16430,7 +16558,16 @@
   const MEX_ANALYSIS_SUBJECTS = [
     { name: "국어", full: 100 }, { name: "수학", full: 100 }, { name: "영어", full: 100 },
     { name: "사회탐구", full: 50 }, { name: "과학탐구", full: 50 },
+    { name: "한국사", full: 50 }, { name: "제2외국어·한문", full: 50 },
   ];
+  const MEX_ANALYSIS_DEFAULT = ["국어", "수학", "영어", "사회탐구", "과학탐구"];
+  let mexAnAddOpen = false;
+  function mexAnKey() { return "holoMexAnSubjects:" + (localStorage.getItem("holoStudentId") || "anon"); }
+  function mexAnShown() { try { const a = JSON.parse(localStorage.getItem(mexAnKey())); if (Array.isArray(a)) return a.filter(n => MEX_ANALYSIS_SUBJECTS.some(s => s.name === n)); } catch (e) {} return MEX_ANALYSIS_DEFAULT.slice(); }
+  function mexAnSave(a) { try { localStorage.setItem(mexAnKey(), JSON.stringify(a)); } catch (e) {} }
+  function mexAnRemove(name) { mexAnSave(mexAnShown().filter(n => n !== name)); mexRenderAnalysis(); }
+  function mexAnAdd(name) { const a = mexAnShown(); if (a.indexOf(name) < 0) a.push(name); mexAnSave(a); mexAnAddOpen = false; mexRenderAnalysis(); }
+  function mexAnToggleAdd() { mexAnAddOpen = !mexAnAddOpen; mexRenderAnalysis(); }
   function mexReasonLabel(note) {
     if (note.reason === "custom" || note.reason === "etc") return (note.reasonCustom || "").trim() || "기타(직접 입력)";
     return (MEX_WRONGNOTE_REASONS.find(r => r.value === note.reason) || {}).label || note.reason;
@@ -16440,7 +16577,11 @@
     const el = document.getElementById("mexAnalysisCard");
     if (!el) return;
     const exams = mexLoadExams().filter(e => (e.category || "mock") === "mock");
-    el.innerHTML = '<div class="mex-an5">' + MEX_ANALYSIS_SUBJECTS.map(sub => {
+    const shown = mexAnShown(), hidden = MEX_ANALYSIS_SUBJECTS.filter(s => shown.indexOf(s.name) < 0);
+    const addCell = hidden.length ? '<div class="mex-an5-add">' + (mexAnAddOpen
+      ? '<div class="mex-an5-add-list">' + hidden.map(s => '<button type="button" onclick="mexAnAdd(\'' + s.name + '\')">' + s.name + '<span>' + s.full + '점</span></button>').join("") + '<button type="button" class="cancel" onclick="mexAnToggleAdd()">닫기</button></div>'
+      : '<button type="button" class="mex-an5-add-btn" onclick="mexAnToggleAdd()">+ 과목 추가하기</button>') + '</div>' : "";
+    el.innerHTML = '<div class="mex-an5">' + shown.map(n => MEX_ANALYSIS_SUBJECTS.find(s => s.name === n)).map(sub => {
       const list = exams.filter(e => e.subject === sub.name).slice().sort((a, b) => a.date.localeCompare(b.date));
       const pts = list.filter(e => e.scoreMine !== "" && e.scoreMine != null && Number(e.scoreMax) > 0)
         .map(e => ({ id: e.id, value: Math.round(Number(e.scoreMine) / Number(e.scoreMax) * sub.full * 10) / 10 }));
@@ -16452,13 +16593,13 @@
       const top = Object.keys(cnt).map(l => ({ l: l, c: cnt[l] })).sort((a, b) => b.c - a.c).slice(0, 3);
       const avg = pts.length ? Math.round(pts.reduce((s, p) => s + p.value, 0) / pts.length * 10) / 10 : null;
       return '<div class="mex-an5-box">' +
-        '<div class="mex-an5-name">' + sub.name + '<span>' + sub.full + '점 만점 환산</span></div>' +
+        '<div class="mex-an5-name"><b>' + sub.name + '</b><span>' + sub.full + '점 만점 환산</span><button type="button" class="mex-an5-x" aria-label="이 과목 숨기기" onclick="mexAnRemove(\'' + sub.name + '\')">×</button></div>' +
         '<div class="mex-an5-avg">' + (avg === null ? '<em>기록 없음</em>' : avg + '<small>점 · 평균 ' + pts.length + '회</small>') + '</div>' +
         '<div class="mex-an5-chart">' + (pts.length ? mexTrendSvg(pts) : '') + '</div>' +
         '<div class="mex-an5-lab">오답 원인 TOP 3</div>' +
         '<ol class="mex-an5-reasons">' + (top.length ? top.map(t => '<li><span>' + escapeHtml(t.l) + '</span><b>' + t.c + '회</b></li>').join("") : '<li class="none">기록 없음</li>') + '</ol>' +
       '</div>';
-    }).join("") + '</div>';
+    }).join("") + addCell + '</div>';
   }
   function mexRenderAnalysisLegacy() {
     const el = document.getElementById("mexAnalysisCard");
