@@ -2878,6 +2878,28 @@
   .hp-photo { position: absolute; right: 0; bottom: 0; width: 30%; height: 100%; display: block; opacity: 0.4; z-index: 0; } /* 글씨 뒤에 깔리는 흐린 사람 모양 */
   .hp-cutout { object-fit: contain; object-position: center bottom; padding: 8px 6px 0 0; box-sizing: border-box; } /* 배경 없는 회색 사람 누끼 이미지(gray-person-cutout.png) */
   .hd-right-top .home-poster { flex: 1 1 0; min-width: 0; }
+  /* 홈 빈 자리의 "머리 식히기" 스톱워치 — 식히는 시간 재기 · 공부로 돌아가기 버튼 하나, 아래에 오늘 식힌 시간 */
+  /* 머리 식히기: 다른 박스처럼 흰 카드 · 테두리 없이, 홈 바탕 위에 그냥 놓이는 가벼운 위젯 */
+  .home-rest { background: transparent; border: none; padding: 6px 16px 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 160px; box-sizing: border-box; position: relative; }
+  .home-rest-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; color: var(--ink-soft); }
+  .home-rest-time { font-size: 2.6rem; font-weight: 300; color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: 0.01em; margin: 0; line-height: 1.1; }
+  .home-rest.running .home-rest-time { color: var(--green-deep); }
+  .home-rest-btn { margin: 0; min-width: 132px; font-family: inherit; font-size: 0.76rem; font-weight: 700; color: #fff; background: var(--green-deep); border: none; border-radius: 999px; padding: 8px 22px; cursor: pointer; }
+  .home-rest-btn:hover { opacity: 0.88; }
+  .home-rest.running .home-rest-btn { color: var(--green-deep); background: transparent; box-shadow: inset 0 0 0 1px var(--green-deep); }
+  .home-rest-total { margin: 0; font-size: 0.72rem; color: var(--ink-soft); padding: 0; border: none; text-align: center; }
+  /* 머리 식히기 박스 오른쪽 위: 일반 스톱워치 · 타이머(전체 화면으로 열림) — 시험 시뮬레이션에서 옮겨 왔다 */
+  .home-rest { position: relative; }
+  .home-rest-tools { position: absolute; top: 16px; right: 14px; display: flex; flex-direction: column; align-items: stretch; gap: 6px; }
+  .home-rest-tools button { display: flex; align-items: center; gap: 6px; width: 98px; box-sizing: border-box; font-family: inherit; font-size: 0.68rem; font-weight: 700; color: var(--ink); background: #fff; border: 1px solid var(--line-dark); border-radius: 999px; padding: 5px 11px 5px 9px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+  .home-rest-tools button:hover, .home-rest-tools button:active { background: var(--cream); border-color: var(--ink-soft); }
+  .home-rest-tools svg { width: 12px; height: 12px; flex: none; color: var(--ink-soft); }
+  .home-rest-tools .hrt-label { flex: 1; text-align: left; }
+  .home-rest-tools .hrt-arrow { flex: none; color: var(--green); font-weight: 800; font-size: 0.8rem; line-height: 1; }
+  @media (min-width: 901px) {
+    .home-dash .home-promo-slot .home-rest { grid-column: 1 / span 2; grid-row: 2; min-height: 0; }
+  }
+  @media (max-width: 1100px) { #view-home .home-rest-title { font-size: 0.74rem; } }
   /* 홈 영어 단어 Test 박스: 오늘의 공부 박스처럼 제목 아래에 상태 두 줄(라벨 + 상태 글씨) */
   .home-eng-status { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 9px; padding: 0 2px; }
   .home-eng-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 8px; }
@@ -6431,6 +6453,15 @@
     .mexp-lap .exend-lap-row { display: flex; justify-content: space-between; font-size: 9pt; background: none; padding: 2px 0; border-bottom: 1px dotted #ccc; }
     .mexp-lap .exend-lap-group-head { display: flex; justify-content: space-between; font-weight: 700; margin-top: 8px; }
   }
+  /* 타이머 · 스톱워치 · 시험 시뮬레이션을 시작하기 전에 뜨는 이어폰 안내 — "확인했습니다"를 눌러야만 닫힌다(바깥 클릭 · Esc로는 안 닫힘) */
+  .earphone-warn { display: none; position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; padding: 20px; }
+  .earphone-warn.on { display: flex; }
+  .earphone-warn-card { background: #fff; border-radius: 16px; padding: 28px 26px 22px; max-width: 360px; width: 100%; text-align: center; box-shadow: 0 16px 48px rgba(0,0,0,0.3); }
+  .earphone-warn-ico { width: 34px; height: 34px; color: var(--green-deep); margin-bottom: 10px; }
+  .earphone-warn-title { margin: 0 0 8px; font-size: 1.05rem; font-weight: 800; color: var(--ink); }
+  .earphone-warn-body { margin: 0 0 20px; font-size: 0.82rem; line-height: 1.6; color: var(--ink-soft); text-wrap: balance; word-break: keep-all; }
+  .earphone-warn-btn { width: 100%; font-family: inherit; font-size: 0.88rem; font-weight: 700; color: #fff; background: var(--green-deep); border: none; border-radius: 10px; padding: 12px 16px; cursor: pointer; }
+  .earphone-warn-btn:hover { opacity: 0.9; }
   .toast-msg {
     position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%) translateY(10px);
     background: var(--ink); color: #fff; font-size: 0.82rem; font-weight: 600;
@@ -6725,6 +6756,14 @@
           </div>
         </div>
       </div>
+<div class="earphone-warn" id="earphoneWarn" role="alertdialog" aria-modal="true" aria-labelledby="earphoneWarnTitle">
+  <div class="earphone-warn-card">
+    <svg class="earphone-warn-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+    <h3 class="earphone-warn-title" id="earphoneWarnTitle">이어폰을 꼭 착용해주세요</h3>
+    <p class="earphone-warn-body">독서실에서 사용하는 경우, 다른 학생에게 방해가 되지 않도록 반드시 이어폰을 착용한 뒤 시작해주세요.</p>
+    <button type="button" class="earphone-warn-btn" onclick="earphoneConfirm()">확인했습니다</button>
+  </div>
+</div>
 <div class="toast-msg" id="toastMsg"></div>
 
 <!-- ═══ 캐러셀 확대 보기 ═══ -->
@@ -7194,6 +7233,16 @@
           <div class="home-eng-row"><span class="rh-tile-status-label">영단어 Test</span><span class="rh-tile-status-val pending" id="engStatus-test">미응시</span></div>
         </div>
       </div>
+      </div>
+      <div class="home-rest" id="homeRestBox">
+        <div class="home-rest-title">머리 식히기</div>
+        <div class="home-rest-tools">
+          <button type="button" onclick="genTimerOpen('stopwatch')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg><span class="hrt-label">스톱워치</span><span class="hrt-arrow">›</span></button>
+          <button type="button" onclick="genTimerOpen('timer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2h12M6 22h12M7 2c0 6 5 6 5 10s-5 4-5 10M17 2c0 6-5 6-5 10s5 4 5 10"/></svg><span class="hrt-label">타이머</span><span class="hrt-arrow">›</span></button>
+        </div>
+        <div class="home-rest-time" id="homeRestTime">00:00</div>
+        <button type="button" class="home-rest-btn" id="homeRestBtn" onclick="restToggle()">식히는 시간 재기</button>
+        <div class="home-rest-total" id="homeRestTotal">오늘 식힌 시간 0초 · 0번</div>
       </div>
     </div>
       </div>
@@ -7855,16 +7904,6 @@
         <button type="button" class="exsim-hub-btn" onclick="go('mockexam')">
           <span class="exsim-hub-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="4" height="9"/><rect x="10" y="5" width="4" height="15"/><rect x="16" y="14" width="4" height="6"/></svg></span>
           <span class="exsim-hub-title">누적된 기록 확인하기</span>
-        </button>
-      </div>
-      <div class="exsim-hub-buttons" style="margin-top:12px;">
-        <button type="button" class="exsim-hub-btn" onclick="genTimerOpen('stopwatch')">
-          <span class="exsim-hub-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.5 1.5M9.5 3h5M12 3v3"/></svg></span>
-          <span class="exsim-hub-title">스톱워치</span>
-        </button>
-        <button type="button" class="exsim-hub-btn" onclick="genTimerOpen('timer')">
-          <span class="exsim-hub-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12M6 21h12M7 3c0 5 5 6 5 9s-5 4-5 9M17 3c0 5-5 6-5 9s5 4 5 9"/></svg></span>
-          <span class="exsim-hub-title">타이머</span>
         </button>
       </div>
     </div>
@@ -11083,7 +11122,7 @@
     if (view === "cumulative") loadDayList();
     // "오늘의 학습 기록" 카드(계획/일기/AI 홀로 현황 + 점수)가 이제 홈 화면에 있어서, 홈에
     // 들어올 때도 recordhub와 똑같이 loadTodayTileStatus()로 채운다.
-    if (view === "home") { syncHomeCardHeights(); loadTodayTileStatus(); engVocabRender(); loadHomeScheduleToday(); loadHomePlannerToday(); loadHomeWeeklyOverview(); }
+    if (view === "home") { syncHomeCardHeights(); loadTodayTileStatus(); engVocabRender(); restRender(); loadHomeScheduleToday(); loadHomePlannerToday(); loadHomeWeeklyOverview(); }
     if (view === "recordhub") { loadRecordHubStatus(); setRhWeekLabels(); loadRhWeekScore(); }
     if (view === "scheduleManage") loadScheduleManage();
     if (view === "examhub") initExamHub();
@@ -11371,6 +11410,49 @@
     engVocabRender();
   }
   document.addEventListener("keydown", e => { if (e.key === "Escape") engVocabClose(); });
+  // ── 홈 "머리 식히기" 스톱워치: 쉬는 시간 전에 머리가 과부하일 때 식히는 시간 재기 → 공부로 돌아가기를 눌러 실제로 쉰 시간을 잰다.
+  // 오늘(새벽 6시 기준) 누적 쉬는 시간과 횟수를 아래에 보여준다. 새로고침해도 이어서 재고, 이 기기에만 저장된다.
+  function restKey() { return "holoRest:" + (localStorage.getItem("holoStudentId") || "anon"); }
+  function restLoad() {
+    let s = {};
+    try { s = JSON.parse(localStorage.getItem(restKey()) || "{}") || {}; } catch (e) {}
+    const today = getLocalDateKey();
+    // 하루가 바뀌었고 쉬는 중이 아니면 처음 상태로 돌아간다(쉬는 중이면 그 쉬기가 끝날 때까지 그대로 둔다).
+    if (s.day !== today && !s.runningSince) s = { day: today, total: 0, count: 0, runningSince: null };
+    return { day: s.day || today, total: Number(s.total) || 0, count: Number(s.count) || 0, runningSince: s.runningSince ? Number(s.runningSince) : null };
+  }
+  function restSave(s) { try { localStorage.setItem(restKey(), JSON.stringify(s)); } catch (e) {} }
+  function restToggle() {
+    const s = restLoad();
+    if (s.runningSince) {
+      const sec = Math.floor((Date.now() - s.runningSince) / 1000);
+      if (sec >= 3) { s.total += sec; s.count += 1; } // 3초 미만은 잘못 누른 것으로 보고 기록하지 않는다
+      s.runningSince = null;
+    } else {
+      s.runningSince = Date.now();
+    }
+    restSave(s); restRender();
+  }
+  function restFmtClock(sec) {
+    const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), x = sec % 60, p = n => String(n).padStart(2, "0");
+    return (h ? p(h) + ":" : "") + p(m) + ":" + p(x);
+  }
+  function restFmtTotal(sec) {
+    if (sec < 60) return sec + "초";
+    const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60);
+    return h ? h + "시간 " + m + "분" : m + "분";
+  }
+  function restRender() {
+    const box = document.getElementById("homeRestBox");
+    if (!box) return;
+    const s = restLoad();
+    const cur = s.runningSince ? Math.max(0, Math.floor((Date.now() - s.runningSince) / 1000)) : 0;
+    box.classList.toggle("running", !!s.runningSince);
+    document.getElementById("homeRestTime").textContent = restFmtClock(cur);
+    document.getElementById("homeRestBtn").textContent = s.runningSince ? "공부로 돌아가기" : "식히는 시간 재기";
+    document.getElementById("homeRestTotal").textContent = "오늘 식힌 시간 " + restFmtTotal(s.total + cur) + " · " + s.count + "번";
+  }
+  setInterval(restRender, 1000);
   function loadTodayTileStatus() {
     const studentId = localStorage.getItem("holoStudentId");
     if (!studentId) return;
@@ -14730,7 +14812,8 @@
       ? { ready: "13:07", start: "13:07" }
       : { ready: "13:05", start: "13:10" });
   }
-  function exsimOpen(periodOrId) {
+  function exsimOpen(periodOrId) { earphoneGuard(function () { exsimOpenReal(periodOrId); }); }
+  function exsimOpenReal(periodOrId) {
     let period = typeof periodOrId === "string" ? EXAM_PERIODS.find(p => p.id === periodOrId) : periodOrId;
     period = exsimResolvePeriod(period);
     if (!period) return;
@@ -15439,7 +15522,19 @@
     if (s.mode === "timer") return s.elapsedSec * 1000;
     return s.baseMs + (s.running ? Date.now() - s.startedAt : 0);
   }
-  function genTimerOpen(mode) {
+  // ── 이어폰 착용 안내: 타이머 · 스톱워치 · 시험 시뮬레이션을 열기 전에 띄우고, "확인했습니다"를 누르면 그때 원래 하려던 동작을 이어서 한다.
+  let earphoneAfter = null;
+  function earphoneGuard(next) {
+    earphoneAfter = next;
+    document.getElementById("earphoneWarn").classList.add("on");
+  }
+  function earphoneConfirm() {
+    document.getElementById("earphoneWarn").classList.remove("on");
+    const next = earphoneAfter; earphoneAfter = null;
+    if (next) next();
+  }
+  function genTimerOpen(mode) { earphoneGuard(function () { genTimerOpenReal(mode); }); }
+  function genTimerOpenReal(mode) {
     genTimerState = { mode: mode, totalSec: 0, elapsedSec: 0, running: false, baseMs: 0, startedAt: null, started: false, laps: [] };
     document.getElementById("genTimerBadge").textContent = mode === "timer" ? "타이머" : "스톱워치";
     // 스톱워치는 들어오자마자 자동으로 흐르지 않고, 컨트롤(일시정지/±30초)은 미리 보여준 채
