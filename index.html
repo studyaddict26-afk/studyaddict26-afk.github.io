@@ -3705,6 +3705,7 @@
     display: flex; flex-direction: column; gap: 16px;
   }
   .mex-dday-row { display: flex; gap: 10px; }
+  #view-examhub .mex-dday-row { margin-bottom: 14px; }
   .mex-dday-card { flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 10px 14px; display: flex; flex-direction: column; justify-content: center; }
   /* 가로로 배치해 카드 높이를 절반쯤으로: 왼쪽 = 이름 · 날짜, 오른쪽 = D-숫자 */
   .mex-dday-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 10px; row-gap: 1px; align-items: center; }
@@ -4140,14 +4141,16 @@
   }
   .mex-form-cancel-btn { background: var(--cream); color: var(--ink-soft); border: 1px solid var(--line); }
   .mex-form-save-btn { background: var(--green-deep); color: #fff; }
-  .mex-list { display: flex; flex-direction: column; gap: 10px; }
-  .mex-list-empty { text-align: center; color: var(--ink-soft); font-size: 0.84rem; padding: 32px; border: 1px dashed var(--line); border-radius: 12px; }
+  .mex-list { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); overflow: hidden; } /* 기록 줄들을 하나의 박스로 묶고 줄 사이는 가는 선으로 나눈다 */
+  .mex-list-empty { text-align: center; color: var(--ink-soft); font-size: 0.84rem; padding: 32px; border: none; border-radius: 12px; }
   .mex-hint { font-size: 0.8rem; font-weight: 600; color: var(--ink-soft); margin-top: 10px; }
   .mex-list-row {
     display: flex; align-items: center; gap: 6px;
-    border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 14px 18px;
+    border: none; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; padding: 14px 18px;
+    transition: background 0.15s;
   }
-  .mex-list-row:hover { border-color: var(--green); }
+  .mex-list-row:last-child { border-bottom: none; }
+  .mex-list-row:hover { background: var(--cream); }
   .mex-list-row-main {
     flex: 1; min-width: 0; background: none; border: none; padding: 0; cursor: pointer; text-align: left; font-family: inherit;
     font-size: 0.76rem; font-weight: 700; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -8158,6 +8161,8 @@
       <div class="split"></div>
     </div>
     <div class="exsim-wrap">
+      <!-- 수능 · 모의고사 · 내신 디데이(예전에는 모의고사·내신 관리하기 화면 맨 위에 있었다) -->
+      <div class="mex-dday-row" id="mexDdayRow"></div>
       <div class="exsim-hub-buttons">
         <button type="button" class="exsim-hub-btn" onclick="go('examSuneung')">
           <span class="exsim-hub-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5-10-5z"/><path d="M6 11.5V16c0 1.2 2.7 3 6 3s6-1.8 6-3v-4.5"/><path d="M22 9v6"/></svg></span>
@@ -8167,11 +8172,11 @@
           <span class="exsim-hub-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.5 5.2 8 4.5 4 4.5v13c4 0 6.5.7 8 2 1.5-1.3 4-2 8-2v-13c-4 0-6.5.7-8 2z"/><path d="M12 6.5v13"/></svg></span>
           <span class="exsim-hub-title">내신 시뮬레이션</span>
         </button>
-        <button type="button" class="exsim-hub-btn" onclick="go('mockexam')">
-          <span class="exsim-hub-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="4" height="9"/><rect x="10" y="5" width="4" height="15"/><rect x="16" y="14" width="4" height="6"/></svg></span>
-          <span class="exsim-hub-title">누적된 기록 확인하기</span>
-        </button>
       </div>
+      <div class="vocab-callout" style="margin-top:16px"><span class="vc-ico">i</span><ul>
+        <li>내신 시뮬레이션은 기록하지 않아요.</li>
+        <li>수능 시뮬레이션은 응시가 끝난 뒤 기록창에 내용을 입력하면, 모의고사 관리하기 페이지에서 확인할 수 있어요.</li>
+      </ul></div>
     </div>
   </section>
 
@@ -9141,28 +9146,6 @@
       </div>
 
       <div class="exsim-selected-card" id="exsimNaeshinSelectedCard"></div>
-    </div>
-  </section>
-
-  <!-- ─── 모의고사·내신 관리하기(허브): 디데이 3개 + 하위 페이지 이동 버튼 ─── -->
-  <section class="view" id="view-mockexam">
-    <div class="chat-head">
-      <span class="eyebrow">MOCK EXAM</span>
-      <h2>모의고사·내신 관리하기</h2>
-      <div class="split"></div>
-    </div>
-    <div class="mex-wrap">
-      <div class="mex-dday-row" id="mexDdayRow"></div>
-      <div class="exsim-hub-buttons">
-        <button type="button" class="exsim-hub-btn" onclick="mexGoList('mock')">
-          <span class="exsim-hub-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1-4L16 5l3 3L8 19l-4 1z"/><path d="M14 7l3 3"/></svg></span>
-          <span class="exsim-hub-title">모의고사 관리하기</span>
-        </button>
-        <button type="button" class="exsim-hub-btn" onclick="mexGoList('naeshin')">
-          <span class="exsim-hub-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.5 5.2 8 4.5 4 4.5v13c4 0 6.5.7 8 2 1.5-1.3 4-2 8-2v-13c-4 0-6.5.7-8 2z"/><path d="M12 6.5v13"/></svg></span>
-          <span class="exsim-hub-title">내신 관리하기</span>
-        </button>
-      </div>
     </div>
   </section>
 
@@ -11187,7 +11170,7 @@
     "consult-materials": "consult", "consult-community": "consult", "consult-home": "consult", "consult-myclass": "consult-home",
     "consult-programs": "consult-home",
     vocabpick: "home", vocab: "vocabpick", todayrecord: "home", cumulative: "recordhub", reports: "recordhub", dayDetail: "cumulative",
-    examSuneung: "examhub", examNaeshin: "examhub", mexlist: "mockexam",
+    examSuneung: "examhub", examNaeshin: "examhub", mexlist: "examhub",
     mathexam: "examhub", engexam: "examhub",
     recordhub: "home", plannerPage: "home", scheduleManage: "home", mockexam: "home",
     examhub: "home", howto: "home", ranking: "home", mypage: "home", studymusic: "home", community: "home",
@@ -11376,6 +11359,7 @@
   let currentView = "home";
   function go(view) {
     if (!MEX_PAGES_READY && (view === "mockexam" || view === "mexlist")) { showToast("준비중입니다"); return; }
+    if (view === "mockexam") { mexGoList("mock"); return; } // "누적된 기록" 중간 페이지는 없앴다 — 홈의 모의고사 디데이 등에서는 바로 모의고사 관리하기로 간다
     if (currentView && currentView !== view && !navGoingBack) { if (view === "home") navStack = []; else { navStack.push(currentView); if (navStack.length > 30) navStack.shift(); } }
     if (currentView === "consult-home" && view !== "consult-home") chomeStopAuto();
     currentView = view;
@@ -11427,7 +11411,6 @@
     if (view === "vocabpick") engVocabRender();
     if (view === "examSuneung") initExamSuneung();
     if (view === "examNaeshin") initExamNaeshin();
-    if (view === "mockexam") initMockExam();
     if (view === "mexlist") initMexlist();
     if (view === "ranking") switchRankingTab("today"); // 매번 "오늘의 랭킹" 탭부터 새로 불러온다
     if (view === "academyHome") loadAcademyData();
@@ -15120,7 +15103,7 @@
   }
 
   // 시험 시뮬레이션 허브 — 수능/내신/누적된 기록 세 페이지로 들어가는 선택 화면, 별도 초기화 없음.
-  function initExamHub() {}
+  function initExamHub() { mexRenderDday(); }
   function initExamSuneung() {
     if (!exsimCheckedIds.length) exsimCheckedIds = ["kor"];
     exsimRenderSelectedCard();
@@ -16023,6 +16006,13 @@
     }
     document.getElementById("exsimLive").classList.remove("on");
     exsimState = null;
+    // 내신 시뮬레이션은 끝나도 "기록하기" 팝업을 띄우지 않는다(내신 기록은 남기지 않는다) — 그냥 내신 시뮬레이션 화면으로 돌아온다.
+    // 수능 시뮬레이션은 기존처럼 종료 팝업에서 기록할 수 있다.
+    if (state && state.period && state.period.id === "naeshin") {
+      exsimEndData = null;
+      showToast("시험이 끝났어요. 수고했어요!");
+      return;
+    }
     exsimShowEnd(state);
   }
 
@@ -17316,14 +17306,21 @@
         showToast("성찰 할 문제를 추가하고 작성해주세요");
         return;
       }
-      // 추가한 문제마다 4가지 질문을 전부 채워야 제출할 수 있다 — 비어 있는 문제로 이동해서 알려준다.
+      // 추가한 문제마다 "오답 원인"은 반드시 골라야 하고, 4가지 질문은 하나만 써도 제출할 수 있다 — 부족한 문제로 이동해서 알려준다.
       for (const n of mexReflectionNums) {
         const note = mexReflectionDraft[n] || {};
-        const missing = ["q1", "q2", "q3", "q4"].findIndex(k => !note[k]);
-        if (missing !== -1) {
+        const needsCustom = note.reason === "custom" || note.reason === "etc";
+        if (!note.reason || (needsCustom && !(note.reasonCustom || "").trim())) {
           mexSelectReflectionNum(n);
-          showToast(n + "번 문제의 " + (missing + 1) + "번 질문에 대한 답변을 입력해주세요");
-          const ta = document.getElementById("mexReflectionQ" + (missing + 1));
+          showToast(n + "번 문제의 오답 원인을 " + (note.reason ? "직접 입력" : "선택") + "해주세요");
+          const sel = document.getElementById("mexReflectionReason");
+          if (sel) sel.focus();
+          return;
+        }
+        if (!["q1", "q2", "q3", "q4"].some(k => (note[k] || "").trim())) {
+          mexSelectReflectionNum(n);
+          showToast(n + "번 문제의 질문 4개 중 하나 이상에 답변을 입력해주세요");
+          const ta = document.getElementById("mexReflectionQ1");
           if (ta) ta.focus();
           return;
         }
