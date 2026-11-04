@@ -2918,6 +2918,11 @@
   @media (max-width: 1100px) { #view-home .home-rest-title { font-size: 0.74rem; } }
   /* 홈 영어 단어 Test 박스: 오늘의 공부 박스처럼 제목 아래에 상태 두 줄(라벨 + 상태 글씨) */
   .home-eng-status { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 7px; padding: 0 2px; }
+  .vring { position: relative; flex: none; width: min(92px, 100%); aspect-ratio: 1; }
+  .vring svg { width: 100%; height: 100%; display: block; }
+  .vring-num { position: absolute; inset: 0; display: flex; align-items: baseline; justify-content: center; gap: 2px; padding-top: 31%; }
+  .vring-num b { font-size: 1.5rem; font-weight: 800; color: var(--ink); line-height: 1; }
+  .vring-num span { font-size: 0.7rem; font-weight: 700; color: var(--ink-soft); }
   .home-eng-test .rh-tile-status-label { font-size: 0.7rem; }
   .home-eng-test .rh-tile-status-val { font-size: 0.58rem; width: 64px; padding: 2px 8px; }
   #view-home .home-eng-test .rh-tile-status-label { font-size: 0.62rem; }
@@ -6589,6 +6594,12 @@
   .vhome button { font-family: inherit; text-align: center; align-items: center; background: #fff; border: 1px solid var(--line-dark); border-radius: 14px; padding: 0 26px; height: clamp(150px, 26vh, 230px); cursor: pointer; display: flex; flex-direction: column; justify-content: center; gap: 10px; transition: background 0.15s, border-color 0.15s; }
   .vhome button:hover { background: var(--cream); border-color: var(--green-deep); }
   .vhome.vhome4 button { height: clamp(84px, 14vh, 120px); }
+  .vhome button { position: relative; }
+  .vpick-badge { position: absolute; top: 10px; right: 12px; font-style: normal; font-size: 0.64rem; font-weight: 800; padding: 3px 10px; border-radius: 999px; color: var(--ink-soft); background: var(--cream); border: 1px solid var(--line); }
+  .vhome button.vpick-done { background: #EAF4EA; border-color: #4C9A5B; }
+  .vhome button.vpick-done:hover { background: #DFEFE0; }
+  .vhome button.vpick-done b { color: #1F5E2E; }
+  .vhome button.vpick-done .vpick-badge { color: #1F5E2E; background: #fff; border-color: #4C9A5B; }
   .vhome.vhome4 b { font-size: 1.15rem; }
   .vhome b { font-size: 1.35rem; font-weight: 800; color: var(--ink); }
   .vhome span { font-size: 0.8rem; line-height: 1.5; color: var(--ink-soft); }
@@ -7426,11 +7437,11 @@
         <div class="home-schedule-head">
           <a class="home-schedule-title" href="#">어휘력 Test <span class="arrow">›</span></a>
         </div>
-        <div class="home-eng-status">
-          <div class="home-eng-row"><span class="rh-tile-status-label">영어 단어</span><span class="rh-tile-status-val pending" id="engStatus-word">미응시</span></div>
-          <div class="home-eng-row"><span class="rh-tile-status-label">영어 문법</span><span class="rh-tile-status-val pending" id="engStatus-grammar">미응시</span></div>
-          <div class="home-eng-row"><span class="rh-tile-status-label">국어 고전 어휘</span><span class="rh-tile-status-val pending">미응시</span></div>
-          <div class="home-eng-row"><span class="rh-tile-status-label">국어 기본 어휘</span><span class="rh-tile-status-val pending">미응시</span></div>
+        <div class="home-schedule-inner hp-plan-inner">
+          <div class="hp-status">
+            <div class="vring" id="vocabRing"></div>
+            <div class="hp-status-text" id="vocabRingText">확인 중…</div>
+          </div>
         </div>
       </div>
       </div>
@@ -8118,8 +8129,8 @@
         <li class="vc-em">점수는 중요하지 않습니다. 통과할 때까지 반복해서 응시하세요.</li>
       </ul></div>
       <div class="vhome vhome4">
-        <button type="button" onclick="go('vocab');vocabPickSubject('word')"><b>영어 단어</b><span>공부하기 · TEST 응시하기</span></button>
-        <button type="button" onclick="go('vocab');vocabPickSubject('grammar')"><b>영어 문법</b><span>공부하기 · TEST 응시하기</span></button>
+        <button type="button" id="pickBtn-word" onclick="go('vocab');vocabPickSubject('word')"><em class="vpick-badge" id="pickStatus-word">미응시</em><b>영어 단어</b><span>공부하기 · TEST 응시하기</span></button>
+        <button type="button" id="pickBtn-grammar" onclick="go('vocab');vocabPickSubject('grammar')"><em class="vpick-badge" id="pickStatus-grammar">미응시</em><b>영어 문법</b><span>공부하기 · TEST 응시하기</span></button>
         <button type="button" onclick="showToast('국어 고전 어휘는 준비중입니다')"><b>국어 고전 어휘</b><span>준비중입니다</span></button>
         <button type="button" onclick="showToast('국어 기본 어휘는 준비중입니다')"><b>국어 기본 어휘</b><span>준비중입니다</span></button>
       </div>
@@ -11409,6 +11420,7 @@
     if (view === "scheduleManage") loadScheduleManage();
     if (view === "examhub") initExamHub();
     if (view === "vocab") { vocabStage = "home"; initVocab(); }
+    if (view === "vocabpick") engVocabRender();
     if (view === "examSuneung") initExamSuneung();
     if (view === "examNaeshin") initExamNaeshin();
     if (view === "mockexam") initMockExam();
@@ -12007,9 +12019,20 @@
       testEl.textContent = ENG_VOCAB_LABEL.test[d.test];
       testEl.classList.toggle("done", d.test === "done" || d.test === "pass"); testEl.classList.toggle("fail", d.test === "fail"); testEl.classList.toggle("pending", d.test === "none");
     }
-    [["engStatus-word", d.word], ["engStatus-grammar", d.grammar]].forEach(p => {
-      const el = document.getElementById(p[0]); if (!el) return;
-      el.textContent = ENG_VOCAB_LABEL.test[p[1]]; el.classList.toggle("done", p[1] === "done"); el.classList.toggle("pending", p[1] !== "done");
+    // 홈 "어휘력 Test" 박스: 4개 중 오늘 응시 완료한 개수를 4칸 링으로 보여준다(영어 단어 · 영어 문법 · 국어 고전 어휘 · 국어 기본 어휘 — 국어 둘은 아직 준비중이라 항상 미완료).
+    const ringEl = document.getElementById("vocabRing");
+    if (ringEl) {
+      const flags = [d.word === "done", d.grammar === "done", false, false], n = flags.filter(Boolean).length, C = 2 * Math.PI * 40, seg = C / 4;
+      const arcs = flags.map((on, i) => '<circle cx="50" cy="50" r="40" fill="none" stroke="' + (on ? "#0D2155" : "#E4E1D9") + '" stroke-width="9" stroke-linecap="round" stroke-dasharray="' + (seg - 9).toFixed(2) + ' ' + (C - seg + 9).toFixed(2) + '" transform="rotate(' + (-90 + i * 90 + 4) + ' 50 50)"/>').join("");
+      ringEl.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true">' + arcs + '</svg><div class="vring-num"><b>' + n + '</b><span>/ 4</span></div>';
+      const tx = document.getElementById("vocabRingText");
+      if (tx) { tx.textContent = n === 0 ? "오늘 응시 전이에요" : n === 4 ? "오늘 모두 완료!" : "오늘 " + n + "개 응시 완료"; tx.className = "hp-status-text" + (n ? " done" : ""); }
+    }
+    // 어휘력 Test 선택 페이지의 영어 단어 / 영어 문법 버튼: 오늘 응시했으면 녹색 + "✓ 응시 완료", 아니면 "미응시"
+    [["word", d.word], ["grammar", d.grammar]].forEach(p => {
+      const el = document.getElementById("pickStatus-" + p[0]), btn = document.getElementById("pickBtn-" + p[0]); if (!el || !btn) return;
+      const done = p[1] === "done";
+      el.textContent = done ? "✓ 응시 완료" : "미응시"; btn.classList.toggle("vpick-done", done);
     });
     document.querySelectorAll(".eng-pop-opt").forEach(b => b.classList.toggle("on", d[b.dataset.k] === b.dataset.v));
   }
@@ -13533,7 +13556,16 @@
     const plannerBody = document.getElementById("plannerBody");
     const ghost = document.getElementById("plannerBodyGhost");
     if (plannerBody && gateBody && ghost && plannerBody.parentElement !== gateBody) {
-      ghost.style.height = plannerBody.getBoundingClientRect().height + "px";
+      ghost.style.minHeight = plannerBody.getBoundingClientRect().height + "px";
+      // 팝업 뒤에는 "최초 계획 / 계획 수정하면서 공부하기" 두 칸이 비어 있는 모습으로 보이게 한다(클릭 안 되는 배경용).
+      const blocks = ["오전", "오후", "저녁"];
+      ghost.innerHTML = '<div class="planner-body" style="pointer-events:none;user-select:none"><div class="planner-dual">' +
+        '<div class="planner-col planner-col-original"><div class="planner-col-head">최초 계획</div><div class="planner-col-body">' +
+        blocks.map(b => '<div class="planner-block-orig"><div class="planner-block-head">' + b + '</div><div class="planner-orig-empty">아직 없어요</div></div>').join("") +
+        '</div></div>' +
+        '<div class="planner-col planner-col-edit"><div class="planner-col-head planner-col-head-edit"><span class="planner-progress-label">계획 수정하면서 공부하기</span><span class="planner-count-badge">0/0</span></div><div class="planner-col-body">' +
+        blocks.map(b => '<div class="planner-block"><div class="planner-block-head-row"><span class="planner-block-head">' + b + '</span><span class="planner-block-add-btn">+ 추가하기</span></div></div>').join("") +
+        '</div></div></div></div>';
       ghost.hidden = false;
       gateBody.appendChild(plannerBody);
     }
@@ -13547,7 +13579,7 @@
     if (plannerBody && ghost && plannerBody.parentElement !== ghost.parentElement) {
       ghost.parentElement.insertBefore(plannerBody, ghost);
     }
-    if (ghost) { ghost.hidden = true; ghost.style.height = ""; }
+    if (ghost) { ghost.hidden = true; ghost.style.height = ""; ghost.style.minHeight = ""; ghost.innerHTML = ""; }
   }
   function closePlanGateToHome() {
     // 아직 플래너를 안 썼으므로 initialPlanLocked는 그대로 false로 둔다 — 이 페이지에
