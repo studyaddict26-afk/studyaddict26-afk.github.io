@@ -4045,6 +4045,7 @@
   .mex-top-row .mex-new-btn:first-child { border-left: none; }
   /* 모의고사 관리하기: "분석하기"/"기록 살펴보기" 두 탭 전환 버튼 — 버튼 자체는 "내 분석지"의
      .reports-subtab-btn을 그대로 재사용(초록 필 버튼, 선택된 쪽만 채워짐). */
+  #view-mexlist, #view-mockexam { scrollbar-gutter: stable; } /* 탭을 바꿀 때 스크롤바가 생기고 사라져서 화면이 옆으로 밀리지 않게 */
   .mex-subtabs { display: flex; gap: 6px; background: #ECEAE4; border-radius: 10px; padding: 4px; }
   .mex-subtabs .reports-subtab-btn { flex: 1; font-family: inherit; font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); background: none; border: none; border-radius: 8px; padding: 9px 0; cursor: pointer; }
   .mex-subtabs .reports-subtab-btn.on { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(23,24,26,0.08); border: none; }
@@ -4196,7 +4197,6 @@
   }
   .mex-reflection-chip:hover { transform: translateY(-1px); }
   .mex-reflection-chip.active { color: var(--green-deep); }
-  .mex-reflection-chip.filled::after { content: "●"; font-size: 0.5rem; margin-left: 4px; vertical-align: middle; color: var(--green-deep); }
   .mex-reflection-form { display: flex; flex-direction: column; gap: 10px; padding-top: 4px; border-top: 1px solid var(--line); }
   .mex-reflection-form-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
   .mex-reflection-form-head .mex-wrongnote-reason { flex: 0 0 34%; width: 34%; font-size: 0.72rem; padding: 6px 8px; }
@@ -6510,21 +6510,25 @@
     .mexp-cover-stats span { font-size: 8.5pt; color: #888; }
     .mexp-cover-stats b { font-size: 15pt; color: #111; }
     .mexp-cover-footer { font-size: 9pt; color: #999; }
-    .mexp-title { font-size: 18pt; margin: 0 0 12px 0; }
-    .mexp-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; border: 1px solid #bbb; border-radius: 6px; padding: 10px 12px; margin-bottom: 14px; }
-    .mexp-meta span { display: block; font-size: 8.5pt; color: #666; }
-    .mexp-meta b { font-size: 11pt; }
-    .mexp-h2 { font-size: 13pt; margin: 18px 0 8px 0; padding-bottom: 4px; border-bottom: 2px solid #111; }
-    .mexp-qa { margin-bottom: 9px; page-break-inside: avoid; }
-    .mexp-q { font-size: 9.5pt; font-weight: 700; color: #444; }
-    .mexp-a { white-space: pre-wrap; padding-left: 8px; border-left: 3px solid #ddd; }
-    .mexp-none { color: #999; }
-    .mexp-note { border: 1px solid #ccc; border-radius: 6px; padding: 10px 12px; margin-bottom: 10px; page-break-inside: avoid; }
-    .mexp-note-head { font-weight: 800; margin-bottom: 6px; }
-    .mexp-lap .exend-lap-rows { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px 10px; }
-    .mexp-lap .exend-lap-row { display: flex; justify-content: space-between; font-size: 9pt; background: none; padding: 2px 0; border-bottom: 1px dotted #ccc; }
-    .mexp-lap .exend-lap-group-head { display: flex; justify-content: space-between; font-weight: 700; margin-top: 8px; }
+    .mexp-page { page-break-after: always; break-after: page; }
   }
+  /* 아래 .mexp-* 규칙은 인쇄 영역과 "한 페이지에 들어가는지" 재보는 숨은 영역(#mexMeasure) 둘 다에서 같은 모양이어야 해서 @media print 밖에 둔다
+     (.mexp-* 요소는 인쇄 영역 안에만 있으므로 화면의 다른 곳에는 영향이 없다). */
+  #mexMeasure { position: absolute; left: -99999px; top: 0; width: 182mm; visibility: hidden; color: #111; font-size: 11pt; line-height: 1.55; }
+  .mexp-title { font-size: 18pt; margin: 0 0 12px 0; }
+  .mexp-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; border: 1px solid #bbb; border-radius: 6px; padding: 10px 12px; margin-bottom: 14px; }
+  .mexp-meta span { display: block; font-size: 8.5pt; color: #666; }
+  .mexp-meta b { font-size: 11pt; }
+  .mexp-h2 { font-size: 13pt; margin: 18px 0 8px 0; padding-bottom: 4px; border-bottom: 2px solid #111; break-after: avoid; page-break-after: avoid; }
+  .mexp-qa { margin-bottom: 9px; page-break-inside: avoid; }
+  .mexp-q { font-size: 9.5pt; font-weight: 700; color: #444; }
+  .mexp-a { white-space: pre-wrap; padding-left: 8px; border-left: 3px solid #ddd; }
+  .mexp-none { color: #999; }
+  .mexp-note { border: 1px solid #ccc; border-radius: 6px; padding: 10px 12px; margin-bottom: 10px; page-break-inside: avoid; }
+  .mexp-note-head { font-weight: 800; margin-bottom: 6px; }
+  .mexp-lap .exend-lap-rows { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px 10px; }
+  .mexp-lap .exend-lap-row { display: flex; justify-content: space-between; font-size: 9pt; background: none; padding: 2px 0; border-bottom: 1px dotted #ccc; }
+  .mexp-lap .exend-lap-group-head { display: flex; justify-content: space-between; font-weight: 700; margin-top: 8px; }
   /* ── 영어 단어 페이지(클래스카드 공부 + 테스트) ── */
   #view-vocab { scrollbar-gutter: stable; } /* 문법처럼 내용이 짧아 스크롤바가 사라질 때 화면이 옆으로 밀리지 않게 */
   #view-vocab .chat-head, #view-vocabpick .chat-head { max-width: 680px; margin-bottom: 18px; }
@@ -16887,7 +16891,10 @@
           '<div><span>랩타임</span><b>' + (hasLap ? "총 " + formatDur(totalSec) : "기록 없음") + '</b></div>' +
         '</div>' +
         '<div class="mexp-cover-footer">발급일 ' + esc(todayStr) + '</div>' +
-      '</div>' +
+      '</div>';
+    // 인쇄 구성: 1페이지 표지 → 2페이지 제목·요약·랩타임 → 3페이지 피드백(+ 성찰 노트가 같이 들어가면 함께) → 4페이지 성찰 노트.
+    // 랩타임이 없는 기록(직접 입력)은 2페이지를 만들지 않고 제목·요약을 3페이지 맨 위에 둔다.
+    const metaHtml =
       '<h1 class="mexp-title">' + esc(exam.title) + '</h1>' +
       '<div class="mexp-meta">' +
         '<div><span>날짜</span><b>' + esc(exam.date) + '</b></div>' +
@@ -16895,15 +16902,15 @@
         '<div><span>점수</span><b>' + score + '</b></div>' +
         '<div><span>랩타임</span><b>' + (hasLap ? "총 " + formatDur(totalSec) : "기록 없음") + '</b></div>' +
       '</div>';
-    if (hasLap) html += '<h2 class="mexp-h2">랩타임</h2><div class="mexp-lap">' + exsimBuildLapTableHtml(groups) + '</div>';
-    html += '<h2 class="mexp-h2">피드백</h2>' +
+    const lapHtml = hasLap ? '<h2 class="mexp-h2">랩타임</h2><div class="mexp-lap">' + exsimBuildLapTableHtml(groups) + '</div>' : "";
+    const fbHtml = '<h2 class="mexp-h2">피드백</h2>' +
       qa("1. 오늘 시험 전체적으로 어땠나요? (시간 배분, 컨디션도 편하게 적어주세요)", fb.q1) +
       qa("2. 시간이 가장 부족했거나 힘들었던 부분은 어디였고, 왜 그랬나요?", fb.q2) +
       qa("3. 이번 시험에서 잘 풀렸던 부분이나 전략은 무엇인가요?", fb.q3) +
       qa("4. 다음 시험까지 개선하고 싶은 부분은 무엇인가요?", fb.q4) +
       qa("자유 기록", fb.free);
-    html += '<h2 class="mexp-h2">성찰 노트</h2>';
-    html += nums.length ? nums.map(n => {
+    let notesHtml = '<h2 class="mexp-h2">성찰 노트</h2>';
+    notesHtml += nums.length ? nums.map(n => {
       const note = notes[n] || {};
       const kind = note.kind === "wrong" ? "틀린 문제" : note.kind === "extra" ? "맞았지만 성찰 할 문제" : "";
       const reason = reasonOf(note);
@@ -16911,6 +16918,20 @@
         qa("어떤 개념이나 포인트를 놓쳤나요?", note.q1) + qa("나의 잘못된 사고 과정", note.q2) +
         qa("올바른 사고 과정", note.q3) + qa("다음엔 어떻게 접근할 건가요?", note.q4) + '</div>';
     }).join("") : '<div class="mexp-none">작성된 성찰 노트가 없습니다.</div>';
+    const head3 = hasLap ? "" : metaHtml;
+    if (hasLap) html += '<div class="mexp-page">' + metaHtml + lapHtml + '</div>';
+    // 피드백 + 성찰 노트가 한 페이지(A4, 여백 14mm 제외 약 269mm)에 다 들어가는지 숨은 영역에서 재 본다.
+    let fits = false;
+    try {
+      let m = document.getElementById("mexMeasure");
+      if (!m) { m = document.createElement("div"); m.id = "mexMeasure"; document.body.appendChild(m); }
+      m.innerHTML = head3 + fbHtml + notesHtml;
+      const pagePx = 269 * 96 / 25.4;
+      fits = m.offsetHeight <= pagePx * 0.94; // 약간의 여유를 둔다
+      m.innerHTML = "";
+    } catch (e) { fits = false; }
+    if (fits) html += '<div>' + head3 + fbHtml + notesHtml + '</div>';
+    else html += '<div class="mexp-page">' + head3 + fbHtml + '</div><div>' + notesHtml + '</div>';
     return html;
   }
   function mexPrintExam(examId) {
