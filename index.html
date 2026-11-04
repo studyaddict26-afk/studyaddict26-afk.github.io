@@ -2905,6 +2905,11 @@
   .home-rest-tools svg { width: 12px; height: 12px; flex: none; color: var(--ink-soft); }
   .home-rest-tools .hrt-label { flex: 1; text-align: left; }
   .home-rest-tools .hrt-arrow { flex: none; color: var(--green); font-weight: 800; font-size: 0.8rem; line-height: 1; }
+  .home-rest-divider { display: none; }
+  @media (min-width: 901px) {
+    /* 머리 식히기 칸과 스톱워치·타이머·메모장 칸 사이(가운데)의 얇은 세로 실선 */
+    .home-dash .home-promo-slot .home-rest-divider { display: block; grid-column: 2; grid-row: 2; justify-self: start; align-self: center; width: 1px; height: 62%; background: var(--line-dark); transform: translateX(calc(var(--ln-gap) / -2)); pointer-events: none; }
+  }
   .home-rest-tools.home-tools-box { position: static; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 8px 0; }
   .home-rest-tools.home-tools-box button { width: auto; }
   @media (min-width: 901px) {
@@ -3529,7 +3534,12 @@
     /* 선생님 홈(#tdPane-home / .ln-grid)과 같은 값: 최대 폭 1400, 칸 사이 14, 윗줄 178, 아랫줄 424, 안쪽 여백 40 */
     --ln-gap: 14px; --ln-cal-h: 424px; --ln-top-h: 100px; --ln-nav-h: 40px;
     width: 100%; max-width: 1480px; margin: 0 auto auto; box-sizing: border-box; padding: 0 40px 24px 40px; /* margin:auto = 선생님 홈처럼 남는 높이의 가운데에 놓는다 */
-    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: var(--ln-top-h) var(--ln-cal-h); gap: var(--ln-gap);
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: var(--ln-top-h) var(--ln-cal-h); row-gap: var(--ln-gap); column-gap: 48px; /* 왼쪽 흰 박스들과 오른쪽 파란/AI 박스들 사이를 넓게 — 박스 가로 폭이 그만큼 줄어든다 */
+  }
+  @media (min-width: 901px) {
+    /* 왼쪽 묶음과 오른쪽 묶음(AI · 공지) 사이 가운데의 얇은 세로 실선 */
+    .home-dash { position: relative; }
+    .home-dash::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 24px; width: 1px; background: var(--line-dark); transform: translateX(-0.5px); pointer-events: none; }
   }
   .hd-left, .hd-right { display: contents; }
   /* 로고 줄(2027 수능 D-day · 로고 · 마이페이지)을 맨 위가 아니라 박스 바로 위로 — 로고 줄 + 박스 묶음이 함께 세로 가운데에 놓인다 */
@@ -7452,6 +7462,7 @@
         </div>
       </div>
       </div>
+      <div class="home-rest-divider" aria-hidden="true"></div>
       <div class="home-rest-tools home-tools-box">
           <button type="button" onclick="genTimerOpen('stopwatch')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg><span class="hrt-label">스톱워치</span><span class="hrt-arrow">›</span></button>
           <button type="button" onclick="genTimerOpen('timer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2h12M6 22h12M7 2c0 6 5 6 5 10s-5 4-5 10M17 2c0 6-5 6-5 10s5 4 5 10"/></svg><span class="hrt-label">타이머</span><span class="hrt-arrow">›</span></button>
