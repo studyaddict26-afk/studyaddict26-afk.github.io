@@ -5037,15 +5037,16 @@
   .rh2-stat + .rh2-stat { border-left: 1px solid var(--line); }
   .rh2-label { font-size: 0.6rem; font-weight: 600; color: var(--ink-soft); line-height: 1.3; }
   .rh2-val { font-size: 0.82rem; font-weight: 800; color: var(--ink); line-height: 1.3; font-variant-numeric: tabular-nums; }
-  .rh2-reports { display: grid; grid-template-columns: 250px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); background: var(--paper); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; height: clamp(380px, calc(100vh - 300px), 680px); }
-  .rh2-list { border-right: 1px solid var(--line); overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; min-height: 0; }
+  .rh2-reports { display: grid; grid-template-columns: max-content minmax(0, 1fr); /* 목록 칸 폭 = 가장 긴 날짜 글씨에 딱 맞춤(잘릴 일이 없다) */ grid-template-rows: minmax(0, 1fr); background: var(--paper); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; height: clamp(380px, calc(100vh - 300px), 680px); }
+  .rh2-list { border-right: 1px solid var(--line); overflow-y: auto; scrollbar-gutter: stable; overscroll-behavior: contain; display: flex; flex-direction: column; min-height: 0; }
   .rh2-list .rh2-item, .rh2-list .rh2-list-head { flex: none; } /* 분석지가 많아져도 항목이 눌리지 않고, 목록 안에서만 스크롤된다 */
   .rh2-list-head { position: sticky; top: 0; background: var(--paper); padding: 14px 16px; font-size: 0.78rem; font-weight: 800; color: var(--ink); border-bottom: 1px solid var(--line); text-align: center; }
   .rh2-item { font-family: inherit; text-align: center; background: none; border: none; border-bottom: 1px solid var(--line); padding: 12px 16px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; transition: background 0.15s; }
   .rh2-item:hover { background: var(--cream); }
   .rh2-item.on { background: var(--cream); box-shadow: inset 3px 0 0 var(--green-deep); }
-  .rh2-item .t { font-size: 0.8rem; font-weight: 700; color: var(--ink); }
-  .rh2-item .s { font-size: 0.68rem; color: var(--ink-soft); }
+  .rh2-item { padding: 10px 10px; }
+  .rh2-item .t { font-size: 0.66rem; font-weight: 700; color: var(--ink); white-space: nowrap; }
+  .rh2-item .s { font-size: 0.6rem; color: var(--ink-soft); }
   .rh2-detail { overflow-y: auto; padding: 18px 24px 24px; min-height: 0; }
   .rh2-detail .report-card { border: none; border-radius: 0; background: transparent; }
   /* 분석지 본문 글씨를 줄여서 한 화면에 더 많이 보이게 한다 */
@@ -5055,6 +5056,21 @@
   .rh2-detail .ans-list { padding-left: 18px; }
   .rh2-detail .ans-list li { margin-bottom: 4px; }
   .rh2-detail .report-period { font-size: 0.76rem; }
+  /* 분석지 위쪽: 숫자 칸 6개 + 날짜별 표 */
+  .rpt-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 10px; margin: 0 0 12px; overflow: hidden; }
+  .rpt-stat { display: flex; flex-direction: column; gap: 3px; padding: 10px 12px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); min-width: 0; }
+  .rpt-stat:nth-child(3n) { border-right: none; }
+  .rpt-stat:nth-last-child(-n+3) { border-bottom: none; }
+  .rpt-label { font-size: 0.64rem; font-weight: 600; color: var(--ink-soft); }
+  .rpt-stat b { font-size: 0.86rem; font-weight: 800; color: var(--ink); line-height: 1.35; }
+  .rpt-sub { font-size: 0.62rem; color: var(--ink-soft); line-height: 1.4; word-break: keep-all; }
+  .rpt-days { width: 100%; border-collapse: collapse; margin: 0 0 16px; font-size: 0.7rem; }
+  .rpt-days th { font-weight: 700; color: var(--ink-soft); text-align: center; padding: 6px 4px; border-bottom: 1px solid var(--line-dark); }
+  .rpt-days td { text-align: center; padding: 6px 4px; border-bottom: 1px solid var(--line); color: var(--ink); }
+  .rpt-days td:first-child, .rpt-days th:first-child { text-align: left; font-weight: 700; }
+  .rpt-ok { color: #2E9B4A; font-weight: 800; }
+  .rpt-no { color: #B9B5A8; }
+  @media (max-width: 700px) { .rpt-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .rpt-stat:nth-child(3n) { border-right: 1px solid var(--line); } .rpt-stat:nth-child(2n) { border-right: none; } }
   .rh2-empty { color: var(--ink-soft); font-size: 0.8rem; padding: 40px 16px; text-align: center; }
   @media (max-width: 700px) {
     .rh2-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -6617,6 +6633,20 @@
   .vocab-actions .vocab-btn { min-width: 130px; }
   .vlive { display: none; position: fixed; inset: 0; z-index: 300; background: var(--cream); overflow-y: auto; }
   .vlive.on { display: block; animation: vliveIn 0.32s cubic-bezier(.2,.8,.2,1); }
+  .ss-pop { display: none; position: fixed; inset: 0; z-index: 410; background: rgba(23,24,26,0.35); align-items: center; justify-content: center; padding: 20px; }
+  .ss-pop.on { display: flex; }
+  .ss-card { width: 100%; max-width: 380px; background: #fff; border-radius: 14px; border: 1px solid var(--line-dark); padding: 22px 22px 18px; box-sizing: border-box; text-align: center; }
+  .ss-title { font-size: 1rem; font-weight: 800; color: var(--ink); }
+  .ss-sub { margin-top: 6px; font-size: 0.76rem; line-height: 1.6; color: var(--ink-soft); }
+  .ss-num { margin: 18px 0 8px; display: flex; align-items: baseline; justify-content: center; gap: 4px; }
+  .ss-num b { font-size: 2.6rem; font-weight: 800; color: var(--green-deep); font-variant-numeric: tabular-nums; line-height: 1; }
+  .ss-num span { font-size: 0.9rem; font-weight: 700; color: var(--ink-soft); }
+  #ssRange { width: 100%; accent-color: var(--green-deep); }
+  .ss-scale { display: flex; justify-content: space-between; font-size: 0.66rem; color: var(--ink-soft); margin-top: 2px; }
+  .ss-actions { display: flex; gap: 8px; margin-top: 18px; }
+  .ss-actions button { flex: 1; font-family: inherit; font-size: 0.8rem; font-weight: 700; border-radius: 999px; padding: 10px 0; cursor: pointer; border: 1px solid var(--green-deep); background: var(--green-deep); color: #fff; }
+  .ss-actions button.ghost { background: #fff; color: var(--ink); border-color: var(--line-dark); }
+  .ss-actions button:disabled { opacity: 0.6; cursor: default; }
   .memo-pop { display: none; position: fixed; inset: 0; z-index: 400; background: rgba(23,24,26,0.35); align-items: center; justify-content: center; padding: 20px; }
   .memo-pop.on { display: flex; }
   .memo-card { width: 100%; max-width: 460px; background: #fff; border-radius: 14px; border: 1px solid var(--line-dark); padding: 16px 18px 12px; box-sizing: border-box; }
@@ -8163,6 +8193,20 @@
       </div>
     </div>
   </section>
+  <!-- ─── 자기평가 점수: 공부일기 제출 직전 팝업 ─── -->
+  <div class="ss-pop" id="selfScorePop">
+    <div class="ss-card">
+      <div class="ss-title">오늘 하루, 나에게 몇 점을 줄까요?</div>
+      <div class="ss-sub">공부한 양과 집중한 정도를 떠올려서 0~100점 사이로 정해 보세요.</div>
+      <div class="ss-num"><b id="ssNum">70</b><span>점</span></div>
+      <input type="range" id="ssRange" min="0" max="100" step="1" value="70" oninput="ssInput(this.value)" aria-label="자기평가 점수">
+      <div class="ss-scale"><span>0</span><span>50</span><span>100</span></div>
+      <div class="ss-actions">
+        <button type="button" class="ghost" onclick="selfScoreCancel()">취소</button>
+        <button type="button" id="ssConfirmBtn" onclick="selfScoreConfirm()">점수 남기고 제출하기</button>
+      </div>
+    </div>
+  </div>
   <!-- ─── 메모장(홈 도구 버튼): 자동 저장되는 간단한 메모 ─── -->
   <div class="memo-pop" id="memoPop" onclick="if(event.target===this)memoClose()">
     <div class="memo-card">
@@ -12026,6 +12070,7 @@
       testEl.textContent = ENG_VOCAB_LABEL.test[d.test];
       testEl.classList.toggle("done", d.test === "done" || d.test === "pass"); testEl.classList.toggle("fail", d.test === "fail"); testEl.classList.toggle("pending", d.test === "none");
     }
+    syncDailyStats();
     // 홈 "어휘력 Test" 박스: 4개 중 오늘 응시 완료한 개수를 4칸 링으로 보여준다(영어 단어 · 영어 문법 · 국어 고전 어휘 · 국어 기본 어휘 — 국어 둘은 아직 준비중이라 항상 미완료).
     const ringEl = document.getElementById("vocabRing");
     if (ringEl) {
@@ -12077,6 +12122,18 @@
       s.runningSince = Date.now();
     }
     restSave(s); restRender();
+    syncDailyStats(); // 쉬기를 마칠 때마다 오늘 누적 시간 · 횟수를 서버(분석지용)에도 남긴다
+  }
+  // 어휘력 Test 응시 · 머리 식힌 시간은 이 기기에만 저장되는 기록이라, 6일 분석지에 쓸 수 있도록 하루치 요약을 서버에도 남긴다.
+  let dailyStatsSig = "";
+  function syncDailyStats() {
+    if (!localStorage.getItem("holoStudentId")) return;
+    let d, r;
+    try { d = engVocabGet(); r = restLoad(); } catch (e) { return; }
+    const payload = { action: "daily_stats_save", date: getLocalDateKey(), vocabWord: d.word === "done", vocabGrammar: d.grammar === "done", restSec: r.day === getLocalDateKey() ? r.total : 0, restCount: r.day === getLocalDateKey() ? r.count : 0 };
+    const sig = JSON.stringify(payload);
+    if (sig === dailyStatsSig) return;
+    planApi(payload).then(x => { if (x && x.ok) dailyStatsSig = sig; }).catch(() => {});
   }
   function restFmtClock(sec) {
     const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), x = sec % 60, p = n => String(n).padStart(2, "0");
@@ -12421,6 +12478,34 @@
     { id: "diary-q3", num: "3" },
     { id: "diary-q4", num: "4" },
   ];
+  // ── 자기평가 점수: 공부일기 제출 직전에 뜨는 작은 팝업(0~100점, 서버 holo_self_scores에 저장) ──
+  let selfScoreConfirmed = false, selfScoreAfter = null, ssTouched = false;
+  function ssSync(v) { document.getElementById("ssNum").textContent = v; }
+  function ssInput(v) { ssTouched = true; ssSync(v); } // 학생이 직접 움직이면, 뒤늦게 도착한 이전 점수가 그 값을 덮어쓰지 않게 표시해 둔다
+  function selfScoreOpen(after) {
+    selfScoreAfter = after; ssTouched = false;
+    const range = document.getElementById("ssRange");
+    range.value = 70; ssSync(70); // 처음 남기는 날의 기본값
+    document.getElementById("selfScorePop").classList.add("on");
+    // 다시 제출할 때는 이미 남긴 점수를 미리 채워 보여주고, 그 자리에서 자유롭게 수정할 수 있다
+    planApi({ action: "self_score_get", date: getLocalDateKey() })
+      .then(d => { if (!ssTouched && d && typeof d.score === "number") { range.value = d.score; ssSync(d.score); } })
+      .catch(() => {});
+  }
+  function selfScoreCancel() { document.getElementById("selfScorePop").classList.remove("on"); selfScoreAfter = null; }
+  function selfScoreConfirm() {
+    const score = Number(document.getElementById("ssRange").value);
+    const btn = document.getElementById("ssConfirmBtn"); btn.disabled = true;
+    planApi({ action: "self_score_save", date: getLocalDateKey(), score: score })
+      .then(d => { if (!d || !d.ok) throw new Error("save failed"); })
+      .catch(() => { showToast("점수는 저장하지 못했어요. 일기는 그대로 제출할게요."); }) // 점수 저장이 잘못돼도 일기 제출은 막지 않는다
+      .then(() => {
+        document.getElementById("selfScorePop").classList.remove("on");
+        const fn = selfScoreAfter; selfScoreAfter = null;
+        btn.disabled = false;
+        if (fn) fn();
+      });
+  }
   function quickSubmit(btn, statusId) {
     if (btn.disabled) return;
     if (statusId === "diarySubmitStatus") {
@@ -12430,6 +12515,11 @@
           showToast(field.num + "번 질문에 대한 답변을 입력해주세요");
           return;
         }
+      }
+      // 일기를 제출할 때마다, 오늘 하루를 스스로 0~100점으로 평가해서 남긴다(점수를 남기면 이어서 제출된다).
+      if (!selfScoreConfirmed) {
+        selfScoreOpen(() => { selfScoreConfirmed = true; try { quickSubmit(btn, statusId); } finally { selfScoreConfirmed = false; } });
+        return;
       }
     }
     if (statusId === "planSubmitStatus") {
@@ -14775,6 +14865,30 @@
 
   // ── 내 분석지 ──
   let reportsLoaded = false;
+  // 분석지 위쪽의 "한눈에" 숫자 칸 + 날짜별 표 — 서버가 DB에서 직접 계산해 둔 값(data_json)을 그린다. 옛 분석지는 값이 없어 건너뛴다.
+  function reportDataHtml(r) {
+    let d = null;
+    try { d = r.data_json ? JSON.parse(r.data_json) : null; } catch (e) { d = null; }
+    if (!d || !d.summary || !Array.isArray(d.days)) return "";
+    const s = d.summary, n = s.periodDays || d.days.length;
+    const fmtRest = sec => sec >= 60 ? Math.round(sec / 60) + "분" : sec + "초";
+    const cells = [
+      ["자기평가 평균 점수", s.selfScoreAvg === null ? "기록 없음" : s.selfScoreAvg + "점", s.selfScoreDays ? s.selfScoreDays + "일 기준" : ""],
+      ["플래너 제출률", s.plannerSubmitDays + " / " + n + "일", ""],
+      ["공부일기 제출률", s.diarySubmitDays + " / " + n + "일", ""],
+      ["어휘력 Test 응시", "단어 " + s.vocabWordDays + "일 · 문법 " + s.vocabGrammarDays + "일", ""],
+      ["하루 평균 머리 식히기", fmtRest(s.restAvgSec) + " · " + s.restAvgCount + "번", ""],
+      ["모의고사 분석지 작성", s.mockCount + "회", (s.mockNames || []).join(", ")],
+    ];
+    const mark = on => on ? '<span class="rpt-ok">✓</span>' : '<span class="rpt-no">–</span>';
+    const rows = d.days.map(x => '<tr><td>' + escapeHtml(x.date.slice(5).replace("-", "/")) + ' (' + escapeHtml(x.weekday) + ')</td>' +
+      '<td>' + mark(x.plannerSubmitted) + '</td><td>' + mark(x.diarySubmitted) + '</td>' +
+      '<td>' + (x.selfScore === null ? '<span class="rpt-no">–</span>' : x.selfScore + '점') + '</td>' +
+      '<td>' + (x.vocabWord || x.vocabGrammar ? (x.vocabWord ? "단어" : "") + (x.vocabWord && x.vocabGrammar ? " · " : "") + (x.vocabGrammar ? "문법" : "") : '<span class="rpt-no">–</span>') + '</td>' +
+      '<td>' + (x.restCount ? fmtRest(x.restSec) + " · " + x.restCount + "번" : '<span class="rpt-no">–</span>') + '</td></tr>').join("");
+    return '<div class="rpt-stats">' + cells.map(c => '<div class="rpt-stat"><span class="rpt-label">' + c[0] + '</span><b>' + escapeHtml(c[1]) + '</b>' + (c[2] ? '<span class="rpt-sub">' + escapeHtml(c[2]) + '</span>' : '') + '</div>').join("") + '</div>' +
+      '<table class="rpt-days"><thead><tr><th>날짜</th><th>플래너</th><th>공부일기</th><th>자기평가</th><th>어휘력 Test</th><th>머리 식히기</th></tr></thead><tbody>' + rows + '</tbody></table>';
+  }
   function renderReportCards(reports, emptyMsg) {
     if (!reports.length) return '<div class="reports-empty">' + emptyMsg + '</div>';
     return reports.map(r => {
@@ -14786,7 +14900,7 @@
           '<span class="report-period">' + period + '</span>' +
           '<button type="button" class="report-print-btn" onclick="printReport(' + r.id + ')">🖨️ 인쇄 / PDF로 저장</button>' +
         '</div>' +
-        '<div class="report-body" id="report-content-' + r.id + '">' + formatAiAnswer(r.content || "") + '</div>' +
+        '<div class="report-body" id="report-content-' + r.id + '">' + reportDataHtml(r) + formatAiAnswer(r.content || "") + '</div>' +
       '</div>';
     }).join("");
   }
