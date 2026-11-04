@@ -2905,12 +2905,22 @@
   .home-rest-tools svg { width: 12px; height: 12px; flex: none; color: var(--ink-soft); }
   .home-rest-tools .hrt-label { flex: 1; text-align: left; }
   .home-rest-tools .hrt-arrow { flex: none; color: var(--green); font-weight: 800; font-size: 0.8rem; line-height: 1; }
+  .home-rest-tools.home-tools-box { position: static; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 8px 0; }
+  .home-rest-tools.home-tools-box button { width: auto; }
   @media (min-width: 901px) {
-    .home-dash .home-promo-slot .home-rest { grid-column: 1 / span 2; grid-row: 2; min-height: 0; }
+    /* 머리 식히기: 오늘의 공부 바로 아래, 한 칸 폭만 차지한다(스톱워치 · 타이머 버튼은 제목 아래 한 줄로) */
+    .home-dash .home-promo-slot .home-rest { grid-column: 1; grid-row: 2; min-height: 0; gap: 5px; padding: 4px 10px 0; }
+    /* 스톱워치 · 타이머 · 메모장: 공부 계획 세우기 아래 칸에 세로로 */
+    .home-dash .home-promo-slot .home-tools-box { grid-column: 2; grid-row: 2; position: static; align-self: center; justify-self: center; width: 170px; flex-direction: column; gap: 8px; }
+    .home-dash .home-promo-slot .home-tools-box button { width: 100%; padding: 8px 14px 8px 12px; font-size: 0.74rem; }
+    .home-dash .home-promo-slot .home-rest-time { font-size: 2.1rem; }
   }
   @media (max-width: 1100px) { #view-home .home-rest-title { font-size: 0.74rem; } }
   /* 홈 영어 단어 Test 박스: 오늘의 공부 박스처럼 제목 아래에 상태 두 줄(라벨 + 상태 글씨) */
-  .home-eng-status { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 9px; padding: 0 2px; }
+  .home-eng-status { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 7px; padding: 0 2px; }
+  .home-eng-test .rh-tile-status-label { font-size: 0.7rem; }
+  .home-eng-test .rh-tile-status-val { font-size: 0.58rem; width: 64px; padding: 2px 8px; }
+  #view-home .home-eng-test .rh-tile-status-label { font-size: 0.62rem; }
   .home-eng-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 8px; }
   .rh-tile-status-val.fail { color: #B91C1C; background: #FEECEC; border-color: #F5C6C6; }
   /* 영어 단어 현황 팝업 */
@@ -6524,6 +6534,14 @@
   .vocab-levels button { font-family: inherit; font-size: 0.8rem; font-weight: 700; color: var(--ink-soft); background: var(--paper); border: 1px solid var(--line); border-radius: 999px; padding: 7px 16px; cursor: pointer; }
   .vocab-levels button.on { background: var(--green-deep); border-color: var(--green-deep); color: #fff; }
   .vocab-levels button.idm { margin-left: auto; }
+  .vocab-levels button.vstar-open { margin-left: auto; }
+  .vocab-levels button.vstar-open + button.idm { margin-left: 0; }
+  .vstar-btn { font-family: inherit; background: none; border: none; cursor: pointer; font-size: 1.15rem; line-height: 1; color: #B9B5A8; padding: 4px; }
+  .vstar-btn.on { color: #E0A100; }
+  .vstar-btn:hover { color: #E0A100; }
+  .vstar-btn.fc-star { position: absolute; top: 4px; right: 6px; z-index: 3; font-size: 1rem; }
+  .vocab-q { position: relative; }
+  .vstar-btn.vq-star { position: absolute; top: 12px; right: 14px; font-size: 1.35rem; }
   .vocab-day { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; font-family: inherit; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 11px 6px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
   .vocab-day:hover { background: var(--cream); border-color: var(--line-dark); }
   .vocab-day .vd-name { font-size: 0.92rem; font-weight: 800; color: var(--ink); }
@@ -6548,13 +6566,30 @@
   .vocab-actions .vocab-btn { min-width: 130px; }
   .vlive { display: none; position: fixed; inset: 0; z-index: 300; background: var(--cream); overflow-y: auto; }
   .vlive.on { display: block; animation: vliveIn 0.32s cubic-bezier(.2,.8,.2,1); }
+  .memo-pop { display: none; position: fixed; inset: 0; z-index: 400; background: rgba(23,24,26,0.35); align-items: center; justify-content: center; padding: 20px; }
+  .memo-pop.on { display: flex; }
+  .memo-card { width: 100%; max-width: 460px; background: #fff; border-radius: 14px; border: 1px solid var(--line-dark); padding: 16px 18px 12px; box-sizing: border-box; }
+  .memo-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .memo-head b { font-size: 0.95rem; font-weight: 800; color: var(--ink); }
+  .memo-head button { font-family: inherit; background: none; border: none; font-size: 1.5rem; line-height: 1; color: var(--ink-soft); cursor: pointer; }
+  #memoText { width: 100%; height: 280px; resize: vertical; box-sizing: border-box; font-family: inherit; font-size: 0.88rem; line-height: 1.7; color: var(--ink); background: var(--cream); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; outline: none; }
+  #memoText:focus { border-color: var(--green-deep); }
+  .memo-foot { margin-top: 8px; font-size: 0.68rem; color: var(--ink-soft); text-align: right; }
+  .vverdict { display: flex; flex-direction: column; gap: 4px; align-items: center; text-align: center; margin: 14px 0; padding: 18px 16px; border-radius: 12px; border: 1px solid; }
+  .vverdict b { font-size: 1.1rem; font-weight: 800; }
+  .vverdict span { font-size: 0.8rem; line-height: 1.5; }
+  .vverdict.pass { background: #EAF4EA; border-color: #4C9A5B; color: #1F5E2E; }
+  .vverdict.fail { background: #FDECEC; border-color: #D96A6A; color: #9B2C2C; }
   .vocab-callout { display: flex; gap: 12px; align-items: flex-start; margin: 14px 0 18px; padding: 14px 16px; background: #EEF1FA; border: 1px solid #D5DBEE; border-radius: 12px; }
   .vocab-callout .vc-ico { flex: none; width: 18px; height: 18px; margin-top: 2px; border-radius: 50%; background: var(--green-deep); color: #fff; font-size: 0.68rem; font-weight: 800; font-style: italic; display: flex; align-items: center; justify-content: center; }
   .vocab-callout ul { margin: 0; padding-left: 16px; font-size: 0.78rem; line-height: 1.7; color: var(--ink); }
   .vocab-callout li + li { margin-top: 2px; }
+  .vocab-callout li.vc-em { font-weight: 800; color: var(--green-deep); background: linear-gradient(transparent 62%, rgba(13,33,85,0.12) 62%); width: fit-content; }
   .vhome { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 24px; }
   .vhome button { font-family: inherit; text-align: center; align-items: center; background: #fff; border: 1px solid var(--line-dark); border-radius: 14px; padding: 0 26px; height: clamp(150px, 26vh, 230px); cursor: pointer; display: flex; flex-direction: column; justify-content: center; gap: 10px; transition: background 0.15s, border-color 0.15s; }
   .vhome button:hover { background: var(--cream); border-color: var(--green-deep); }
+  .vhome.vhome4 button { height: clamp(84px, 14vh, 120px); }
+  .vhome.vhome4 b { font-size: 1.15rem; }
   .vhome b { font-size: 1.35rem; font-weight: 800; color: var(--ink); }
   .vhome span { font-size: 0.8rem; line-height: 1.5; color: var(--ink-soft); }
   @media (max-width: 560px) { .vhome { grid-template-columns: 1fr; } }
@@ -7392,16 +7427,20 @@
           <a class="home-schedule-title" href="#">어휘력 Test <span class="arrow">›</span></a>
         </div>
         <div class="home-eng-status">
-          <div class="home-eng-row"><span class="rh-tile-status-label">영어 단어 및 문법</span><span class="rh-tile-status-val pending" id="engStatus-test">미응시</span></div>
+          <div class="home-eng-row"><span class="rh-tile-status-label">영어 단어</span><span class="rh-tile-status-val pending" id="engStatus-word">미응시</span></div>
+          <div class="home-eng-row"><span class="rh-tile-status-label">영어 문법</span><span class="rh-tile-status-val pending" id="engStatus-grammar">미응시</span></div>
+          <div class="home-eng-row"><span class="rh-tile-status-label">국어 고전 어휘</span><span class="rh-tile-status-val pending">미응시</span></div>
+          <div class="home-eng-row"><span class="rh-tile-status-label">국어 기본 어휘</span><span class="rh-tile-status-val pending">미응시</span></div>
         </div>
       </div>
       </div>
-      <div class="home-rest" id="homeRestBox">
-        <div class="home-rest-title">머리 식히기</div>
-        <div class="home-rest-tools">
+      <div class="home-rest-tools home-tools-box">
           <button type="button" onclick="genTimerOpen('stopwatch')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg><span class="hrt-label">스톱워치</span><span class="hrt-arrow">›</span></button>
           <button type="button" onclick="genTimerOpen('timer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2h12M6 22h12M7 2c0 6 5 6 5 10s-5 4-5 10M17 2c0 6-5 6-5 10s5 4 5 10"/></svg><span class="hrt-label">타이머</span><span class="hrt-arrow">›</span></button>
+          <button type="button" onclick="memoOpen()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg><span class="hrt-label">메모장</span><span class="hrt-arrow">›</span></button>
         </div>
+      <div class="home-rest" id="homeRestBox">
+        <div class="home-rest-title">머리 식히기</div>
         <div class="home-rest-time" id="homeRestTime">00:00</div>
         <button type="button" class="home-rest-btn" id="homeRestBtn" onclick="restToggle()">식히는 시간 재기</button>
         <div class="home-rest-total" id="homeRestTotal">오늘 식힌 시간 0초 · 0번</div>
@@ -7419,7 +7458,7 @@
           </span>
           <span class="hp-btn">내 상황 상담해보기 <span class="hp-arrow">→</span></span>
         </button>
-        <button type="button" class="home-poster" onclick="showToast('공부법 칼럼은 준비중입니다')" aria-label="공부법 칼럼 읽어보기">
+        <button type="button" class="home-poster" onclick="go('consult-teacher')" aria-label="공부법 칼럼 읽어보기">
           <span class="hp-text">
             <span class="hp-headline">송의준 선배</span>
             <span class="hp-bullets"><span>노베이스 축구선수 출신으로, 수능 전과목 1등급</span><span>정시 일반전형 한의대 입학</span></span>
@@ -8071,10 +8110,29 @@
       <div class="split"></div>
     </div>
     <div class="vocab-wrap">
-      <div class="vhome"><button type="button" onclick="go('vocab')"><b>영어</b><span>영어 단어 · 문법 공부하기와 TEST</span></button>
-        <button type="button" onclick="showToast('국어 어휘력 Test는 준비중입니다')"><b>국어</b><span>준비중입니다</span></button></div>
+      <div class="vocab-callout"><span class="vc-ico">i</span><ul>
+        <li>매일 밤 12시 전까지, 아직 응시한 적 없는 Test를 응시해야 합니다.</li>
+        <li>모든 Test를 이미 응시했다면, 아무 Test나 골라서 다시 응시하세요.</li>
+        <li>'공부하기'는 Test를 위한 연습 과정입니다. 반드시 Test를 응시해야 합니다.</li>
+        <li>60% 이상 정답을 맞혀야 Test를 통과할 수 있습니다.</li>
+        <li class="vc-em">점수는 중요하지 않습니다. 통과할 때까지 반복해서 응시하세요.</li>
+      </ul></div>
+      <div class="vhome vhome4">
+        <button type="button" onclick="go('vocab');vocabPickSubject('word')"><b>영어 단어</b><span>공부하기 · TEST 응시하기</span></button>
+        <button type="button" onclick="go('vocab');vocabPickSubject('grammar')"><b>영어 문법</b><span>공부하기 · TEST 응시하기</span></button>
+        <button type="button" onclick="showToast('국어 고전 어휘는 준비중입니다')"><b>국어 고전 어휘</b><span>준비중입니다</span></button>
+        <button type="button" onclick="showToast('국어 기본 어휘는 준비중입니다')"><b>국어 기본 어휘</b><span>준비중입니다</span></button>
+      </div>
     </div>
   </section>
+  <!-- ─── 메모장(홈 도구 버튼): 자동 저장되는 간단한 메모 ─── -->
+  <div class="memo-pop" id="memoPop" onclick="if(event.target===this)memoClose()">
+    <div class="memo-card">
+      <div class="memo-head"><b>메모장</b><button type="button" onclick="memoClose()" aria-label="닫기">&times;</button></div>
+      <textarea id="memoText" oninput="memoSave()" placeholder="자유롭게 적어 두세요. 자동으로 저장돼요."></textarea>
+      <div class="memo-foot" id="memoFoot">자동 저장됨 · 이 기기에만 저장돼요</div>
+    </div>
+  </div>
   <div class="vlive" id="vocabLive"><div class="vlive-body" id="vocabLiveBody"></div></div>
 
   <!-- ─── 우리 동네 내신 기출 공부하기 (허브) ─── -->
@@ -11128,7 +11186,7 @@
   let navStack = [], navGoingBack = false;
   function goBack() {
     // 영어 단어: 공부하기/TEST 목록에서 "이전으로"를 누르면 홈이 아니라 바로 전 화면(공부하기 · TEST 큰 버튼 화면)으로 간다.
-    if (currentView === "vocab" && vocabStage === "hub") { vocabGoHome(); return; }
+    if (currentView === "vocab" && vocabStage === "hub") { vocabBackStep(); return; } // 목록 → 공부하기/TEST 선택. 그 화면에서 이전으로는 어휘력 Test 선택 페이지로 간다.
     if (currentView === "mexlist" && mexCurrentExam) {
       mexBackToList();
       return;
@@ -11621,7 +11679,7 @@
   // 공부: 카드 보기 → 단어 보고 뜻 고르기 → 뜻 보고 단어 고르기(모두 3지선다). 테스트: 두 유형을 섞어 3지선다로 풀고 점수로 통과 여부를 낸다.
   // 기록은 이 기기(localStorage)에 저장하고, 홈 "영어 단어 Test" 박스의 클래스카드/Test 상태가 여기서 자동으로 정해진다.
   // ══════════════════════════════════════════════════════════════
-  const VOCAB_DAY_SIZE = 20, VOCAB_TEST_N = 20, VOCAB_RANDOM_N = 30, VOCAB_PASS_RATE = 0.8;
+  const VOCAB_DAY_SIZE = 20, VOCAB_TEST_N = 20, VOCAB_RANDOM_N = 30, VOCAB_PASS_RATE = 0.6;
   const VOCAB_LEVELS = [{ key: "1", name: "초급" }, { key: "2", name: "중급" }, { key: "3", name: "상급" }];
   let vocabStage = "home"; // 영어 단어 페이지에 들어오면 먼저 "공부하기 / TEST 응시하기" 두 큰 버튼("home")을 보여준다
   let vocabSetsCache = null, vocabTab = "study", vocabRun = null, vocabLevel = "1";
@@ -11677,58 +11735,89 @@
   function vocabPosLabel(p) { return { n: "명사", v: "동사", adj: "형용사", adv: "부사", prep: "전치사", conj: "접속사", pron: "대명사", idm: "숙어" }[p] || p; }
   function vocabWrap() { const lv = document.getElementById("vocabLive"); return lv && lv.classList.contains("on") ? document.getElementById("vocabLiveBody") : document.getElementById("vocabWrap"); }
   function vocabLiveOpen() { const lv = document.getElementById("vocabLive"); if (!lv.classList.contains("on")) { lv.classList.add("on"); document.getElementById("vocabLiveBody").scrollTop = 0; } }
+  // ── 홈 메모장: 글을 쓰는 대로 이 기기에 자동 저장 ──
+  function memoKey() { return "holoMemo:" + (localStorage.getItem("holoStudentId") || "anon"); }
+  function memoOpen() {
+    const t = document.getElementById("memoText");
+    try { t.value = localStorage.getItem(memoKey()) || ""; } catch (e) { t.value = ""; }
+    document.getElementById("memoPop").classList.add("on"); t.focus();
+  }
+  function memoSave() { try { localStorage.setItem(memoKey(), document.getElementById("memoText").value); } catch (e) {} }
+  function memoClose() { memoSave(); document.getElementById("memoPop").classList.remove("on"); }
   function vocabLiveClose() { document.getElementById("vocabLive").classList.remove("on"); }
 
   // ── 목록(허브) ──
   function initVocab() { vocabRun = null; vocabLiveClose(); vocabRenderHub(); }
-  function vocabSetTab(t) { vocabTab = t; vocabRenderHub(); }
+  // 영어 페이지 흐름: 1) 영어 단어 / 영어 문법 고르기("home") → 2) 공부하기 / TEST 응시하기 고르기("mode") → 3) 목록("hub")
+  let vocabSubject = "word"; // "word" | "grammar"
+  function vocabPickSubject(s) { vocabSubject = s; vocabStage = "mode"; vocabRenderHub(); }
   function vocabPickStage(tab) { vocabStage = "hub"; vocabTab = tab; vocabRenderHub(); }
   function vocabGoHome() { vocabStage = "home"; vocabRenderHub(); }
+  function vocabBackStep() { vocabStage = vocabStage === "hub" ? "mode" : "home"; vocabRenderHub(); }
+  function vocabSubjectName() { return vocabSubject === "grammar" ? "영어 문법" : "영어 단어"; }
   function vocabHomeHtml() {
-    return '<div class="vhome"><button type="button" onclick="vocabPickStage(\'study\')"><b>공부하기</b><span>단어 카드 · 객관식 · 문법 공부</span></button>' +
-      '<button type="button" onclick="vocabPickStage(\'test\')"><b>TEST 응시하기</b><span>단어와 문법 TEST · 매일 하나 이상 응시</span></button></div>';
+    return '<div class="vhome"><button type="button" onclick="vocabPickSubject(\'word\')"><b>영어 단어</b><span>단어 카드 · 객관식 · TEST</span></button>' +
+      '<button type="button" onclick="vocabPickSubject(\'grammar\')"><b>영어 문법</b><span>문법 문제 공부 · TEST</span></button></div>';
   }
-  function vocabTabsHtml() {
-    const b = (k, t) => '<button type="button" class="' + (vocabTab === k ? "on" : "") + '" onclick="vocabSetTab(\'' + k + '\')">' + t + '</button>';
-    return (vocabTab === "test" ? "" :'<div class="vocab-tabs">' + b("study", "단어 공부하기") + b("grammar", "문법 공부하기") + '</div>'); // 공부하기에는 TEST 탭이 없고, TEST 화면에는 탭이 없다
+  function vocabModeHtml() {
+    return '<div class="vhome"><button type="button" onclick="vocabPickStage(\'study\')"><b>공부하기</b><span>' + (vocabSubject === "grammar" ? "3지선다로 문법을 공부해요" : "카드 보기 · 객관식으로 공부해요") + '</span></button>' +
+      '<button type="button" onclick="vocabPickStage(\'test\')"><b>TEST 응시하기</b><span>매일 하나 이상 응시해요</span></button></div>';
+  }
+  function vocabTabsHtml() { return ""; } // 탭은 없앴다(위 흐름으로 대체)
+  function vocabCalloutHtml() {
+    return '<div class="vocab-callout"><span class="vc-ico">i</span><ul><li>매일 밤 12시 전까지, 아직 응시한 적 없는 Test를 응시해야 합니다.</li><li>모든 Test를 이미 응시했다면, 아무 Test나 골라서 다시 응시하세요.</li><li>\'공부하기\'는 Test를 위한 연습 과정입니다. 반드시 Test를 응시해야 합니다.</li><li>' + Math.round(VOCAB_PASS_RATE * 100) + '% 이상 정답을 맞혀야 Test를 통과할 수 있습니다.</li><li class="vc-em">점수는 중요하지 않습니다. 통과할 때까지 반복해서 응시하세요.</li></ul></div>';
   }
   function vocabRenderHub() {
-    const vt = document.getElementById("vocabTitle"); if (vt) vt.textContent = vocabStage === "hub" && vocabTab === "test" ? "영어 단어 TEST" : "영어"; // TEST 화면은 페이지 제목도 "영어 단어 TEST"
+    const vt = document.getElementById("vocabTitle");
+    if (vt) vt.textContent = vocabStage === "home" ? "영어" : vocabSubjectName() + (vocabStage === "hub" && vocabTab === "test" ? " TEST" : "");
     if (vocabStage === "home") { vocabWrap().innerHTML = vocabHomeHtml(); return; }
-    if (vocabTab === "grammar") {
-      vocabWrap().innerHTML = vocabTabsHtml() + grammarHubHtml();
+    if (vocabStage === "mode") { vocabWrap().innerHTML = vocabModeHtml(); return; }
+    if (vocabSubject === "grammar") {
+      vocabWrap().innerHTML = vocabTab === "test" ? vocabCalloutHtml() + grammarTestGridHtml(vocabLoad()) : grammarHubHtml();
       return;
     }
-    if (vocabTab === "study" && vocabLevel === "grammar") vocabLevel = "1"; // 문법 칸은 TEST 탭에만 있다
+    if (vocabLevel === "grammar") vocabLevel = "1";
     const st = vocabLoad(), sets = vocabSets();
     const dayBtn = s => {
       const b = st.best[s.id], isTest = vocabTab !== "study";
-      const done = isTest ? !!(b && b.pass) : !!st.studied[s.id];
-      return '<button type="button" class="vocab-day' + (done ? " done" : "") + '" onclick="' + (vocabTab === "study" ? "vocabStartStudy" : "vocabStartTest") + "('" + s.id + "')" + '"><span class="vd-name">' + s.label.replace(/^(초급|중급|상급|숙어) /, "") + '</span><span class="vd-sub">' + (isTest && b ? "최고 " + Math.round(b.score / b.total * 100) + "점" : s.items.length + "개") + '</span>' + (done ? '<span class="vd-check">✓</span>' : "") + '</button>';
+      const done = isTest ? !!b : !!st.studied[s.id]; // TEST는 응시만 해도 색이 바뀐다(✓는 통과했을 때만)
+      const passed = !!(b && b.pass);
+      return '<button type="button" class="vocab-day' + (done ? " done" : "") + '" onclick="' + (vocabTab === "study" ? "vocabStartStudy" : "vocabStartTest") + "('" + s.id + "')" + '"><span class="vd-name">' + s.label.replace(/^(초급|중급|상급|숙어) /, "") + '</span><span class="vd-sub">' + (isTest && b ? "최고 " + Math.round(b.score / b.total * 100) + "점" : s.items.length + "개") + '</span>' + (isTest ? (passed ? '<span class="vd-check">✓</span>' : "") : (done ? '<span class="vd-check">✓</span>' : "")) + '</button>';
     };
     const levelRow = '<div class="vocab-levels">' + VOCAB_LEVELS.map(lv => '<button type="button" class="' + (vocabLevel === lv.key ? "on" : "") + '" onclick="vocabSetLevel(\'' + lv.key + '\')">' + lv.name + '</button>').join("") +
-      (vocabTab === "test" ? '<button type="button" class="' + (vocabLevel === "grammar" ? "on" : "") + '" onclick="vocabSetLevel(\'grammar\')">문법</button>' : "") +
+      (vocabTab === "study" ? '<button type="button" class="vstar-open" onclick="vocabStartStudy(\'star\')">★ 별표 카드 모아 공부 (' + vocabStarList().length + ')</button>' : "") +
       '<button type="button" class="idm' + (vocabLevel === "idiom" ? " on" : "") + '" onclick="vocabSetLevel(\'idiom\')">' + (vocabTab === "test" ? "숙어만 따로 시험보기" : "숙어만 따로 공부하기") + '</button></div>';
     const lvName = vocabLevel === "idiom" ? "필수 숙어" : (VOCAB_LEVELS.find(l => l.key === vocabLevel) || {}).name;
     vocabWrap().innerHTML =
-      vocabTabsHtml() +
-      (vocabTab === "study" ? '<p class="vocab-hint">객관식 3지선다로 영어 단어를 공부하세요!</p>'
-        : '<div class="vocab-callout"><span class="vc-ico">i</span><ul><li>매일 밤 12시 전까지 하나 이상의 test를 끝까지 응시하면 그날 응시 완료로 기록돼요.</li><li>시험 문제의 ' + Math.round(VOCAB_PASS_RATE * 100) + '% 이상 정답을 맞춰야 시험을 통과할 수 있습니다.</li><li>점수는 중요하지 않습니다. 통과할 때까지 반복해서 응시하세요.</li></ul></div>') +
+      (vocabTab === "study" ? '<p class="vocab-hint">객관식 3지선다로 영어 단어를 공부하세요!</p>' : vocabCalloutHtml()) +
       levelRow +
-      (vocabTab === "test" && vocabLevel === "grammar" ? grammarTestGridHtml(st) : '<div class="vocab-days">' + sets.filter(s => s.level === vocabLevel).map(dayBtn).join("") + '<button type="button" class="vocab-day vocab-day-rand" onclick="' + (vocabTab === "study" ? "vocabStartStudy" : "vocabStartTest") + '(\'all\')"><span class="vd-name">전체 무작위</span><span class="vd-sub">' + VOCAB_RANDOM_N + '문제</span></button>' + '</div>') +
-      "";
+      '<div class="vocab-days">' + sets.filter(s => s.level === vocabLevel).map(dayBtn).join("") + '<button type="button" class="vocab-day vocab-day-rand" onclick="' + (vocabTab === "study" ? "vocabStartStudy" : "vocabStartTest") + '(\'all\')"><span class="vd-name">전체 무작위</span><span class="vd-sub">' + VOCAB_RANDOM_N + '문제</span></button>' + '</div>';
   }
   // TEST 탭의 "문법" 칸 — 문법 세트도 여기서 응시한다(통과하면 ✓, 최고 점수 표시, 응시하면 오늘 응시 완료로 기록).
   function grammarTestGridHtml(st) {
     return '<div class="vocab-days gr-days">' + HOLO_GRAMMAR.map(g => {
       const b = st.best["g:" + g.id];
-      return '<button type="button" class="vocab-day' + (b && b.pass ? " done" : "") + '" onclick="grammarStart(\'' + g.id + '\', true)"><span class="vd-name">' + escapeHtml(g.label) + '</span><span class="vd-sub">' + (b ? "최고 " + Math.round(b.score / b.total * 100) + "점" : g.qs.length + "문제") + '</span>' + (b && b.pass ? '<span class="vd-check">✓</span>' : "") + '</button>';
+      return '<button type="button" class="vocab-day' + (b ? " done" : "") + '" onclick="grammarStart(\'' + g.id + '\', true)"><span class="vd-name">' + escapeHtml(g.label) + '</span><span class="vd-sub">' + (b ? "최고 " + Math.round(b.score / b.total * 100) + "점" : g.qs.length + "문제") + '</span>' + (b && b.pass ? '<span class="vd-check">✓</span>' : "") + '</button>';
     }).join("") + '<button type="button" class="vocab-day vocab-day-rand" onclick="grammarStart(\'all\', true)"><span class="vd-name">전체 무작위</span><span class="vd-sub">20문제</span></button></div>';
   }
 
   // ── 클래스카드 공부 ──
+  // ── 별표: 공부하다가 별표를 눌러 둔 단어만 모아서 공부할 수 있다(이 기기에 저장) ──
+  function vocabStarKey() { return "holoVocabStar:" + (localStorage.getItem("holoStudentId") || "anon"); }
+  function vocabStarList() { try { const a = JSON.parse(localStorage.getItem(vocabStarKey()) || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+  function vocabIsStar(i) { return vocabStarList().indexOf(i) >= 0; }
+  function vocabToggleStar(i, btn, ev) {
+    if (ev) ev.stopPropagation();
+    let a = vocabStarList(); const on = a.indexOf(i) >= 0;
+    a = on ? a.filter(x => x !== i) : a.concat(i);
+    try { localStorage.setItem(vocabStarKey(), JSON.stringify(a)); } catch (e) {}
+    if (btn) { btn.textContent = on ? "☆" : "★"; btn.classList.toggle("on", !on); }
+  }
+  function vocabStarBtn(i, cls) { const on = vocabIsStar(i); return '<button type="button" class="vstar-btn ' + (cls || "") + (on ? " on" : "") + '" aria-label="별표" onclick="vocabToggleStar(' + i + ',this,event)">' + (on ? "★" : "☆") + '</button>'; }
   function vocabStartStudy(id) {
-    const set = id === "all" ? { id: "all", label: "전체 무작위", items: vocabShuffle(HOLO_VOCAB.map((_, i) => i)).slice(0, VOCAB_RANDOM_N) } : vocabSets().find(s => s.id === id); if (!set) return;
+    if (id === "star" && !vocabStarList().length) { showToast("별표한 카드가 아직 없어요. 카드나 문제에서 ☆를 눌러 보세요."); return; }
+    const set = id === "star" ? { id: "star", label: "별표한 카드", items: vocabStarList().slice().sort((a, b) => a - b) }
+      : id === "all" ? { id: "all", label: "전체 무작위", items: vocabShuffle(HOLO_VOCAB.map((_, i) => i)).slice(0, VOCAB_RANDOM_N) } : vocabSets().find(s => s.id === id); if (!set) return;
     vocabRun = { mode: "study", set: set, step: "menu", queue: set.items.slice(), i: 0, flipped: false, retry: [], q: null, wrong: 0, correct: 0 };
     vocabSplash("vstudy", function () { vocabLiveOpen(); vocabRenderStudy(); });
   }
@@ -11742,7 +11831,7 @@
   function vocabShowCards() {
     const r = vocabRun; if (!r) return; r.step = "grid";
     vocabWrap().innerHTML = '<div class="fc-wrap"><div class="vocab-top"><button type="button" class="vocab-back" onclick="vocabBackToMenu()">← 뒤로</button><span class="vocab-step">' + escapeHtml(r.set.label) + ' · 카드 보기</span><span class="vocab-count">' + r.set.items.length + '개</span></div>' +
-      '<div class="fc-grid">' + r.set.items.map(i => { const e = vocabE(i); return '<div class="fc" onclick="this.classList.toggle(\'flip\')"><div class="fc-in"><div class="fc-face">' + escapeHtml(e[0]) + '</div><div class="fc-face fc-back">' + escapeHtml(e[2]) + '</div></div></div>'; }).join("") + '</div></div>';
+      '<div class="fc-grid">' + r.set.items.map(i => { const e = vocabE(i); return '<div class="fc" onclick="this.classList.toggle(\'flip\')">' + vocabStarBtn(i, "fc-star") + '<div class="fc-in"><div class="fc-face">' + escapeHtml(e[0]) + '</div><div class="fc-face fc-back">' + escapeHtml(e[2]) + '</div></div></div>'; }).join("") + '</div></div>';
     document.getElementById("vocabLiveBody").scrollTop = 0;
   }
   function vocabBackToMenu() { const r = vocabRun; if (!r) return; r.step = "menu"; vocabWrap().innerHTML = vocabStudyMenuHtml(r); }
@@ -11771,7 +11860,7 @@
     const head = q.type === "w2m"
       ? '<div class="vq-label">이 단어의 뜻은?</div><div class="vq-main">' + escapeHtml(e[0]) + '</div><div class="vq-pos">' + vocabPosLabel(e[1]) + '</div>'
       : '<div class="vq-label">이 뜻에 알맞은 단어는?</div><div class="vq-main vq-meaning">' + escapeHtml(e[2]) + '</div><div class="vq-pos">' + vocabPosLabel(e[1]) + '</div>';
-    return '<div class="vocab-q">' + head + '<div class="vq-opts">' + q.opts.map((o, k) => '<button type="button" class="vq-opt" data-k="' + k + '" onclick="vocabAnswer(' + k + ')">' + escapeHtml(o.text) + '</button>').join("") + '</div></div>';
+    return '<div class="vocab-q">' + (withFeedback ? vocabStarBtn(q.idx, "vq-star") : "") + head + '<div class="vq-opts">' + q.opts.map((o, k) => '<button type="button" class="vq-opt" data-k="' + k + '" onclick="vocabAnswer(' + k + ')">' + escapeHtml(o.text) + '</button>').join("") + '</div></div>';
   }
   let vocabLocked = false;
   function vocabAnswer(k) {
@@ -11813,6 +11902,13 @@
     r.answers[r.i] = k;
     setTimeout(() => { vocabLocked = false; if (vocabRun !== r) return; r.i++; vocabRenderTest(); }, okT ? 700 : 1300); // 고른 선지에 ✓/✕를 잠깐 보여준 뒤 넘어간다
   }
+  // TEST 결과: 기준(60%) 이상이면 축하, 미만이면 탈락 경고를 크게 보여준다.
+  function vocabVerdictHtml(pass) {
+    const pct = Math.round(VOCAB_PASS_RATE * 100);
+    return pass
+      ? '<div class="vverdict pass"><b>🎉 테스트에 통과했습니다!</b><span>축하해요. 정말 잘했어요.</span></div>'
+      : '<div class="vverdict fail"><b>⚠ 테스트에 미통과했습니다</b><span>' + pct + '% 이상 맞혀야 통과해요. 틀린 문제를 확인하고 통과할 때까지 다시 응시하세요.</span></div>';
+  }
   function vocabFinishTest() {
     const r = vocabRun; if (!r) return;
     const total = r.qs.length, score = r.qs.filter((q, i) => r.answers[i] === q.answer).length, pass = score / total >= VOCAB_PASS_RATE;
@@ -11823,7 +11919,7 @@
     const wrong = r.qs.map((q, i) => ({ q: q, a: r.answers[i] })).filter(x => x.a !== x.q.answer);
     vocabWrap().innerHTML =
       '<div class="vocab-result ' + (pass ? "pass" : "fail") + '"><div class="vr-label">' + escapeHtml(r.label) + ' 테스트 결과</div><div class="vr-score">' + score + ' <span>/ ' + total + '</span></div><div class="vr-verdict">' + (pass ? "통과" : "미통과") + ' · ' + Math.round(score / total * 100) + '%</div></div>' +
-      '<p class="vocab-hint" style="text-align:center">' + "오늘 응시 완료로 기록됐어요." + '</p>' +
+      vocabVerdictHtml(pass) + '<p class="vocab-hint" style="text-align:center">' + "오늘 응시 완료로 기록됐어요." + '</p>' +
       (wrong.length ? '<div class="vocab-group-title">틀린 문제 ' + wrong.length + '개</div><ul class="vocab-wrong">' + wrong.map(x => { const e = vocabE(x.q.idx); return '<li><b>' + escapeHtml(e[0]) + '</b><span>' + escapeHtml(e[2]) + '</span></li>'; }).join("") + '</ul>' : '<p class="vocab-hint">모두 맞혔어요!</p>') +
       '<div class="vocab-actions"><button type="button" class="vocab-btn ghost" onclick="initVocab()">목록으로</button><button type="button" class="vocab-btn" onclick="vocabStartTest(\'' + r.scope + '\')">다시 테스트</button></div>';
     vocabRun = null;
@@ -11878,9 +11974,9 @@
       if (r.scope !== "all") { const k = "g:" + r.scope, pb = st.best[k], better = !pb || r.score / r.qs.length >= pb.score / pb.total; st.best[k] = better ? { score: r.score, total: r.qs.length, pass: pass || !!(pb && pb.pass) } : { score: pb.score, total: pb.total, pass: pb.pass || pass }; }
       vocabSave(st); engVocabRender();
     }
-    if (r.scope !== "all") { const rec = grammarLoad(); rec[r.scope] = { best: Math.max(r.score, (rec[r.scope] || {}).best || 0), last: r.score, date: getLocalDateKey() }; grammarSave(rec); }
+    if (!r.test && r.scope !== "all") { const rec = grammarLoad(); rec[r.scope] = { best: Math.max(r.score, (rec[r.scope] || {}).best || 0), last: r.score, date: getLocalDateKey() }; grammarSave(rec); }
     vocabWrap().innerHTML =
-      '<div class="vocab-result ' + (r.score / r.qs.length >= VOCAB_PASS_RATE ? "pass" : "fail") + '"><div class="vr-label">' + escapeHtml(r.label) + ' 결과</div><div class="vr-score">' + r.score + ' <span>/ ' + r.qs.length + '</span></div><div class="vr-verdict">' + Math.round(r.score / r.qs.length * 100) + '%</div></div>' + (r.test ? '<p class="vocab-hint" style="text-align:center">오늘 응시 완료로 기록됐어요.</p>' : "") +
+      '<div class="vocab-result ' + (r.score / r.qs.length >= VOCAB_PASS_RATE ? "pass" : "fail") + '"><div class="vr-label">' + escapeHtml(r.label) + ' 결과</div><div class="vr-score">' + r.score + ' <span>/ ' + r.qs.length + '</span></div><div class="vr-verdict">' + Math.round(r.score / r.qs.length * 100) + '%</div></div>' + (r.test ? vocabVerdictHtml(r.score / r.qs.length >= VOCAB_PASS_RATE) + '<p class="vocab-hint" style="text-align:center">오늘 응시 완료로 기록됐어요.</p>' : "") +
       (r.wrong.length ? '<div class="vocab-group-title">틀린 문제 ' + r.wrong.length + '개</div><ul class="vocab-wrong">' + r.wrong.map(q => '<li style="display:block"><b>' + escapeHtml(q.stem) + '</b><span style="display:block;margin-top:4px">' + escapeHtml(q.opts[q.answer].t) + ' — ' + escapeHtml(q.ex) + '</span></li>').join("") + '</ul>' : '<p class="vocab-hint">모두 맞혔어요!</p>') +
       '<div class="vocab-actions"><button type="button" class="vocab-btn ghost" onclick="initVocab()">목록으로</button><button type="button" class="vocab-btn" onclick="grammarStart(\'' + r.scope + '\'' + (r.test ? ', true' : '') + ')">다시 풀기</button></div>';
     vocabRun = null;
@@ -11897,7 +11993,8 @@
     const st = vocabLoad(), today = getLocalDateKey();
     const card = Object.keys(st.studied).some(k => st.studied[k] === today) ? "done" : "todo";
     const todays = st.tests.filter(t => t.date === today && t.counted); // 그 날짜에 해당하는 DAY 테스트만 홈 기록으로 인정
-    return { card: card, test: todays.length ? "done" : "none" };
+    const has = isG => todays.some(t => String(t.scope).indexOf("g:") === 0 === isG) ? "done" : "none"; // 단어 / 문법 TEST를 따로 센다
+    return { card: card, test: todays.length ? "done" : "none", word: has(false), grammar: has(true) };
   }
   function engVocabRender() {
     const d = engVocabGet();
@@ -11910,6 +12007,10 @@
       testEl.textContent = ENG_VOCAB_LABEL.test[d.test];
       testEl.classList.toggle("done", d.test === "done" || d.test === "pass"); testEl.classList.toggle("fail", d.test === "fail"); testEl.classList.toggle("pending", d.test === "none");
     }
+    [["engStatus-word", d.word], ["engStatus-grammar", d.grammar]].forEach(p => {
+      const el = document.getElementById(p[0]); if (!el) return;
+      el.textContent = ENG_VOCAB_LABEL.test[p[1]]; el.classList.toggle("done", p[1] === "done"); el.classList.toggle("pending", p[1] !== "done");
+    });
     document.querySelectorAll(".eng-pop-opt").forEach(b => b.classList.toggle("on", d[b.dataset.k] === b.dataset.v));
   }
   function engVocabOpen(e) {
