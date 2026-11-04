@@ -5037,16 +5037,24 @@
   .rh2-stat + .rh2-stat { border-left: 1px solid var(--line); }
   .rh2-label { font-size: 0.6rem; font-weight: 600; color: var(--ink-soft); line-height: 1.3; }
   .rh2-val { font-size: 0.82rem; font-weight: 800; color: var(--ink); line-height: 1.3; font-variant-numeric: tabular-nums; }
-  .rh2-reports { display: grid; grid-template-columns: 250px minmax(0, 1fr); background: var(--paper); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; height: clamp(380px, calc(100vh - 300px), 680px); }
-  .rh2-list { border-right: 1px solid var(--line); overflow-y: auto; display: flex; flex-direction: column; min-height: 0; }
-  .rh2-list-head { position: sticky; top: 0; background: var(--paper); padding: 14px 16px; font-size: 0.78rem; font-weight: 800; color: var(--ink); border-bottom: 1px solid var(--line); }
-  .rh2-item { font-family: inherit; text-align: left; background: none; border: none; border-bottom: 1px solid var(--line); padding: 12px 16px; cursor: pointer; display: flex; flex-direction: column; gap: 3px; transition: background 0.15s; }
+  .rh2-reports { display: grid; grid-template-columns: 250px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); background: var(--paper); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; height: clamp(380px, calc(100vh - 300px), 680px); }
+  .rh2-list { border-right: 1px solid var(--line); overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; min-height: 0; }
+  .rh2-list .rh2-item, .rh2-list .rh2-list-head { flex: none; } /* 분석지가 많아져도 항목이 눌리지 않고, 목록 안에서만 스크롤된다 */
+  .rh2-list-head { position: sticky; top: 0; background: var(--paper); padding: 14px 16px; font-size: 0.78rem; font-weight: 800; color: var(--ink); border-bottom: 1px solid var(--line); text-align: center; }
+  .rh2-item { font-family: inherit; text-align: center; background: none; border: none; border-bottom: 1px solid var(--line); padding: 12px 16px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; transition: background 0.15s; }
   .rh2-item:hover { background: var(--cream); }
   .rh2-item.on { background: var(--cream); box-shadow: inset 3px 0 0 var(--green-deep); }
   .rh2-item .t { font-size: 0.8rem; font-weight: 700; color: var(--ink); }
   .rh2-item .s { font-size: 0.68rem; color: var(--ink-soft); }
   .rh2-detail { overflow-y: auto; padding: 18px 24px 24px; min-height: 0; }
   .rh2-detail .report-card { border: none; border-radius: 0; background: transparent; }
+  /* 분석지 본문 글씨를 줄여서 한 화면에 더 많이 보이게 한다 */
+  .rh2-detail .report-body { padding: 14px 4px 4px; font-size: 0.8rem; line-height: 1.65; }
+  .rh2-detail .ans-heading { font-size: 0.88rem; margin: 14px 0 6px 0; }
+  .rh2-detail .ans-p { margin: 0 0 5px 0; }
+  .rh2-detail .ans-list { padding-left: 18px; }
+  .rh2-detail .ans-list li { margin-bottom: 4px; }
+  .rh2-detail .report-period { font-size: 0.76rem; }
   .rh2-empty { color: var(--ink-soft); font-size: 0.8rem; padding: 40px 16px; text-align: center; }
   @media (max-width: 700px) {
     .rh2-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
