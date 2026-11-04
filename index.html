@@ -2905,11 +2905,6 @@
   .home-rest-tools svg { width: 12px; height: 12px; flex: none; color: var(--ink-soft); }
   .home-rest-tools .hrt-label { flex: 1; text-align: left; }
   .home-rest-tools .hrt-arrow { flex: none; color: var(--green); font-weight: 800; font-size: 0.8rem; line-height: 1; }
-  .home-rest-divider { display: none; }
-  @media (min-width: 901px) {
-    /* 머리 식히기 칸과 스톱워치·타이머·메모장 칸 사이(가운데)의 얇은 세로 실선 */
-    .home-dash .home-promo-slot .home-rest-divider { display: block; grid-column: 2; grid-row: 2; justify-self: start; align-self: center; width: 1px; height: 62%; background: var(--line-dark); transform: translateX(calc(var(--ln-gap) / -2)); pointer-events: none; }
-  }
   .home-rest-tools.home-tools-box { position: static; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 8px 0; }
   .home-rest-tools.home-tools-box button { width: auto; }
   @media (min-width: 901px) {
@@ -5035,6 +5030,32 @@
 
   /* ── 내 학습 기록 살펴보기 (허브): 아이콘 카드 ── */
   .rh-tile-grid { display: grid; grid-template-columns: repeat(2, 1fr); align-items: stretch; gap: 14px; }
+  /* 내 학습 기록 살펴보기: 위쪽 통계 박스 + 아래 분석지 박스(왼쪽 목록 · 오른쪽 내용) */
+  #view-recordhub { scrollbar-gutter: stable; }
+  .rh2-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: var(--paper); border: 1px solid var(--line); border-radius: 14px; margin: 20px 0 14px; }
+  .rh2-stat { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 10px; text-align: center; min-width: 0; }
+  .rh2-stat + .rh2-stat { border-left: 1px solid var(--line); }
+  .rh2-label { font-size: 0.6rem; font-weight: 600; color: var(--ink-soft); line-height: 1.3; }
+  .rh2-val { font-size: 0.82rem; font-weight: 800; color: var(--ink); line-height: 1.3; font-variant-numeric: tabular-nums; }
+  .rh2-reports { display: grid; grid-template-columns: 250px minmax(0, 1fr); background: var(--paper); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; height: clamp(380px, calc(100vh - 300px), 680px); }
+  .rh2-list { border-right: 1px solid var(--line); overflow-y: auto; display: flex; flex-direction: column; min-height: 0; }
+  .rh2-list-head { position: sticky; top: 0; background: var(--paper); padding: 14px 16px; font-size: 0.78rem; font-weight: 800; color: var(--ink); border-bottom: 1px solid var(--line); }
+  .rh2-item { font-family: inherit; text-align: left; background: none; border: none; border-bottom: 1px solid var(--line); padding: 12px 16px; cursor: pointer; display: flex; flex-direction: column; gap: 3px; transition: background 0.15s; }
+  .rh2-item:hover { background: var(--cream); }
+  .rh2-item.on { background: var(--cream); box-shadow: inset 3px 0 0 var(--green-deep); }
+  .rh2-item .t { font-size: 0.8rem; font-weight: 700; color: var(--ink); }
+  .rh2-item .s { font-size: 0.68rem; color: var(--ink-soft); }
+  .rh2-detail { overflow-y: auto; padding: 18px 24px 24px; min-height: 0; }
+  .rh2-detail .report-card { border: none; border-radius: 0; background: transparent; }
+  .rh2-empty { color: var(--ink-soft); font-size: 0.8rem; padding: 40px 16px; text-align: center; }
+  @media (max-width: 700px) {
+    .rh2-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .rh2-stat:nth-child(3) { border-left: none; }
+    .rh2-stat:nth-child(n+3) { border-top: 1px solid var(--line); }
+    .rh2-reports { grid-template-columns: 1fr; grid-template-rows: 200px minmax(0, 1fr); height: auto; }
+    .rh2-list { border-right: none; border-bottom: 1px solid var(--line); }
+    .rh2-detail { max-height: 520px; }
+  }
   .rh-tile {
     background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
     padding: 20px 18px 18px; text-align: left; cursor: pointer; font-family: inherit;
@@ -7462,7 +7483,6 @@
         </div>
       </div>
       </div>
-      <div class="home-rest-divider" aria-hidden="true"></div>
       <div class="home-rest-tools home-tools-box">
           <button type="button" onclick="genTimerOpen('stopwatch')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg><span class="hrt-label">스톱워치</span><span class="hrt-arrow">›</span></button>
           <button type="button" onclick="genTimerOpen('timer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2h12M6 22h12M7 2c0 6 5 6 5 10s-5 4-5 10M17 2c0 6-5 6-5 10s5 4 5 10"/></svg><span class="hrt-label">타이머</span><span class="hrt-arrow">›</span></button>
@@ -7872,49 +7892,30 @@
       <h2>내 학습 기록 살펴보기</h2>
       <div class="split"></div>
 
-      <div class="rh-tile-grid">
-        <button type="button" class="rh-tile" onclick="go('cumulative')">
-          <span class="rh-tile-head">
-            <span class="rh-tile-head-left">
-              <span class="rh-tile-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="12" height="12" rx="1.5"/><rect x="8" y="8" width="12" height="12" rx="1.5"/></svg>
-              </span>
-              <span class="rh-tile-title">누적된 학습 기록</span>
-            </span>
-            <span class="rh-tile-head-right"><span class="rh-tile-arrow">›</span></span>
-          </span>
-          <div class="rh-tile-avg rh-tile-avg-2col">
-            <div class="rh-tile-avg-col">
-              <span class="rh-tile-avg-label">현재까지 누적</span>
-              <span class="rh-score-num s2">"<span id="rhTotalDays">…</span>일"</span>
-            </div>
-            <div class="rh-tile-avg-col">
-              <span class="rh-tile-avg-label"><span id="rhCumWeekLabel">9월 1주차</span> 누적 점수</span>
-              <span class="rh-score-num s2" id="rhCumScore">확인 중…</span>
-            </div>
-          </div>
-        </button>
-        <button type="button" class="rh-tile" onclick="go('reports')">
-          <span class="rh-tile-head">
-            <span class="rh-tile-head-left">
-              <span class="rh-tile-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 19V6M12 19V3M19 19v-9"/></svg>
-              </span>
-              <span class="rh-tile-title">내 분석지</span>
-            </span>
-            <span class="rh-tile-head-right"><span class="rh-tile-arrow">›</span></span>
-          </span>
-          <div class="rh-tile-avg rh-tile-avg-2col">
-            <div class="rh-tile-avg-col">
-              <span class="rh-tile-avg-label">현재까지 누적</span>
-              <span class="rh-score-num s2">"<span id="rhReportCount">…</span>개"</span>
-            </div>
-            <div class="rh-tile-avg-col">
-              <span class="rh-tile-avg-label"><span id="rhReportWeekLabel">9월 1주차</span> 분석지</span>
-              <span class="rh-score-num s0" id="rhReportStatus">확인 중…</span>
-            </div>
-          </div>
-        </button>
+      <!-- 위쪽 긴 박스: 이번 주 평균 점수 · 이번 주 분석지 상태 · 누적 학습 일수 · 누적 분석지 개수 -->
+      <div class="rh2-stats">
+        <div class="rh2-stat">
+          <span class="rh2-label"><span id="rhCumWeekLabel">이번 주</span> 평균 점수</span>
+          <span class="rh2-val" id="rhCumScore">…</span>
+        </div>
+        <div class="rh2-stat">
+          <span class="rh2-label"><span id="rhReportWeekLabel">이번 주</span> 분석지</span>
+          <span class="rh2-val" id="rhReportStatus">…</span>
+        </div>
+        <div class="rh2-stat">
+          <span class="rh2-label">현재까지 누적 학습</span>
+          <span class="rh2-val"><span id="rhTotalDays">…</span>일</span>
+        </div>
+        <div class="rh2-stat">
+          <span class="rh2-label">누적 분석지</span>
+          <span class="rh2-val"><span id="rhReportCount">…</span>개</span>
+        </div>
+      </div>
+
+      <!-- 아래 큰 박스: 왼쪽 분석지 목록 · 오른쪽 선택한 분석지 내용 -->
+      <div class="rh2-reports">
+        <div class="rh2-list" id="rh2List"><div class="rh2-empty">불러오는 중…</div></div>
+        <div class="rh2-detail" id="rh2Detail"><div class="rh2-empty">왼쪽에서 분석지를 선택해 보세요.</div></div>
       </div>
     </div>
   </section>
@@ -11590,7 +11591,7 @@
     planApi({ action: "week_score", date: getLocalDateKey(), joinDate: localStorage.getItem("holoStudentJoinDate") || null })
       .then(data => {
         const avg = typeof data.avgScore === "number" ? data.avgScore : 0;
-        el.textContent = "평균 " + avg + "점";
+        el.textContent = avg + "점";
         el.classList.remove("s0", "s1", "s2", "s3");
         el.classList.add("s" + Math.min(3, Math.round(avg)));
       })
@@ -12148,6 +12149,7 @@
         .then(res => res.json())
         .then(data => {
           const weekly = (data.reports || []).filter(r => r.report_type !== "daily");
+          rhRenderReports(weekly);
           if (reportCountEl) reportCountEl.textContent = weekly.length;
           if (reportStatusEl) {
             const todayKey = getCalendarDateKey();
@@ -12162,8 +12164,46 @@
             reportStatusEl.classList.add(isDone ? "s3" : "s0");
           }
         })
-        .catch(() => { /* 조회 실패 시 기본 표시("확인 중…")를 그대로 둔다 */ });
+        .catch(() => {
+          const listEl = document.getElementById("rh2List");
+          if (listEl) listEl.innerHTML = '<div class="rh2-empty">분석지를 불러오지 못했어요.<br>잠시 후 다시 시도해 주세요.</div>';
+        });
     }
+  }
+  // ── 내 학습 기록 살펴보기: 분석지 목록(왼쪽) + 선택한 분석지 내용(오른쪽) ──
+  let rhReports = [], rhSelectedId = null;
+  function rhReportPeriod(r) {
+    const start = (r.period_start || "").slice(0, 10), end = (r.period_end || "").slice(0, 10);
+    return start === end ? start : (start + " ~ " + end);
+  }
+  function rhRenderReports(list) {
+    const listEl = document.getElementById("rh2List"), detailEl = document.getElementById("rh2Detail");
+    if (!listEl || !detailEl) return;
+    rhReports = (list || []).slice().sort((a, b) => String(b.period_end || b.created_at || "").localeCompare(String(a.period_end || a.created_at || "")));
+    if (!rhReports.length) {
+      listEl.innerHTML = '<div class="rh2-empty">아직 분석지가 없어요.</div>';
+      detailEl.innerHTML = '<div class="rh2-empty">기록이 6일 쌓이면 분석지가 자동으로 만들어져요.</div>';
+      return;
+    }
+    if (!rhReports.some(r => String(r.id) === String(rhSelectedId))) rhSelectedId = rhReports[0].id; // 처음엔 가장 최근 분석지를 보여준다
+    const total = rhReports.length;
+    listEl.innerHTML = '<div class="rh2-list-head">분석지 목록</div>' + rhReports.map((r, i) =>
+      '<button type="button" class="rh2-item' + (String(r.id) === String(rhSelectedId) ? " on" : "") + '" data-id="' + r.id + '" onclick="rhSelectReport(' + r.id + ')">' +
+        '<span class="t">' + escapeHtml(rhReportPeriod(r)) + '</span><span class="s">' + (total - i) + '번째 분석지</span></button>'
+    ).join("");
+    rhShowReport(rhSelectedId);
+  }
+  function rhSelectReport(id) {
+    rhSelectedId = id;
+    document.querySelectorAll("#rh2List .rh2-item").forEach(b => b.classList.toggle("on", String(b.dataset.id) === String(id)));
+    rhShowReport(id);
+  }
+  function rhShowReport(id) {
+    const detailEl = document.getElementById("rh2Detail");
+    const r = rhReports.find(x => String(x.id) === String(id));
+    if (!detailEl || !r) return;
+    detailEl.innerHTML = renderReportCards([r], ""); // 기존 분석지 카드(기간 · 인쇄 버튼 · 내용)를 그대로 재사용한다
+    detailEl.scrollTop = 0;
   }
 
   // ── 오늘의 학습 기록 (플래너+챗봇+일기 통합) ──
@@ -16665,7 +16705,7 @@
       const rowText = escapeHtml(exam.subject) + ' · ' + escapeHtml(exam.date) + '<span class="mex-list-row-divider"></span><span class="mex-list-row-gray">' + scoreText + ' · ' + escapeHtml(exam.title) + '</span>';
       return '<div class="mex-list-row">' +
         '<button type="button" class="mex-list-row-main" onclick="mexOpenDetail(\'' + exam.id + '\')">' + rowText + '</button>' +
-        '<button type="button" class="mex-list-print-btn" onclick="mexPrintExam(\'' + exam.id + '\')">프린트하기</button>' +
+        '<button type="button" class="mex-list-print-btn" onclick="mexPrintExam(\'' + exam.id + '\')">PDF 다운받기</button>' +
         '<button type="button" class="mex-list-del-btn" onclick="mexDeleteExam(\'' + exam.id + '\')">삭제하기</button>' +
       '</div>';
     }).join("");
@@ -16950,6 +16990,7 @@
     const cleanup = () => document.body.classList.remove("mex-printing");
     window.addEventListener("afterprint", cleanup, { once: true });
     document.body.classList.add("mex-printing");
+    showToast("열리는 창에서 '대상'을 'PDF로 저장'으로 고르면 PDF로 받을 수 있어요");
     setTimeout(() => window.print(), 150);
   }
   function mexBackToList() {
