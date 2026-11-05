@@ -2180,7 +2180,7 @@
      메가스터디 홈페이지 구조 참고 — 위쪽에 로고가 가운데 오는 흰 줄, 그 아래 가로 목차 줄. */
   .consult-header { display: none; flex-direction: column; flex: none; }
   .consult-header.on { display: flex; }
-  .consult-brand-row { background: #F4F4F5; padding: 60px 0 20px 0; }
+  .consult-brand-row { background: #F4F4F5; padding: 95px 0 14px 0; } /* 로고 · 버튼 줄을 스터디 홀로(Road Map) 홈 헤더와 같은 높이로 내림(위 60 → 95, 아래 20 → 14) */
   /* .consult-page(24px) + .chome-layout(24px) 안쪽 여백 합만큼(48px) 똑같이 안쪽 여백을 줘서,
      이 줄의 디데이/전환 링크가 아래 본문(공부자료 탭, 내 교실 입장하기 버튼 등)과
      좌우 끝이 정확히 맞도록 한다. */
@@ -2191,10 +2191,12 @@
   .consult-brand {
     grid-column: 2; justify-self: center;
     display: flex; align-items: center; gap: 9px;
-    font-family: inherit; font-size: 1.6rem; font-weight: 900; letter-spacing: -0.02em;
+    font-family: inherit; font-size: 1.22rem; font-weight: 900; letter-spacing: -0.02em; /* Road Map 홈 로고와 같은 크기(1.3rem × 홈 축소 0.94) */
     color: var(--ink); background: none; border: none; cursor: pointer; padding: 0;
   }
-  .consult-brand-icon { width: 28px; height: 28px; flex: none; }
+  .consult-brand-icon { width: 26px; height: 26px; flex: none; }
+  #view-academyHome .home-brand-text { font-size: 1.22rem; }
+  #view-academyHome .home-brand-icon { width: 26px; height: 26px; }
   .consult-brand .brand-accent { color: var(--ink); }
   .consult-dday { grid-column: 1; justify-self: start; font-size: 0.8rem; color: var(--ink-soft); white-space: nowrap; }
   .consult-header-switch {
@@ -2215,11 +2217,114 @@
     padding: 13px 28px;
   }
   .consult-nav-link {
-    font-family: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink);
+    font-family: inherit; font-size: 0.78rem; font-weight: 600; color: var(--ink);
     background: none; border: none; cursor: pointer; padding: 2px 0;
     transition: color 0.15s;
   }
   .consult-nav-link:hover, .consult-nav-link.on { color: var(--green-deep); }
+
+  /* ── 아카데미(Study Addict) 홈: 왼쪽 선생님 소개 / 오른쪽 학습 성향 MBTI 버튼 + 공부중독 AI 챗봇 / 아래 목차 + 스크롤하면 하나씩 나타나는 내용 ── */
+  .ch2-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: stretch; }
+  .ch2-intro { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 28px 30px; display: flex; flex-direction: column; gap: 16px; }
+  .ch2-intro-top { display: flex; align-items: center; gap: 14px; }
+  .ch2-avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--green-deep); color: #fff; font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex: none; }
+  .ch2-eyebrow { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.14em; color: var(--green-deep); }
+  .ch2-name { margin: 2px 0 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); }
+  .ch2-lead { margin: 0; font-size: 1rem; line-height: 1.65; font-weight: 600; color: var(--ink); }
+  .ch2-lead em { font-style: normal; color: var(--green-deep); background: linear-gradient(transparent 62%, rgba(255,212,77,0.55) 62%); }
+  .ch2-facts { list-style: none; margin: 0; padding: 16px 0 0; display: flex; flex-direction: column; gap: 13px; border-top: 1px solid var(--line); }
+  .ch2-facts li { position: relative; padding-left: 16px; display: flex; flex-direction: column; gap: 2px; }
+  .ch2-facts li::before { content: ""; position: absolute; left: 1px; top: 0.55em; width: 6px; height: 6px; border-radius: 50%; background: var(--green-deep); }
+  .ch2-facts b { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
+  .ch2-facts span { font-size: 0.76rem; color: var(--ink-soft); line-height: 1.5; }
+  .ch2-intro-actions { margin-top: auto; display: flex; flex-wrap: wrap; gap: 8px; padding-top: 6px; }
+  .ch2-btn { font-family: inherit; font-size: 0.78rem; font-weight: 700; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line-dark); background: #fff; color: var(--ink); cursor: pointer; transition: opacity 0.15s; }
+  .ch2-btn.solid { background: var(--green-deep); border-color: var(--green-deep); color: #fff; }
+  .ch2-btn:hover { opacity: 0.88; }
+  .ch2-side { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .ch2-mbti { display: flex; align-items: center; gap: 14px; width: 100%; padding: 14px 20px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; font-family: inherit; text-align: left; color: var(--ink); background: #fff; transition: background 0.15s, border-color 0.15s; }
+  .ch2-mbti:hover { background: var(--cream); border-color: var(--line-dark); }
+  .ch2-mbti-ico { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex: none; color: var(--green-deep); }
+  .ch2-mbti-ico svg { width: 22px; height: 22px; }
+  .ch2-mbti-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .ch2-mbti-text b { font-size: 0.92rem; font-weight: 800; color: var(--green-deep); }
+  .ch2-mbti-text span { font-size: 0.74rem; color: var(--ink-soft); }
+  .ch2-mbti-go { font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); white-space: nowrap; }
+  .ch2-links { display: flex; flex-direction: column; min-width: 0; background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; align-self: stretch; }
+  .ch2-links-head { flex: none; padding: 14px 22px; font-size: 0.8rem; font-weight: 800; color: var(--ink); border-bottom: 1px solid var(--line); }
+  .ch2-link { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; font-family: inherit; background: #fff; border: none; border-bottom: 1px solid var(--line); border-radius: 0; padding: 18px 22px; cursor: pointer; color: var(--ink); transition: background 0.15s; }
+  .ch2-link:last-child { border-bottom: none; }
+  .ch2-link:hover { background: var(--cream); }
+  .ch2-link-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .ch2-link-k { font-size: 0.68rem; font-weight: 700; color: var(--ink-soft); }
+  .ch2-link-h { font-size: 0.92rem; font-weight: 800; line-height: 1.4; color: var(--green-deep); }
+  .ch2-link-s { font-size: 0.74rem; color: var(--ink-soft); line-height: 1.45; }
+  .ch2-link-t { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+  .ch2-link-t span { font-size: 0.64rem; font-weight: 600; color: var(--ink-soft); border: 1px solid var(--line-dark); border-radius: 999px; padding: 2px 8px; }
+  .ch2-link-go { flex: none; font-size: 0.8rem; color: var(--ink-soft); }
+  .ch2-chat { flex: none; height: clamp(340px, calc(100vh - 390px), 470px); display: flex; } /* 페이지가 한 화면에 들어오도록 창 높이에 맞춘다 */
+  .ch2-chat .record-chat-pane { flex: 1; min-height: 0; border-radius: 12px; overflow: hidden; background: #F4F4F5; border-color: var(--line); }
+  .ch2-chat .record-chat-pane .chat-pane-title-row { flex: none; padding: 14px 20px 0; align-items: center; }
+  .ch2-chat .record-chat-pane .chat-wrap { flex: 1; min-height: 0; max-width: none; padding: 38px 20px 30px; gap: 14px; margin: 0; width: auto; }
+  .ch2-chat .record-chat-pane .input-zone { max-width: none; background: transparent; padding: 12px 20px 14px; }
+  .ch2-chat .record-chat-pane .input-box { max-width: none; width: auto; margin: 0; }
+  .ch2-chips { display: flex; flex-wrap: wrap; gap: 5px; padding: 0 20px; }
+  .ch2-chips button { font-family: inherit; font-size: 0.64rem; font-weight: 600; color: var(--ink-soft); background: #fff; border: 1px solid var(--line-dark); border-radius: 999px; padding: 4px 10px; cursor: pointer; }
+  .ch2-chips button:hover { background: var(--cream); color: var(--ink); }
+  /* 목차: 스크롤해도 위에 붙어 있고, 지금 보고 있는 내용이 진하게 표시된다 */
+  .ch2-toc { position: sticky; top: 0; z-index: 20; display: flex; gap: 8px; margin: 26px 0 18px; padding: 10px 0; background: #F4F4F5; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
+  .ch2-toc::-webkit-scrollbar { display: none; }
+  .ch2-toc button { font-family: inherit; font-size: 0.8rem; font-weight: 700; color: var(--ink-soft); background: #fff; border: 1px solid var(--line-dark); border-radius: 999px; padding: 8px 16px; cursor: pointer; white-space: nowrap; transition: background 0.2s, color 0.2s, border-color 0.2s; }
+  .ch2-toc button.on { background: var(--green-deep); color: #fff; border-color: var(--green-deep); }
+  /* 목차 내용: 스크롤해서 화면에 들어올 때 하나씩 떠오른다 */
+  .ch2-sections { display: flex; flex-direction: column; gap: 22px; padding-bottom: 90px; }
+  .ch2-sec { scroll-margin-top: 72px; min-height: 300px; border-radius: 18px; padding: 38px 42px; color: #fff; display: flex; flex-direction: column; justify-content: center; gap: 14px; opacity: 0; transform: translateY(40px); transition: opacity 0.65s ease, transform 0.65s ease; }
+  .ch2-sec.in { opacity: 1; transform: none; }
+  .ch2-sec-badges { display: flex; gap: 6px; }
+  .ch2-sec-badges span { font-size: 0.66rem; font-weight: 800; letter-spacing: 0.06em; padding: 4px 11px; border-radius: 999px; background: rgba(255,255,255,0.22); }
+  .ch2-sec h3 { margin: 0; font-size: 1.6rem; line-height: 1.4; font-weight: 800; letter-spacing: -0.02em; }
+  .ch2-sec h3 .chome-banner-accent { color: #FFD44D; }
+  .ch2-sec p { margin: 0; font-size: 0.95rem; line-height: 1.65; color: rgba(255,255,255,0.9); max-width: 560px; }
+  .ch2-sec-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ch2-sec-tags span { font-size: 0.74rem; font-weight: 700; padding: 6px 13px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.45); }
+  .ch2-sec-btn { align-self: flex-start; margin-top: 4px; font-family: inherit; font-size: 0.8rem; font-weight: 800; color: #0D2155; background: #FFD44D; border: none; border-radius: 999px; padding: 10px 18px; cursor: pointer; }
+  .ch2-sec-btn[disabled] { background: rgba(255,255,255,0.25); color: #fff; cursor: default; }
+  @media (prefers-reduced-motion: reduce) { .ch2-sec { opacity: 1; transform: none; transition: none; } }
+  @media (max-width: 900px) { .ch2-hero { grid-template-columns: 1fr; } .ch2-sec { padding: 28px 24px; min-height: 240px; } .ch2-sec h3 { font-size: 1.3rem; } }
+
+  /* ── 학습 성향 MBTI 검사 팝업 ── */
+  .mbti-pop { display: none; position: fixed; inset: 0; z-index: 420; background: rgba(23,24,26,0.45); align-items: center; justify-content: center; padding: 20px; }
+  .mbti-pop.on { display: flex; }
+  .mbti-card { position: relative; width: 100%; max-width: 520px; max-height: 92vh; overflow-y: auto; background: #fff; border-radius: 18px; padding: 26px 28px 22px; box-sizing: border-box; }
+  .mbti-x { position: absolute; top: 12px; right: 14px; background: none; border: none; font-size: 1.5rem; line-height: 1; color: var(--ink-soft); cursor: pointer; }
+  .mbti-eyebrow { font-size: 0.64rem; font-weight: 800; letter-spacing: 0.14em; color: var(--green-deep); }
+  .mbti-title { margin: 4px 0 6px; font-size: 1.3rem; font-weight: 800; color: var(--ink); }
+  .mbti-sub { margin: 0; font-size: 0.8rem; line-height: 1.6; color: var(--ink-soft); }
+  .mbti-progress { display: flex; align-items: center; gap: 10px; margin: 6px 0 18px; font-size: 0.72rem; font-weight: 700; color: var(--ink-soft); }
+  .mbti-bar { flex: 1; height: 4px; background: #E4E1D9; border-radius: 999px; overflow: hidden; }
+  .mbti-bar i { display: block; height: 100%; background: var(--green-deep); border-radius: 999px; transition: width 0.3s; }
+  .mbti-q { margin: 0 0 14px; font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); }
+  .mbti-opt { display: block; width: 100%; text-align: left; font-family: inherit; font-size: 0.92rem; font-weight: 700; line-height: 1.5; color: var(--ink); background: #fff; border: 1px solid var(--line-dark); border-radius: 12px; padding: 16px 18px; margin-bottom: 10px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+  .mbti-opt:hover { background: var(--cream); border-color: var(--green-deep); }
+  .mbti-back { font-family: inherit; font-size: 0.76rem; font-weight: 700; color: var(--ink-soft); background: none; border: none; cursor: pointer; padding: 4px 0; }
+  .mbti-start { display: block; width: 100%; margin-top: 18px; font-family: inherit; font-size: 0.9rem; font-weight: 800; color: #fff; background: var(--green-deep); border: none; border-radius: 12px; padding: 14px; cursor: pointer; }
+  .mbti-res-code { font-size: 2rem; font-weight: 900; letter-spacing: 0.18em; color: var(--green-deep); margin: 6px 0 2px; }
+  .mbti-res-nick { font-size: 1.15rem; font-weight: 800; color: var(--ink); }
+  .mbti-res-sum { margin: 10px 0 14px; font-size: 0.82rem; line-height: 1.75; color: var(--ink); }
+  .mbti-axis { margin: 0 0 10px; }
+  .mbti-axis-lab { display: flex; justify-content: space-between; font-size: 0.72rem; font-weight: 700; color: var(--ink-soft); margin-bottom: 4px; }
+  .mbti-axis-lab b { color: var(--ink); }
+  .mbti-axis-bar { height: 8px; border-radius: 999px; background: #E4E1D9; overflow: hidden; display: flex; }
+  .mbti-axis-bar i { display: block; height: 100%; background: var(--green-deep); }
+  .mbti-two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+  .mbti-two > div { background: var(--cream); border-radius: 12px; padding: 12px 14px; }
+  .mbti-two h4 { margin: 0 0 6px; font-size: 0.76rem; font-weight: 800; color: var(--green-deep); }
+  .mbti-two ul { margin: 0; padding-left: 16px; font-size: 0.76rem; line-height: 1.6; color: var(--ink); }
+  .mbti-note { margin: 0 0 14px; font-size: 0.68rem; line-height: 1.6; color: var(--ink-soft); }
+  .mbti-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .mbti-actions button { flex: 1; font-family: inherit; font-size: 0.78rem; font-weight: 800; border-radius: 999px; padding: 11px 14px; cursor: pointer; border: 1px solid var(--line-dark); background: #fff; color: var(--ink); white-space: nowrap; }
+  .mbti-actions button.solid { background: var(--green-deep); border-color: var(--green-deep); color: #fff; flex: 2 1 100%; }
+  @media (max-width: 560px) { .mbti-two { grid-template-columns: 1fr; } }
   /* "Holo Study" 홈(랜딩) 페이지 — 메가스터디 홈페이지의 왼쪽 탭 + 가운데 배너 + 오른쪽
      박스(HOT PICK) 3단 구조를 참고. 왼쪽 탭을 고르면 가운데 배너 내용이 바뀌고, 오른쪽은
      "내 교실 입장하기"/"수업 프로그램 살펴보기" 두 칸으로 나눈 버튼(기능은 나중에 추가 예정, 지금은
@@ -2753,6 +2858,7 @@
   .home-brand-center { grid-column: 2; justify-self: center; display: flex; align-items: center; gap: 9px; }
   .home-brand-icon { width: 28px; height: 28px; flex: none; }
   .home-brand-text { font-size: 1.6rem; font-weight: 900; letter-spacing: -0.02em; color: var(--ink); }
+  .home-brand-sub { margin-left: 9px; font-size: 0.52em; font-weight: 700; letter-spacing: 0; color: var(--ink-soft); vertical-align: 0.18em; white-space: nowrap; } /* 로고 옆에 작고 연하게 붙는 "입시 관리형 독서실" */
 
   /* ── 홈 화면 4대 메뉴 ── */
   .home-nav-grid {
@@ -7050,11 +7156,11 @@
     <div class="pc-gate-title">어디로 들어갈까요?</div>
     <div class="pc-gate-cards">
       <button type="button" class="pc-gate-card" onclick="chooseProduct('manager')">
-        <div class="pc-gate-card-name">Study Holo <b>Manager</b></div>
+        <div class="pc-gate-card-name"><b>Road Map</b></div>
         <div class="pc-gate-card-desc">학습 관리</div>
       </button>
       <button type="button" class="pc-gate-card" onclick="chooseProduct('academy')">
-        <div class="pc-gate-card-name">Study Holo <b>Academy</b></div>
+        <div class="pc-gate-card-name"><b>Study Addict</b></div>
         <div class="pc-gate-card-desc">온라인 과외</div>
       </button>
     </div>
@@ -7067,11 +7173,9 @@
   <div class="consult-splash-logo">
     <svg class="consult-splash-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
       <rect width="40" height="40" rx="10" fill="#0A1A44"/>
-      <rect x="11" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/>
-      <rect x="24" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/>
-      <rect x="11" y="17.5" width="18" height="5" rx="1.5" fill="#FFFFFF"/>
+      <path d="M26.5 14.5C26 11.8 23.4 10.5 20 10.5C16.2 10.5 13.8 12.4 13.8 15.2C13.8 18 16.3 19 20 20C23.7 21 26.2 22 26.2 24.9C26.2 27.7 23.6 29.5 20 29.5C16.4 29.5 13.9 27.9 13.5 25" fill="none" stroke="#FFFFFF" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-    <span>Study Holo <span class="brand-accent">Academy</span></span>
+    <span>Study Addict</span>
   </div>
   <div class="consult-splash-divider"></div>
   <div class="consult-splash-tagline">온라인 과외, 학원처럼 확실하게</div>
@@ -7081,9 +7185,7 @@
   <div class="td-zonefx-in">
     <svg class="td-zonefx-logo" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
       <rect width="40" height="40" rx="10" fill="#FFFFFF"/>
-      <rect x="11" y="10" width="5" height="20" rx="1.5" fill="#0D2155"/>
-      <rect x="24" y="10" width="5" height="20" rx="1.5" fill="#0D2155"/>
-      <rect x="11" y="17.5" width="18" height="5" rx="1.5" fill="#0D2155"/>
+      <path d="M26.5 14.5C26 11.8 23.4 10.5 20 10.5C16.2 10.5 13.8 12.4 13.8 15.2C13.8 18 16.3 19 20 20C23.7 21 26.2 22 26.2 24.9C26.2 27.7 23.6 29.5 20 29.5C16.4 29.5 13.9 27.9 13.5 25" fill="none" stroke="#0D2155" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
     <div class="td-zonefx-title" id="tdZoneFxTitle"></div>
     <div class="td-zonefx-bar"><i></i></div>
@@ -7450,26 +7552,22 @@
         <button type="button" class="consult-brand" onclick="go('consult-home')">
           <svg class="consult-brand-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
             <rect width="40" height="40" rx="10" fill="#0A1A44"/>
-            <rect x="11" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/>
-            <rect x="24" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/>
-            <rect x="11" y="17.5" width="18" height="5" rx="1.5" fill="#FFFFFF"/>
+            <path d="M26.5 14.5C26 11.8 23.4 10.5 20 10.5C16.2 10.5 13.8 12.4 13.8 15.2C13.8 18 16.3 19 20 20C23.7 21 26.2 22 26.2 24.9C26.2 27.7 23.6 29.5 20 29.5C16.4 29.5 13.9 27.9 13.5 25" fill="none" stroke="#FFFFFF" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <span>Study Holo <span class="brand-accent">Academy</span></span>
+          <span>Study Addict</span>
         </button>
         <div class="home-brand-actions">
           <button type="button" class="consult-header-switch" onclick="go('mypage')">마이페이지</button>
           <span class="hba-divider"></span>
-          <button type="button" class="consult-header-switch" onclick="switchProduct('manager')">Study Holo Manager →</button>
+          <button type="button" class="consult-header-switch" onclick="switchProduct('manager')">Road Map →</button>
         </div>
       </div>
     </div>
     <nav class="consult-nav-row">
       <button type="button" class="consult-nav-link" id="consultNav-home" onclick="go('consult-home')">홈</button>
-      <button type="button" class="consult-nav-link" id="consultNav-teachers" onclick="go('consult')">홀로선생님</button>
+      <button type="button" class="consult-nav-link" id="consultNav-teachers" onclick="go('consult')">선생님 소개</button>
       <button type="button" class="consult-nav-link" id="consultNav-programs" onclick="go('consult-programs')">수업 프로그램</button>
-      <button type="button" class="consult-nav-link" id="consultNav-materials" onclick="go('consult-materials')">공부자료</button>
-      <button type="button" class="consult-nav-link" id="consultNav-community" onclick="go('consult-community')">커뮤니티</button>
-      <button type="button" class="consult-nav-link" id="consultNav-mypage" onclick="go('mypage')">마이페이지</button>
+      <button type="button" class="consult-nav-link" id="consultNav-column" onclick="go('consult-column')">공부법 칼럼</button>
     </nav>
   </div>
 
@@ -7481,14 +7579,14 @@
         <div class="home-brand-center">
           <svg class="home-brand-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
             <rect width="40" height="40" rx="10" fill="#0A1A44"/>
-            <rect x="11" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/>
-            <rect x="24" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/>
-            <rect x="11" y="17.5" width="18" height="5" rx="1.5" fill="#FFFFFF"/>
+            <g fill="none" stroke="#FFFFFF" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 11V29"/><path d="M14 11H21.5a5.25 5.25 0 0 1 0 10.5H14"/><path d="M21 21.5L27.5 29"/></g>
           </svg>
-          <span class="home-brand-text">Study Holo Manager</span>
+          <span class="home-brand-text">Road Map</span>
         </div>
         <div class="home-brand-actions">
           <button type="button" class="consult-header-switch" onclick="go('mypage')">마이페이지</button>
+          <span class="hba-divider"></span>
+          <button type="button" class="consult-header-switch" onclick="switchProduct('academy')">Study Addict →</button>
         </div>
       </div>
     </div>
@@ -8261,6 +8359,10 @@
       </div>
     </div>
   </div>
+  <!-- ─── 학습 성향 MBTI 검사 팝업 ─── -->
+  <div class="mbti-pop" id="mbtiPop" onclick="if(event.target===this)mbtiClose()">
+    <div class="mbti-card" id="mbtiCard"></div>
+  </div>
   <!-- ─── 메모장(홈 도구 버튼): 자동 저장되는 간단한 메모 ─── -->
   <div class="memo-pop" id="memoPop" onclick="if(event.target===this)memoClose()">
     <div class="memo-card">
@@ -8307,16 +8409,14 @@
         <div class="home-brand-center">
           <svg class="home-brand-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
             <rect width="40" height="40" rx="10" fill="#0A1A44"/>
-            <rect x="11" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/>
-            <rect x="24" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/>
-            <rect x="11" y="17.5" width="18" height="5" rx="1.5" fill="#FFFFFF"/>
+            <path d="M26.5 14.5C26 11.8 23.4 10.5 20 10.5C16.2 10.5 13.8 12.4 13.8 15.2C13.8 18 16.3 19 20 20C23.7 21 26.2 22 26.2 24.9C26.2 27.7 23.6 29.5 20 29.5C16.4 29.5 13.9 27.9 13.5 25" fill="none" stroke="#FFFFFF" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <span class="home-brand-text">Study Holo Academy</span>
+          <span class="home-brand-text">Study Addict</span>
         </div>
         <div class="home-brand-actions">
           <button type="button" class="consult-header-switch" onclick="go('mypage')">마이페이지</button>
           <span class="hba-divider"></span>
-          <button type="button" class="consult-header-switch" onclick="switchProduct('manager')">Study Holo Manager →</button>
+          <button type="button" class="consult-header-switch" onclick="switchProduct('manager')">Road Map →</button>
         </div>
       </div>
     </div>
@@ -8370,9 +8470,7 @@
         <div class="td-brand is-home" onclick="tdNavTo('home')" title="내 스케줄">
           <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <rect width="40" height="40" rx="10" fill="#FFFFFF"/>
-            <rect x="11" y="10" width="5" height="20" rx="1.5" fill="#0D2155"/>
-            <rect x="24" y="10" width="5" height="20" rx="1.5" fill="#0D2155"/>
-            <rect x="11" y="17.5" width="18" height="5" rx="1.5" fill="#0D2155"/>
+            <path d="M26.5 14.5C26 11.8 23.4 10.5 20 10.5C16.2 10.5 13.8 12.4 13.8 15.2C13.8 18 16.3 19 20 20C23.7 21 26.2 22 26.2 24.9C26.2 27.7 23.6 29.5 20 29.5C16.4 29.5 13.9 27.9 13.5 25" fill="none" stroke="#0D2155" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
         <!-- 목차: 크게 3가지(선생님 광장 · 내 스케줄 · 과외 수업). "과외 수업"을 누르면 과외 수업 현황(대시보드)이 열리고, 그 아래에 홍보 · 시범 과외 · 학생 관리 · 학부모 관리 · 수업료 관리가 펼쳐진다 -->
@@ -8555,13 +8653,11 @@
     </div>
         <div class="td-pane" id="tdPane-dash">
           <div class="td-hero">
-            <div class="td-hero-eyebrow">STUDY HOLO ACADEMY · TEACHER</div>
+            <div class="td-hero-eyebrow">STUDY ADDICT · TEACHER</div>
             <div class="td-hero-brand">
               <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <rect width="40" height="40" rx="10" fill="#0D2155"/>
-                <rect x="11" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/>
-                <rect x="24" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/>
-                <rect x="11" y="17.5" width="18" height="5" rx="1.5" fill="#FFFFFF"/>
+                <path d="M26.5 14.5C26 11.8 23.4 10.5 20 10.5C16.2 10.5 13.8 12.4 13.8 15.2C13.8 18 16.3 19 20 20C23.7 21 26.2 22 26.2 24.9C26.2 27.7 23.6 29.5 20 29.5C16.4 29.5 13.9 27.9 13.5 25" fill="none" stroke="#FFFFFF" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
               <h2 class="td-hero-title">홀로 HOLO</h2>
             </div>
@@ -9197,10 +9293,10 @@
     <div class="community-wrap community-list">
       <button type="button" class="community-entry" onclick="switchProduct('academy')">
         <span class="community-entry-text">
-          <span class="community-entry-title">Study Holo Academy</span>
+          <span class="community-entry-title">Study Addict</span>
           <span class="community-entry-sub">온라인 과외, 학원처럼 확실하게</span>
         </span>
-        <span class="community-entry-go">Study Holo Academy →</span>
+        <span class="community-entry-go">Study Addict →</span>
       </button>
       <p class="hub-coming-soon">커뮤니티 게시판은 준비중입니다</p>
     </div>
@@ -9917,6 +10013,20 @@
     </div>
   </section>
 
+  <!-- ─── 공부법 칼럼 (목차에서 들어오는 페이지 · 아직 글이 없어 준비중) ─── -->
+  <section class="view dark-consult" id="view-consult-column">
+    <div class="consult-page">
+      <div class="cd-page-head">
+        <div>
+          <span class="eyebrow">COLUMN</span>
+          <h2>공부법 칼럼</h2>
+        </div>
+      </div>
+      <div class="split"></div>
+      <p class="hub-coming-soon">준비중입니다</p>
+    </div>
+  </section>
+
   <!-- ─── 상담 상세: 영어 선생님 소개 (준비중) ─── -->
   <section class="view dark-consult" id="view-consult-english">
     <div class="consult-page">
@@ -9982,17 +10092,37 @@
   <!-- ─── 홀로 온라인 과외: 홈 (메가스터디 홈페이지 3단 레이아웃 참고) ─── -->
   <section class="view dark-consult" id="view-consult-home">
     <div class="consult-page">
-      <div class="chome-layout">
-        <nav class="chome-tabs">
-          <button type="button" class="chome-tab on" id="chomeTab-study" onclick="chomeShowTab('study')">Holo Study</button>
-          <button type="button" class="chome-tab" id="chomeTab-teacher" onclick="chomeShowTab('teacher')">특화된 전문 선생님</button>
-          <button type="button" class="chome-tab" id="chomeTab-subject" onclick="chomeShowTab('subject')">과목별 실력업</button>
-          <button type="button" class="chome-tab" id="chomeTab-materials" onclick="chomeShowTab('materials')">공부자료</button>
-        </nav>
-        <div class="chome-banner" id="chomeBanner"></div>
-        <div class="chome-side">
-          <button type="button" class="chome-side-btn">수업 프로그램 살펴보기 <span class="chome-side-arw">→</span></button>
-          <button type="button" class="chome-side-btn">내 교실 입장하기 <span class="chome-side-arw">→</span></button>
+      <!-- 위쪽: 왼쪽 = 선생님 소개, 오른쪽 = 학습 성향 MBTI 버튼 + 공부중독 AI 챗봇 / 아래: 목차(스크롤하면 하나씩 나타나는 내용) -->
+      <div class="ch2-hero">
+        <div class="ch2-links" id="ch2Links"></div>
+        <div class="ch2-side">
+          <button type="button" class="ch2-mbti" onclick="mbtiOpen()">
+            <span class="ch2-mbti-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5c1 1.3 2.2 2 3.5 2s2.5-.7 3.5-2"/><path d="M9 9.5h.01M15 9.5h.01"/></svg>
+            </span>
+            <span class="ch2-mbti-text"><b>학습 성향 MBTI</b><span>나는 어떤 공부 스타일일까? 12문항 · 약 2분</span></span>
+            <span class="ch2-mbti-go">검사하기 →</span>
+          </button>
+          <section class="ch2-chat">
+            <div class="record-chat-pane ln-chat">
+              <div class="chat-pane-title-row">
+                <h3 class="record-pane-title">공부중독 AI</h3>
+                <button type="button" class="chat-new-btn" onclick="ch2NewChat()">+ 새 채팅</button>
+              </div>
+              <div class="chat-wrap" id="chat-consult"></div>
+              <div class="ch2-chips" id="ch2Chips">
+                <button type="button" onclick="send('consult', this.textContent)">성적이 안 오르는 이유가 궁금해요</button>
+                <button type="button" onclick="send('consult', this.textContent)">나에게 맞는 수업을 추천해 주세요</button>
+                <button type="button" onclick="send('consult', this.textContent)">공부 계획이 자꾸 무너져요</button>
+              </div>
+              <div class="input-zone">
+                <div class="input-box">
+                  <textarea id="q-consult" rows="1" placeholder="학습 고민을 편하게 적어 보세요" autocomplete="off"></textarea>
+                  <button type="button" onclick="send('consult')">보내기</button>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     </div>
@@ -11278,7 +11408,7 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", vocabpick: "어휘력 Test", vocab: "영어", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-home": "Holo Study", "consult-myclass": "나의 수업", "consult-programs": "수업 프로그램", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "공부 계획 세우기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "독서실 스케줄", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", studymusic: "공부 음악", community: "공부중독 커뮤니티", academyHome: "Academy", academyTeacher: "선생님 수업 현황", teacherHome: "내 학생 관리", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", vocabpick: "어휘력 Test", vocab: "영어", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-column": "공부법 칼럼", "consult-home": "Holo Study", "consult-myclass": "나의 수업", "consult-programs": "수업 프로그램", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "공부 계획 세우기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "독서실 스케줄", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", studymusic: "공부 음악", community: "공부중독 커뮤니티", academyHome: "Academy", academyTeacher: "선생님 수업 현황", teacherHome: "내 학생 관리", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { mathexam: "exam", engexam: "exam" };
   // "← 이전으로"가 상단 흰색 바(topbar)의 제목 오른쪽에 뜨는 페이지들과, 각각이 돌아갈 곳.
   const BACK_TARGET = {
@@ -11286,7 +11416,7 @@
     "consult-5": "consult", "consult-6": "consult", "consult-7": "consult", "consult-8": "consult",
     "consult-teacher": "consult", "consult-korean": "consult", "consult-math": "consult", "consult-english": "consult",
     "consult-materials": "consult", "consult-community": "consult", "consult-home": "consult", "consult-myclass": "consult-home",
-    "consult-programs": "consult-home",
+    "consult-programs": "consult-home", "consult-column": "consult-home",
     vocabpick: "home", vocab: "vocabpick", todayrecord: "home", cumulative: "recordhub", reports: "recordhub", dayDetail: "cumulative",
     examSuneung: "examhub", examNaeshin: "examhub", mexlist: "examhub",
     mathexam: "examhub", engexam: "examhub",
@@ -11331,7 +11461,7 @@
   // 느낌, Manager: 계획·기록·분석 느낌으로 서로 다른 멘트를 쓴다).
   const SPLASH_CONTENT = {
     academy: {
-      name: 'Study Holo <span class="brand-accent">Academy</span>',
+      name: 'Study Addict',
       tagline: "온라인 과외, 학원처럼 확실하게",
     },
     community: {
@@ -11339,7 +11469,7 @@
       tagline: "같은 목표를 가진 사람들과 함께해요",
     },
     manager: {
-      name: 'Study Holo <span class="brand-accent">Manager</span>',
+      name: 'Road Map',
       tagline: "계획부터 분석까지, 학습을 관리합니다",
     },
     vstudy: {
@@ -11364,6 +11494,7 @@
     if (vocabSplashBusy) return;
     vocabSplashBusy = true;
     const el = document.getElementById("consultSplash"), content = SPLASH_CONTENT[kind];
+    setSplashIcon(kind);
     el.querySelector(".consult-splash-logo span").innerHTML = content.name;
     el.querySelector(".consult-splash-tagline").textContent = content.tagline;
     el.classList.add("cream", "on");
@@ -11372,9 +11503,17 @@
       setTimeout(() => { el.classList.remove("on"); vocabSplashBusy = false; setTimeout(() => el.classList.remove("cream"), 700); }, 60);
     }, 1300);
   }
+  // 전환 화면의 마크: Road Map(Manager)과 영어 단어 · 문법 쪽은 R, 아카데미 · 커뮤니티는 H
+  const SPLASH_ICON_H = '<rect width="40" height="40" rx="10" fill="#0A1A44"/><path d="M26.5 14.5C26 11.8 23.4 10.5 20 10.5C16.2 10.5 13.8 12.4 13.8 15.2C13.8 18 16.3 19 20 20C23.7 21 26.2 22 26.2 24.9C26.2 27.7 23.6 29.5 20 29.5C16.4 29.5 13.9 27.9 13.5 25" fill="none" stroke="#FFFFFF" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>'; // (이름은 옛날 H 마크 때 그대로) 아카데미(Study Addict) · 커뮤니티 전환 화면의 S 마크
+  const SPLASH_ICON_R = '<rect width="40" height="40" rx="10" fill="#0A1A44"/><g fill="none" stroke="#FFFFFF" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 11V29"/><path d="M14 11H21.5a5.25 5.25 0 0 1 0 10.5H14"/><path d="M21 21.5L27.5 29"/></g>';
+  function setSplashIcon(kind) {
+    const ic = document.querySelector("#consultSplash .consult-splash-icon");
+    if (ic) ic.innerHTML = (kind === "manager" || /^v/.test(kind)) ? SPLASH_ICON_R : SPLASH_ICON_H;
+  }
   function showProductSplash(product, targetView) {
     const el = document.getElementById("consultSplash");
     const content = SPLASH_CONTENT[product];
+    setSplashIcon(product);
     el.querySelector(".consult-splash-logo span").innerHTML = content.name;
     el.querySelector(".consult-splash-tagline").textContent = content.tagline;
     el.classList.add("on");
@@ -11389,7 +11528,7 @@
     study: {
       bg: "linear-gradient(135deg, #4A5AC4, #38428E)",
       badges: ["HOT"],
-      title: '온라인 과외부터 학원 수업까지,<br><span class="chome-banner-accent">Study Holo Academy</span>에서 만나요',
+      title: '온라인 과외부터 학원 수업까지,<br><span class="chome-banner-accent">Study Addict</span>에서 만나요',
       sub: "온라인 과외와 학원 수업까지, 나에게 맞는 선생님을 만나보세요.",
       tags: ["학습 상담", "온라인 과외", "1:1 컨설팅"],
     },
@@ -11476,6 +11615,8 @@
   }
   let currentView = "home";
   function go(view) {
+    // "선생님 연결하기 / To Do List / 연결된 선생님" 아카데미 홈 페이지는 없앴다 — 아카데미(Study Addict)로 들어오는 모든 길은 학습 상담 홈(consult-home)으로 간다.
+    if (view === "academyHome") view = "consult-home";
     if (!MEX_PAGES_READY && (view === "mockexam" || view === "mexlist")) { showToast("준비중입니다"); return; }
     if (view === "mockexam") { mexGoList("mock"); return; } // "누적된 기록" 중간 페이지는 없앴다 — 홈의 모의고사 디데이 등에서는 바로 모의고사 관리하기로 간다
     if (currentView && currentView !== view && !navGoingBack) { if (view === "home") navStack = []; else { navStack.push(currentView); if (navStack.length > 30) navStack.shift(); } }
@@ -11498,13 +11639,13 @@
     document.querySelector(".main > .topbar").style.display = isConsultSection ? "none" : "";
     document.getElementById("consultHeader").classList.toggle("on", isConsultSection);
     if (isConsultSection) {
-      const activeNav = (view === "consult-home") ? "home" : (view === "consult-programs") ? "programs" : (view === "consult-materials") ? "materials" : (view === "consult-community") ? "community" : "teachers";
-      ["home", "teachers", "programs", "materials", "community"].forEach(n =>
+      const activeNav = (view === "consult-home") ? "home" : (view === "consult-programs") ? "programs" : (view === "consult-column") ? "column" : "teachers";
+      ["home", "teachers", "programs", "column"].forEach(n =>
         document.getElementById("consultNav-" + n).classList.toggle("on", n === activeNav));
     }
     renderConsultDday(); // Manager 홈 상단(.home-brand-inner)에도 같은 .consult-dday가 있어서 매번 같이 갱신
     document.body.classList.toggle("mypage-bg-academy", view === "mypage" && localStorage.getItem("holoActiveProduct") === "academy");
-    if (view === "consult-home") chomeShowTab("study");
+    if (view === "consult-home") ch2Enter();
     document.body.classList.toggle("is-admin", view === "admin" || view === "form" || view === "trialInfo" || view === "trialApply");
     document.body.classList.toggle("is-teacher", view === "teacherHome");
     document.body.classList.toggle("is-academy-page", view === "academyHome" || view === "academyTeacher");
@@ -11539,6 +11680,142 @@
   const HOME_ACADEMY_PROMO_SLIDES = [
     { eyebrow: "공부중독 커뮤니티", title: "같은 목표를 가진 사람들과 공부 고민을 나눠요", btn: "커뮤니티 입장하기 →", onclick: () => { showProductSplash("community", "community"); } },
   ];
+  // ══ 아카데미(Study Addict) 홈 ══
+  // 목차(Holo Study · 특화된 전문 선생님 · 과목별 실력업 · 공부자료): 위의 목차 버튼을 누르면 그 내용으로 내려가고,
+  // 스크롤해서 화면에 들어오면 내용이 하나씩 떠오른다. 지금 보고 있는 내용은 목차에서 진하게 표시된다.
+  let ch2Ready = false;
+  function ch2Setup() {
+    ch2Ready = true;
+    // 왼쪽: 홈 홍보 포스터와 같은 내용을 차분한 버튼으로 (HOME_POSTERS에서 켜져 있는 것만)
+    const lk = document.getElementById("ch2Links");
+    if (lk) lk.innerHTML = '<div class="ch2-links-head">소식 · 칼럼</div>' + HOME_POSTERS.filter(x => x.on !== false).map(x => {
+      const plain = t => escapeHtml(String(t).replace(/\*/g, "").replace(/__/g, ""));
+      return '<button type="button" class="ch2-link" onclick="homePosterGo(\'' + x.go + '\')">' +
+        '<span class="ch2-link-text">' + (x.kicker ? '<span class="ch2-link-k">' + plain(x.kicker) + '</span>' : "") +
+        '<span class="ch2-link-h">' + plain(x.head) + '</span>' +
+        (x.sub ? '<span class="ch2-link-s">' + plain(x.sub) + '</span>' : "") +
+        (x.tags && x.tags.length ? '<span class="ch2-link-t">' + x.tags.map(t => '<span>' + escapeHtml(t) + '</span>').join("") + '</span>' : "") + '</span>' +
+        '<span class="ch2-link-go">→</span></button>';
+    }).join("");
+    addMsg("consult", "bot", escapeHtml("안녕하세요, 공부중독 AI예요. 학습 고민을 편하게 말해 주세요. 고민에 맞는 공부 방향을 같이 찾고, 우리 아카데미 수업 중에 어울리는 것도 추천해 드릴게요."));
+  }
+  function ch2NewChat() {
+    chatHistory["consult"] = [];
+    const w = document.getElementById("chat-consult"); if (w) w.innerHTML = "";
+    ch2Setup();
+  }
+  function ch2Enter() {
+    if (!ch2Ready) ch2Setup();
+    window.scrollTo(0, 0);
+    ["view-consult-home"].forEach(id => { const el = document.getElementById(id); if (el) el.scrollTop = 0; });
+    const mainEl = document.querySelector(".main"); if (mainEl) mainEl.scrollTop = 0;
+  }
+
+  // ══ 학습 성향 MBTI ══ — 12문항(4가지 성향 × 3문항). 재미로 보는 학습 성향 검사이고 진단이 아니다.
+  const MBTI_AXES = [
+    { a: { code: "P", name: "계획형" }, b: { code: "F", name: "몰입형" } },
+    { a: { code: "S", name: "혼자형" }, b: { code: "T", name: "함께형" } },
+    { a: { code: "U", name: "이해형" }, b: { code: "R", name: "연습형" } },
+    { a: { code: "C", name: "꾸준형" }, b: { code: "B", name: "벼락형" } },
+  ];
+  const MBTI_QS = [
+    { ax: 0, a: "오늘 할 분량을 먼저 정해 두어야 마음이 편해요", b: "일단 책상에 앉고, 그날 기분과 흐름대로 해요" },
+    { ax: 1, a: "혼자 조용히 풀어야 집중이 잘 돼요", b: "누군가와 같이 하거나 설명을 들으며 해야 잘 돼요" },
+    { ax: 2, a: "공식이나 개념의 이유를 알아야 다음으로 넘어가요", b: "일단 문제를 많이 풀면서 감을 잡아요" },
+    { ax: 3, a: "매일 조금씩, 비슷한 시간에 공부하는 게 편해요", b: "몰입될 때 하루에 몰아서 많이 해요" },
+    { ax: 0, a: "계획이 틀어지면 불안해서 다시 짜요", b: "계획이 틀어져도 크게 신경 쓰지 않고 이어서 해요" },
+    { ax: 1, a: "모르는 건 끝까지 혼자 찾아보는 편이에요", b: "모르는 건 바로 물어보고 해결하는 편이에요" },
+    { ax: 2, a: "틀린 문제는 왜 틀렸는지 원리부터 다시 봐요", b: "틀린 문제는 비슷한 문제를 더 풀어서 익혀요" },
+    { ax: 3, a: "시험 전에도 평소 리듬을 지키려고 해요", b: "시험이 가까울수록 집중력이 확 올라가요" },
+    { ax: 0, a: "시험 며칠 전까지 날짜별 계획을 세워 둬요", b: "시험이 다가오면 그때 상황을 보고 정해요" },
+    { ax: 1, a: "배운 걸 혼자 정리하며 내 것으로 만들어요", b: "친구나 선생님에게 설명하면서 확실히 알게 돼요" },
+    { ax: 2, a: "읽고 이해가 되면 오래 기억에 남아요", b: "반복해서 쓰고 풀어야 기억에 남아요" },
+    { ax: 3, a: "숙제나 과제는 미리미리 끝내는 편이에요", b: "숙제는 마감이 가까워졌을 때 몰아서 끝내요" },
+  ];
+  const MBTI_ROLE = { PS: "설계자", PT: "팀 리더", FS: "탐험가", FT: "분위기 메이커" };
+  const MBTI_STYLE = { UC: "원리를 차근차근 쌓는", UB: "원리에 꽂히면 몰아서 파는", RC: "매일 문제로 감을 쌓는", RB: "시험 앞에서 폭발하는" };
+  const MBTI_LINE = {
+    P: "공부를 시작하기 전에 계획이 있어야 마음이 놓이는 편이에요.", F: "그날의 컨디션과 흐름에 맞출 때 가장 잘 집중하는 편이에요.",
+    S: "혼자 조용히 파고들 때 효율이 가장 높아요.", T: "설명하고 질문을 주고받으며 공부할 때 더 오래 남아요.",
+    U: "원리를 이해해야 다음 단계로 넘어가는 편이에요.", R: "많이 풀어 보면서 감을 잡고 정리하는 편이에요.",
+    C: "매일 조금씩 쌓는 리듬이 잘 맞아요.", B: "마감이 가까워질수록 집중력이 올라가고 몰아서 해내요.",
+  };
+  const MBTI_STRONG = {
+    P: "계획대로 움직이는 안정감", F: "몰입했을 때의 놀라운 집중력", S: "깊이 있는 자기주도 공부", T: "설명하며 배우는 힘",
+    U: "탄탄하게 쌓이는 개념", R: "문제 감각과 실전 적응력", C: "꾸준히 쌓이는 누적의 힘", B: "집중할 때 터지는 폭발력",
+  };
+  const MBTI_WATCH = {
+    P: "계획이 틀어지면 쉽게 흔들릴 수 있어요", F: "계획이 없으면 공부량이 들쭉날쭉해질 수 있어요", S: "막혀도 혼자 오래 붙잡고 있을 수 있어요", T: "혼자 공부하는 시간이 부족해질 수 있어요",
+    U: "이해에 시간을 많이 쓰면 문제 풀이량이 모자랄 수 있어요", R: "원리가 약하면 유형이 바뀔 때 흔들릴 수 있어요", C: "변화를 주지 않으면 지루해질 수 있어요", B: "몰아치기가 길어지면 쉽게 지칠 수 있어요",
+  };
+  let mbtiIdx = 0, mbtiAns = [];
+  function mbtiKey() { return "holoLearnMbti:" + (localStorage.getItem("holoStudentId") || "anon"); }
+  function mbtiCard(html) { document.getElementById("mbtiCard").innerHTML = '<button type="button" class="mbti-x" onclick="mbtiClose()" aria-label="닫기">&times;</button>' + html; }
+  function mbtiOpen() {
+    document.getElementById("mbtiPop").classList.add("on");
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(mbtiKey()) || "null"); } catch (e) {}
+    if (saved && Array.isArray(saved.picks) && saved.picks.length === MBTI_QS.length) { mbtiAns = saved.picks; mbtiResult(false); }
+    else mbtiIntro();
+  }
+  function mbtiClose() { document.getElementById("mbtiPop").classList.remove("on"); }
+  function mbtiIntro() {
+    mbtiCard('<div class="mbti-eyebrow">LEARNING STYLE</div><h3 class="mbti-title">학습 성향 MBTI</h3>' +
+      '<p class="mbti-sub">공부할 때의 나를 떠올리며 둘 중 더 가까운 쪽을 골라 주세요. 12문항이고 약 2분이면 끝나요.<br>정답은 없고, 재미로 보는 검사예요.</p>' +
+      '<button type="button" class="mbti-start" onclick="mbtiStart()">검사 시작하기</button>');
+  }
+  function mbtiStart() { mbtiIdx = 0; mbtiAns = []; mbtiRender(); }
+  function mbtiRender() {
+    const q = MBTI_QS[mbtiIdx], pct = Math.round(mbtiIdx / MBTI_QS.length * 100);
+    mbtiCard('<div class="mbti-eyebrow">LEARNING STYLE</div>' +
+      '<div class="mbti-progress"><span>' + (mbtiIdx + 1) + ' / ' + MBTI_QS.length + '</span><div class="mbti-bar"><i style="width:' + pct + '%"></i></div></div>' +
+      '<p class="mbti-q">더 나와 가까운 쪽을 골라 주세요</p>' +
+      '<button type="button" class="mbti-opt" onclick="mbtiPick(\'a\')">' + escapeHtml(q.a) + '</button>' +
+      '<button type="button" class="mbti-opt" onclick="mbtiPick(\'b\')">' + escapeHtml(q.b) + '</button>' +
+      (mbtiIdx > 0 ? '<button type="button" class="mbti-back" onclick="mbtiBack()">← 이전 문항</button>' : ''));
+  }
+  function mbtiPick(v) { mbtiAns[mbtiIdx] = v; mbtiIdx++; if (mbtiIdx >= MBTI_QS.length) mbtiResult(true); else mbtiRender(); }
+  function mbtiBack() { if (mbtiIdx > 0) { mbtiIdx--; mbtiRender(); } }
+  function mbtiCompute() {
+    return MBTI_AXES.map((ax, i) => {
+      let a = 0; MBTI_QS.forEach((q, k) => { if (q.ax === i && mbtiAns[k] === "a") a++; });
+      const pickA = a >= 2;
+      return { ax: ax, a: a, b: 3 - a, code: pickA ? ax.a.code : ax.b.code, name: pickA ? ax.a.name : ax.b.name, strength: Math.abs(a - 1.5) };
+    });
+  }
+  function mbtiSummaryText(res) {
+    const code = res.map(r => r.code).join("");
+    const nick = MBTI_STYLE[res[2].code + res[3].code] + " " + MBTI_ROLE[res[0].code + res[1].code];
+    return { code: code, nick: nick, names: res.map(r => r.name).join(" · ") };
+  }
+  function mbtiResult(fresh) {
+    const res = mbtiCompute(), s = mbtiSummaryText(res);
+    if (fresh) { try { localStorage.setItem(mbtiKey(), JSON.stringify({ code: s.code, nick: s.nick, picks: mbtiAns, at: Date.now() })); } catch (e) {} }
+    const top = res.slice().sort((x, y) => y.strength - x.strength).slice(0, 2);
+    const bars = res.map(r => {
+      const pa = Math.round(r.a / 3 * 100), pb = 100 - pa;
+      return '<div class="mbti-axis"><div class="mbti-axis-lab"><span>' + (pa >= pb ? '<b>' : '') + r.ax.a.name + ' ' + pa + '%' + (pa >= pb ? '</b>' : '') + '</span><span>' + (pb > pa ? '<b>' : '') + pb + '% ' + r.ax.b.name + (pb > pa ? '</b>' : '') + '</span></div>' +
+        '<div class="mbti-axis-bar"><i style="width:' + pa + '%"></i></div></div>';
+    }).join("");
+    mbtiCard('<div class="mbti-eyebrow">MY LEARNING STYLE</div>' +
+      '<div class="mbti-res-code">' + s.code + '</div><div class="mbti-res-nick">' + escapeHtml(s.nick) + '</div>' +
+      '<p class="mbti-res-sum">' + res.map(r => escapeHtml(MBTI_LINE[r.code])).join(" ") + '</p>' + bars +
+      '<div class="mbti-two"><div><h4>이런 점이 힘이에요</h4><ul>' + top.map(r => '<li>' + escapeHtml(MBTI_STRONG[r.code]) + '</li>').join("") + '</ul></div>' +
+      '<div><h4>이런 점은 조심해요</h4><ul>' + top.map(r => '<li>' + escapeHtml(MBTI_WATCH[r.code]) + '</li>').join("") + '</ul></div></div>' +
+      '<p class="mbti-note">재미로 보는 학습 성향 검사예요. 진단이 아니라 내 공부 방식을 돌아보는 참고용이에요.</p>' +
+      '<div class="mbti-actions"><button type="button" class="solid" onclick="mbtiAskChat()">이 결과로 공부중독 AI에게 상담받기</button>' +
+      '<button type="button" onclick="mbtiStart()">다시 검사하기</button><button type="button" onclick="mbtiClose()">닫기</button></div>');
+  }
+  // 검사 결과를 챗봇에 실어 보내서, 공부 방식에 맞는 공부 방법과 수업을 추천받는다.
+  function mbtiAskChat() {
+    const s = mbtiSummaryText(mbtiCompute());
+    mbtiClose();
+    const text = "[학습 성향 MBTI 결과] " + s.names + " (" + s.code + ") — " + s.nick + ". 이 결과를 참고해서 제 공부 방식에 맞는 공부 방법과 수업을 추천해 주세요.";
+    const q = document.getElementById("q-consult");
+    if (q) { q.scrollIntoView({ behavior: "smooth", block: "center" }); }
+    send("consult", text);
+  }
+
   // ── 홈 오른쪽 위 홍보 포스터 목록 ──
   // 짧고 센 첫 줄(head) + 한 줄 설명(sub) + 행동 버튼(cta) 구성. head 안의 *별표*로 감싼 말은 노란색으로 강조된다.
   // kicker는 위에 작게 붙는 상대방 상황 한 줄(없어도 됨). on:false로 두면 순환에서 빠진다. go는 이동할 화면 이름이고 "chat"은 홈 AI 입력칸으로 바로 이동.
@@ -14290,7 +14567,7 @@
   // Cloudflare Worker 배포 후 이 주소를 실제 Worker 주소로 바꿔주세요.
   // (예: https://studyaddict-chat.내계정이름.workers.dev)
   const CHAT_API_URL = "https://studyaddict26afk--be1575be9f7e11f190ff1607ee4eb77e.web.val.run";
-  const AI_SUBJECTS = ["chat", "diary", "mathexam", "engexam", "schedule", "plan"];
+  const AI_SUBJECTS = ["chat", "diary", "mathexam", "engexam", "schedule", "plan", "consult"];
   const chatHistory = {};
   const historyLoaded = {};
 
@@ -15149,7 +15426,7 @@
     const todayStr = getLocalDateKey();
     const cover =
       '<div class="mexp-cover">' +
-        '<div class="mexp-cover-word"><svg class="mexp-cover-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="#0A1A44"/><rect x="11" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/><rect x="24" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/><rect x="11" y="17.5" width="18" height="5" rx="1.5" fill="#FFFFFF"/></svg>Study Holo Manager</div>' +
+        '<div class="mexp-cover-word"><svg class="mexp-cover-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="#0A1A44"/><g fill="none" stroke="#FFFFFF" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 11V29"/><path d="M14 11H21.5a5.25 5.25 0 0 1 0 10.5H14"/><path d="M21 21.5L27.5 29"/></g></svg>Road Map</div>' +
         '<div class="mexp-cover-kicker">STUDY ANALYSIS REPORT</div>' +
         '<h1 class="mexp-cover-title">내 분석지</h1>' +
         '<div class="mexp-cover-sub">' + escapeHtml(periodText) + '</div>' +
@@ -17245,7 +17522,7 @@
     const todayStr = getLocalDateKey();
     let html =
       '<div class="mexp-cover">' +
-        '<div class="mexp-cover-word"><svg class="mexp-cover-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="#0A1A44"/><rect x="11" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/><rect x="24" y="10" width="5" height="20" rx="1.5" fill="#FFFFFF"/><rect x="11" y="17.5" width="18" height="5" rx="1.5" fill="#FFFFFF"/></svg>Study Holo Manager</div>' +
+        '<div class="mexp-cover-word"><svg class="mexp-cover-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="#0A1A44"/><g fill="none" stroke="#FFFFFF" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 11V29"/><path d="M14 11H21.5a5.25 5.25 0 0 1 0 10.5H14"/><path d="M21 21.5L27.5 29"/></g></svg>Road Map</div>' +
         '<div class="mexp-cover-kicker">EXAM REPORT</div>' +
         '<h1 class="mexp-cover-title">' + esc(exam.title) + '</h1>' +
         '<div class="mexp-cover-sub">' + esc((exam.periodLabel ? exam.periodLabel + " " : "") + exam.subject) + ' · ' + esc(exam.date) + '</div>' +
@@ -17865,7 +18142,7 @@
     }
   }
 
-  ["chat", "diary", "mathexam", "engexam", "schedule", "plan"].forEach(s => {
+  ["chat", "diary", "mathexam", "engexam", "schedule", "plan", "consult"].forEach(s => {
     const qEl = document.getElementById("q-" + s);
     if (!qEl) return; // "diary"처럼 자유 채팅 입력창이 없는 과목도 있음
     qEl.addEventListener("keydown", e => {
@@ -18872,7 +19149,8 @@
   // 곧바로 반대쪽으로 넘어가되, 어느 시스템으로 들어가는지 스플래시 화면을 잠깐 보여준다.
   function switchProduct(product) {
     localStorage.setItem("holoActiveProduct", product);
-    showProductSplash(product, product === "academy" ? "academyHome" : "home");
+    // 홍보 포스터를 눌렀을 때와 똑같이: 전환 화면(Study Addict) → 학습 상담 사이트(상단 메뉴가 홈 · 선생님 소개 · 수업 프로그램 · 공부법 칼럼인 화면)의 홈
+    showProductSplash(product, product === "academy" ? "consult-home" : "home");
   }
   // "학생 / 선생님" 로그인 역할 토글 — 아이디/비밀번호 입력칸은 그대로 공유하고, 역할에 따라
   // studentLogin() 또는 teacherLogin()을 탄다. 관리자는 index.html#admin의 완전히 별도 로그인
