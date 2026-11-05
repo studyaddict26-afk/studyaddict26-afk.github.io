@@ -2871,24 +2871,47 @@
     transition: transform 0.15s, box-shadow 0.15s;
   }
   .home-poster:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(13,33,85,0.25); }
-  .hp-text { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 5px; padding: 20px 18px 10px 20px; position: relative; z-index: 1; }
+  .hp-text { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 4px; padding: 16px 18px 8px 20px; position: relative; z-index: 1; }
   .hp-eyebrow { font-size: 0.74rem; font-weight: 700; color: #FFD44D; position: relative; top: -8px; } /* 큰 글씨와 간격을 벌려 위로 */
+  .hp-headline.big.mid { font-size: 1.12rem; } /* 큰 제목을 조금만 줄인 크기(1.32rem → 1.12rem) */
+  .hp-sub.small { font-size: 0.64rem; line-height: 1.3; } /* 한 줄에 다 들어가게(줄이 바뀌면 박스가 빽빽해지고 윗줄이 버튼과 어긋남) */
+  .hp-eyebrow.low { top: 0; margin-bottom: 1px; } /* 윗줄을 위로 띄우던 것을 없애고 큰 글씨 쪽으로 조금 내림 */
+  .hp-sub.accent { color: #FFD44D; font-weight: 700; font-size: 0.92rem; line-height: 1.3; } /* 설명 줄에 색을 넣어 강조(노란색) · 크게 */
+  .hp-eyebrow.quiet { color: rgba(255,255,255,0.92); font-size: 0.64rem; top: 0; line-height: 1.2; margin-bottom: -1px; } /* 윗줄과 큰 제목 사이 간격을 바짝 붙인다(윗줄을 위로 띄우던 것도 없앰) */ /* 눈에 덜 띄는 윗줄: 노란색 대신 흰색, 글씨도 작게 */
   .hp-headline { font-size: 0.98rem; font-weight: 800; line-height: 1.3; color: #fff; white-space: nowrap; }
   .hp-headline.big { font-size: 1.32rem; letter-spacing: -0.01em; line-height: 1.25; } /* 짧고 센 첫 줄은 크게 */
   .hp-headline em { font-style: normal; color: #FFD44D; } /* *별표*로 감싼 말은 노란색 강조 */
+  /* __밑줄 두 개__로 감싼 말: 금색으로 꾸불꾸불하게 그은 밑줄 한 줄(작은 물결무늬를 글자 아래에 이어 붙인다) */
+  .hp-sub em { font-style: normal; color: #FFD44D; }
+  .hp-headline u, .hp-sub u {
+    text-decoration: none; padding-bottom: 6px; -webkit-box-decoration-break: clone; box-decoration-break: clone;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='6' viewBox='0 0 14 6'><path d='M0 3 Q 3.5 0.3 7 3 T 14 3' fill='none' stroke='%23E2B13C' stroke-width='1.7' stroke-linecap='round'/></svg>") repeat-x left bottom / 14px 6px;
+  }
+  .hp-sub u { padding-bottom: 5px; background-size: 11px 5px; } /* 설명 줄은 글씨가 작아서 물결도 조금 작게 */
+  .hp-headline.quiet, .hp-headline.big.quiet { font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.95); letter-spacing: 0; line-height: 1.25; } /* 흰색 한 줄 제목(로드맵 독서실): 처음보다 조금 키움 */
   .hp-sub { font-size: 0.74rem; line-height: 1.35; color: rgba(255,255,255,0.88); }
-  .hp-btn { position: absolute; top: 14px; right: 12px; z-index: 2; font-size: 0.66rem; font-weight: 800; color: #0D2155; background: #FFD44D; border-radius: 7px; padding: 5px 11px; box-shadow: 0 2px 8px rgba(255,212,77,0.35); } /* 눌러야 할 곳이 가장 먼저 보이도록 조금 키우고 은은한 광택을 준다 */
+  .hp-btn { position: absolute; top: 14px; right: 12px; z-index: 2; font-size: 0.58rem; font-weight: 800; color: #0D2155; background: #FFD44D; border-radius: 6px; padding: 3px 8px; box-shadow: 0 1px 5px rgba(255,212,77,0.3); } /* 눌러야 할 곳이 가장 먼저 보이도록 조금 키우고 은은한 광택을 준다 */
   .hp-arrow { margin-left: 2px; transition: transform 0.15s; display: inline-block; }
   .home-poster:hover .hp-arrow { transform: translateX(3px); }
   .hp-photo { position: absolute; right: 0; bottom: 0; width: 30%; height: 100%; display: block; opacity: 0.4; z-index: 0; } /* 글씨 뒤에 깔리는 흐린 사람 모양 */
   .hp-cutout { object-fit: contain; object-position: center bottom; padding: 8px 6px 0 0; box-sizing: border-box; } /* 배경 없는 회색 사람 누끼 이미지(gray-person-cutout.png) */
   /* 홍보 포스터 두 장(학습 상담 · 선배 소개)이 같은 자리에서 번갈아 나온다 */
+  /* 포스터는 옆으로 넘기는 캐러셀: 자동으로 넘어가고, 터치 · 트랙패드로 옆으로 밀거나 마우스로 끌어서 넘길 수 있고, 박스 아래 점으로 몇 장 중 몇 번째인지 보인다 */
   .home-poster-rot { position: relative; flex: 1 1 0; min-width: 0; }
-  .home-poster-rot .home-poster { position: absolute; inset: 0; width: 100%; opacity: 0; visibility: hidden; transition: opacity 0.5s ease, visibility 0s linear 0.5s, transform 0.15s, box-shadow 0.15s; }
-  .home-poster-rot .home-poster.on { opacity: 1; visibility: visible; transition: opacity 0.5s ease, visibility 0s, transform 0.15s, box-shadow 0.15s; }
+  .hp-track { position: absolute; inset: 0; display: flex; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; overscroll-behavior-x: contain; border-radius: 12px; cursor: grab; }
+  .hp-track::-webkit-scrollbar { display: none; }
+  .hp-track.dragging { cursor: grabbing; scroll-snap-type: none; }
+  .home-poster-rot .home-poster { position: relative; flex: 0 0 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; }
+  .home-poster-rot .home-poster:hover { transform: none; box-shadow: none; filter: brightness(1.06); }
+  .hp-dots { position: absolute; left: 0; right: 0; top: 100%; margin-top: 2px; display: flex; justify-content: center; align-items: center; height: 10px; }
+  .hp-dot { width: 11px; height: 10px; padding: 0; border: 3px solid transparent; border-width: 3px 3.5px; border-radius: 999px; background: #C9C6BC; background-clip: padding-box; cursor: pointer; transition: width 0.25s, background-color 0.25s; box-sizing: border-box; } /* 눈에 보이는 점은 4px, 누르는 칸은 조금 더 넓게 */
+  .hp-dot.on { width: 19px; background-color: #0D2155; }
+  .hp-dot:focus:not(:focus-visible) { outline: none; } /* 마우스로 누른 뒤에 점 둘레에 검은 테두리가 남지 않게(키보드로 이동할 때는 그대로 보인다) */
+  .hp-tags { position: absolute; right: 12px; bottom: 9px; z-index: 1; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; max-width: 56%; }
+  .hp-tags > span { font-size: 0.6rem; font-weight: 700; color: rgba(255,255,255,0.9); border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
   .hp-bullets { display: flex; flex-direction: column; gap: 3px; font-size: 0.78rem; line-height: 1.4; color: rgba(255,255,255,0.92); }
   .hp-bullets > span::before { content: "•"; margin-right: 6px; color: #FFD44D; }
-  @media (prefers-reduced-motion: reduce) { .home-poster-rot .home-poster, .home-poster-rot .home-poster.on { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .hp-dot { transition: none; } }
   /* 홈 빈 자리의 "머리 식히기" 스톱워치 — 식히는 시간 재기 · 공부로 돌아가기 버튼 하나, 아래에 오늘 식힌 시간 */
   /* 머리 식히기: 다른 박스처럼 흰 카드 · 테두리 없이, 홈 바탕 위에 그냥 놓이는 가벼운 위젯 */
   .home-rest { background: transparent; border: none; padding: 6px 16px 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 160px; box-sizing: border-box; position: relative; }
@@ -3572,6 +3595,17 @@
   .hd-right-top { grid-column: 2; grid-row: 1; display: flex; gap: var(--ln-gap); min-width: 0; min-height: 0; }
   .hd-right-top .home-academy-compact { flex: 1 1 0; min-width: 0; justify-content: center; }
   .hd-right-top .home-notice-box { flex: 1 1 0; min-width: 0; }
+  /* 공지사항도 포스터처럼 옆으로 넘기는 칸 + 아래 점 표시 (공지가 여러 개 생기면 옆으로 넘겨 볼 수 있다) */
+  .home-notice-rot { position: relative; flex: 1 1 0; min-width: 0; min-height: 64px; }
+  .hn-track { position: absolute; inset: 0; display: flex; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; overscroll-behavior-x: contain; border-radius: 12px; }
+  .hn-track::-webkit-scrollbar { display: none; }
+  .hd-right-top .hn-track .home-notice-box { flex: 0 0 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; }
+  .hn-notice-text { font-size: 0.78rem; line-height: 1.5; color: var(--ink-soft); }
+  .hn-notice-text b { color: var(--ink); font-weight: 700; }
+  @media (min-width: 901px) {
+    /* 위 박스(포스터 · 공지)는 줄 높이보다 조금 낮게 — 남는 자리에 점 표시가 들어간다 */
+    .hd-right-top { align-self: start; height: calc(var(--ln-top-h) - 10px); }
+  }
   .hd-right-top .home-academy-compact, .hd-right-top .home-notice-box { border-radius: 12px; }
   .home-dash .home-promo-slot { grid-column: 1; grid-row: 2; align-self: end; height: calc(var(--ln-cal-h) - var(--ln-nav-h) - var(--ln-gap)); display: flex; gap: var(--ln-gap); align-items: stretch; min-height: 0; }
   .home-dash .home-promo-slot .rh-tile { flex: 1 1 0; min-width: 0; padding: 14px 16px; border-radius: 12px; }
@@ -7576,10 +7610,7 @@
       <div class="home-poster-rot" id="homePosterRot">
         <!-- 포스터는 아래 스크립트의 HOME_POSTERS 목록에서 만든다(renderHomePosters). 문구를 바꾸거나 켜고 끄려면 그 목록만 고치면 된다. -->
       </div>
-          <div class="home-notice-box">
-            <div class="hn-notice-title">공지사항</div>
-            <div class="hn-notice-empty">등록된 공지가 없어요.</div>
-          </div>
+          <div class="home-notice-rot" id="homeNoticeRot"><!-- 공지는 아래 스크립트의 HOME_NOTICES 목록에서 만든다(renderHomeNotices) --></div>
         </div>
         <div class="hd-ai">
       <div class="record-chat-pane ln-chat">
@@ -11514,11 +11545,11 @@
   // 원칙: 지금 실제로 있는 것만 쓴다(거짓 · 과장 · 보장 · 가짜 마감 금지). 소개가 필요 없는 포스터는 상황 · 고민을 정확히 짚는 쪽으로 만든다.
   const HOME_POSTERS = [
     // ── 지금 돌아가는 5장(선생님이 고른 것). 칼럼 포스터가 연달아 나오지 않게 사이사이에 끼웠다. 칼럼은 전용 페이지가 없어서 선생님 소개로 연결해 둔 상태 ──
-    { head: "로드맵 독서실", sub: "겨울방학 학습 프로그램", cta: "살펴보기", go: "consult-programs" },
-    { kicker: "공부법 칼럼", head: "수능 *3등급*에서 *1등급*으로 올린 방법", sub: "- 수학 편 -", cta: "읽어보기", go: "consult-teacher" },
-    { head: "*100000문제* 풀어도", sub: "수학 성적이 안 오르는 이유", cta: "바로 알아보기", go: "consult-math" },
-    { kicker: "공부법 칼럼", head: "수능 *3등급*에서 *1등급*으로 올린 방법", sub: "- 국어 편 -", cta: "읽어보기", go: "consult-teacher" },
-    { head: "송의준 선생님", sub: "축구선수 출신 노베이스 → 수능 전과목 1등급", cta: "내 상황 상담해보기", go: "consult-teacher" },
+    // tags: 오른쪽 아래에 붙는 작은 알약 문구(빈 자리를 채우는 용도, 선택). ※ 로드맵 독서실 프로그램의 실제 내용(기간 · 대상 · 구성)을 확정하면 그에 맞게 고칠 것
+    { head: "입시 관리형 로드맵 독서실", headQuiet: true, sub: "겨울방학 1:1 학습 프로그램", subAccent: true, tags: ["학습 컨설팅", "수학 클리닉", "문학 클리닉", "비문학 클리닉"], cta: "살펴보기", go: "consult-programs" },
+    { kicker: "공부법 칼럼", kickerLow: true, head: "수능 __국어, 수학__ *3등급*에서 *1등급*으로 올린 방법", cta: "읽어보기", go: "consult-teacher" },
+    { kicker: "양치기 공부의 함정", kickerLow: true, head: "*100000문제* 풀어도", headMid: true, sub: "__수학 성적이 안 오르는 이유__를 알려드립니다.", cta: "바로 알아보기", go: "consult-math" },
+    { kicker: "겨울방학 또 흐지부지 보낼 건가요?", kickerLow: true, head: "실제로 이행 가능한 *공부 전략*을 세워드립니다", sub: "노베이스 축구선수 출신, 수능 전과목 1등급 선생님이 직접 상담합니다", subSmall: true, cta: "내 상황 상담해보기", go: "consult-teacher" },
     // ── 아래는 꺼 둔 후보(on:false를 지우면 돌아가는 포스터에 들어간다) ──
     { head: "만년 *3등급* → *1등급* 만들기", sub: "구체적인 방법 살펴보기", cta: "살펴보기", go: "consult-1", on: false },
     { head: "수포자 · 국포자", sub: "해결해드립니다. 들어오세요.", cta: "들어가기", go: "consult", on: false },
@@ -11540,26 +11571,93 @@
     const box = document.getElementById("homePosterRot");
     if (!box) return;
     const list = HOME_POSTERS.filter(p => p.on !== false);
-    box.innerHTML = list.map((p, i) => {
-      const head = escapeHtml(p.head).replace(/\*(.+?)\*/g, "<em>$1</em>");
+    const posters = list.map(p => {
+      const head = escapeHtml(p.head).replace(/\*(.+?)\*/g, "<em>$1</em>").replace(/__(.+?)__/g, "<u>$1</u>"); // *노란 강조* · __밑줄__
       const big = String(p.head).replace(/\*/g, "").length <= 16; // 짧은 첫 줄은 크게
-      return '<button type="button" class="home-poster' + (i === 0 ? " on" : "") + '" onclick="homePosterGo(\'' + p.go + '\')" aria-label="' + escapeHtml(String(p.head).replace(/\*/g, "")) + '">' +
-        '<span class="hp-text">' + (p.kicker ? '<span class="hp-eyebrow">' + escapeHtml(p.kicker) + '</span>' : "") +
-        '<span class="hp-headline' + (big ? " big" : "") + '">' + head + '</span>' +
-        (p.sub ? '<span class="hp-sub">' + escapeHtml(p.sub) + '</span>' : "") + '</span>' +
+      return '<button type="button" class="home-poster" onclick="homePosterGo(\'' + p.go + '\')" aria-label="' + escapeHtml(String(p.head).replace(/\*/g, "")) + '">' +
+        '<span class="hp-text">' + (p.kicker ? '<span class="hp-eyebrow' + (p.kickerQuiet ? " quiet" : "") + (p.kickerLow ? " low" : "") + '">' + escapeHtml(p.kicker) + '</span>' : "") +
+        '<span class="hp-headline' + (big ? " big" : "") + (p.headQuiet ? " quiet" : "") + (p.headMid ? " mid" : "") + '">' + head + '</span>' +
+        (p.sub ? '<span class="hp-sub' + (p.subAccent ? " accent" : "") + (p.subSmall ? " small" : "") + '">' + escapeHtml(p.sub).replace(/\*(.+?)\*/g, "<em>$1</em>").replace(/__(.+?)__/g, "<u>$1</u>") + '</span>' : "") + '</span>' +
+        (p.tags && p.tags.length ? '<span class="hp-tags">' + p.tags.map(t => '<span>' + escapeHtml(t) + '</span>').join("") + '</span>' : "") +
         '<span class="hp-btn">' + escapeHtml(p.cta) + ' <span class="hp-arrow">→</span></span></button>';
     }).join("");
+    // 박스 아래 점: 몇 장 중 몇 번째인지 보여주고, 누르면 그 장으로 넘어간다
+    const dots = list.length > 1 ? '<div class="hp-dots" id="hpDots">' + list.map((p, i) =>
+      '<button type="button" class="hp-dot' + (i === 0 ? " on" : "") + '" aria-label="포스터 ' + (i + 1) + '번 보기" onclick="homePosterShow(' + i + ')"></button>').join("") + '</div>' : "";
+    box.innerHTML = '<div class="hp-track" id="hpTrack">' + posters + '</div>' + dots;
     homePosterIdx = 0;
+    homePosterBindTrack();
   }
-  // ── 홈 오른쪽 위 홍보 포스터 번갈아 보여주기(6초마다 부드럽게 전환, 마우스를 올려 두면 멈춤) ──
-  let homePosterIdx = 0, homePosterPaused = false;
+  // ── 홈 오른쪽 위 홍보 포스터: 자동으로 넘어가고(6초), 옆으로 밀거나 끌어서 직접 넘길 수도 있다 ──
+  let homePosterIdx = 0, homePosterPaused = false, homePosterUserAt = 0, homePosterDragMoved = false, homePosterWinBound = false, homePosterRaf = 0;
+  function homePosterBehavior() { return window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"; }
+  function homePosterDots() { document.querySelectorAll("#hpDots .hp-dot").forEach((d, k) => d.classList.toggle("on", k === homePosterIdx)); }
+  function homePosterShow(i, byUser, instant) {
+    const t = document.getElementById("hpTrack"); if (!t) return;
+    if (byUser !== false) homePosterUserAt = Date.now(); // 직접 넘기면 자동 넘김이 잠깐 쉰다
+    homePosterIdx = i; homePosterDots();
+    t.scrollTo({ left: i * t.clientWidth, behavior: instant ? "auto" : homePosterBehavior() });
+  }
   function homePosterRotate() {
-    if (homePosterPaused) return;
-    const list = document.querySelectorAll("#homePosterRot .home-poster");
-    if (list.length < 2) return;
-    list[homePosterIdx].classList.remove("on");
-    homePosterIdx = (homePosterIdx + 1) % list.length;
-    list[homePosterIdx].classList.add("on");
+    if (homePosterPaused || Date.now() - homePosterUserAt < 5000) return;
+    const n = document.querySelectorAll("#hpTrack .home-poster").length;
+    if (n < 2) return;
+    const next = (homePosterIdx + 1) % n;
+    homePosterShow(next, false, next === 0); // 마지막 장 다음에는 처음으로 바로 돌아간다
+  }
+  function homePosterBindTrack() {
+    const t = document.getElementById("hpTrack"); if (!t) return;
+    // 밀어서 넘기면(터치 · 트랙패드) 스크롤 위치로 몇 번째인지 알아내서 점을 바꾼다
+    t.addEventListener("scroll", () => {
+      if (homePosterRaf) return;
+      homePosterRaf = requestAnimationFrame(() => {
+        homePosterRaf = 0;
+        if (!t.clientWidth) return;
+        const i = Math.round(t.scrollLeft / t.clientWidth);
+        if (i !== homePosterIdx) { homePosterIdx = i; homePosterDots(); }
+      });
+    }, { passive: true });
+    ["touchstart", "wheel"].forEach(ev => t.addEventListener(ev, () => { homePosterUserAt = Date.now(); }, { passive: true }));
+    // 마우스로 끌어서 넘기기
+    let down = false, sx = 0, sl = 0, startIdx = 0;
+    t.addEventListener("mousedown", e => { if (e.button !== 0) return; down = true; homePosterDragMoved = false; sx = e.clientX; sl = t.scrollLeft; startIdx = Math.round(sl / (t.clientWidth || 1)); });
+    t.addEventListener("click", e => { if (homePosterDragMoved) { e.preventDefault(); e.stopPropagation(); homePosterDragMoved = false; } }, true); // 끈 뒤에 포스터가 눌리지 않게
+    t.addEventListener("dragstart", e => e.preventDefault());
+    if (!homePosterWinBound) {
+      homePosterWinBound = true;
+      window.addEventListener("mousemove", e => {
+        const tr = document.getElementById("hpTrack"); if (!down || !tr) return;
+        const dx = e.clientX - sx;
+        if (!homePosterDragMoved && Math.abs(dx) > 5) { homePosterDragMoved = true; tr.classList.add("dragging"); }
+        if (homePosterDragMoved) { tr.scrollLeft = sl - dx; homePosterUserAt = Date.now(); }
+      });
+      window.addEventListener("mouseup", e => {
+        const tr = document.getElementById("hpTrack"); if (!down || !tr) return;
+        down = false;
+        if (!homePosterDragMoved) return;
+        tr.classList.remove("dragging");
+        const n = tr.querySelectorAll(".home-poster").length, dx = e.clientX - sx;
+        const target = Math.max(0, Math.min(n - 1, startIdx + (dx < -40 ? 1 : dx > 40 ? -1 : 0)));
+        homePosterShow(target);
+      });
+      window.addEventListener("resize", () => { const tr = document.getElementById("hpTrack"); if (tr) tr.scrollTo({ left: homePosterIdx * tr.clientWidth, behavior: "auto" }); });
+    }
+  }
+  // ── 홈 공지사항: 공지가 없으면 안내 한 칸만 보이고, 여러 개가 생기면 옆으로 넘겨 볼 수 있다(아래 점 표시는 포스터와 같은 모양) ──
+  // 공지를 올리려면 이 목록에 { title: "제목", text: "내용(선택)" }을 넣으면 된다.
+  const HOME_NOTICES = [];
+  function renderHomeNotices() {
+    const box = document.getElementById("homeNoticeRot");
+    if (!box) return;
+    const list = HOME_NOTICES.length ? HOME_NOTICES : [null];
+    const slides = list.map(n => '<div class="home-notice-box"><div class="hn-notice-title">공지사항</div>' +
+      (n ? '<div class="hn-notice-text"><b>' + escapeHtml(n.title || "") + '</b>' + (n.text ? " " + escapeHtml(n.text) : "") + '</div>' : '<div class="hn-notice-empty">등록된 공지가 없어요.</div>') + '</div>').join("");
+    box.innerHTML = '<div class="hn-track" id="hnTrack">' + slides + '</div>' +
+      '<div class="hp-dots" id="hnDots">' + list.map((n, i) => '<button type="button" class="hp-dot' + (i === 0 ? " on" : "") + '" aria-label="공지 ' + (i + 1) + '번 보기"></button>').join("") + '</div>';
+    const track = document.getElementById("hnTrack"), dots = Array.from(document.querySelectorAll("#hnDots .hp-dot"));
+    const sync = () => { const i = Math.round(track.scrollLeft / (track.clientWidth || 1)); dots.forEach((d, k) => d.classList.toggle("on", k === i)); };
+    track.addEventListener("scroll", sync, { passive: true });
+    dots.forEach((d, k) => d.addEventListener("click", () => track.scrollTo({ left: k * track.clientWidth, behavior: homePosterBehavior() })));
   }
   (function () {
     const box = document.getElementById("homePosterRot");
@@ -11567,6 +11665,7 @@
       box.addEventListener("mouseenter", () => { homePosterPaused = true; });
       box.addEventListener("mouseleave", () => { homePosterPaused = false; });
     }
+    renderHomeNotices();
     renderHomePosters();
     setInterval(homePosterRotate, 6000); // 포스터 5장, 한 장당 6초(한 바퀴 30초)
   })();
