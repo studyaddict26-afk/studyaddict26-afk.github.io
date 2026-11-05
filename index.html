@@ -5049,13 +5049,8 @@
   .rh2-item .s { font-size: 0.6rem; color: var(--ink-soft); }
   .rh2-detail { overflow-y: auto; padding: 18px 24px 24px; min-height: 0; }
   .rh2-detail .report-card { border: none; border-radius: 0; background: transparent; }
-  /* 분석지 본문 글씨를 줄여서 한 화면에 더 많이 보이게 한다 */
-  .rh2-detail .report-body { padding: 14px 4px 4px; font-size: 0.8rem; line-height: 1.65; }
-  .rh2-detail .ans-heading { font-size: 0.88rem; margin: 14px 0 6px 0; }
-  .rh2-detail .ans-p { margin: 0 0 5px 0; }
-  .rh2-detail .ans-list { padding-left: 18px; }
-  .rh2-detail .ans-list li { margin-bottom: 4px; }
-  .rh2-detail .report-period { font-size: 0.76rem; }
+  .rh2-detail { padding: 22px 28px 28px; }
+  .rh2-detail .report-body { max-width: 720px; }
   /* 분석지 위쪽: 숫자 칸 6개 + 날짜별 표 */
   .rpt-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 10px; margin: 0 0 12px; overflow: hidden; }
   .rpt-stat { display: flex; flex-direction: column; gap: 3px; padding: 10px 12px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); min-width: 0; }
@@ -6466,16 +6461,44 @@
   .report-card { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); overflow: hidden; }
   .report-card-head {
     display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
-    padding: 14px 18px; background: var(--cream); border-bottom: 1px solid var(--line);
+    padding: 4px 0 16px; border-bottom: 1px solid var(--line);
   }
-  .report-period { font-size: 0.82rem; font-weight: 700; color: var(--ink); }
+  .rpt-title { display: flex; flex-direction: column; gap: 3px; }
+  .rpt-kicker { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.12em; color: var(--green-deep); }
+  .report-period { font-size: 1rem; font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; }
   .report-print-btn {
-    flex: none; background: var(--green-soft); color: var(--green-deep);
-    border: none; border-radius: 7px; padding: 7px 12px;
-    font-family: inherit; font-size: 0.76rem; font-weight: 700; cursor: pointer;
+    flex: none; background: #fff; color: var(--ink);
+    border: 1px solid var(--line-dark); border-radius: 999px; padding: 7px 14px;
+    font-family: inherit; font-size: 0.72rem; font-weight: 700; cursor: pointer; transition: background 0.15s;
   }
-  .report-print-btn:hover { background: #C9D2E6; }
-  .report-body { padding: 20px 22px; }
+  .report-print-btn:hover { background: var(--cream); }
+  .report-body { padding: 18px 0 8px; }
+
+  /* ── 분석지 글 구역(요약 · 목록 · 한마디 · 제안) ── */
+  .rpt-sec { margin: 0 0 24px; }
+  .rpt-h { display: flex; align-items: center; gap: 12px; margin: 0 0 10px; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.02em; color: var(--green-deep); }
+  .rpt-h::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .rpt-b { font-size: 0.82rem; line-height: 1.8; color: var(--ink); }
+  .rpt-b .ans-p { margin: 0 0 6px; }
+  .rpt-b .ans-heading { font-size: 0.82rem; margin: 12px 0 4px; }
+  .rpt-b strong { font-weight: 800; color: var(--green-deep); }
+  .rpt-b ul.ans-list { list-style: none; margin: 0; padding: 0; }
+  .rpt-b ul.ans-list li { position: relative; padding-left: 16px; margin: 0 0 9px; }
+  .rpt-b ul.ans-list li::before { content: ""; position: absolute; left: 2px; top: 0.78em; width: 5px; height: 5px; border-radius: 50%; background: var(--green-deep); }
+  .rpt-b ol.ans-list { list-style: none; counter-reset: rptn; margin: 0; padding: 0; }
+  .rpt-b ol.ans-list li { counter-increment: rptn; position: relative; padding-left: 28px; margin: 0 0 9px; }
+  .rpt-b ol.ans-list li::before { content: counter(rptn); position: absolute; left: 0; top: 0.2em; width: 18px; height: 18px; border-radius: 50%; background: #EEF1FA; color: var(--green-deep); font-size: 0.66rem; font-weight: 800; display: flex; align-items: center; justify-content: center; line-height: 1; }
+  .rpt-date { display: inline-block; margin-right: 8px; padding: 1px 8px; border-radius: 999px; background: #EEF1FA; color: var(--green-deep); font-size: 0.68rem; font-weight: 800; font-variant-numeric: tabular-nums; vertical-align: 1px; }
+  /* 요약: 맨 위에서 가장 먼저 읽히는 칸 */
+  .rpt-lead .rpt-b { padding: 14px 18px; background: var(--cream); border-left: 3px solid var(--green-deep); border-radius: 0 12px 12px 0; font-size: 0.88rem; font-weight: 600; line-height: 1.85; }
+  /* 홀로의 한마디 */
+  .rpt-note .rpt-b { padding: 14px 18px; background: #EEF1FA; border: 1px solid #D5DBEE; border-radius: 12px; font-size: 0.86rem; line-height: 1.85; }
+  /* 제안 · 질문: 항목마다 작은 카드 */
+  .rpt-tip .rpt-b ul.ans-list li, .rpt-ask .rpt-b ol.ans-list li { border: 1px solid var(--line); border-radius: 10px; background: #fff; padding: 10px 14px 10px 16px; margin-bottom: 8px; }
+  .rpt-tip .rpt-b ul.ans-list li::before { display: none; }
+  .rpt-tip .rpt-b ul.ans-list li { padding-left: 16px; }
+  .rpt-ask .rpt-b ol.ans-list li { padding-left: 42px; }
+  .rpt-ask .rpt-b ol.ans-list li::before { left: 14px; top: 0.95em; }
 
   /* ── 누적된 학습 기록 (날짜별 목록) ── */
   /* "학습 상담 프로그램 및 비용" 카드(.grade-tabs-card 등)를 그대로 재사용 — 연도별 카드를
@@ -14889,6 +14912,28 @@
     return '<div class="rpt-stats">' + cells.map(c => '<div class="rpt-stat"><span class="rpt-label">' + c[0] + '</span><b>' + escapeHtml(c[1]) + '</b>' + (c[2] ? '<span class="rpt-sub">' + escapeHtml(c[2]) + '</span>' : '') + '</div>').join("") + '</div>' +
       '<table class="rpt-days"><thead><tr><th>날짜</th><th>플래너</th><th>공부일기</th><th>자기평가</th><th>어휘력 Test</th><th>머리 식히기</th></tr></thead><tbody>' + rows + '</tbody></table>';
   }
+  // 분석지 글 부분: "## 제목" 단위로 구역을 나눠서, 구역마다 어울리는 모양(요약 · 목록 · 한마디 · 제안)으로 보여준다.
+  // 예전 분석지(지난 한 주 요약 / 반복되는 패턴 …)와 새 분석지(한 줄 요약 / 이번 6일에 한 일 …) 둘 다 같은 규칙으로 처리한다.
+  function rptSectionKind(title) {
+    if (/한마디/.test(title)) return "note";
+    if (/질문|물어보/.test(title)) return "ask";
+    if (/제안|상담을 받|추천/.test(title)) return "tip";
+    if (/요약/.test(title)) return "lead";
+    if (/고민/.test(title)) return "worry";
+    return "plain";
+  }
+  function reportContentHtml(text) {
+    const parts = String(text || "").split(/\n(?=#{1,4}\s)/);
+    return parts.map(part => {
+      const m = part.match(/^#{1,4}\s+(.*)\n?([\s\S]*)$/);
+      if (!m) { const t = formatAiAnswer(part); return t ? '<section class="rpt-sec"><div class="rpt-b">' + t + '</div></section>' : ""; }
+      const title = m[1].trim(), kind = rptSectionKind(title);
+      let body = formatAiAnswer(m[2]);
+      // 고민 칸: 줄 맨 앞의 날짜("10/26 ·" 또는 "10월 26일")를 작은 날짜표로 바꿔서 한눈에 훑어볼 수 있게 한다.
+      if (kind === "worry") body = body.replace(/<li>\s*(\d{1,2}\/\d{1,2}|\d{1,2}월\s*\d{1,2}일)\s*[·,:\-]?\s*/g, '<li><span class="rpt-date">$1</span>');
+      return '<section class="rpt-sec rpt-' + kind + '"><h3 class="rpt-h">' + escapeHtml(title) + '</h3><div class="rpt-b">' + body + '</div></section>';
+    }).join("");
+  }
   function renderReportCards(reports, emptyMsg) {
     if (!reports.length) return '<div class="reports-empty">' + emptyMsg + '</div>';
     return reports.map(r => {
@@ -14897,10 +14942,10 @@
       const period = start === end ? start : (start + " ~ " + end);
       return '<div class="report-card">' +
         '<div class="report-card-head">' +
-          '<span class="report-period">' + period + '</span>' +
-          '<button type="button" class="report-print-btn" onclick="printReport(' + r.id + ')">🖨️ 인쇄 / PDF로 저장</button>' +
+          '<div class="rpt-title"><span class="rpt-kicker">6일 분석지</span><span class="report-period">' + period + '</span></div>' +
+          '<button type="button" class="report-print-btn" onclick="printReport(' + r.id + ')">인쇄 / PDF로 저장</button>' +
         '</div>' +
-        '<div class="report-body" id="report-content-' + r.id + '">' + reportDataHtml(r) + formatAiAnswer(r.content || "") + '</div>' +
+        '<div class="report-body" id="report-content-' + r.id + '">' + reportDataHtml(r) + reportContentHtml(r.content || "") + '</div>' +
       '</div>';
     }).join("");
   }
