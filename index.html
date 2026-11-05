@@ -11549,7 +11549,7 @@
     { head: "입시 관리형 로드맵 독서실", headQuiet: true, sub: "겨울방학 1:1 학습 프로그램", subAccent: true, tags: ["학습 컨설팅", "수학 클리닉", "문학 클리닉", "비문학 클리닉"], cta: "살펴보기", go: "consult-programs" },
     { kicker: "공부법 칼럼", kickerLow: true, head: "수능 국어, 수학 *3등급*에서 *1등급*으로 올린 방법", cta: "읽어보기", go: "consult-teacher" },
     { kicker: "양치기 공부의 함정", kickerLow: true, head: "*100000문제* 풀어도", headMid: true, sub: "수학 성적이 안 오르는 이유를 알려드립니다.", cta: "바로 알아보기", go: "consult-math" },
-    { kicker: "겨울방학 또 흐지부지 보낼 건가요?", kickerLow: true, head: "실제로 이행 가능한 *공부 전략*을 세워드립니다", sub: "노베이스 축구선수 출신, 수능 전과목 1등급 선생님이 직접 상담합니다", subSmall: true, cta: "내 상황 상담해보기", go: "consult-teacher" },
+    { kicker: "겨울방학 또 흐지부지 보낼 건가요?", kickerLow: true, head: "실제로 이행 가능한 *공부 전략*을 세워드립니다", cta: "내 상황 상담해보기", go: "consult-teacher" },
     // ── 아래는 꺼 둔 후보(on:false를 지우면 돌아가는 포스터에 들어간다) ──
     { head: "만년 *3등급* → *1등급* 만들기", sub: "구체적인 방법 살펴보기", cta: "살펴보기", go: "consult-1", on: false },
     { head: "수포자 · 국포자", sub: "해결해드립니다. 들어오세요.", cta: "들어가기", go: "consult", on: false },
@@ -11565,6 +11565,8 @@
   ];
   function homePosterGo(dest) {
     if (dest === "chat") { const t = document.getElementById("q-chat"); if (t) { t.scrollIntoView({ block: "center", behavior: "smooth" }); t.focus(); } return; }
+    // 스터디 홀로(Manager)에서 아카데미(학습 상담 · 수업 프로그램 · 선생님 소개 쪽 페이지)로 넘어갈 때는 "Study Holo Academy" 전환 화면을 거친다
+    if (/^consult/.test(dest)) { showProductSplash("academy", dest); return; }
     go(dest);
   }
   function renderHomePosters() {
