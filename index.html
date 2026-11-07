@@ -2249,7 +2249,27 @@
   .ch2-mbti-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
   .ch2-mbti-text b { font-size: 0.92rem; font-weight: 800; color: var(--green-deep); }
   .ch2-mbti-text span { font-size: 0.74rem; color: var(--ink-soft); }
+  .ts-inq-one .ch2-row2 { grid-template-columns: minmax(0, 320px); }
+  .ch2-mbti.ch2-inq { background: #EDF0F5; border-color: #DDE2EA; }
+  .ch2-mbti.ch2-inq:hover { background: #E6EAF1; }
+  .ch2-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ch2-row2 .ch2-mbti { padding: 12px 14px; gap: 10px; min-width: 0; }
+  .ch2-row2 .ch2-mbti-ico { width: 30px; height: 30px; }
+  .ch2-row2 .ch2-mbti-ico svg { width: 20px; height: 20px; }
+  .ch2-row2 .ch2-mbti-text b { font-size: 0.86rem; }
+  .ch2-row2 .ch2-mbti-text span { font-size: 0.68rem; line-height: 1.4; }
+  .ch2-row2 .ch2-mbti-go { display: none; }
+  @media (max-width: 520px) { .ch2-row2 { grid-template-columns: 1fr; } }
   .ch2-mbti-go { font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); white-space: nowrap; }
+  .inq-wrap { max-width: 620px; margin: 16px auto 0; }
+  .vocab-callout.inq-callout { max-width: 620px; margin: 16px auto 0; align-items: center; justify-content: center; }
+  .inq-callout p { margin: 0; font-size: 0.8rem; line-height: 1.6; color: var(--ink); }
+  .inq-callout .vc-ico { margin-top: 0; }
+  .inq-lead { margin: 6px 0 0; text-align: center; font-size: 0.84rem; line-height: 1.7; color: var(--ink-soft); }
+  #view-consult-inquiry .cd-page-head { justify-content: center; text-align: center; }
+  .ch2-inq-btn { display: flex; align-items: center; justify-content: space-between; width: 100%; font-family: inherit; font-size: 0.82rem; font-weight: 800; color: var(--green-deep); background: #fff; border: 1px solid #DDE2EA; border-radius: 12px; padding: 13px 18px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+  .ch2-inq-btn:hover { background: #F7F9FC; border-color: #B9C3D6; }
+  .ch2-left { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
   .ch2-links { display: flex; flex-direction: column; min-width: 0; background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; align-self: stretch; }
   .ch2-links-head { flex: none; padding: 14px 22px; font-size: 0.8rem; font-weight: 800; color: var(--ink); border-bottom: 1px solid var(--line); }
   .ch2-link { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; font-family: inherit; background: #fff; border: none; border-bottom: 1px solid var(--line); border-radius: 0; padding: 18px 22px; cursor: pointer; color: var(--ink); transition: background 0.15s; }
@@ -2263,7 +2283,7 @@
   .ch2-link-t span { font-size: 0.64rem; font-weight: 600; color: var(--ink-soft); border: 1px solid var(--line-dark); border-radius: 999px; padding: 2px 8px; }
   .ch2-link-go { flex: none; font-size: 0.8rem; color: var(--ink-soft); }
   .ch2-chat { flex: none; height: clamp(340px, calc(100vh - 390px), 470px); display: flex; } /* 페이지가 한 화면에 들어오도록 창 높이에 맞춘다 */
-  .ch2-chat .record-chat-pane { flex: 1; min-height: 0; border-radius: 12px; overflow: hidden; background: #EDF0F5; border-color: #DDE2EA; }
+  .ch2-chat .record-chat-pane { flex: 1; min-height: 0; border-radius: 12px; overflow: hidden; background: #fff; border-color: #DDE2EA; }
   .ch2-chat .record-chat-pane .chat-pane-title-row { flex: none; padding: 14px 20px 0; align-items: center; }
   .ch2-chat .record-chat-pane .chat-wrap { flex: 1; min-height: 0; max-width: none; padding: 38px 20px 30px; gap: 14px; margin: 0; width: auto; }
   .ch2-chat .record-chat-pane .input-zone { max-width: none; background: transparent; padding: 12px 20px 14px; }
@@ -5609,9 +5629,9 @@
     display: block;
     cursor: zoom-in;
   }
-  .review-item img { display: block; width: auto; height: auto; max-width: 228px; max-height: 300px; }
+  .review-item img { display: block; width: auto; height: auto; max-width: 228px; max-height: 210px; }
   @media (max-width: 860px) {
-    .review-item img { max-width: 168px; max-height: 224px; }
+    .review-item img { max-width: 168px; max-height: 170px; }
   }
   .rv-lightbox {
     position: fixed; inset: 0; z-index: 999;
@@ -6005,6 +6025,7 @@
   .cx-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .cx-photo video { width: 100%; height: 100%; object-fit: cover; display: block; }
   .cx-photo.is-filled { border: none; }
+  #teacherPane-preview .cx-photos { max-width: 800px; gap: 10px; }
   @media (max-width: 860px) {
     .cx-photos { grid-template-columns: 1fr; }
   }
@@ -6570,6 +6591,9 @@
   #view-consult-teacher .consult-page { padding-top: 28px; padding-bottom: 20px; }
   #view-consult-teacher .teacher-layout { margin-top: 16px; }
   .spec-box .cd-page-head { margin-bottom: 12px; }
+  .spec-box { position: relative; overflow: hidden; }
+  .spec-photo { position: absolute; right: 48px; bottom: 0; height: 270px; width: 209px; pointer-events: none; user-select: none; }
+  @media (max-width: 900px) { .spec-photo { display: none; } }
   /* 오른쪽 빈 공간은 선생님 사진 자리 — 가로선과 내용은 왼쪽 일부 폭까지만 */
   .spec-box .spec-header, .spec-box .spec-body { max-width: 540px; }
   .teacher-sidebar {
@@ -6639,50 +6663,65 @@
   @media (max-width: 760px) { .ts-crit { grid-template-columns: 1fr; } }
   .ts-note { margin: 0 0 12px; font-size: 0.78rem; line-height: 1.6; color: var(--ink-soft); }
   .ts-contact-text { margin: 0 0 12px; font-size: 0.82rem; line-height: 1.7; color: var(--ink-soft); }
-  .inq-split { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: stretch; }
-  .inq-promo { background: #EDF0F5; border: 1px solid #DDE2EA; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; }
-  .inq-promo-eye { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; color: #7F8DAA; margin-bottom: 8px; }
-  .inq-promo h4 { margin: 0; font-size: 1.1rem; font-weight: 800; color: var(--green-deep); letter-spacing: -0.01em; line-height: 1.4; }
-  .inq-promo-sub { margin: 4px 0 0; font-size: 0.84rem; color: var(--ink-soft); }
-  .inq-promo-lead { margin: 18px 0 0; font-size: 0.9rem; font-weight: 800; line-height: 1.6; color: var(--ink); }
-  .inq-promo-list { list-style: none; margin: 8px 0 0; padding: 0; }
-  .inq-promo-list li { position: relative; padding-left: 13px; font-size: 0.84rem; line-height: 1.7; color: var(--ink-soft); margin-bottom: 2px; }
-  .inq-promo-list li::before { content: ''; position: absolute; left: 0; top: 0.78em; width: 4px; height: 4px; border-radius: 50%; background: #9AA8C4; }
-  .inq-promo-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
-  .inq-promo-tags span { font-size: 0.72rem; font-weight: 600; color: var(--ink-soft); background: #fff; border: 1px solid #DDE2EA; border-radius: 999px; padding: 4px 11px; }
-  .inq-promo-btn { margin-top: auto; align-self: flex-start; padding-top: 0; font-family: inherit; font-size: 0.8rem; font-weight: 700; color: var(--green-deep); background: #fff; border: 1px solid #C9D2E3; border-radius: 999px; padding: 9px 18px; cursor: pointer; }
-  .inq-promo-btn:hover { background: #F7F9FC; border-color: var(--green-deep); }
+  .prog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 22px; }
+  .prog-card { display: flex; flex-direction: column; align-items: flex-start; text-align: left; font-family: inherit; background: #fff; border: 1px solid #DDE2EA; border-radius: 14px; padding: 20px 22px; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s; }
+  .prog-card:hover { border-color: #B9C3D6; box-shadow: 0 6px 20px rgba(13,33,85,0.06); transform: translateY(-2px); }
+  .prog-tag { font-size: 0.68rem; font-weight: 700; color: var(--green-deep); background: #E9EDF4; border-radius: 6px; padding: 2px 9px; margin-bottom: 12px; }
+  .prog-card b { font-size: 1.02rem; font-weight: 800; color: var(--green-deep); letter-spacing: -0.01em; }
+  .prog-card p { margin: 8px 0 0; font-size: 0.82rem; line-height: 1.7; color: var(--ink-soft); }
+  .prog-go { margin-top: auto; padding-top: 16px; font-size: 0.78rem; font-weight: 700; color: var(--ink); }
+  .prog-go i { font-style: normal; }
+  @media (max-width: 860px) { .prog-grid { grid-template-columns: 1fr; } }
+  .inq-split { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+  .inq-promo { position: relative; background: #EAEEF7; color: #26365F; border: 1px solid #D7DEEC; border-radius: 12px; padding: 14px 18px 12px; display: flex; flex-direction: column; align-items: flex-start; }
+  .inq-promo-kicker { font-size: 0.66rem; font-weight: 700; color: #8A6D1F; margin-bottom: 6px; }
+  .inq-promo h4 { margin: 0; font-size: 1.02rem; font-weight: 800; color: #1F2F55; letter-spacing: -0.02em; line-height: 1.3; }
+  .inq-promo h4 small { display: block; font-size: 0.68rem; font-weight: 700; color: #7E8BA8; letter-spacing: 0; margin-bottom: 2px; }
+  .ip-sec { width: 100%; margin-top: 8px; padding-top: 8px; border-top: 1px solid #D7DEEC; }
+  .ip-tag { display: inline-block; font-size: 0.6rem; font-weight: 700; color: #3A4D7A; background: #fff; border: 1px solid #C9D2E3; border-radius: 999px; padding: 0 8px; margin-bottom: 3px; }
+  .ip-q { margin: 0 0 3px; font-size: 0.76rem; font-weight: 800; color: #1F2F55; line-height: 1.45; }
+  .ip-qa { margin: 0 0 2px; font-size: 0.72rem; line-height: 1.5; color: #1F2F55; }
+  .ip-qa b { font-weight: 800; }
+  .ip-qa i { font-style: normal; color: #8A96B0; margin-left: 6px; }
+  .inq-promo-list { list-style: none; margin: 0; padding: 0; }
+  .inq-promo-list li { font-size: 0.8rem; font-weight: 700; line-height: 1.55; color: #26365F; letter-spacing: -0.01em; margin-bottom: 2px; }
+  .inq-promo-list li em { font-style: normal; color: #1F2F55; background: linear-gradient(transparent 55%, #F3DFA0 55%); padding: 0 1px; }
+  .inq-promo-tags { display: none; }
+  .inq-promo-btn { position: absolute; top: 12px; right: 14px; font-family: inherit; font-size: 0.66rem; font-weight: 800; color: #fff; background: #3A4D7A; border: none; border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+  .inq-promo-btn:hover { background: #2F4068; }
   .inq-promo-tags + .inq-promo-btn { margin-top: 22px; }
-  .inq-box { background: #fff; border: 1px solid #DDE2EA; border-radius: 12px; padding: 18px 20px 20px; }
-  .inq-box .ts-contact-text { margin: 0 0 14px; font-size: 0.78rem; color: var(--ink-soft); }
-  .inq-form { display: flex; flex-direction: column; gap: 12px; }
-  .inq-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .inq-f { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
-  .inq-f > span { font-size: 0.7rem; font-weight: 700; color: #4A5568; letter-spacing: 0.01em; }
+  .inq-box { background: #fff; border: 1px solid #DDE2EA; border-radius: 12px; padding: 14px 16px 14px; }
+  .inq-box .ts-contact-text { margin: 0 0 10px; font-size: 0.68rem; line-height: 1.6; color: var(--ink-soft); }
+  .inq-form { display: flex; flex-direction: column; gap: 9px; }
+  .inq-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .inq-f { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .inq-f > span { font-size: 0.64rem; font-weight: 700; color: #4A5568; letter-spacing: 0.01em; }
   .inq-f > span em { font-style: normal; font-weight: 500; font-size: 0.64rem; color: #8A94A6; margin-left: 6px; }
-  .inq-f input[type="text"], .inq-f input[type="tel"], .inq-f textarea { font-family: inherit; font-size: 0.78rem; color: var(--ink); background: #F8F9FB; border: 1px solid #E1E5EC; border-radius: 8px; outline: none; width: 100%; box-sizing: border-box; min-width: 0; transition: border-color 0.15s, background 0.15s; }
-  .inq-f input[type="text"], .inq-f input[type="tel"] { height: 34px; padding: 0 11px; }
-  .inq-f textarea { padding: 9px 11px; line-height: 1.55; resize: vertical; min-height: 78px; }
+  .inq-f input[type="text"], .inq-f input[type="tel"], .inq-f textarea { font-family: inherit; font-size: 0.7rem; color: var(--ink); background: #F8F9FB; border: 1px solid #E1E5EC; border-radius: 6px; outline: none; width: 100%; box-sizing: border-box; min-width: 0; transition: border-color 0.15s, background 0.15s; }
+  .inq-f input[type="text"], .inq-f input[type="tel"] { height: 26px; padding: 0 8px; }
+  .inq-f textarea { padding: 9px 11px; line-height: 1.55; resize: vertical; min-height: 40px; }
   .inq-f input::placeholder, .inq-f textarea::placeholder { color: #A5ADBB; }
   .inq-f input:focus, .inq-f textarea:focus { background: #fff; border-color: var(--green-deep); }
+  .inq-row2 { display: grid; grid-template-columns: auto 1fr; gap: 8px 28px; align-items: start; }
   .inq-sep { height: 1px; background: #EDEFF4; margin: 4px 0; }
-  .inq-radios { display: flex; flex-wrap: wrap; gap: 6px; }
-  .inq-radios .inq-pill { display: inline-block; white-space: nowrap; font-style: normal; font-size: 0.74rem; font-weight: 600; color: #5B6577; background: #F8F9FB; border: 1px solid #E1E5EC; border-radius: 8px; padding: 6px 13px; cursor: pointer; font-family: inherit; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+  .inq-radios { display: flex; flex-wrap: wrap; gap: 5px; }
+  .inq-radios .inq-pill { display: inline-block; white-space: nowrap; font-style: normal; font-size: 0.64rem; font-weight: 600; color: #5B6577; background: #F8F9FB; border: 1px solid #E1E5EC; border-radius: 6px; padding: 3px 9px; cursor: pointer; font-family: inherit; transition: background 0.15s, color 0.15s, border-color 0.15s; }
   .inq-radios .inq-pill:hover { border-color: #C3CBDA; }
   .inq-radios .inq-pill.on { background: var(--green-deep); border-color: var(--green-deep); color: #fff; }
-  .inq-mock { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
-  .inq-mock label { display: flex; flex-direction: column; gap: 4px; align-items: stretch; min-width: 0; }
-  .inq-mock b { font-size: 0.7rem; font-weight: 600; color: #5B6577; text-align: center; }
-  .inq-f .inq-mock input[type="text"] { height: 34px; padding: 0; text-align: center; }
-  .inq-actions { margin-top: 4px; }
-  .inq-actions button { width: 100%; font-family: inherit; font-size: 0.8rem; font-weight: 800; color: #fff; background: var(--green-deep); border: none; border-radius: 8px; padding: 10px 0; cursor: pointer; transition: background 0.15s; }
+  .inq-mock { display: flex; flex-wrap: wrap; gap: 6px 10px; }
+  .inq-mock label { display: flex; flex-direction: column; gap: 3px; align-items: stretch; width: 40px; }
+  .inq-mock b { font-size: 0.64rem; font-weight: 600; color: #5B6577; text-align: center; }
+  .inq-f .inq-mock input[type="text"] { height: 22px; padding: 0; text-align: center; font-size: 0.64rem; font-weight: 600; border-radius: 6px; line-height: 1; }
+  .inq-actions { margin-top: 2px; }
+  .inq-actions button { width: 100%; font-family: inherit; font-size: 0.76rem; font-weight: 800; color: #fff; background: var(--green-deep); border: none; border-radius: 8px; padding: 8px 0; cursor: pointer; transition: background 0.15s; }
   .inq-actions button:hover { background: #0a1a44; }
   .inq-actions button:disabled { opacity: 0.6; cursor: default; }
-  .inq-msg { font-size: 0.74rem; min-height: 1em; text-align: center; }
+  .inq-msg { font-size: 0.74rem; text-align: center; }
+  .inq-msg:empty { display: none; }
   .inq-msg.success { color: #2E7D4F; }
   .inq-msg.error { color: #C0392B; }
   @media (max-width: 860px) { .inq-split { grid-template-columns: 1fr; } }
-  @media (max-width: 520px) { .inq-grid3 { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .inq-grid3 { grid-template-columns: 1fr 1fr; } .inq-row2 { grid-template-columns: 1fr; } }
   .ts-contact-btns { display: flex; flex-wrap: wrap; gap: 8px; }
   .ts-contact-btn { font-family: inherit; font-size: 0.74rem; font-weight: 700; color: var(--ink); background: #fff; border: 1px solid var(--line-dark); border-radius: 999px; padding: 7px 15px; cursor: pointer; text-decoration: none; }
   .ts-contact-btn:hover { background: var(--cream); }
@@ -9921,6 +9960,7 @@
         <div class="cx-block ts-sec" id="teacherPane-profile">
           <div class="cx-title">선생님 프로필</div>
                   <div class="spec-box">
+            <svg class="spec-photo" viewBox="0 0 215 277" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#8A8A8A" d="M84.7 8.8Q79.6 8.9 76.3 9.9Q73 10.9 71.5 12Q70.1 13.2 69 13.6Q67.9 13.9 64.5 17.6Q61 21.3 58.8 24.6Q56.6 27.8 55.8 30.4Q55 32.9 54.3 36.8Q53.6 40.7 53.7 44.2Q53.7 47.7 54.4 51.8Q55 56 56 59.3Q57.1 62.6 56.4 66.3Q55.7 69.9 56.3 73.1Q57 76.2 57.5 77.3Q58.1 78.3 58.6 80.7Q59.2 83.1 60.1 84.6Q61 86.2 61.5 86.7Q62 87.3 63.9 88.2Q65.9 89.2 66.3 89.7Q66.8 90.3 68.3 93.7Q69.7 97 71.8 100.3Q73.8 103.6 74 105.9Q74.2 108.2 73.8 108.7Q73.4 109.2 66.6 112Q59.8 114.9 56.5 116.9Q53.2 119 50.2 122.6Q47.2 126.3 45.9 130.3Q44.5 134.3 44.4 137.4Q44.3 140.4 44.4 143.1Q44.6 145.8 45.4 147.8Q46.2 149.7 46.7 152.4Q47.2 155.1 40.9 161Q34.7 167 33.5 167.6Q32.4 168.2 31 170.2Q29.5 172.2 26.6 177.7Q23.6 183.1 21 193.1Q18.3 203.2 17.8 207.2Q17.2 211.2 17.6 217.2Q18 223.2 19.7 230.6Q21.3 238.1 22.4 244.6Q23.5 251.2 25.8 260.9Q28.1 270.7 28.2 273.3Q28.2 276 29.3 276.2Q30.3 276.5 120.2 276.3Q210.1 276.2 210 274.7Q209.9 273.1 208.9 268.6Q207.9 264 207.5 258.5Q207.2 252.9 206.7 251.1Q206.1 249.3 204.8 237.3Q203.4 225.2 202.9 223.4Q202.4 221.7 202.1 216.2Q201.7 210.7 200.7 204.5Q199.8 198.3 199.3 196.7Q198.8 195.2 197.4 187.1Q196 179 194.5 173.4Q193 167.8 192 165.5Q190.9 163.1 188.5 158.8Q186.1 154.5 184.2 152.6Q182.2 150.7 173.8 144.9Q165.4 139.1 165.3 136.8Q165.2 134.6 165.6 130.8Q166 127 165.5 125.5Q165 124.1 162 120.5Q159.1 117 156.6 114.4Q154.1 111.8 153.2 111.3Q152.4 110.8 151.9 109.8Q151.3 108.8 147 105.5Q142.7 102.2 140.4 101.4Q138 100.5 137.2 99.2Q136.5 97.9 134.8 96.2Q133.2 94.6 131.3 94.3Q129.4 94.1 126.9 94.7Q124.4 95.3 123.7 94.7Q122.9 94.2 123 92.6Q123 91.1 123.5 90Q123.9 88.9 126.4 87.9Q128.9 86.9 129.9 85.5Q131 84 131.4 81.5Q131.9 78.9 133.2 73.9Q134.5 68.9 133.6 65.8Q132.7 62.6 133.1 59.1Q133.6 55.6 133.5 47.4Q133.5 39.3 131.6 33.8Q129.6 28.2 126.2 23.8Q122.8 19.5 121 17.5Q119.2 15.6 118.1 14.8Q117.1 13.9 114.8 12.8Q112.4 11.6 109.1 11Q105.7 10.5 100.9 11.5Q96.2 12.4 95.1 11.4Q94 10.4 91.9 9.6Q89.8 8.8 84.7 8.8Z"/></svg>
             <div class="cd-page-head">
               <div>
                 <h2><span class="ef-hl">송의준 선생님</span><span class="teacher-tagline">노베이스부터 최상위권까지</span></h2>
@@ -9992,70 +10032,15 @@
 
         <div class="cx-block ts-sec" id="teacherPane-contact">
           <div class="cx-title">상담 문의</div>
-          <div class="inq-split">
-          <div class="inq-box">
-          <p class="ts-contact-text">상담 문의 남겨주시면, 금일 안으로 연락드리겠습니다.</p>
-          <form class="inq-form" id="inqForm" onsubmit="submitInquiry(event)">
-            <div class="inq-grid3">
-              <label class="inq-f"><span>학생 이름</span><input type="text" id="inq-name" required autocomplete="name"></label>
-              <label class="inq-f"><span>학교</span><input type="text" id="inq-school" required></label>
-              <label class="inq-f"><span>학년</span><input type="text" id="inq-grade" required placeholder="예: 고2"></label>
-              <label class="inq-f"><span>생년월일</span><input type="text" id="inq-age" required inputmode="numeric" placeholder="예: 2003.11.28"></label>
-              <label class="inq-f"><span>학생 연락처</span><input type="tel" id="inq-sphone" required autocomplete="tel" placeholder="010-0000-0000"></label>
-              <label class="inq-f"><span>학부모 연락처</span><input type="tel" id="inq-pphone" required placeholder="010-0000-0000"></label>
-            </div>
-            <div class="inq-f">
-              <span>어디로 연락드릴까요?</span>
-<div class="inq-radios" data-group="to" data-multi="0">
-                <button type="button" class="inq-pill" data-v="학생" aria-pressed="false">학생</button>
-                <button type="button" class="inq-pill" data-v="학부모" aria-pressed="false">학부모</button>
-              </div>
-            </div>
-            <div class="inq-sep"></div>
-            <div class="inq-f">
-              <span>입시 방향성 <em>중복 선택 가능</em></span>
-<div class="inq-radios" data-group="dir" data-multi="1">
-                <button type="button" class="inq-pill" data-v="정시" aria-pressed="false">정시</button>
-                <button type="button" class="inq-pill" data-v="학종" aria-pressed="false">학종</button>
-                <button type="button" class="inq-pill" data-v="교과" aria-pressed="false">교과</button>
-                <button type="button" class="inq-pill" data-v="논술" aria-pressed="false">논술</button>
-              </div>
-            </div>
-            <div class="inq-f">
-              <span>내신 평균 성적</span>
-<div class="inq-radios" data-group="naesin" data-multi="0">
-                <button type="button" class="inq-pill" data-v="1.0~1.6" aria-pressed="false">1.0~1.6</button>
-                <button type="button" class="inq-pill" data-v="1.7~1.9" aria-pressed="false">1.7~1.9</button>
-                <button type="button" class="inq-pill" data-v="2.0~2.5" aria-pressed="false">2.0~2.5</button>
-                <button type="button" class="inq-pill" data-v="2.6~3.0" aria-pressed="false">2.6~3.0</button>
-                <button type="button" class="inq-pill" data-v="3.1 이상" aria-pressed="false">3.1 이상</button>
-              </div>
-            </div>
-            <div class="inq-f">
-              <span>모의고사 성적</span>
-              <div class="inq-mock">
-                <label><b>국어</b><input type="text" id="inq-m-korean" inputmode="numeric" maxlength="1" pattern="[1-9]" placeholder="등급" aria-label="국어 등급"></label>
-                <label><b>수학</b><input type="text" id="inq-m-math" inputmode="numeric" maxlength="1" pattern="[1-9]" placeholder="등급" aria-label="수학 등급"></label>
-                <label><b>영어</b><input type="text" id="inq-m-english" inputmode="numeric" maxlength="1" pattern="[1-9]" placeholder="등급" aria-label="영어 등급"></label>
-                <label><b>통사</b><input type="text" id="inq-m-tongsa" inputmode="numeric" maxlength="1" pattern="[1-9]" placeholder="등급" aria-label="통사 등급"></label>
-                <label><b>통과</b><input type="text" id="inq-m-tonggwa" inputmode="numeric" maxlength="1" pattern="[1-9]" placeholder="등급" aria-label="통과 등급"></label>
-              </div>
-            </div>
-            <label class="inq-f"><span>원하는 상담 주제</span><textarea id="inq-topic" rows="3" required placeholder="상담받고 싶은 내용을 자유롭게 적어 주세요"></textarea></label>
-            <div class="inq-actions"><button type="submit" id="inqSubmit">제출하기</button></div>
-            <div class="inq-msg" id="inqMsg"></div>
-          </form>
-          </div>
-          <aside class="inq-promo">
-            <span class="inq-promo-eye">수업 프로그램</span>
-            <h4>입시 관리형 로드맵 독서실</h4>
-            <p class="inq-promo-sub">겨울방학 1:1 학습 프로그램</p>
-            <p class="inq-promo-lead">겨울방학, 또 흐지부지 보낼 건가요?</p>
-            <ul class="inq-promo-list"><li>실제로 이행 가능한 공부 전략을 세워드립니다.</li><li>국어, 수학을 학생 스스로 올바르게 공부할 수 있도록 만들어 드립니다.</li></ul>
-            <div class="inq-promo-tags"><span>학습 컨설팅</span><span>수학 클리닉</span><span>문학 클리닉</span><span>비문학 클리닉</span></div>
-            <button type="button" class="inq-promo-btn" onclick="go('consult-programs')">수업 프로그램 살펴보기 <span>&rarr;</span></button>
-          </aside>
-          </div>
+          <p class="ts-contact-text">간단한 전화 상담 후 적합한 수업을 추천해드립니다. 금일 안으로 연락드리겠습니다.</p>
+          <div class="ts-contact-btns ts-inq-one"><div class="ch2-row2">
+            <button type="button" class="ch2-mbti ch2-inq" onclick="go('consult-inquiry')">
+              <span class="ch2-mbti-ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5 8.5 8.5 0 0 1 8.7 3.9 8.4 8.4 0 0 1 12.5 3H13a8.5 8.5 0 0 1 8 8z"/></svg>
+              </span>
+              <span class="ch2-mbti-text"><b>상담 문의하기</b><span>전화 상담 후 적합한 수업 추천</span></span>
+            </button>
+          </div></div>
         </div>
         </div>
         </div>
@@ -10174,19 +10159,53 @@
     <div class="consult-page">
       <!-- 위쪽: 왼쪽 = 선생님 소개, 오른쪽 = 학습 성향 MBTI 버튼 + 공부중독 AI 챗봇 / 아래: 목차(스크롤하면 하나씩 나타나는 내용) -->
       <div class="ch2-hero">
-        <div class="ch2-links" id="ch2Links"></div>
+        <div class="ch2-left">
+          <aside class="inq-promo">
+            <span class="inq-promo-kicker">겨울방학, 또 흐지부지 보낼 건가요?</span>
+            <h4>겨울방학 1:1 학습 프로그램</h4>
+            <div class="ip-sec">
+              <span class="ip-tag">학습 컨설팅</span>
+              <ul class="inq-promo-list"><li>문제 상황을 분석하여, <em>실제로 이행 가능한 공부 전략</em>을 세워드립니다.</li></ul>
+            </div>
+            <div class="ip-sec">
+              <span class="ip-tag">수학 클리닉</span>
+              <ul class="inq-promo-list">
+                <li>헷갈리는 문제가 있나요? <em>아는 문제와 모르는 문제만</em> 있어야 합니다.</li>
+              </ul>
+            </div>
+            <div class="ip-sec">
+              <span class="ip-tag">문학 클리닉</span>
+              <ul class="inq-promo-list">
+                <li>공감은 부수적인 것입니다. <em>문학을 비문학처럼</em> 읽게 만들어 드립니다.</li>
+              </ul>
+            </div>
+            <div class="ip-sec">
+              <span class="ip-tag">비문학 클리닉</span>
+              <ul class="inq-promo-list"><li><em>두루뭉실한 공부법</em>에 지친 학생들 여기로 모이세요</li></ul>
+            </div>
+            <button type="button" class="inq-promo-btn" onclick="go('consult-programs')">수업 프로그램 살펴보기 <span>&rarr;</span></button>
+          </aside>
+        </div>
         <div class="ch2-side">
+          <div class="ch2-row2">
+          <button type="button" class="ch2-mbti ch2-inq" onclick="go('consult-inquiry')">
+            <span class="ch2-mbti-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5 8.5 8.5 0 0 1 8.7 3.9 8.4 8.4 0 0 1 12.5 3H13a8.5 8.5 0 0 1 8 8z"/></svg>
+            </span>
+            <span class="ch2-mbti-text"><b>상담 문의하기</b><span>전화 상담 후 적합한 수업 추천</span></span>
+          </button>
           <button type="button" class="ch2-mbti" onclick="mbtiOpen()">
             <span class="ch2-mbti-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5c1 1.3 2.2 2 3.5 2s2.5-.7 3.5-2"/><path d="M9 9.5h.01M15 9.5h.01"/></svg>
             </span>
-            <span class="ch2-mbti-text"><b>학습 성향 MBTI</b><span>나는 어떤 공부 스타일일까? 12문항 · 약 2분</span></span>
+            <span class="ch2-mbti-text"><b>학습 성향 MBTI 검사하기</b><span>나는 어떤 공부 스타일일까?<br>12문항 · 약 2분</span></span>
             <span class="ch2-mbti-go">검사하기 →</span>
           </button>
+          </div>
           <section class="ch2-chat">
             <div class="record-chat-pane ln-chat">
               <div class="chat-pane-title-row">
-                <h3 class="record-pane-title">공부중독 AI</h3>
+                <h3 class="record-pane-title">학습 상담 AI</h3>
                 <button type="button" class="chat-new-btn" onclick="ch2NewChat()">+ 새 채팅</button>
               </div>
               <div class="chat-wrap" id="chat-consult"></div>
@@ -10227,12 +10246,98 @@
     <div class="consult-page">
       <div class="cd-page-head">
         <div>
-          <span class="eyebrow">GENERAL</span>
           <h2>수업 프로그램</h2>
         </div>
       </div>
       <div class="split"></div>
-      <p class="hub-coming-soon">준비중입니다</p>
+      <div class="prog-grid">
+        <button type="button" class="prog-card" onclick="go('consult-1')">
+          <span class="prog-tag">학습 컨설팅</span>
+          <b>전반적인 학습 컨설팅</b>
+          <p>전국 최상위권 선생님과 함께 공부 계획, 공부 방법을 수립하세요.</p>
+          <span class="prog-go">자세히 보기 <i>&rarr;</i></span>
+        </button>
+        <button type="button" class="prog-card" onclick="go('consult-2')">
+          <span class="prog-tag">수학</span>
+          <b>수학 과외</b>
+          <p>전국 최상위권 선생님에게 수학 과외를 받아보세요.<br>과외 범위: 대수, 미적분I</p>
+          <span class="prog-go">자세히 보기 <i>&rarr;</i></span>
+        </button>
+        <button type="button" class="prog-card" onclick="go('consult-3')">
+          <span class="prog-tag">국어</span>
+          <b>국어 과외</b>
+          <p>전국 최상위권 선생님에게 국어 과외를 받아보세요.<br>과외 범위: 비문학, 문학</p>
+          <span class="prog-go">자세히 보기 <i>&rarr;</i></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 상담 문의 (홈의 "상담 문의하기" 버튼으로 오는 페이지) ─── -->
+  <section class="view dark-consult" id="view-consult-inquiry">
+    <div class="consult-page">
+      <div class="cd-page-head">
+        <div>
+          <h2>상담 문의</h2>
+        </div>
+      </div>
+      <div class="vocab-callout inq-callout"><span class="vc-ico">i</span><p>간단한 전화 상담 후 적합한 수업을 추천해드립니다. 금일 안으로 연락드리겠습니다.</p></div>
+      <div class="inq-wrap">
+          <div class="inq-box">
+          <form class="inq-form" id="inqForm" onsubmit="submitInquiry(event)">
+            <div class="inq-grid3">
+              <label class="inq-f"><span>학생 이름</span><input type="text" id="inq-name" required autocomplete="name"></label>
+              <label class="inq-f"><span>학교</span><input type="text" id="inq-school" required></label>
+              <label class="inq-f"><span>학년</span><input type="text" id="inq-grade" required placeholder="예: 고2"></label>
+              <label class="inq-f"><span>생년월일</span><input type="text" id="inq-age" required inputmode="numeric" placeholder="예: 2003.11.28"></label>
+              <label class="inq-f"><span>학생 연락처</span><input type="tel" id="inq-sphone" required autocomplete="tel" placeholder="010-0000-0000"></label>
+              <label class="inq-f"><span>학부모 연락처</span><input type="tel" id="inq-pphone" required placeholder="010-0000-0000"></label>
+            </div>
+            <div class="inq-row2">
+            <div class="inq-f">
+              <span>어디로 연락드릴까요?</span>
+<div class="inq-radios" data-group="to" data-multi="0">
+                <button type="button" class="inq-pill" data-v="학생" aria-pressed="false">학생</button>
+                <button type="button" class="inq-pill" data-v="학부모" aria-pressed="false">학부모</button>
+              </div>
+            </div>
+            <div class="inq-f">
+              <span>입시 방향성 <em>중복 선택 가능</em></span>
+<div class="inq-radios" data-group="dir" data-multi="1">
+                <button type="button" class="inq-pill" data-v="정시" aria-pressed="false">정시</button>
+                <button type="button" class="inq-pill" data-v="학종" aria-pressed="false">학종</button>
+                <button type="button" class="inq-pill" data-v="교과" aria-pressed="false">교과</button>
+                <button type="button" class="inq-pill" data-v="논술" aria-pressed="false">논술</button>
+              </div>
+            </div>
+            </div>
+            <div class="inq-sep"></div>
+            <div class="inq-f">
+              <span>내신 평균 성적</span>
+<div class="inq-radios" data-group="naesin" data-multi="0">
+                <button type="button" class="inq-pill" data-v="1.0~1.6" aria-pressed="false">1.0~1.6</button>
+                <button type="button" class="inq-pill" data-v="1.7~1.9" aria-pressed="false">1.7~1.9</button>
+                <button type="button" class="inq-pill" data-v="2.0~2.5" aria-pressed="false">2.0~2.5</button>
+                <button type="button" class="inq-pill" data-v="2.6~3.0" aria-pressed="false">2.6~3.0</button>
+                <button type="button" class="inq-pill" data-v="3.1 이상" aria-pressed="false">3.1 이상</button>
+              </div>
+            </div>
+            <div class="inq-f">
+              <span>모의고사 성적</span>
+              <div class="inq-mock">
+                <label><b>국어</b><input type="text" id="inq-m-korean" inputmode="numeric" maxlength="1" pattern="[1-9]" placeholder="등급" aria-label="국어 등급"></label>
+                <label><b>수학</b><input type="text" id="inq-m-math" inputmode="numeric" maxlength="1" pattern="[1-9]" placeholder="등급" aria-label="수학 등급"></label>
+                <label><b>영어</b><input type="text" id="inq-m-english" inputmode="numeric" maxlength="1" pattern="[1-9]" placeholder="등급" aria-label="영어 등급"></label>
+                <label><b>통사</b><input type="text" id="inq-m-tongsa" inputmode="numeric" maxlength="1" pattern="[1-9]" placeholder="등급" aria-label="통사 등급"></label>
+                <label><b>통과</b><input type="text" id="inq-m-tonggwa" inputmode="numeric" maxlength="1" pattern="[1-9]" placeholder="등급" aria-label="통과 등급"></label>
+              </div>
+            </div>
+            <label class="inq-f"><span>원하는 상담 주제</span><textarea id="inq-topic" rows="1" required placeholder="상담받고 싶은 내용을 자유롭게 적어 주세요"></textarea></label>
+            <div class="inq-actions"><button type="submit" id="inqSubmit">제출하기</button></div>
+            <div class="inq-msg" id="inqMsg"></div>
+          </form>
+          </div>
+      </div>
     </div>
   </section>
 
@@ -11488,15 +11593,15 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", vocabpick: "어휘력 Test", vocab: "영어", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-column": "공부법 칼럼", "consult-home": "Holo Study", "consult-myclass": "나의 수업", "consult-programs": "수업 프로그램", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "공부 계획 세우기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "독서실 스케줄", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", studymusic: "공부 음악", community: "공부중독 커뮤니티", academyHome: "Academy", academyTeacher: "선생님 수업 현황", teacherHome: "내 학생 관리", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", vocabpick: "어휘력 Test", vocab: "영어", consult: "학습 상담 안내", "consult-1": "전반적인 학습 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-column": "공부법 칼럼", "consult-home": "Holo Study", "consult-myclass": "나의 수업", "consult-programs": "수업 프로그램", "consult-inquiry": "상담 문의", "consult-2": "수학 과외", "consult-3": "국어 과외", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "공부 계획 세우기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "독서실 스케줄", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", studymusic: "공부 음악", community: "공부중독 커뮤니티", academyHome: "Academy", academyTeacher: "선생님 수업 현황", teacherHome: "내 학생 관리", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { mathexam: "exam", engexam: "exam" };
   // "← 이전으로"가 상단 흰색 바(topbar)의 제목 오른쪽에 뜨는 페이지들과, 각각이 돌아갈 곳.
   const BACK_TARGET = {
-    "consult-1": "consult-home", "consult-2": "consult-home", "consult-3": "consult-home",
+    "consult-1": "consult-programs", "consult-2": "consult-programs", "consult-3": "consult-programs",
     "consult-5": "consult-home", "consult-6": "consult-home", "consult-7": "consult-home", "consult-8": "consult-home",
     "consult-teacher": "consult-home", "consult-korean": "consult-home", "consult-math": "consult-home", "consult-english": "consult-home",
     "consult-materials": "consult-home", "consult-community": "consult-home", "consult-myclass": "consult-home",
-    "consult-programs": "consult-home", "consult-column": "consult-home",
+    "consult-programs": "consult-home", "consult-inquiry": "consult-home", "consult-column": "consult-home",
     vocabpick: "home", vocab: "vocabpick", todayrecord: "home", cumulative: "recordhub", reports: "recordhub", dayDetail: "cumulative",
     examSuneung: "examhub", examNaeshin: "examhub", mexlist: "examhub",
     mathexam: "examhub", engexam: "examhub",
@@ -11721,7 +11826,7 @@
     document.querySelector(".main > .topbar").style.display = isConsultSection ? "none" : "";
     document.getElementById("consultHeader").classList.toggle("on", isConsultSection);
     if (isConsultSection) {
-      const activeNav = (view === "consult-home") ? "home" : (view === "consult-programs") ? "programs" : (view === "consult-column") ? "column" : "teachers";
+      const activeNav = (view === "consult-home" || view === "consult-inquiry") ? "home" : (view === "consult-programs" || view === "consult-1" || view === "consult-2" || view === "consult-3") ? "programs" : (view === "consult-column") ? "column" : "teachers";
       ["home", "teachers", "programs", "column"].forEach(n =>
         document.getElementById("consultNav-" + n).classList.toggle("on", n === activeNav));
     }
@@ -11779,7 +11884,7 @@
         (x.tags && x.tags.length ? '<span class="ch2-link-t">' + x.tags.map(t => '<span>' + escapeHtml(t) + '</span>').join("") + '</span>' : "") + '</span>' +
         '<span class="ch2-link-go">→</span></button>';
     }).join("");
-    addMsg("consult", "bot", escapeHtml("안녕하세요, 공부중독 AI예요. 학습 고민을 편하게 말해 주세요. 고민에 맞는 공부 방향을 같이 찾고, 우리 아카데미 수업 중에 어울리는 것도 추천해 드릴게요."));
+    addMsg("consult", "bot", escapeHtml("학습 고민을 편하게 말해 주세요. 적합한 수업을 추천해 드릴게요."));
   }
   function ch2NewChat() {
     chatHistory["consult"] = [];
@@ -11887,7 +11992,7 @@
       '<div class="mbti-two"><div><h4>이런 점이 힘이에요</h4><ul>' + top.map(r => '<li>' + escapeHtml(MBTI_STRONG[r.code]) + '</li>').join("") + '</ul></div>' +
       '<div><h4>이런 점은 조심해요</h4><ul>' + top.map(r => '<li>' + escapeHtml(MBTI_WATCH[r.code]) + '</li>').join("") + '</ul></div></div>' +
       '<p class="mbti-note">재미로 보는 학습 성향 검사예요. 진단이 아니라 내 공부 방식을 돌아보는 참고용이에요.</p>' +
-      '<div class="mbti-actions"><button type="button" class="solid" onclick="mbtiAskChat()">이 결과로 공부중독 AI에게 상담받기</button>' +
+      '<div class="mbti-actions"><button type="button" class="solid" onclick="mbtiAskChat()">이 결과로 학습 상담 AI에게 상담받기</button>' +
       '<button type="button" onclick="mbtiStart()">다시 검사하기</button><button type="button" onclick="mbtiClose()">닫기</button></div>');
   }
   // 검사 결과를 챗봇에 실어 보내서, 공부 방식에 맞는 공부 방법과 수업을 추천받는다.
