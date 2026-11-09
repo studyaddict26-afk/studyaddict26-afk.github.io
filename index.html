@@ -2253,6 +2253,7 @@
   .ch2-mbti.ch2-inq { background: #F0A04B; border-color: #F0A04B; }
   .ch2-mbti.ch2-inq:hover { background: #E8912F; border-color: #E8912F; }
   .ch2-mbti.ch2-inq .ch2-mbti-ico, .ch2-mbti.ch2-inq .ch2-mbti-text b { color: #1B2440; }
+  .ch2-mbti.ch2-inq .ch2-mbti-text span { color: rgba(27,36,64,0.78); }
   .ch2-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .ch2-row2 .ch2-mbti { padding: 12px 14px; gap: 10px; min-width: 0; }
   .ch2-row2 .ch2-mbti-ico { width: 30px; height: 30px; }
@@ -2282,11 +2283,58 @@
   .inq-callout p { margin: 0; font-size: 0.76rem; line-height: 1.5; color: var(--ink); }
   .inq-callout .vc-ico { margin-top: 0; }
   .inq-lead { margin: 6px 0 0; text-align: center; font-size: 0.84rem; line-height: 1.7; color: var(--ink-soft); }
-  #view-consult-inquiry, #view-consult-column, #view-consult-purpose, #view-consult-4 { overflow-y: auto; } /* 스크롤 되는 화면 목록에 빠져 있어서 아래가 잘렸다 */
+  #view-consult-inquiry, #view-consult-mbti, #view-consult-column, #view-consult-purpose, #view-consult-4 { overflow-y: auto; } /* 스크롤 되는 화면 목록에 빠져 있어서 아래가 잘렸다 */
   #view-consult-inquiry .consult-page { padding-top: 28px; padding-bottom: 120px; }
   #view-consult-inquiry .cd-page-head { justify-content: center; text-align: center; }
+  #view-consult-mbti .consult-page { padding-top: 28px; padding-bottom: 120px; }
+  #view-consult-mbti .cd-page-head { justify-content: center; text-align: center; }
+  #view-consult-mbti .mbti-card { max-width: 620px; max-height: none; overflow: visible; margin: 8px auto 0; border: 1px solid var(--line); padding: 30px 34px 26px; }
+  #view-consult-mbti .mbti-x { display: none; }
   .ch2-inq-btn { display: flex; align-items: center; justify-content: space-between; width: 100%; font-family: inherit; font-size: 0.82rem; font-weight: 800; color: var(--green-deep); background: #fff; border: 1px solid #DDE2EA; border-radius: 12px; padding: 13px 18px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
   .ch2-inq-btn:hover { background: #F7F9FC; border-color: #B9C3D6; }
+  .pcar { width: 100%; margin-top: auto; margin-bottom: 36px; }
+  .pcar-lead { margin: 0 0 14px; text-align: center; line-height: 1.4; letter-spacing: -0.035em; color: #0D2155; }
+  .pcar-lead span { display: block; }
+  .pcar-lead .pl-1 { font-size: 1.05rem; font-weight: 500; color: #6b7487; margin-bottom: 4px; }
+  .pcar-lead .pl-2 { font-size: 1.45rem; font-weight: 800; }
+  .pcar-lead u { text-decoration: none; background: linear-gradient(transparent 52%, rgba(255,222,112,0.75) 52%, rgba(255,222,112,0.75) 92%, transparent 92%); padding: 0 2px; }
+  .pcar-stage { touch-action: pan-y; position: relative; height: 336px; overflow: visible; clip-path: inset(-90px 0 -90px 0); }
+  .pcar-card { position: absolute; left: 50%; top: 14px; width: 232px; height: 316px; margin-left: -116px; border-radius: 20px; padding: 22px 20px 20px; box-sizing: border-box; display: flex; flex-direction: column; will-change: transform, filter, opacity; box-shadow: 0 22px 50px rgba(13,33,85,0.18); transform-origin: 50% 100%; }
+  .pcar-card .pc-kicker { font-size: 0.7rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 12px; }
+  .pcar-card h4 { margin: 0; font-size: 1.42rem; font-weight: 800; line-height: 1.28; letter-spacing: -0.03em; }
+  .pcar-card .pc-sub { margin: 12px 0 0; font-size: 0.8rem; line-height: 1.6; font-weight: 500; }
+  .pcar-card .pc-list { list-style: none; margin: 14px 0 0; padding: 12px 0 0; display: flex; flex-direction: column; gap: 7px; border-top: 1px solid rgba(23,41,79,0.14); }
+  .pcar-card .pc-list li { position: relative; padding-left: 18px; font-size: 0.78rem; font-weight: 700; line-height: 1.35; letter-spacing: -0.02em; }
+  .pcar-card .pc-list li::before { content: "✓"; position: absolute; left: 0; top: 0; font-weight: 800; }
+  .pcar-btn { margin-top: auto; align-self: stretch; text-align: center; font-family: inherit; font-size: 0.84rem; font-weight: 800; border: none; border-radius: 11px; padding: 11px 12px; cursor: pointer; transition: transform 0.15s; }
+  .pcar-btn:hover { transform: translateY(-2px); }
+  .pc-navy { background: #0D2155; color: #fff; }
+  .pc-navy .pc-kicker { color: #F0D27A; }
+  .pc-navy .pc-sub { color: rgba(255,255,255,0.9); }
+  .pc-navy .pc-list { border-top-color: rgba(255,255,255,0.22); }
+  .pc-navy .pc-list li { color: #fff; }
+  .pc-navy .pc-list li::before { color: #F0D27A; }
+  .pc-navy .pcar-btn { background: #F0A04B; color: #1B2440; }
+  .pc-ivory { background: #FBFAF6; color: #17294F; border: 1px solid #E6E1D5; }
+  .pc-ivory .pc-kicker { color: #8A6D1F; }
+  .pc-ivory .pc-sub { color: #3B455C; }
+  .pc-ivory .pc-list { border-top-color: #E3DECF; }
+  .pc-ivory .pc-list li { color: #17294F; }
+  .pc-ivory .pc-list li::before { color: #0D2155; }
+  .pc-ivory .pcar-btn { background: #0D2155; color: #fff; }
+  .pc-blue { background: #DDE6F5; color: #17294F; }
+  .pc-blue .pc-kicker { color: #3A4D7A; }
+  .pc-blue .pc-sub { color: #2F3E5E; }
+  .pc-blue .pc-list { border-top-color: #B7C5E0; }
+  .pc-blue .pc-list li { color: #17294F; }
+  .pc-blue .pc-list li::before { color: #0D2155; }
+  .pc-blue .pcar-btn { background: #F0A04B; color: #1B2440; }
+  .pcar-arrow { position: absolute; top: 172px; z-index: 300; width: 24px; height: 24px; margin-top: -12px; border-radius: 50%; border: 1px solid var(--line, #d9dce4); background: #fff; color: #0D2155; font-size: 0.95rem; line-height: 1; padding: 0 0 2px; cursor: pointer; box-shadow: 0 2px 8px rgba(13,33,85,0.12); transition: background 0.15s, transform 0.15s; }
+  .pcar-arrow:hover { background: #0D2155; color: #fff; }
+  .pcar-prev { left: 22px; }
+  .pcar-next { right: 22px; }
+  .pcar-hint { margin: 6px 0 0; text-align: center; font-size: 0.72rem; color: var(--ink-soft); }
+  @media (max-width: 900px) { .pcar-stage { height: 336px; } }
   .ch2-left { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
   .ch2-links { display: flex; flex-direction: column; min-width: 0; background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; align-self: stretch; }
   .ch2-links-head { flex: none; padding: 14px 22px; font-size: 0.8rem; font-weight: 800; color: var(--ink); border-bottom: 1px solid var(--line); }
@@ -2348,6 +2396,32 @@
   .mbti-start { display: block; width: 100%; margin-top: 18px; font-family: inherit; font-size: 0.9rem; font-weight: 800; color: #fff; background: var(--green-deep); border: none; border-radius: 12px; padding: 14px; cursor: pointer; }
   .mbti-res-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0 0 8px; font-size: 0.76rem; color: var(--ink-soft); }
   .mbti-res-legend b { color: var(--green-deep); font-weight: 800; margin-right: 2px; }
+  .mbti-res-head { padding-bottom: 14px; }
+  .mbti-sec { padding-top: 16px; border-top: 1px solid #ECE8DE; }
+  .mbti-axes { display: flex; flex-direction: column; gap: 14px; }
+  .mbti-axes .mbti-axis { margin: 0; }
+  .mbti-axes { gap: 10px; }
+  .mbti-axes .mbti-axis-bar { height: 6px; }
+  .mbti-detail { padding-top: 16px; margin-bottom: 20px; }
+  .mbti-d-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; font-family: inherit; font-size: 0.86rem; font-weight: 800; color: var(--ink); background: var(--cream); border: 1px solid var(--line-dark); border-radius: 12px; padding: 13px 16px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+  .mbti-d-toggle:hover { border-color: var(--green-deep); }
+  .mbti-d-toggle i { font-style: normal; font-size: 0.9rem; color: var(--ink-soft); transition: transform 0.2s; }
+  .mbti-detail.open .mbti-d-toggle i { transform: rotate(180deg); }
+  .mbti-d-body { display: none; }
+  .mbti-detail.open .mbti-d-body { display: block; }
+  .mbti-d-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 22px; }
+  @media (max-width: 560px) { .mbti-d-cols { grid-template-columns: 1fr; } }
+  .mbti-d-title { font-size: 0.9rem; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+  .mbti-d { padding: 14px 0 6px; border-top: 1px dashed #DDD8CB; margin-top: 12px; }
+  .mbti-d:first-of-type { border-top: none; margin-top: 4px; }
+  .mbti-d-h { display: flex; align-items: center; gap: 8px; }
+  .mbti-d-h i { font-style: normal; width: 20px; height: 20px; border-radius: 50%; background: var(--green-deep); color: #fff; font-size: 0.68rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; }
+  .mbti-d-h b { font-size: 0.92rem; font-weight: 800; color: var(--ink); }
+  .mbti-d-head { margin: 6px 0 10px; font-size: 0.86rem; font-weight: 700; color: var(--green-deep); line-height: 1.5; word-break: keep-all; }
+  .mbti-d-l { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.04em; color: var(--ink-soft); margin: 8px 0 3px; }
+  .mbti-d ul { margin: 0 0 6px; padding-left: 17px; font-size: 0.8rem; line-height: 1.75; color: var(--ink); word-break: keep-all; }
+  .mbti-axis-desc { margin-top: 5px; font-size: 0.74rem; line-height: 1.5; color: var(--ink-soft); word-break: keep-all; }
+  .mbti-two { margin: 0 0 18px; }
   .mbti-res-code { font-size: 2rem; font-weight: 900; letter-spacing: 0.18em; color: var(--green-deep); margin: 6px 0 2px; }
   .mbti-res-nick { font-size: 1.15rem; font-weight: 800; color: var(--ink); }
   .mbti-res-sum { margin: 10px 0 14px; font-size: 0.82rem; line-height: 1.75; color: var(--ink); }
@@ -2461,7 +2535,7 @@
     padding: 24px; box-sizing: border-box;
   }
   .pc-gate-inner { max-width: 640px; width: 100%; text-align: center; }
-  .pc-gate-logo { font-size: 1.1rem; font-weight: 900; color: var(--green-deep); letter-spacing: 0.02em; margin-bottom: 10px; }
+  .pc-gate-logo { font-size: 1.1rem; font-weight: 900; color: var(--green-deep); letter-spacing: 0.02em; margin-bottom: 12px; display: flex; justify-content: center; }
   .pc-gate-title { font-size: 1.5rem; font-weight: 800; color: var(--ink); margin-bottom: 28px; }
   .pc-gate-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .pc-gate-card {
@@ -5042,7 +5116,7 @@
   }
 
   /* ═══════════ 상담 안내 ═══════════ */
-  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3, #view-consult-5, #view-consult-6, #view-consult-7, #view-consult-8, #view-consult-teacher, #view-consult-korean, #view-consult-math, #view-consult-english, #view-consult-materials, #view-consult-community, #view-consult-home, #view-consult-myclass, #view-consult-programs, #view-howto, #view-recordhub, #view-scheduleManage, #view-examhub, #view-examSuneung, #view-examNaeshin, #view-mockexam, #view-mexlist, #view-vocab { overflow-y: auto; }
+  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3, #view-consult-5, #view-consult-6, #view-consult-7, #view-consult-8, #view-consult-teacher, #view-consult-korean, #view-consult-math, #view-consult-english, #view-consult-materials, #view-consult-community, #view-consult-home, #view-consult-myclass, #view-consult-programs, #view-consult-fee, #view-howto, #view-recordhub, #view-scheduleManage, #view-examhub, #view-examSuneung, #view-examNaeshin, #view-mockexam, #view-mexlist, #view-vocab { overflow-y: auto; }
   .consult-page {
     max-width: 1040px; width: 100%; margin: 0 auto;
     padding: 32px 24px 56px 24px;
@@ -5106,7 +5180,7 @@
   }
   .cd-back-link:hover { color: var(--green); gap: 7px; }
   .cd-page-head {
-    display: flex; align-items: flex-end; justify-content: flex-start;
+    display: flex; align-items: flex-end; justify-content: space-between;
     gap: 18px; flex-wrap: wrap;
   }
   .cd-apply-btn {
@@ -5115,8 +5189,8 @@
     background: var(--ink);
     color: #FFFFFF;
     font-family: inherit; font-size: 0.8rem; font-weight: 700;
-    padding: 8px 16px;
-    border: none; border-radius: 8px;
+    padding: 13px 24px;
+    border: none; border-radius: 10px;
     text-decoration: none; cursor: pointer;
     white-space: nowrap;
     box-shadow: 0 4px 14px rgba(23,24,26,0.22);
@@ -5147,6 +5221,7 @@
   }
   .cd-promo { margin: 0 0 20px 0; }
   .cd-promo-head { font-size: 1.05rem; font-weight: 800; line-height: 1.5; word-break: keep-all; }
+  .cd-scope { margin-left: 12px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0; color: var(--ink-soft); white-space: nowrap; }
   .cd-promo-sub { margin-top: 6px; font-size: 0.86rem; color: var(--ink-soft); word-break: keep-all; }
   .consult-tabs {
     display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
@@ -5744,6 +5819,25 @@
     transform: rotate(45deg) translate(-1px, -1px);
     opacity: 0;
   }
+  .apply-step { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: 800; color: var(--ink); margin: 20px 0 10px; padding-top: 16px; border-top: 1px solid var(--line); }
+  #applyForm > .apply-step:first-child { margin-top: 8px; padding-top: 0; border-top: none; }
+  .apply-step span { width: 20px; height: 20px; border-radius: 50%; background: #0D2155; color: #fff; font-size: 0.72rem; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+  .apply-step em { font-style: normal; font-size: 0.72rem; font-weight: 500; color: var(--ink-soft); }
+  .apply-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 480px) { .apply-row { grid-template-columns: 1fr; gap: 0; } }
+  .apply-checks.apply-progs { grid-template-columns: 1fr; }
+  .apply-field .apply-check.apply-prog { justify-content: flex-start; padding: 12px 14px; }
+  .apply-prog-t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .apply-prog-t b { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
+  .apply-prog-t em { font-style: normal; font-size: 0.74rem; color: var(--ink-soft); font-weight: 500; }
+  .apply-prog-p { font-size: 0.9rem; font-weight: 800; color: #0D2155; white-space: nowrap; }
+  .apply-notice { margin: 0 0 10px; padding: 12px 14px 12px 28px; background: var(--cream); border: 1px solid var(--line-dark); border-radius: 8px; font-size: 0.78rem; line-height: 1.6; color: var(--ink); word-break: keep-all; }
+  .apply-notice li + li { margin-top: 4px; }
+  .apply-notice em { font-style: normal; font-weight: 800; color: #B3261E; }
+  .apply-agree { position: relative; display: flex; align-items: center; gap: 10px; font-size: 0.82rem; font-weight: 700; color: var(--ink); cursor: pointer; margin-bottom: 16px; }
+  .apply-agree input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .apply-agree:has(input:checked) .apply-check-box { background: var(--green); border-color: var(--green); }
+  .apply-agree:has(input:checked) .apply-check-box::after { opacity: 1; }
   .apply-check:has(input:checked) .apply-check-box { background: var(--green); border-color: var(--green); }
   .apply-check:has(input:checked) .apply-check-box::after { opacity: 1; }
   .apply-check:has(input:checked) { border-color: var(--green); background: var(--green-soft); font-weight: 700; }
@@ -6688,7 +6782,7 @@
   .ts-intro-btn button { font-family: inherit; font-size: 0.8rem; font-weight: 700; color: var(--green-deep); background: #fff; border: 1px solid #C9D2E3; border-radius: 999px; padding: 9px 22px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
   .ts-intro-btn button:hover { background: #EDF0F5; border-color: var(--green-deep); }
   .ts-crit-lead { margin: 14px 0 18px; text-align: center; font-family: "Noto Serif KR", "Nanum Myeongjo", "Batang", serif; font-size: 0.9rem; line-height: 1.9; color: var(--ink); letter-spacing: -0.01em; }
-  .ts-crit { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ts-crit { display: grid; grid-template-columns: repeat(2, 372px); grid-auto-rows: 1fr; justify-content: center; gap: 12px; }
   .ts-crit-row { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: baseline; background: #fff; border: 1px solid #E3E8F0; border-radius: 14px; padding: 14px 18px 16px; box-shadow: 0 4px 14px rgba(13,33,85,0.04); }
   .ts-crit-row > div { display: contents; }
   .ts-crit-row .num { font-family: "Noto Serif KR", "Nanum Myeongjo", "Batang", serif; font-size: 1.15rem; font-weight: 400; font-style: italic; color: #B4BFD8; line-height: 1.2; }
@@ -6696,7 +6790,7 @@
   .ts-crit-row p { grid-column: 1 / -1; margin: 6px 0 0; font-size: 0.78rem; line-height: 1.7; color: var(--ink-soft); }
   .ts-crit-end { margin: 18px 0 2px; text-align: center; font-family: "Noto Serif KR", "Nanum Myeongjo", "Batang", serif; font-size: 0.9rem; line-height: 1.8; color: var(--green-deep); }
   .ts-crit-end::before { content: '“'; display: block; font-size: 1.4rem; line-height: 1; color: #C3CCE0; margin-bottom: 2px; }
-  @media (max-width: 760px) { .ts-crit { grid-template-columns: 1fr; } }
+  @media (max-width: 960px) { .ts-crit { grid-template-columns: 1fr; } }
   .ts-note { margin: 0 0 12px; font-size: 0.78rem; line-height: 1.6; color: var(--ink-soft); }
   .ts-contact-text { margin: 0 0 12px; font-size: 0.82rem; line-height: 1.7; color: var(--ink-soft); }
   .poster-box { max-width: 940px; margin: 8px auto 120px; background: #EEF1F7; border: 1px solid #DDE2EA; border-radius: 26px; padding: 36px 38px 38px; box-shadow: 0 10px 34px rgba(13,33,85,0.06); }
@@ -6751,8 +6845,14 @@
   .prog-side { flex: none; width: 142px; position: sticky; top: 20px; display: flex; flex-direction: column; gap: 12px; align-self: flex-start; }
   .prog-side .teacher-sidebar { position: static; width: 100%; box-sizing: border-box; }
   .prog-side .ts-link { font-size: 0.74rem; white-space: nowrap; }
+  .prog-side .ts-link.ts-sub { font-size: 0.72rem; font-weight: 500; color: var(--ink-soft); text-align: center; padding: 4px 2px; }
+  .prog-side .ts-link.ts-sub:hover { color: var(--green-deep); font-weight: 700; }
   .prog-side .teacher-sidebar { padding: 11px 10px; }
   .prog-ask { align-self: center; width: 130px; box-sizing: border-box; background: #0D2155; border: none; border-radius: 16px; padding: 16px 10px 14px; box-shadow: 0 10px 28px rgba(13,33,85,0.25); }
+  .prog-ask { transition: transform 0.22s ease, box-shadow 0.22s ease; }
+  .prog-ask:hover { transform: translateY(-5px) scale(1.04); box-shadow: 0 18px 38px rgba(13,33,85,0.34); }
+  .prog-ask:hover .ts-ask-btn { transform: translateY(-1px); }
+  .prog-ask .ts-ask-btn { transition: background 0.15s, transform 0.2s; }
   .prog-ask p { margin: 0 0 10px; white-space: nowrap; font-size: 0.6rem; line-height: 1.65; color: rgba(255,255,255,0.88); text-align: center; }
   .prog-ask .pa-gap { display: block; height: 8px; }
   .prog-ask .ts-ask-btn { margin-top: 0; color: #1B2440; background: #F0A04B; font-weight: 800; font-size: 0.68rem; border-radius: 9px; padding: 9px 4px; white-space: nowrap; }
@@ -6818,7 +6918,59 @@
   .prog-vs-arrow { align-self: center; font-size: 1.1rem; color: #9AA8C4; }
   @media (max-width: 860px) { .prog-vs { grid-template-columns: 1fr; width: auto; } .prog-vs-box li { white-space: normal; } .prog-vs-arrow { transform: rotate(90deg); justify-self: center; } }
   /* 과외 + 관리형 독서실 = 장점만: 아래 '없앤 단점 / 합친 장점' 박스와 같은 부품(알약 · 점선 · 같은 모서리)으로 구성 */
-  .prog-merge { margin: 30px 0 0; max-width: none; text-align: center; padding: 4px 0 0; background: none; border: none; box-shadow: none; display: flex; flex-direction: column-reverse; }
+  /* 수업 안내 오른쪽에 열리는 상세(학습 상담 · 수학 · 국어) — 다른 목차 페이지처럼 글씨를 작게 */
+  .fee-sum { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 0 40px; background: #E6EEFB; border: 1px solid #C9D8F0; border-radius: 14px; padding: 18px 0; }
+  .fee-sum-c { padding: 2px 20px 2px 18px; min-width: 0; }
+  .fee-sum-c + .fee-sum-c { border-left: 1px solid #C3D2EA; }
+  .fee-sum-c li { position: relative; padding-left: 14px; font-size: 0.76rem; letter-spacing: -0.025em; line-height: 1.55; color: var(--ink); font-weight: 600; white-space: nowrap; }
+  @media (max-width: 1100px) { .fee-sum { grid-template-columns: 1fr; padding: 6px 0; } .fee-sum-c { padding: 12px 20px; } .fee-sum-c + .fee-sum-c { border-left: none; border-top: 1px solid #C3D2EA; } .fee-sum-c li { white-space: normal; word-break: keep-all; } }
+  .fee-sum-q { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; font-weight: 800; color: #0D2155; margin-bottom: 8px; }
+  .fee-sum-q i { font-style: normal; width: 19px; height: 19px; border-radius: 50%; background: #0D2155; color: #fff; font-size: 0.66rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+  .fee-sum-c ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  .fee-sum-c li::before { content: ""; position: absolute; left: 2px; top: 0.62em; width: 4px; height: 4px; border-radius: 50%; background: #8FA6CC; }
+  .fee-chip { display: inline-block; vertical-align: middle; font-size: 0.72rem; font-weight: 700; color: #0D2155; background: #fff; border: 1px solid #B9C9E6; border-radius: 6px; padding: 0 7px; margin: 0 2px; position: relative; top: -1px; }
+  .fee-sum-more { display: flex; align-items: center; gap: 10px; margin: 0 0 28px; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.06em; color: var(--ink-soft); }
+  .fee-sum-more::before, .fee-sum-more::after { content: ""; flex: 1; height: 1px; background: var(--line-dark); }
+  .prog-detail .cd-promo-head { font-size: 0.95rem; }
+  .prog-detail .cd-promo-sub { font-size: 0.76rem; }
+  .prog-detail .ci-reco-label { font-size: 0.6rem; }
+  .prog-detail .reco-grid { gap: 8px; }
+  .prog-detail .reco-card { font-size: 0.76rem; line-height: 1.5; padding: 11px 14px; gap: 9px; border-radius: 9px; }
+  .prog-detail .reco-card-ico { width: 18px; height: 18px; font-size: 0.62rem; }
+  .prog-detail .cd-section .tag { font-size: 0.6rem; margin-bottom: 8px; }
+  .prog-detail .cd-section .gpt-lead { font-size: 0.88rem; line-height: 1.6; margin: 0 0 10px 0; padding-bottom: 10px; }
+  .prog-detail .cd-section .gpt-p { font-size: 0.76rem; line-height: 1.7; margin-bottom: 8px; }
+  .prog-detail .gpt-turn { font-size: 0.82rem; margin: 10px 0; padding: 10px 0 10px 14px; }
+  .prog-detail .consult-panel { padding: 10px 12px; margin-bottom: 10px; }
+  .prog-detail .cd-section { margin-top: 10px; }
+  .prog-detail .cd-section:first-child { margin-top: 0; }
+  .prog-detail .cd-panel { padding: 12px 16px; }
+  .prog-detail .ci-reco-label { margin-bottom: 6px; }
+  .prog-detail .cd-promo { margin-bottom: 12px; }
+  .prog-detail .consult-panel p { margin-bottom: 6px; line-height: 1.6; }
+  .prog-detail .cd-section .gpt-lead { margin-bottom: 8px; padding-bottom: 8px; }
+  .prog-detail .cd-point { font-size: 0.76rem; }
+  .prog-detail .cd-pullquotes { gap: 8px; }
+  .prog-detail .cd-pullquote { font-size: 0.8rem; line-height: 1.6; padding: 13px 18px 13px 44px; border-radius: 10px; }
+  .prog-detail .cd-pullquote::before { font-size: 2.1rem; top: 6px; left: 14px; }
+  .prog-detail .cd-faq-btn { font-size: 0.76rem; padding: 11px 13px; }
+  .prog-detail .cd-faq-answer-body { padding: 16px 18px; }
+  .fee-wrap { max-width: 640px; display: flex; flex-direction: column; gap: 12px; }
+  .fee-box { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; }
+  .fee-h { font-size: 0.86rem; font-weight: 800; color: var(--ink); padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
+  .fee-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; }
+  .fee-row + .fee-row { border-top: 1px dashed var(--line); }
+  .fee-t { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .fee-t b { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
+  .fee-t span { font-size: 0.74rem; color: var(--ink-soft); }
+  .fee-p { font-size: 0.95rem; font-weight: 800; color: #0D2155; white-space: nowrap; }
+  .fee-notice { margin: 6px 0 0; padding-left: 18px; font-size: 0.78rem; line-height: 1.65; color: var(--ink); word-break: keep-all; }
+  .fee-notice li + li { margin-top: 3px; }
+  .fee-notice em { font-style: normal; font-weight: 800; color: #B3261E; }
+  .fee-go { align-self: stretch; font-family: inherit; font-size: 0.88rem; font-weight: 800; color: #fff; background: #0D2155; border: none; border-radius: 11px; padding: 13px; cursor: pointer; transition: background 0.15s; }
+  .fee-go:hover { background: #17294F; }
+  .prog-top { margin: 6px 0 0; text-align: center; font-size: 1.7rem; font-weight: 800; letter-spacing: -0.035em; color: #0D2155; line-height: 1.35; }
+  .prog-merge { margin: 26px 0 0; max-width: none; text-align: center; padding: 4px 0 0; background: none; border: none; box-shadow: none; display: flex; flex-direction: column-reverse; }
   .prog-merge-eq { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 24px 0 0; padding-bottom: 0; border-bottom: none; }
   .prog-merge-eq span { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; flex: none; width: 140px; height: 140px; padding: 0 8px; box-sizing: border-box; border-radius: 50%; background: #fff; border: 1px solid #C9D2E3; box-shadow: 0 6px 18px rgba(13,33,85,0.05); }
   .prog-merge-eq span b { font-size: 0.66rem; font-weight: 700; color: var(--green-deep); background: #E9EDF4; border-radius: 6px; padding: 2px 10px; letter-spacing: 0; }
@@ -7482,16 +7634,16 @@
      로그인 세션 동안은 새로고침해도 다시 안 물어보고 고른 쪽으로 바로 들어간다. ═══ -->
 <div id="productChoiceGate">
   <div class="pc-gate-inner">
-    <div class="pc-gate-logo">Holo</div>
+    <div class="pc-gate-logo"><svg viewBox="0 0 100 100" width="54" height="54" xmlns="http://www.w3.org/2000/svg" aria-label="로드맵 독서실"><polygon points="50,4 92,27 92,73 50,96 8,73 8,27" fill="none" stroke="#17294F" stroke-width="4.5" stroke-linejoin="round"/><polygon points="50,15 82,32.5 82,67.5 50,85 18,67.5 18,32.5" fill="none" stroke="#17294F" stroke-width="1.2" stroke-linejoin="round" opacity="0.32"/><path d="M27 66C38 66 40 50 51 51C61 52 64 42 71 35" fill="none" stroke="#17294F" stroke-width="4.5" stroke-linecap="round"/><circle cx="27" cy="66" r="3.6" fill="#17294F"/><circle cx="72" cy="34" r="6.6" fill="#17294F"/><circle cx="72" cy="34" r="2.4" fill="#FFFFFF"/></svg></div>
     <div class="pc-gate-title">어디로 들어갈까요?</div>
     <div class="pc-gate-cards">
       <button type="button" class="pc-gate-card" onclick="chooseProduct('manager')">
-        <div class="pc-gate-card-name"><b>Road Map</b></div>
-        <div class="pc-gate-card-desc">학습 관리</div>
+        <div class="pc-gate-card-name"><b>Road MAP</b></div>
+        <div class="pc-gate-card-desc">학습 관리 특화 독서실</div>
       </button>
       <button type="button" class="pc-gate-card" onclick="chooseProduct('academy')">
-        <div class="pc-gate-card-name"><b>Study Addict</b></div>
-        <div class="pc-gate-card-desc">온라인 과외</div>
+        <div class="pc-gate-card-name"><b>학습 프로그램</b></div>
+        <div class="pc-gate-card-desc">로드맵 독서실</div>
       </button>
     </div>
     <p class="pc-gate-hint">언제든 화면 안의 전환 버튼으로 다른 쪽으로 넘어갈 수 있어요.</p>
@@ -7820,40 +7972,42 @@
 <!-- ═══ 상담 신청 모달 ═══ -->
 <div class="apply-modal-overlay" id="applyModalOverlay" onclick="if(event.target===this) closeApplyModal()">
   <div class="apply-modal">
-    <h3 id="applyModalTitle">로드맵 학습 상담 신청하기</h3>
-    <div class="apply-sub">아래의 내용 입력 후 신청해주시면, 카카오톡으로 구체적인 절차 안내해 드리겠습니다.</div>
+    <h3 id="applyModalTitle">로드맵 학습 프로그램 신청하기</h3>
+    <div class="apply-sub">아래의 내용 입력 후 신청해주시면, 구체적인 절차 안내해 드리겠습니다.</div>
     <div class="apply-ai-recommend" id="applyAiRecommend" style="display:none">
       <span class="apply-ai-recommend-label">🤖 AI 홀로의 추천</span>
       <div class="apply-ai-recommend-body" id="applyAiRecommendBody"></div>
     </div>
     <form id="applyForm" onsubmit="submitApply(event)">
-      <div class="apply-field">
-        <label for="apply-name">학생 이름 <span class="apply-req">*</span></label>
-        <input type="text" id="apply-name" required autocomplete="name">
+      <div class="apply-step"><span>1</span>기본 정보</div>
+      <div class="apply-row">
+        <div class="apply-field"><label for="apply-name">학생 이름 <span class="apply-req">*</span></label><input type="text" id="apply-name" required autocomplete="name"></div>
+        <div class="apply-field"><label for="apply-school">학교 <span class="apply-req">*</span></label><input type="text" id="apply-school" required placeholder="예: OO고등학교"></div>
       </div>
-      <div class="apply-field">
-        <label for="apply-school">학교 및 학년 <span class="apply-req">*</span></label>
-        <input type="text" id="apply-school" required placeholder="예: OO고등학교 2학년">
+      <div class="apply-row">
+        <div class="apply-field"><label for="apply-grade">학년 <span class="apply-req">*</span></label><input type="text" id="apply-grade" required placeholder="예: 2학년"></div>
+        <div class="apply-field"><label for="apply-birth">생년월일 <span class="apply-req">*</span></label><input type="text" id="apply-birth" required placeholder="예: 2009-03-15" inputmode="numeric"></div>
       </div>
+      <div class="apply-row">
+        <div class="apply-field"><label for="apply-student-phone">학생 연락처 <span class="apply-req">*</span></label><input type="tel" id="apply-student-phone" required autocomplete="tel" placeholder="010-0000-0000"></div>
+        <div class="apply-field"><label for="apply-parent-phone">학부모 연락처 <span class="apply-req">*</span></label><input type="tel" id="apply-parent-phone" required placeholder="010-0000-0000"></div>
+      </div>
+      <div class="apply-step"><span>2</span>학습 프로그램 종류 및 비용 <em>(중복 선택 가능)</em></div>
       <div class="apply-field">
-        <label>원하는 학습 상담 종류 <span class="apply-req">*</span></label>
-        <div class="apply-checks" id="applyChecks">
-          <label class="apply-check"><input type="checkbox" name="apply-type" value="전반적인 학습 컨설팅 (1시간)"><span class="apply-check-box"></span>전반적인 학습 컨설팅 (1시간)</label>
-          <label class="apply-check"><input type="checkbox" name="apply-type" value="전반적인 학습 컨설팅 (2시간)"><span class="apply-check-box"></span>전반적인 학습 컨설팅 (2시간)</label>
-          <label class="apply-check"><input type="checkbox" name="apply-type" value="수학 과외 (1시간)"><span class="apply-check-box"></span>수학 과외 (1시간)</label>
-          <label class="apply-check"><input type="checkbox" name="apply-type" value="수학 과외 (2시간)"><span class="apply-check-box"></span>수학 과외 (2시간)</label>
-          <label class="apply-check"><input type="checkbox" name="apply-type" value="국어 과외 (1시간)"><span class="apply-check-box"></span>국어 과외 (1시간)</label>
-          <label class="apply-check"><input type="checkbox" name="apply-type" value="국어 과외 (2시간)"><span class="apply-check-box"></span>국어 과외 (2시간)</label>
+        <div class="apply-checks apply-progs" id="applyChecks">
+          <label class="apply-check apply-prog"><input type="checkbox" name="apply-type" value="학습 상담 90분 (1회, 5만원)"><span class="apply-check-box"></span><span class="apply-prog-t"><b>학습 상담</b><em>90분 · 1회</em></span><span class="apply-prog-p">5만원</span></label>
+          <label class="apply-check apply-prog"><input type="checkbox" name="apply-type" value="수학 클리닉 4주 8회 (주 2회, 1회 2시간, 65만원)"><span class="apply-check-box"></span><span class="apply-prog-t"><b>수학 클리닉</b><em>4주 · 8회 (주 2회, 1회 2시간)</em></span><span class="apply-prog-p">65만원</span></label>
+          <label class="apply-check apply-prog"><input type="checkbox" name="apply-type" value="수학 클리닉 4주 4회 (주 1회, 1회 2시간 30분, 41만원)"><span class="apply-check-box"></span><span class="apply-prog-t"><b>수학 클리닉</b><em>4주 · 4회 (주 1회, 1회 2시간 30분)</em></span><span class="apply-prog-p">41만원</span></label>
+          <label class="apply-check apply-prog"><input type="checkbox" name="apply-type" value="독해력 클리닉 4주 8회 (주 2회, 1회 2시간, 65만원)"><span class="apply-check-box"></span><span class="apply-prog-t"><b>국어 독해력 클리닉</b><em>4주 · 8회 (주 2회, 1회 2시간)</em></span><span class="apply-prog-p">65만원</span></label>
         </div>
       </div>
-      <div class="apply-field">
-        <label for="apply-student-phone">학생 전화번호 <span class="apply-req">*</span></label>
-        <input type="tel" id="apply-student-phone" required autocomplete="tel" placeholder="010-0000-0000">
-      </div>
-      <div class="apply-field">
-        <label for="apply-parent-phone">학부모님 전화번호 <span class="apply-req">*</span></label>
-        <input type="tel" id="apply-parent-phone" required autocomplete="tel" placeholder="010-0000-0000">
-      </div>
+      <div class="apply-step"><span>3</span>유의 사항 확인</div>
+      <ul class="apply-notice">
+        <li>공부에 열의가 없는 학생은 받지 않습니다.</li>
+        <li><em>숙제를 3회 이상 해오지 않을 시 수업은 자동으로 종료되며, 환불은 불가능합니다.</em></li>
+        <li>수업 직후, 오늘 수업에서 배운 내용을 총정리해서 제출해야 합니다. <em>이를 지키지 않을 시 수업은 자동으로 종료되며, 환불은 불가능합니다.</em></li>
+      </ul>
+      <label class="apply-agree"><input type="checkbox" id="apply-agree" required><span class="apply-check-box"></span>위 유의 사항을 모두 확인했습니다 <span class="apply-req">*</span></label>
       <div class="apply-actions">
         <button type="button" class="apply-cancel-btn" onclick="closeApplyModal()">취소</button>
         <button type="submit" class="apply-submit-btn" id="applySubmitBtn">신청하기</button>
@@ -7901,6 +8055,7 @@
       <button type="button" class="consult-nav-link" id="consultNav-purpose" onclick="go('consult-purpose')">운영 목적</button>
       <button type="button" class="consult-nav-link" id="consultNav-teachers" onclick="go('consult-teacher')">선생님 소개</button>
       <button type="button" class="consult-nav-link" id="consultNav-programs" onclick="go('consult-programs')">수업 안내</button>
+      <button type="button" class="consult-nav-link" id="consultNav-fee" onclick="go('consult-fee')">수업 비용 및 신청</button>
     </nav>
   </div>
 
@@ -8072,18 +8227,6 @@
         <div class="input-plus-wrap">
           <button type="button" class="input-plus-btn" id="inputPlusBtn-chat" onclick="toggleInputPlusMenu('chat')" aria-label="더보기">+</button>
           <div class="input-plus-menu" id="inputPlusMenu-chat">
-            <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('chat');openImportPanel('chat')">
-              <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
-              다른 AI와의 대화 내용 가져오기
-            </button>
-            <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('chat');openLectureImportPanel('chat')">
-              <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></span>
-              인강 Q&amp;A 내용 가져오기
-            </button>
-            <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('chat');openPhotoPanel('chat')">
-              <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a5 5 0 0 1-7.07-7.07l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95l-9.19 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span>
-              사진 첨부하기
-            </button>
             <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('chat');openFaqPanel('chat')">
               <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
               자주 하는 질문
@@ -8697,10 +8840,6 @@
         <button type="button" id="ssConfirmBtn" onclick="selfScoreConfirm()">점수 남기고 제출하기</button>
       </div>
     </div>
-  </div>
-  <!-- ─── 학습 성향 MBTI 검사 팝업 ─── -->
-  <div class="mbti-pop" id="mbtiPop" onclick="if(event.target===this)mbtiClose()">
-    <div class="mbti-card" id="mbtiCard"></div>
   </div>
   <!-- ─── 메모장(홈 도구 버튼): 자동 저장되는 간단한 메모 ─── -->
   <div class="memo-pop" id="memoPop" onclick="if(event.target===this)memoClose()">
@@ -10048,6 +10187,48 @@
     </div>
   </section>
 
+  <!-- ─── 수업 비용 및 신청 ─── -->
+  <section class="view dark-consult" id="view-consult-fee">
+    <div class="consult-page">
+      <div class="teacher-layout">
+        <div class="prog-side">
+        <nav class="teacher-sidebar">
+          <div class="ts-group"><button type="button" class="ts-link" id="feeLink-1" onclick="feeShow(1)">① 학습 상담</button></div>
+          <div class="ts-group"><button type="button" class="ts-link" id="feeLink-2" onclick="feeShow(2)">② 수학 클리닉</button></div>
+          <div class="ts-group"><button type="button" class="ts-link" id="feeLink-3" onclick="feeShow(3)">③ 국어 클리닉</button></div>
+          <div class="ts-group ts-group-last"><button type="button" class="ts-link on" id="feeLink-main" onclick="feeShow('main')">수업 비용 및 신청</button></div>
+        </nav>
+        </div>
+        <div class="teacher-content">
+        <div id="feeMain">
+      <div class="cd-page-head">
+        <div><h2>수업 비용 및 신청</h2></div>
+      </div>
+      <div class="split"></div>
+      <div class="fee-wrap">
+        <div class="fee-box">
+          <div class="fee-h">학습 프로그램 종류 및 비용</div>
+          <div class="fee-row"><div class="fee-t"><b>학습 상담</b><span>90분 · 1회</span></div><div class="fee-p">5만원</div></div>
+          <div class="fee-row"><div class="fee-t"><b>수학 클리닉</b><span>4주 · 8회 (주 2회, 1회 2시간)</span></div><div class="fee-p">65만원</div></div>
+          <div class="fee-row"><div class="fee-t"><b>수학 클리닉</b><span>4주 · 4회 (주 1회, 1회 2시간 30분)</span></div><div class="fee-p">41만원</div></div>
+          <div class="fee-row"><div class="fee-t"><b>국어 독해력 클리닉</b><span>4주 · 8회 (주 2회, 1회 2시간)</span></div><div class="fee-p">65만원</div></div>
+        </div>
+        <div class="fee-box">
+          <div class="fee-h">유의 사항</div>
+          <ul class="fee-notice">
+            <li>공부에 열의가 없는 학생은 받지 않습니다.</li>
+            <li><em>숙제를 3회 이상 해오지 않을 시 수업은 자동으로 종료되며, 환불은 불가능합니다.</em></li>
+            <li>수업 직후, 오늘 수업에서 배운 내용을 총정리해서 제출해야 합니다. <em>이를 지키지 않을 시 수업은 자동으로 종료되며, 환불은 불가능합니다.</em></li>
+          </ul>
+        </div>
+        <button type="button" class="fee-go" onclick="openApplyModal()">수업 신청하기 →</button>
+      </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ─── 상담 상세: 전반적인 학습 컨설팅 ─── -->
   <section class="view dark-consult" id="view-consult-1">
     <div class="consult-page">
@@ -10056,9 +10237,6 @@
         <div>
           <h2><span class="subj-tag lg">컨설팅</span>학습 상담</h2>
         </div>
-        <button type="button" class="cd-apply-btn" onclick="openApplyModal('전반적인 학습 컨설팅')">
-          학습 상담 신청하기 <span class="cd-apply-arw">→</span>
-        </button>
       </div>
       <div class="split"></div>
       <div class="cd-promo">
@@ -10349,14 +10527,43 @@
     <div class="consult-page">
       <!-- 위쪽: 왼쪽 = 선생님 소개, 오른쪽 = 학습 성향 MBTI 버튼 + 공부중독 AI 챗봇 / 아래: 목차(스크롤하면 하나씩 나타나는 내용) -->
       <div class="ch2-hero">
-        <div class="ch2-left" aria-hidden="true"></div>
+        <div class="ch2-left">
+          <div class="pcar" id="pcar">
+            <p class="pcar-lead"><span class="pl-1">수업은 일주일에 두 번,</span><span class="pl-2">공부 검사는 독서실에서 <u>매일</u> 합니다.</span></p>
+            <div class="pcar-stage" id="pcarStage">
+              <article class="pcar-card pc-ivory">
+                <span class="pc-kicker">과외 + 관리형 독서실</span>
+                <h4>과외 따로,<br>독서실 따로?</h4>
+                <p class="pc-sub">둘의 아쉬운 점은 없애고<br>장점만 합쳤습니다.</p>
+                <ul class="pc-list"><li>주 2회 1:1 대면 수업</li><li>매일 독서실에서 점검</li></ul>
+                <button type="button" class="pcar-btn" onclick="go('consult-programs');progShowSection('intro')">무엇이 다른지 보기 &rarr;</button>
+              </article>
+              <article class="pcar-card pc-navy">
+                <span class="pc-kicker">수업 끝나면 끝일까요?</span>
+                <h4>수업 후 1시간,<br>복습 확인까지</h4>
+                <p class="pc-sub">숙제를 했는지 안 했는지<br>매일 독서실에서 점검해요.</p>
+                <ul class="pc-list"><li>수업 직후 1시간 이내 총정리 복습</li><li>숙제 이행 독서실에서 매일 점검</li></ul>
+                <button type="button" class="pcar-btn" onclick="go('consult-programs');progShowSection('flow')">관리 과정 보기 &rarr;</button>
+              </article>
+              <article class="pcar-card pc-blue">
+                <span class="pc-kicker">어떤 수업이 맞을지 모르겠다면</span>
+                <h4>상담 문의부터<br>남겨 주세요</h4>
+                <p class="pc-sub">학생에게 맞는 수업을<br>찾아드립니다.</p>
+                <ul class="pc-list"><li>학습 상담</li><li>수학 클리닉</li><li>국어 독해력 클리닉</li></ul>
+                <button type="button" class="pcar-btn" onclick="go('consult-inquiry')">상담 문의하기 &rarr;</button>
+              </article>
+              <button type="button" class="pcar-arrow pcar-prev" id="pcarPrev" aria-label="이전 포스터">&#8249;</button>
+              <button type="button" class="pcar-arrow pcar-next" id="pcarNext" aria-label="다음 포스터">&#8250;</button>
+            </div>
+          </div>
+        </div>
         <div class="ch2-side">
           <div class="ch2-row2">
           <button type="button" class="ch2-mbti ch2-inq" onclick="go('consult-inquiry')">
             <span class="ch2-mbti-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5 8.5 8.5 0 0 1 8.7 3.9 8.4 8.4 0 0 1 12.5 3H13a8.5 8.5 0 0 1 8 8z"/></svg>
             </span>
-            <span class="ch2-mbti-text"><b>상담 문의하기</b></span>
+            <span class="ch2-mbti-text"><b>상담 문의하기</b><span>적합한 수업을 찾아드립니다</span></span>
           </button>
           <button type="button" class="ch2-mbti" onclick="mbtiOpen()">
             <span class="ch2-mbti-ico" aria-hidden="true">
@@ -10374,9 +10581,9 @@
               </div>
               <div class="chat-wrap" id="chat-consult"></div>
               <div class="ch2-chips" id="ch2Chips">
-                <button type="button" onclick="send('consult', this.textContent)">성적이 안 오르는 이유가 궁금해요</button>
-                <button type="button" onclick="send('consult', this.textContent)">나에게 맞는 수업을 추천해 주세요</button>
-                <button type="button" onclick="send('consult', this.textContent)">공부 계획이 자꾸 무너져요</button>
+                <button type="button" onclick="send('consult', this.textContent)">성적이 안 올라요</button>
+                <button type="button" onclick="send('consult', this.textContent)">어떤 수업이 맞을까요?</button>
+                <button type="button" onclick="send('consult', this.textContent)">공부 방법이 막막해요</button>
               </div>
               <div class="input-zone">
                 <div class="input-box">
@@ -10413,7 +10620,8 @@
         <nav class="teacher-sidebar">
           <div class="ts-group"><button type="button" class="ts-link on" id="progLink-intro" onclick="progShowSection('intro')">프로그램 소개</button></div>
           <div class="ts-group"><button type="button" class="ts-link" id="progLink-flow" onclick="progShowSection('flow')">수업 진행 과정</button></div>
-          <div class="ts-group"><button type="button" class="ts-link" id="progLink-programs" onclick="progShowSection('programs')">수업 프로그램</button></div>
+          <div class="ts-group"><button type="button" class="ts-link" id="progLink-programs" onclick="progShowSection('programs')">수업 프로그램</button>
+          </div>
           <div class="ts-group ts-group-last"><button type="button" class="ts-link" id="progLink-notice" onclick="progShowSection('notice')">유의 사항</button></div>
         </nav>
           <div class="prog-ask">
@@ -10423,9 +10631,10 @@
         </div>
         <div class="teacher-content">
         <div class="prog-sec" id="progSec-intro">
+        <h3 class="prog-top">최고의 1:1 수업을 제공합니다</h3>
         <div class="prog-merge">
         <div class="prog-merge-eq"><span><b>고퀄리티 과외</b><small>노베이스 출신<br>수능 상위 0.8% 선생님</small></span><i>+</i><span><b>관리형 독서실</b><small>로드맵의<br>철저한 학습 관리</small></span></div>
-        <p>단점은 없애고 <em class="pp-em">장점만</em> 합쳤습니다</p>
+        <p>과외와 독서실의 단점은 없애고 <em class="pp-em">장점만</em> 합쳤습니다</p>
       </div>
       <div class="prog-vs">
         <div class="prog-vs-box cut">
@@ -10537,6 +10746,19 @@
     </div>
   </section>
 
+  <!-- ─── 학습 성향 MBTI (홈의 "학습 성향 MBTI 검사하기" 버튼으로 오는 페이지 — 상담 문의 페이지처럼 로고 · 목차 없이 이 화면만) ─── -->
+  <section class="view dark-consult" id="view-consult-mbti">
+    <div class="consult-page">
+      <button type="button" class="cd-back-btn" onclick="goBack()">&larr; 이전으로</button>
+      <div class="cd-page-head">
+        <div>
+          <h2>학습 성향 MBTI</h2>
+        </div>
+      </div>
+      <div class="mbti-card" id="mbtiCard"></div>
+    </div>
+  </section>
+
   <!-- ─── 상담 문의 (홈의 "상담 문의하기" 버튼으로 오는 페이지) ─── -->
   <section class="view dark-consult" id="view-consult-inquiry">
     <div class="consult-page">
@@ -10552,7 +10774,11 @@
           <form class="inq-form" id="inqForm" onsubmit="submitInquiry(event)">
             <div class="inq-colL">
             <section class="inq-ch">
-              <h5 class="inq-ch-h"><i>1</i>학생 정보</h5>
+              <h5 class="inq-ch-h"><i>1</i>가장 고민되는 점</h5>
+              <label class="inq-f"><textarea id="inq-topic" aria-label="가장 고민되는 점" rows="3" required placeholder="가장 고민되는 점을 먼저 적어 주세요 (예: 열심히 하는데 수학 성적이 안 올라요)"></textarea></label>
+            </section>
+            <section class="inq-ch">
+              <h5 class="inq-ch-h"><i>2</i>학생 정보</h5>
               <div class="inq-grid2">
                 <label class="inq-f"><span>학생 이름</span><input type="text" id="inq-name" required autocomplete="name"></label>
                 <label class="inq-f"><span>학교</span><input type="text" id="inq-school" required></label>
@@ -10561,7 +10787,7 @@
               </div>
             </section>
             <section class="inq-ch">
-              <h5 class="inq-ch-h"><i>2</i>연락 정보</h5>
+              <h5 class="inq-ch-h"><i>3</i>연락 정보</h5>
               <div class="inq-grid2 inq-contact">
                 <label class="inq-f"><span>학생 연락처</span><input type="tel" id="inq-sphone" required autocomplete="tel" placeholder="010-0000-0000"></label>
                 <label class="inq-f"><span>학부모 연락처</span><input type="tel" id="inq-pphone" required placeholder="010-0000-0000"></label>
@@ -10573,10 +10799,6 @@
               </div>
             </div>
               </div>
-            </section>
-            <section class="inq-ch">
-              <h5 class="inq-ch-h"><i>3</i>상담 주제</h5>
-              <label class="inq-f"><textarea id="inq-topic" aria-label="원하는 상담 주제" rows="1" required placeholder="상담받고 싶은 내용을 자유롭게 적어 주세요"></textarea></label>
             </section>
             </div>
             <div class="inq-colR">
@@ -10635,22 +10857,18 @@
       <button type="button" class="cd-back-btn" onclick="go('consult-programs')">&larr; 이전으로</button>
       <div class="cd-page-head">
         <div>
-          <h2><span class="subj-tag lg">수학</span>문제 풀이 전략 클리닉</h2>
+          <h2><span class="subj-tag lg">수학</span>문제 풀이 전략 클리닉<small class="cd-scope">과외 범위: 대수, 미적분I</small></h2>
         </div>
-        <button type="button" class="cd-apply-btn" onclick="openApplyModal('수학 과외')">
-          문제 풀이 전략 클리닉 신청하기 <span class="cd-apply-arw">→</span>
-        </button>
       </div>
       <div class="split"></div>
       <div class="cd-promo">
         <div class="cd-promo-head"><span class="ef-hl">전국 최상위권 선생님에게 문제 풀이 전략 클리닉을 받아보세요</span></div>
-        <div class="cd-promo-sub">과외 범위: 대수, 미적분I</div>
       </div>
       <div class="consult-panel on">
         <div class="cd-section">
           <div class="ci-reco-label">이런 학생이라면 꼭 신청하세요</div>
           <div class="reco-grid">
-            <div class="reco-card"><span class="reco-card-ico">✓</span>문제를 풀다 막혔을 때, 어떤 과정에서 왜 막혔는지 설명하지 못하는 학생</div>
+            <div class="reco-card"><span class="reco-card-ico">✓</span>문제를 풀 때, 어떤 과정에서 왜 막혔는지 설명하지 못하는 학생</div>
             <div class="reco-card"><span class="reco-card-ico">✓</span>비슷한 문제를 풀어봤는데 조건이 조금만 달라지면 다시 막히는 학생</div>
             <div class="reco-card"><span class="reco-card-ico">✓</span>개념을 공부했는데도 예제와 유형서 문제부터 잘 풀리지 않는 학생</div>
             <div class="reco-card"><span class="reco-card-ico">✓</span>문제를 많이 풀고 오답해도 수학 성적이 계속 정체되어 있는 학생</div>
@@ -10723,7 +10941,7 @@
                 <div class="cd-section">
                   <div class="gpt-lead">
                     <span class="ef-hl">문제 풀이 절차와 조건을 해석하는 체계</span> —
-                    이 두 가지를 만드는 것이 공부중독 문제 풀이 전략 클리닉의 목표입니다.
+                    이 두 가지를 만드는 것이 목표입니다.
                   </div>
                   <p class="gpt-p">문제를 많이 풀며 풀이를 경험적으로 쌓는 것이 아니라,<br>
                   <span class="gpt-quote">문제를 마주했을 때 무엇부터 확인하고, 조건을 어떻게 해석하며, 어떤 순서로 풀이를 전개해야 하는지를 명확한 언어와 체계로 배우게 됩니다.</span></p>
@@ -10746,16 +10964,12 @@
       <button type="button" class="cd-back-btn" onclick="go('consult-programs')">&larr; 이전으로</button>
       <div class="cd-page-head">
         <div>
-          <h2><span class="subj-tag lg">국어</span>독해력 클리닉</h2>
+          <h2><span class="subj-tag lg">국어</span>독해력 클리닉<small class="cd-scope">두루뭉실한 공부법에 지친 학생들 여기로 모이세요</small></h2>
         </div>
-        <button type="button" class="cd-apply-btn" onclick="openApplyModal('국어 과외')">
-          국어 독해력 클리닉 신청하기 <span class="cd-apply-arw">→</span>
-        </button>
       </div>
       <div class="split"></div>
       <div class="cd-promo">
         <div class="cd-promo-head"><span class="ef-hl">공감은 부수적인 것입니다. 문학을 비문학처럼 읽게 만들어 드립니다.</span></div>
-        <div class="cd-promo-sub">두루뭉실한 공부법에 지친 학생들 여기로 모이세요</div>
       </div>
       <div class="consult-panel on">
         <div class="cd-section">
@@ -10764,7 +10978,7 @@
             <div class="reco-card"><span class="reco-card-ico">✓</span>지문을 다 읽었는데 무슨 내용인지 정리가 되지 않는 학생</div>
             <div class="reco-card"><span class="reco-card-ico">✓</span>답을 맞혀도 왜 정답인지 명확하게 설명하지 못하는 학생</div>
             <div class="reco-card"><span class="reco-card-ico">✓</span>기출문제를 여러 번 풀었지만 실력이 늘고 있다는 느낌이 없는 학생</div>
-            <div class="reco-card"><span class="reco-card-ico">✓</span>시험 난이도에 따라 국어 성적이 크게 흔들리는 학생</div>
+            <div class="reco-card"><span class="reco-card-ico">✓</span>비문학, 문학을 독해하는 일관적인 방법이 없는 학생</div>
           </div>
         </div>
       </div>
@@ -10772,8 +10986,8 @@
       <div class="consult-panel on">
         <div class="cd-section">
           <div class="cd-pullquotes">
-            <div class="cd-pullquote">“<span class="ef-hl">문학과 비문학은 결국 똑같습니다.</span> 아직도 공감만 하면서 문학을 읽고 있다면 꼭 국어 독해력 클리닉을 신청하세요.”</div>
-            <div class="cd-pullquote">“글이란 화제어와 화제어 사이의 관계성으로 이루어진 덩어리입니다. <span class="ef-hl">관계성을 파악하는 방법을 알려드립니다.</span>”</div>
+            <div class="cd-pullquote">“문학과 비문학은 결국 똑같습니다. 어떤 글을 만나더라도 적용할 수 있는 <span class="ef-hl">하나의 일관된 독해 체계</span>를 알려드립니다.”</div>
+            <div class="cd-pullquote">“처음 보는 문제도 스스로 설명할 수 있는 <span class="ef-hl">선지 판단 체계</span>를 알려드립니다.”</div>
           </div>
         </div>
 
@@ -10850,7 +11064,7 @@
                 <div class="cd-section">
                   <div class="gpt-lead">
                     <span class="ef-hl">글을 읽는 체계와 선지를 판단하는 체계</span> —
-                    이 두 가지를 만드는 것이 공부중독 국어 독해력 클리닉의 목표입니다.
+                    이 두 가지를 만드는 것이 목표입니다.
                   </div>
                   <p class="gpt-p">국어를 잘하는 학생의 감각을 따라 하는 것이 아니라, 잘하는 학생이
                   <span class="gpt-quote">어떤 근거로 답을 결정하는지를 명확한 언어와 체계로 배우게 됩니다.</span></p>
@@ -11881,7 +12095,7 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", vocabpick: "어휘력 Test", vocab: "영어", consult: "학습 상담 안내", "consult-1": "학습 상담", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-column": "공부법 칼럼", "consult-home": "Holo Study", "consult-myclass": "나의 수업", "consult-programs": "수업 안내", "consult-inquiry": "상담 문의", "consult-purpose": "운영 목적", "consult-2": "문제 풀이 전략 클리닉", "consult-3": "국어 독해력 클리닉", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "공부 계획 세우기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "독서실 스케줄", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", studymusic: "공부 음악", community: "공부중독 커뮤니티", academyHome: "Academy", academyTeacher: "선생님 수업 현황", teacherHome: "내 학생 관리", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", vocabpick: "어휘력 Test", vocab: "영어", consult: "학습 상담 안내", "consult-1": "학습 상담", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-column": "공부법 칼럼", "consult-home": "Holo Study", "consult-myclass": "나의 수업", "consult-programs": "수업 안내", "consult-fee": "수업 비용 및 신청", "consult-inquiry": "상담 문의", "consult-mbti": "학습 성향 MBTI", "consult-purpose": "운영 목적", "consult-2": "문제 풀이 전략 클리닉", "consult-3": "국어 독해력 클리닉", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "공부 계획 세우기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "독서실 스케줄", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", studymusic: "공부 음악", community: "공부중독 커뮤니티", academyHome: "Academy", academyTeacher: "선생님 수업 현황", teacherHome: "내 학생 관리", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { mathexam: "exam", engexam: "exam" };
   // "← 이전으로"가 상단 흰색 바(topbar)의 제목 오른쪽에 뜨는 페이지들과, 각각이 돌아갈 곳.
   const BACK_TARGET = {
@@ -11889,7 +12103,7 @@
     "consult-5": "consult-home", "consult-6": "consult-home", "consult-7": "consult-home", "consult-8": "consult-home",
     "consult-teacher": "consult-home", "consult-korean": "consult-home", "consult-math": "consult-home", "consult-english": "consult-home",
     "consult-materials": "consult-home", "consult-community": "consult-home", "consult-myclass": "consult-home",
-    "consult-programs": "consult-home", "consult-4": "consult-programs", "consult-inquiry": "consult-home", "consult-purpose": "consult-home", "consult-column": "consult-home",
+    "consult-programs": "consult-home", "consult-4": "consult-programs", "consult-inquiry": "consult-home", "consult-mbti": "consult-home", "consult-purpose": "consult-home", "consult-column": "consult-home",
     vocabpick: "home", vocab: "vocabpick", todayrecord: "home", cumulative: "recordhub", reports: "recordhub", dayDetail: "cumulative",
     examSuneung: "examhub", examNaeshin: "examhub", mexlist: "examhub",
     mathexam: "examhub", engexam: "examhub",
@@ -12093,6 +12307,9 @@
   }
   let currentView = "home";
   function go(view) {
+    const dm = /^consult-([123])$/.exec(view); // 학습 상담 · 수학 · 국어 클리닉은 독립 페이지가 아니라 "수업 비용 및 신청" 목차의 오른쪽에 열린다
+    if (dm) { go("consult-fee"); feeShow(+dm[1]); return; }
+    if (view === "consult-fee" && typeof feeShow === "function") feeShow(1); // 처음에는 학습 상담이 먼저
     // "선생님 연결하기 / To Do List / 연결된 선생님" 아카데미 홈 페이지는 없앴다 — 아카데미(Study Addict)로 들어오는 모든 길은 학습 상담 홈(consult-home)으로 간다.
     if (view === "academyHome") view = "consult-home";
     if (view === "consult") view = "consult-teacher"; // 선생님 목록 페이지는 없앴다 — 선생님 소개는 바로 프로필 페이지
@@ -12117,10 +12334,10 @@
     // "나가기"로 나간다. 목차 중 현재 있는 곳과 관련된 항목만 강조 표시한다.
     const isConsultSection = document.getElementById("view-" + view).classList.contains("dark-consult");
     document.querySelector(".main > .topbar").style.display = isConsultSection ? "none" : "";
-    document.getElementById("consultHeader").classList.toggle("on", isConsultSection && view !== "consult-inquiry"); // 상담 문의 페이지는 로고 · 목차 없이 양식만
+    document.getElementById("consultHeader").classList.toggle("on", isConsultSection && view !== "consult-inquiry" && view !== "consult-mbti"); // 상담 문의 페이지는 로고 · 목차 없이 양식만
     if (isConsultSection) {
-      const activeNav = (view === "consult-home") ? "home" : (view === "consult-purpose") ? "purpose" : (view === "consult-inquiry") ? "inquiry" : (view === "consult-programs" || view === "consult-1" || view === "consult-2" || view === "consult-3" || view === "consult-4") ? "programs" : (view === "consult-column") ? "column" : "teachers";
-      ["home", "purpose", "teachers", "programs", "column", "inquiry"].forEach(n =>
+      const activeNav = (view === "consult-home") ? "home" : (view === "consult-purpose") ? "purpose" : (view === "consult-inquiry") ? "inquiry" : (view === "consult-programs" || view === "consult-1" || view === "consult-2" || view === "consult-3" || view === "consult-4") ? "programs" : (view === "consult-column") ? "column" : (view === "consult-fee") ? "fee" : "teachers";
+      ["home", "purpose", "teachers", "programs", "fee", "column", "inquiry"].forEach(n =>
         { const el = document.getElementById("consultNav-" + n); if (el) el.classList.toggle("on", n === activeNav); });
     }
     renderConsultDday(); // Manager 홈 상단(.home-brand-inner)에도 같은 .consult-dday가 있어서 매번 같이 갱신
@@ -12191,6 +12408,60 @@
     const mainEl = document.querySelector(".main"); if (mainEl) mainEl.scrollTop = 0;
   }
 
+  // ── 홈 왼쪽 홍보 포스터 회전목마: 마우스를 좌우로 움직이면 포스터들이 원을 그리며 돌고, 앞에 온 포스터가 크고 선명해진다 ──
+  (function pcarInit() {
+    const root = document.getElementById("pcar"), stage = document.getElementById("pcarStage");
+    if (!root || !stage) return;
+    const cards = Array.from(stage.querySelectorAll(".pcar-card")), N = cards.length;
+    const TAU = Math.PI * 2;
+    const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const STEP = TAU / N;
+    let angle = 0, target = 0, hovering = false, pauseUntil = 0;
+    // 화살표: 누를 때마다 다음/이전 포스터가 앞으로 온다
+    function stepBy(d) { target = Math.round(target / STEP) * STEP + d * STEP; pauseUntil = Date.now() + 6000; }
+    const pv = document.getElementById("pcarPrev"), nx = document.getElementById("pcarNext");
+    if (pv) pv.addEventListener("click", () => stepBy(-1));
+    if (nx) nx.addEventListener("click", () => stepBy(1));
+    // 휴대폰·태블릿: 옆으로 밀면(스와이프) 다음/이전 포스터로 넘어간다. 트랙패드의 좌우 스크롤도 같은 방식으로 동작한다.
+    let sx = null, sy = null, swiped = false;
+    stage.addEventListener("pointerdown", ev => { if (ev.pointerType === "mouse") return; sx = ev.clientX; sy = ev.clientY; swiped = false; });
+    stage.addEventListener("pointermove", ev => {
+      if (sx == null || swiped) return;
+      const dx = ev.clientX - sx, dy = ev.clientY - sy;
+      if (Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy) * 1.2) { swiped = true; stepBy(dx < 0 ? 1 : -1); }
+    });
+    ["pointerup", "pointercancel"].forEach(t => stage.addEventListener(t, () => { sx = null; }));
+    let wheelLock = 0;
+    stage.addEventListener("wheel", ev => {
+      if (Math.abs(ev.deltaX) > Math.abs(ev.deltaY) && Math.abs(ev.deltaX) > 12) {
+        ev.preventDefault();
+        if (Date.now() > wheelLock) { stepBy(ev.deltaX > 0 ? 1 : -1); wheelLock = Date.now() + 600; }
+      }
+    }, { passive: false });
+    stage.addEventListener("pointerenter", () => { hovering = true; });
+    stage.addEventListener("pointerleave", () => { hovering = false; });
+    function frame() {
+      const view = document.getElementById("view-consult-home");
+      if (view && view.classList.contains("on")) {
+        // 자동 회전 없음: 화살표 버튼이나 옆으로 밀기(스와이프·좌우 스크롤)를 할 때만 넘어간다
+        angle += (target - angle) * 0.05;
+        const w = stage.clientWidth || 560, cw = cards[0].offsetWidth || 210, R = Math.max(30, w / 2 - cw * 0.5 - 24); // 바깥쪽 포스터가 칸 밖으로 나가지 않도록
+        cards.forEach((c, i) => {
+          const th = i * TAU / N - angle;
+          const z = Math.cos(th), x = Math.sin(th) * R, t = (z + 1) / 2; // t: 0(뒤) ~ 1(앞)
+          const sc = 0.62 + 0.38 * t;
+          c.style.transform = "translateX(" + x.toFixed(1) + "px) translateY(" + ((1 - t) * -26).toFixed(1) + "px) scale(" + sc.toFixed(3) + ")";
+          c.style.opacity = (0.5 + 0.5 * t).toFixed(2);
+          c.style.filter = "blur(" + ((1 - t) * 3.2).toFixed(2) + "px)";
+          c.style.zIndex = String(Math.round(t * 100));
+          c.style.boxShadow = t > 0.85 ? "0 26px 56px rgba(13,33,85,0.28)" : "0 12px 28px rgba(13,33,85,0.12)";
+        });
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  })();
+
   // ══ 학습 성향 MBTI ══ — 12문항(4가지 성향 × 3문항). 재미로 보는 학습 성향 검사이고 진단이 아니다.
   const MBTI_AXES = [
     { a: { code: "P", name: "계획형" }, b: { code: "F", name: "몰입형" } },
@@ -12228,17 +12499,37 @@
     P: "계획이 틀어지면 쉽게 흔들릴 수 있어요", F: "계획이 없으면 공부량이 들쭉날쭉해질 수 있어요", S: "막혀도 혼자 오래 붙잡고 있을 수 있어요", T: "혼자 공부하는 시간이 부족해질 수 있어요",
     U: "이해에 시간을 많이 쓰면 문제 풀이량이 모자랄 수 있어요", R: "원리가 약하면 유형이 바뀔 때 흔들릴 수 있어요", C: "변화를 주지 않으면 지루해질 수 있어요", B: "몰아치기가 길어지면 쉽게 지칠 수 있어요",
   };
+  // 결과지 "자세히 보기" — 성향마다 (한 줄 요약 / 이런 모습이에요 3 / 이렇게 해 보세요 3)
+  const MBTI_DETAIL = {
+    P: { head: "계획이 있어야 마음이 놓여요", look: ["시작하기 전에 오늘 할 분량부터 정해요", "계획대로 흘러갈 때 안정감을 느껴요", "계획이 틀어지면 불안해서 다시 짜는 편이에요"], tip: ["계획에 여유 시간을 20% 남겨 두세요", "밀린 분량을 넣을 예비 시간을 따로 정해 두세요", "계획이 틀어지면 전부 다시 짜지 말고 오늘 분량만 조정하세요"] },
+    F: { head: "그날의 흐름과 컨디션에 맞출 때 잘돼요", look: ["일단 앉고, 그날의 기분과 흐름대로 시작해요", "몰입하면 시간 가는 줄 몰라요", "계획이 틀어져도 크게 신경 쓰지 않아요"], tip: ["하루 최소 분량 한 가지만 정해 두세요", "공부 시간대를 고정하면 몰입이 더 쉬워져요", "주 1회는 이번 주 공부량을 점검해 보세요"] },
+    S: { head: "혼자 조용히 파고들 때 효율이 높아요", look: ["모르는 건 끝까지 혼자 찾아봐요", "배운 내용을 혼자 정리하며 내 것으로 만들어요", "조용한 환경에서 집중이 잘돼요"], tip: ["막히면 20~30분만 고민하고 질문하세요", "정리한 내용을 가끔 소리 내어 설명해 보세요", "혼자 푼 풀이가 맞는지 주 1회 점검받으세요"] },
+    T: { head: "설명하고 질문을 주고받을 때 오래 남아요", look: ["모르는 건 바로 물어보고 해결해요", "친구나 선생님께 설명하면서 확실히 알게 돼요", "같이 하면 동기부여가 잘돼요"], tip: ["혼자 풀어 보는 시간을 먼저 확보하세요", "질문하기 전에 어디서 막혔는지 한 줄로 적어 보세요", "배운 내용을 직접 설명해 보는 시간을 정해 두세요"] },
+    U: { head: "원리를 알아야 다음 단계로 넘어가요", look: ["공식과 개념이 왜 그런지 궁금해요", "틀린 문제는 원리부터 다시 봐요", "이해한 내용은 오래 기억에 남아요"], tip: ["개념 하나당 이해에 쓰는 시간 상한을 정하세요", "개념을 공부한 뒤에는 바로 문제로 확인하세요", "한 주에 풀 문제 수를 미리 정해 두세요"] },
+    R: { head: "많이 풀면서 감을 잡아요", look: ["일단 문제를 풀면서 익혀요", "틀린 문제는 비슷한 문제를 더 풀어요", "반복해서 쓰고 풀어야 기억에 남아요"], tip: ["틀린 문제는 왜 틀렸는지 한 줄로 적어 두세요", "유형이 바뀌면 원리 요약부터 다시 보세요", "오답은 주 1회 모아서 다시 풀어 보세요"] },
+    C: { head: "매일 조금씩 쌓는 리듬이 잘 맞아요", look: ["비슷한 시간에 공부하는 게 편해요", "시험 전에도 평소 리듬을 지켜요", "숙제와 과제는 미리미리 끝내요"], tip: ["같은 과목만 반복하면 지루하니 주 1회 변화를 주세요", "시험 2주 전부터는 분량을 조금 늘리세요", "쉬는 날에도 최소 분량은 유지하세요"] },
+    B: { head: "마감이 가까워질수록 집중이 올라가요", look: ["시험이 가까울수록 집중력이 확 올라가요", "숙제는 마감 직전에 몰아서 끝내요", "몰입하면 하루에 많이 해내요"], tip: ["주 단위 중간 마감을 만들어 몰아치기를 쪼개세요", "몰아친 다음 날은 가볍게 쉬어 주세요", "시험 3주 전부터 하루 분량을 정해 시작하세요"] },
+  };
+  function mbtiDetailHtml(res) {
+    const ul = arr => '<ul>' + arr.map(x => '<li>' + escapeHtml(x) + '</li>').join('') + '</ul>';
+    return '<div class="mbti-sec mbti-detail" id="mbtiDetail"><button type="button" class="mbti-d-toggle" onclick="this.parentNode.classList.toggle(\'open\')" aria-expanded="false"><span>내 공부 스타일 자세히 보기</span><i>&#9662;</i></button><div class="mbti-d-body">' + res.map((r, i) => {
+      const d = MBTI_DETAIL[r.code]; if (!d) return '';
+      return '<div class="mbti-d"><div class="mbti-d-h"><i>' + (i + 1) + '</i><b>' + escapeHtml(r.name) + '</b></div><div class="mbti-d-head">' + escapeHtml(d.head) + '</div>' +
+        '<div class="mbti-d-cols"><div><div class="mbti-d-l">이런 모습이에요</div>' + ul(d.look) + '</div><div><div class="mbti-d-l">이렇게 해 보세요</div>' + ul(d.tip) + '</div></div></div>';
+    }).join('') + '</div></div>';
+  }
   let mbtiIdx = 0, mbtiAns = [];
   function mbtiKey() { return "holoLearnMbti:" + (localStorage.getItem("holoStudentId") || "anon"); }
   function mbtiCard(html) { document.getElementById("mbtiCard").innerHTML = '<button type="button" class="mbti-x" onclick="mbtiClose()" aria-label="닫기">&times;</button>' + html; }
   function mbtiOpen() {
-    document.getElementById("mbtiPop").classList.add("on");
+    go("consult-mbti");
+    window.scrollTo(0, 0); const mm = document.querySelector(".main"); if (mm) mm.scrollTop = 0;
     let saved = null;
     try { saved = JSON.parse(localStorage.getItem(mbtiKey()) || "null"); } catch (e) {}
     if (saved && Array.isArray(saved.picks) && saved.picks.length === MBTI_QS.length) { mbtiAns = saved.picks; mbtiResult(false); }
     else mbtiIntro();
   }
-  function mbtiClose() { document.getElementById("mbtiPop").classList.remove("on"); }
+  function mbtiClose() { if (currentView === "consult-mbti") goBack(); }
   function mbtiIntro() {
     mbtiCard('<div class="mbti-eyebrow">LEARNING STYLE</div><h3 class="mbti-title">학습 성향 MBTI</h3>' +
       '<p class="mbti-sub">공부할 때의 나를 떠올리며 둘 중 더 가까운 쪽을 골라 주세요. 12문항이고 약 2분이면 끝나요.<br>정답은 없고, 재미로 보는 검사예요.</p>' +
@@ -12278,13 +12569,11 @@
       return '<div class="mbti-axis"><div class="mbti-axis-lab"><span>' + (pa >= pb ? '<b>' : '') + r.ax.a.name + ' ' + pa + '%' + (pa >= pb ? '</b>' : '') + '</span><span>' + (pb > pa ? '<b>' : '') + pb + '% ' + r.ax.b.name + (pb > pa ? '</b>' : '') + '</span></div>' +
         '<div class="mbti-axis-bar"><i style="width:' + pa + '%"></i></div></div>';
     }).join("");
-    mbtiCard('<div class="mbti-eyebrow">MY LEARNING STYLE</div>' +
-      '<div class="mbti-res-code">' + s.code + '</div>' +
-      '<div class="mbti-res-legend">' + res.map(r => { const en = MBTI_EN[r.code] || r.code; return '<span><b>' + en.charAt(0) + '</b>' + en.slice(1) + ' ' + escapeHtml(r.name) + '</span>'; }).join('') + '</div><div class="mbti-res-nick">' + escapeHtml(s.nick) + '</div>' +
-      '<p class="mbti-res-sum">' + res.map(r => escapeHtml(MBTI_LINE[r.code])).join(" ") + '</p>' + bars +
-      '<div class="mbti-two"><div><h4>이런 점이 힘이에요</h4><ul>' + top.map(r => '<li>' + escapeHtml(MBTI_STRONG[r.code]) + '</li>').join("") + '</ul></div>' +
+    mbtiCard('<div class="mbti-res-head"><div class="mbti-res-code">' + s.code + '</div><div class="mbti-res-nick">' + escapeHtml(s.nick) + '</div></div>' +
+      '<div class="mbti-sec mbti-axes">' + bars + '</div>' +
+      '<div class="mbti-sec mbti-two"><div><h4>이런 점이 힘이에요</h4><ul>' + top.map(r => '<li>' + escapeHtml(MBTI_STRONG[r.code]) + '</li>').join("") + '</ul></div>' +
       '<div><h4>이런 점은 조심해요</h4><ul>' + top.map(r => '<li>' + escapeHtml(MBTI_WATCH[r.code]) + '</li>').join("") + '</ul></div></div>' +
-      '<p class="mbti-note">재미로 보는 학습 성향 검사예요. 진단이 아니라 내 공부 방식을 돌아보는 참고용이에요.</p>' +
+      mbtiDetailHtml(res) +
       '<div class="mbti-actions"><button type="button" class="solid" onclick="mbtiAskChat()">이 결과로 학습 상담 AI에게 상담받기</button>' +
       '<button type="button" onclick="mbtiStart()">다시 검사하기</button><button type="button" onclick="mbtiClose()">닫기</button></div>');
   }
@@ -16031,11 +16320,44 @@
   });
   document.addEventListener("keydown", e => { if (e.key === "Escape") progVsClose(); });
   const PROG_SECS = ["intro", "flow", "programs", "notice"];
-  function progSetActive(k) { PROG_SECS.forEach(x => { const l = document.getElementById("progLink-" + x); if (l) l.classList.toggle("on", x === k); }); }
+  function progSetActive(k) { PROG_SECS.concat(["d1", "d2", "d3"]).forEach(x => { const l = document.getElementById("progLink-" + x); if (l) l.classList.toggle("on", x === k); }); }
+  // 학습 상담 · 수학 · 국어 클리닉 상세 화면(옛 독립 페이지)의 내용을 "수업 비용 및 신청" 페이지 오른쪽으로 옮겨 둔다
+  // 상세 화면 맨 위에 먼저 보여주는 핵심 3가지 — 어떤 경우에 필요한지 / 수업이 어떻게 진행되는지 / 무엇을 배우는지
+  const FEE_SUM = {
+    1: [["어떤 경우에 필요한가요?", ["열심히 하는데 성적이 오르지 않을 때", "과목별로 무엇부터 할지 모를 때", "공부 방향이 맞는지 점검받고 싶을 때", "재수 · 반수 · 늦게 시작해 전략이 필요할 때"]],
+        ["수업은 어떻게 진행되나요?", ["1회성 1:1 대면 상담 90분", "성적 · 습관 · 교재를 함께 진단", "과목별 공부 순서와 방식 정리"]],
+        ["무엇을 배울 수 있나요?", ["내 공부의 가장 큰 문제가 무엇인지", "무엇을 먼저 바꿔야 하는지", "과목별로 앞으로 어떻게 공부할지"]]],
+    2: [["어떤 경우에 필요한가요?", ["조건이 조금 달라지면 다시 막힐 때", "막혔을 때 왜 막혔는지 설명 못할 때", "일관된 체계 없이 행동강령만 계속 쌓일 때"]],
+        ["수업은 어떻게 진행되나요?", ["1:1 대면 수업 (대수, 미적분I)", "4주 <span class='fee-chip'>8회 (16시간)</span> 또는 <span class='fee-chip'>4회 (10시간)</span>", "수업 직후 복습 검사 · 매일 공부 현황 점검"]],
+        ["무엇을 배울 수 있나요?", ["모든 유형을 하나의 일관된 체계로 푸는 방법", "조건을 해석하는 일관적인 체계", "막힌 이유를 스스로 진단하는 힘"]]],
+    3: [["어떤 경우에 필요한가요?", ["비문학과 문학을 완전히 구분해서 공부하는 학생", "본인만의 독해 기준이 정립되지 않은 학생", "기출을 풀어도 실력이 안 느는 것 같을 때"]],
+        ["수업은 어떻게 진행되나요?", ["1:1 대면 수업 (독해법 + 선지 분석)", "4주 <span class='fee-chip'>8회 (16시간)</span> 또는 <span class='fee-chip'>4회 (10시간)</span>", "수업 직후 복습 검사 · 매일 공부 현황 점검"]],
+        ["무엇을 배울 수 있나요?", ["글을 읽는 체계 (화제어와 관계)", "선지를 판단하는 체계 (근거 중심)", "새 지문도 스스로 읽고 판단하는 힘"]]],
+  };
+  function feeSumHtml(n) {
+    const d = FEE_SUM[n]; if (!d) return "";
+    return '<div class="fee-sum">' + d.map((c, i) => '<div class="fee-sum-c"><div class="fee-sum-q"><i>' + (i + 1) + '</i>' + c[0] + '</div><ul>' + c[1].map(x => '<li>' + x + '</li>').join("") + '</ul></div>').join("") + '</div><div class="fee-sum-more">자세한 설명</div>';
+  }
+  (function feeDetailInit() {
+    const host = document.querySelector("#view-consult-fee .teacher-content"); if (!host) return;
+    [1, 2, 3].forEach(n => {
+      const page = document.querySelector("#view-consult-" + n + " .consult-page"); if (!page) return;
+      const box = document.createElement("div"); box.id = "feeDetail-" + n; box.className = "prog-detail"; box.style.display = "none";
+      Array.from(page.children).forEach(c => { if (!c.classList.contains("cd-back-btn")) box.appendChild(c); });
+      const promo = box.querySelector(".cd-promo"); const html = feeSumHtml(n);
+      if (html) { if (promo) promo.insertAdjacentHTML("afterend", html); else box.insertAdjacentHTML("afterbegin", html); }
+      host.appendChild(box);
+    });
+  })();
+  function feeShow(k) {
+    const main = document.getElementById("feeMain"); if (main) main.style.display = k === "main" ? "" : "none";
+    [1, 2, 3].forEach(i => { const d = document.getElementById("feeDetail-" + i); if (d) d.style.display = i === k ? "" : "none"; });
+    ["main", 1, 2, 3].forEach(x => { const l = document.getElementById("feeLink-" + x); if (l) l.classList.toggle("on", x === k); });
+    window.scrollTo(0, 0); const m = document.querySelector(".main"); if (m) m.scrollTop = 0; const v = document.getElementById("view-consult-fee"); if (v) v.scrollTop = 0;
+  }
   function progShowSection(k) {
     const el = document.getElementById("progSec-" + k); if (!el) return;
-    if (k === "intro") { window.scrollTo({ top: 0, behavior: "smooth" }); const m = document.querySelector(".main"); if (m) m.scrollTo({ top: 0, behavior: "smooth" }); const v = document.getElementById("view-consult-programs"); if (v) v.scrollTo({ top: 0, behavior: "smooth" }); }
-    else el.scrollIntoView({ behavior: "smooth", block: "start" });
+    el.scrollIntoView({ behavior: "smooth", block: "start" }); // 맨 위에는 수업 안내 포스터가 있어서, "프로그램 소개"도 그 섹션 위치로 이동
     progSetActive(k);
   }
   (function progSpyInit() {
@@ -18722,9 +19044,9 @@
     document.getElementById("applyStatusMsg").className = "apply-status-msg";
     document.getElementById("applySubmitBtn").disabled = false;
     document.getElementById("applySubmitBtn").textContent = "신청하기";
-    if (type) {
-      const exact = document.querySelector('input[name="apply-type"][value="' + type + ' (1시간)"]');
-      if (exact) exact.checked = true;
+    if (type) { // 상세 페이지의 신청 버튼: 해당 프로그램의 첫 번째 항목을 미리 체크
+      const first = Array.from(document.querySelectorAll('input[name="apply-type"]')).find(i => i.value.indexOf(type) === 0);
+      if (first) first.checked = true;
     }
     document.getElementById("applyModalOverlay").classList.add("on");
     loadConsultRecommendation();
@@ -18837,14 +19159,18 @@
     const msg = document.getElementById("applyStatusMsg");
     const checked = Array.from(document.querySelectorAll('input[name="apply-type"]:checked')).map(c => c.value);
     if (!checked.length) {
-      msg.textContent = "원하는 학습 상담 종류를 하나 이상 선택해주세요.";
+      msg.textContent = "학습 프로그램을 하나 이상 선택해주세요.";
       msg.className = "apply-status-msg error";
       return;
     }
     const data = {
       types: checked,
       name: document.getElementById("apply-name").value.trim(),
-      school: document.getElementById("apply-school").value.trim(),
+      school: document.getElementById("apply-school").value.trim() + " " + document.getElementById("apply-grade").value.trim(),
+      schoolName: document.getElementById("apply-school").value.trim(),
+      grade: document.getElementById("apply-grade").value.trim(),
+      birth: document.getElementById("apply-birth").value.trim(),
+      noticeAgreed: true,
       studentPhone: document.getElementById("apply-student-phone").value.trim(),
       parentPhone: document.getElementById("apply-parent-phone").value.trim(),
       status: "대기",
