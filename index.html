@@ -98,7 +98,7 @@
   .av-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
   /* 프로필 카드 + 닉네임 카드를 나란히(각각 폭의 절반씩) 놓는 행 — 예전에 프로필 카드
      혼자 420px를 다 쓰던 걸 반으로 줄이고, 남는 절반에 닉네임 카드를 배치한다. */
-  .mypage-top-row { display: flex; gap: 12px; max-width: 420px; align-items: stretch; }
+  .mypage-top-row { display: flex; gap: 12px; max-width: 420px; align-items: stretch; } /* 닉네임 카드를 없애서 프로필 카드 하나만 */
   .mypage-top-row .mypage-profile-card, .mypage-top-row .mypage-field-card {
     flex: 1 1 0; min-width: 0; max-width: none; margin-top: 0;
   }
@@ -196,39 +196,120 @@
   }
   .mypage-dday-del:hover { color: #B3261E; }
   .mypage-dday-empty { font-size: 0.78rem; color: var(--ink-soft); margin-top: 4px; }
+  /* 마이페이지: 카드를 여러 개 쌓지 않고, 하나의 흰 판 안에서 가는 선으로 구역만 나눈다 */
+  .mp-sheet { max-width: 460px; margin-top: 4px; background: var(--paper); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .mp-sheet .mypage-profile-card { border: none; border-radius: 0; background: none; padding: 22px 24px; gap: 18px; }
+  .mp-sheet .mypage-avatar { width: 56px; height: 56px; font-size: 1.25rem; }
+  .mp-sheet .mypage-name { font-size: 1.02rem; margin-bottom: 4px; }
+  .mp-sheet .mypage-school { font-size: 0.78rem; }
+  .mp-sheet .mypage-id { font-size: 0.74rem; }
+  .mp-dl { margin: 0; display: flex; flex-direction: column; gap: 3px; }
+  .mp-dl > div { display: flex; gap: 12px; font-size: 0.78rem; line-height: 1.5; }
+  .mp-dl dt { flex: none; width: 52px; color: var(--ink-soft); }
+  .mp-dl dd { margin: 0; color: var(--ink); font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mp-sec { padding: 20px 24px 18px; border-top: 1px solid var(--line); }
+  /* D-Day 구역: 옅은 바탕색과 위아래 선으로 다른 구역과 한눈에 구분 */
+  /* D-Day 구역: 색은 다른 구역과 같게(흰색), 왼쪽 남색 막대 + 굵은 제목으로 구분 */
+  .mp-dday { position: relative; background: none; border-top: 1px solid var(--line); padding: 22px 24px 24px; }
+  .mp-dday::before { content: ""; position: absolute; left: 0; top: 22px; width: 4px; height: 38px; background: #0D2155; border-radius: 0 4px 4px 0; }
+  .mp-dday .mp-sec-h { font-size: 0.92rem; font-weight: 800; }
+  .mp-sec-sub { display: block; margin-top: 3px; font-size: 0.7rem; font-weight: 500; color: var(--ink-soft); }
+  .mp-sec-h { font-size: 0.84rem; font-weight: 800; color: var(--ink); margin-bottom: 12px; }
+  .mp-sheet .mypage-field-row input[type="date"], .mp-sheet .mypage-field-row input[type="text"] { font-size: 0.8rem; padding: 8px 10px; border-radius: 8px; }
+  .mp-sheet .mypage-field-save-btn { font-size: 0.78rem; padding: 8px 14px; border-radius: 8px; }
+  .mp-sheet .mypage-dday-list { margin-top: 8px; }
+  .mp-logout { margin-left: auto; align-self: flex-start; flex: none; font-family: inherit; font-size: 0.76rem; font-weight: 600; color: var(--ink-soft); background: #fff; border: 1px solid var(--line-dark); border-radius: 999px; padding: 6px 14px; cursor: pointer; transition: color 0.15s, border-color 0.15s; }
+  .mp-logout:hover { color: var(--ink); border-color: #9FA3AE; }
+  /* 넓은 화면에서는 왼쪽(프로필 · D-Day)과 오른쪽(목표 · AI 질문 · 메뉴) 두 칸으로 나눠 세로로만 길어지지 않게 */
+  .mp-sheet.mp-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); max-width: 940px; }
+  .mp-two .mp-col { display: flex; flex-direction: column; min-width: 0; }
+  .mp-two .mp-col + .mp-col { border-left: 1px solid var(--line); }
+  .mp-two .mp-col > .mp-sec:first-child { border-top: none; }
+  .mp-two .mp-col:last-child .mp-legal { margin-top: auto; }
+  @media (max-width: 820px) { .mp-sheet.mp-two { grid-template-columns: 1fr; max-width: 460px; } .mp-two .mp-col + .mp-col { border-left: none; border-top: 1px solid var(--line); } }
+  /* 마이페이지 새 구성: 위에 "나"(큰 사진 · 이름 · 한 줄 소개), 왼쪽은 정보와 계정, 오른쪽은 나를 위한 설정(진행도 막대 포함) */
+  .mp-hero { display: flex; align-items: center; gap: 18px; padding: 26px 26px 24px; }
+  .mp-hero .mypage-avatar { width: 68px; height: 68px; font-size: 1.5rem; }
+  .mp-hero .mypage-avatar-edit-btn { width: 24px; height: 24px; right: -2px; bottom: -2px; }
+  .mp-hero .mypage-avatar-edit-btn svg { width: 12px; height: 12px; }
+  .mp-hero-text { min-width: 0; flex: 1; }
+  .mp-hero .mypage-name { font-size: 1.22rem; margin-bottom: 4px; letter-spacing: -0.02em; }
+  .mp-hero-sub { font-size: 0.8rem; color: var(--ink-soft); line-height: 1.5; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mp-hero .mp-logout { align-self: flex-start; }
+  .mp-dl > div { align-items: baseline; }
+  .mp-dl dt { width: 64px; }
+  .mp-usage .item { display: block; }
+  .mp-usage .item + .item { margin-top: 8px; }
+  .mp-usage .row { margin-bottom: 5px; }
+  .mp-meter { height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; }
+  .mp-meter i { display: block; height: 100%; border-radius: 999px; background: #0D2155; transition: width 0.4s; }
+  .mp-meter.full i { background: #B3261E; }
+  /* ───────── 마이페이지 (읽기 쉽게: 글씨는 크게, 보조 글씨는 진한 회색, 구역은 선이 아니라 여백과 카드로) ───────── */
+  .mpx { display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 12px; max-width: 760px; margin-top: 8px; align-items: start; }
+  .mpx-main { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .mpx-side { position: sticky; top: 20px; min-width: 0; }
+  .mpx-card { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .mpx-me { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .mpx-me .mypage-avatar-wrap { margin-bottom: 14px; }
+  .mpx-me .mypage-avatar { width: 60px; height: 60px; font-size: 1.35rem; }
+  .mpx-me .mypage-avatar-edit-btn { width: 22px; height: 22px; right: 0; bottom: 0; }
+  .mpx-me .mypage-avatar-edit-btn svg { width: 11px; height: 11px; }
+  .mpx-name { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); margin: 0 0 2px; white-space: normal; }
+  .mpx-sub { display: none; }
+  .mpx-dl { width: 100%; margin: 12px 0 0; padding-top: 12px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 7px; text-align: left; }
+  .mpx-dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .mpx-dl dt { flex: none; font-size: 0.74rem; color: #6B7280; }
+  .mpx-dl dd { margin: 0; font-size: 0.78rem; font-weight: 700; color: var(--ink); text-align: right; min-width: 0; overflow-wrap: anywhere; }
+  .mpx-actions { width: 100%; display: flex; flex-direction: column; gap: 4px; margin-top: 13px; }
+  .mpx-btn { font-family: inherit; font-size: 0.76rem; font-weight: 700; color: var(--ink); background: #fff; border: 1px solid var(--line-dark); border-radius: 9px; padding: 7px 10px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+  .mpx-btn:hover { background: var(--cream); border-color: #9FA3AE; }
+  .mpx-btn-ghost { color: #6B7280; border-color: transparent; background: none; font-weight: 600; }
+  .mpx-btn-ghost:hover { color: var(--ink); background: var(--cream); border-color: transparent; }
+  .mpx-me .mp-pw { width: 100%; padding: 16px 0 0; text-align: left; }
+  .mpx-me .mp-pw input { font-size: 0.76rem; padding: 7px 10px; border-radius: 10px; }
+  .mpx-me .mp-pw .mypage-field-save-btn { width: 100%; font-size: 0.76rem; padding: 8px; border-radius: 10px; }
+  .mpx-legal { display: flex; justify-content: center; gap: 10px; padding: 8px 0 0; font-size: 0.7rem; color: #6B7280; }
+  .mpx-legal a { color: #6B7280; text-decoration: none; }
+  .mpx-legal a:hover { color: var(--ink); text-decoration: underline; }
+  .mpx-h { margin: 0; font-size: 0.88rem; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); }
+  .mpx-p { margin: 2px 0 10px; font-size: 0.72rem; line-height: 1.5; color: #5B6270; }
+  .mpx .mypage-field-row { gap: 8px; }
+  .mpx .mypage-field-row input[type="date"], .mpx .mypage-field-row input[type="text"] { font-size: 0.78rem; padding: 7px 10px; border-radius: 8px; }
+  .mpx .mypage-field-save-btn { font-size: 0.76rem; font-weight: 700; padding: 7px 13px; border-radius: 8px; }
+  .mpx .mypage-field-status { font-size: 0.74rem; margin-top: 5px; }
+  .mpx .mypage-dday-list { margin-top: 10px; }
+  .mpx .mypage-dday-row { padding: 8px 4px; }
+  .mpx .mypage-dday-title { font-size: 0.82rem; }
+  .mpx .mypage-dday-date { font-size: 0.76rem; color: #5B6270; }
+  .mpx .mypage-dday-del { font-size: 0.9rem; padding: 4px 6px; }
+  .mpx .mypage-dday-empty { font-size: 0.74rem; color: #5B6270; }
+  .mpx .mp-usage { font-size: 0.8rem; }
+  .mpx .mp-usage .row span:first-child { color: #5B6270; font-size: 0.76rem; }
+  .mpx .mp-usage .row b { font-size: 0.78rem; }
+  .mpx .mp-meter { height: 8px; }
+  @media (max-width: 860px) { .mpx { grid-template-columns: 1fr; } .mpx-side { position: static; } .mpx .mypage-field-row { flex-wrap: wrap; } .mpx .mypage-field-row input { flex: 1 1 100%; } }
+  .mp-usage { display: flex; flex-direction: column; gap: 6px; font-size: 0.8rem; color: var(--ink); }
+  .mp-usage .row { display: flex; align-items: center; justify-content: space-between; }
+  .mp-usage .row span:first-child { color: var(--ink-soft); }
+  .mp-usage .row b { font-variant-numeric: tabular-nums; }
+  .mp-menu .mp-menu-btn { width: 100%; background: none; border: none; border-top: 1px solid var(--line); cursor: pointer; text-align: left; }
+  .mp-menu a.mypage-menu-link + .mp-menu-btn { border-top: 1px solid var(--line); }
+  .mp-pw { display: flex; flex-direction: column; gap: 8px; padding: 4px 24px 18px; }
+  .mp-pw[hidden] { display: none; }
+  .mp-pw input { font-family: inherit; font-size: 0.8rem; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); box-sizing: border-box; width: 100%; }
+  .mp-pw input:focus { outline: none; border-color: var(--green); }
+  .mp-pw .mypage-field-save-btn { align-self: flex-start; font-size: 0.78rem; padding: 8px 14px; border-radius: 8px; }
+  .mp-legal { display: flex; justify-content: flex-start; gap: 8px; padding: 12px 24px 16px; border-top: 1px solid var(--line); font-size: 0.7rem; color: var(--ink-soft); }
+  .mp-legal a { color: var(--ink-soft); text-decoration: none; }
+  .mp-legal a:hover { color: var(--ink); text-decoration: underline; }
+  .legal-page { max-width: 640px; }
+  .legal-page h4 { margin: 20px 0 6px; font-size: 0.9rem; font-weight: 800; color: var(--ink); }
+  .legal-page p, .legal-page li { font-size: 0.82rem; line-height: 1.75; color: var(--ink-soft); }
+  .legal-page ul { margin: 0; padding-left: 18px; }
+  .mp-menu { border-top: 1px solid var(--line); }
+  .mp-menu .mypage-menu-link { padding: 15px 24px; font-size: 0.86rem; }
+  .mp-menu .mypage-logout-btn { padding: 15px 24px; font-size: 0.86rem; border-top: none; }
 
-  /* ── 우리 독서실 랭킹 ── */
-  .ranking-desc { font-size: 0.8rem; color: var(--ink-soft); margin: 4px 0 16px; max-width: 480px; line-height: 1.5; }
-  .ranking-tabs { display: flex; gap: 8px; margin-bottom: 14px; }
-  .ranking-tab-btn {
-    font-family: inherit; font-size: 0.86rem; font-weight: 700; color: var(--ink-soft);
-    background: var(--cream); border: 1px solid var(--line); border-radius: 999px;
-    padding: 8px 18px; cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s;
-  }
-  .ranking-tab-btn:hover { border-color: var(--green); }
-  .ranking-tab-btn.active { background: var(--green-deep); color: #fff; border-color: var(--green-deep); }
-  .ranking-my-status { font-size: 0.8rem; font-weight: 600; color: var(--green-deep); margin-bottom: 12px; min-height: 1.2em; }
-  .ranking-list { display: flex; flex-direction: column; gap: 6px; max-width: 480px; }
-  .ranking-row {
-    display: flex; align-items: center; gap: 14px;
-    background: var(--paper); border: 1px solid var(--line); border-radius: 10px;
-    padding: 10px 16px;
-  }
-  /* "내 랭킹"(로그인한 학생 본인 줄)은 눈에 띄게 강조한다 — 굵은 초록 테두리 + 은은한 그림자 +
-     "나" 배지. */
-  .ranking-row.me {
-    border: 2px solid var(--green-deep); background: var(--green-soft);
-    box-shadow: 0 4px 14px rgba(10,26,68,0.16); padding: 9px 15px;
-  }
-  .ranking-row.me .ranking-rank, .ranking-row.me .ranking-nickname { color: var(--green-deep); }
-  .ranking-me-badge {
-    flex: none; font-size: 0.62rem; font-weight: 800; color: #fff; background: var(--green-deep);
-    border-radius: 999px; padding: 2px 8px; letter-spacing: 0.02em;
-  }
-  .ranking-rank { flex: none; width: 28px; font-size: 0.9rem; font-weight: 800; color: var(--ink-soft); text-align: center; }
-  .ranking-nickname { flex: 1; min-width: 0; font-size: 0.88rem; font-weight: 700; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .ranking-score { flex: none; font-size: 0.86rem; font-weight: 800; color: var(--green-deep); }
-  .ranking-empty { font-size: 0.82rem; color: var(--ink-soft); padding: 20px 0; text-align: center; }
 
   /* "학생 계정 관리" 등록 폼(#studentAddForm)만 다른 곳의 .apply-field보다 훨씬 작고 좁게 —
      한 줄에 아이디/비밀번호/학교/이름/생년월일/성별/버튼이 다 들어가는 좁은 툴바라서다. */
@@ -2256,7 +2337,12 @@
   .ch2-mbti.ch2-inq .ch2-mbti-ico, .ch2-mbti.ch2-inq .ch2-mbti-text b { color: #1B2440; }
   .ch2-mbti.ch2-inq .ch2-mbti-text span { color: rgba(27,36,64,0.78); }
   .ch2-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .ch2-row2 .ch2-mbti { padding: 12px 14px; gap: 10px; min-width: 0; }
+  .ch2-stack { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .ch2-stack .ch2-mini { flex: 1 1 0; padding: 4px 12px; gap: 8px; border-radius: 10px; }
+  .ch2-stack .ch2-mini .ch2-mbti-ico { width: 22px; height: 22px; }
+  .ch2-stack .ch2-mini .ch2-mbti-ico svg { width: 16px; height: 16px; }
+  .ch2-stack .ch2-mini .ch2-mbti-text b { font-size: 0.74rem; }
+  .ch2-row2 .ch2-mbti { padding: 7px 14px; gap: 10px; min-width: 0; }
   .ch2-row2 .ch2-mbti-ico { width: 30px; height: 30px; }
   .ch2-row2 .ch2-mbti-ico svg { width: 20px; height: 20px; }
   .ch2-row2 .ch2-mbti-text b { font-size: 0.86rem; }
@@ -5124,7 +5210,7 @@
   }
 
   /* ═══════════ 상담 안내 ═══════════ */
-  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3, #view-consult-5, #view-consult-6, #view-consult-7, #view-consult-8, #view-consult-teacher, #view-consult-korean, #view-consult-math, #view-consult-english, #view-consult-materials, #view-consult-community, #view-consult-home, #view-consult-myclass, #view-consult-programs, #view-consult-fee, #view-howto, #view-recordhub, #view-scheduleManage, #view-examhub, #view-examSuneung, #view-examNaeshin, #view-mockexam, #view-mexlist, #view-vocab { overflow-y: auto; }
+  #view-consult, #view-consult-1, #view-consult-2, #view-consult-3, #view-consult-5, #view-consult-6, #view-consult-7, #view-consult-8, #view-consult-teacher, #view-consult-korean, #view-consult-math, #view-consult-english, #view-consult-materials, #view-consult-community, #view-consult-home, #view-consult-myclass, #view-consult-programs, #view-consult-fee, #view-howto, #view-mypage, #view-privacy, #view-terms, #view-recordhub, #view-scheduleManage, #view-examhub, #view-examSuneung, #view-examNaeshin, #view-mockexam, #view-mexlist, #view-vocab { overflow-y: auto; }
   .consult-page {
     max-width: 1040px; width: 100%; margin: 0 auto;
     padding: 32px 24px 56px 24px;
@@ -6275,6 +6361,9 @@
   }
   .chip:hover { border-color: var(--line-dark); color: var(--ink); }
 
+  .chat-quick { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 0 0 8px; }
+  .chat-quick-btn { font-family: inherit; font-size: 0.76rem; font-weight: 700; color: var(--ink); background: #fff; border: 1px solid var(--line-dark); border-radius: 999px; padding: 6px 14px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+  .chat-quick-btn:hover { background: var(--cream); border-color: #9FA3AE; }
   .input-zone { background: var(--cream); padding: 10px 20px 22px 20px; flex: none; position: relative; }
   .input-plus-wrap { position: relative; flex: none; }
   .input-box .input-plus-btn {
@@ -8392,16 +8481,12 @@
       </div>
     </div>
     <div class="input-zone">
+      <div class="chat-quick">
+        <button type="button" class="chat-quick-btn" onclick="send('chat', this.textContent.trim())">열심히 하는데 성적이 안 올라요</button>
+        <button type="button" class="chat-quick-btn" onclick="send('chat', this.textContent.trim())">지금 공부 방향이 맞는지 모르겠어요</button>
+        <button type="button" class="chat-quick-btn" onclick="homePosterGo('consult-column')">선배들의 공부법 칼럼 구경하기</button>
+      </div>
       <div class="input-box">
-        <div class="input-plus-wrap">
-          <button type="button" class="input-plus-btn" id="inputPlusBtn-chat" onclick="toggleInputPlusMenu('chat')" aria-label="더보기">+</button>
-          <div class="input-plus-menu" id="inputPlusMenu-chat">
-            <button type="button" class="input-plus-item" onclick="closeInputPlusMenu('chat');openFaqPanel('chat')">
-              <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
-              자주 하는 질문
-            </button>
-          </div>
-        </div>
         <textarea id="q-chat" rows="1" placeholder="궁금한 것을 무엇이든 물어보세요" autocomplete="off"></textarea>
         <button onclick="send('chat')">보내기</button>
       </div>
@@ -8498,10 +8583,11 @@
         <button type="button" class="photo-panel-close" onclick="closeFaqPanel('chat')" aria-label="닫기">×</button>
       </div>
       <div class="faq-question-list">
-        <button type="button" class="faq-question-item" onclick="pickFaqQuestion('chat', this)">지금부터 뭐부터 시작해야 해요?</button>
-        <button type="button" class="faq-question-item" onclick="pickFaqQuestion('chat', this)">플래너 작성법이 궁금해요</button>
-        <button type="button" class="faq-question-item" onclick="pickFaqQuestion('chat', this)">수능 수학 어떻게 공부해요?</button>
-        <button type="button" class="faq-question-item" onclick="pickFaqQuestion('chat', this)">단어 암기는 어떻게 해요?</button>
+        <button type="button" class="faq-question-item" onclick="pickFaqQuestion('chat', this)">열심히 하는데 성적이 안 올라요</button>
+        <button type="button" class="faq-question-item" onclick="pickFaqQuestion('chat', this)">지금 공부 방향이 맞는지 모르겠어요</button>
+        <button type="button" class="faq-question-item" onclick="pickFaqQuestion('chat', this)">과목별로 무엇부터 어떻게 해야 할지 모르겠어요</button>
+        <button type="button" class="faq-question-item" onclick="pickFaqQuestion('chat', this)">계획을 세워도 자꾸 무너져요</button>
+        <button type="button" class="faq-question-item" onclick="pickFaqQuestion('chat', this)">슬럼프가 와서 공부가 손에 안 잡혀요</button>
       </div>
     </aside>
   </section>
@@ -10280,79 +10366,131 @@
     </div>
   </div>
 
-  <!-- ─── 우리 독서실 랭킹 ─── -->
-  <section class="view" id="view-ranking">
-    <div class="consult-page">
-      <span class="eyebrow">RANKING</span>
-      <h2>우리 독서실 랭킹</h2>
+  <!-- ─── 개인정보 처리방침 (마이페이지 아래 링크) — 시행 전에 전문가 검토 권장 ─── -->
+  <section class="view" id="view-privacy">
+    <div class="consult-page legal-page">
+      <h2>개인정보 처리방침</h2>
       <div class="split"></div>
-      <p class="ranking-desc">닉네임을 설정한 학생만 표시돼요(마이페이지에서 설정). 등록 학생 중 상위 50%까지만 순위가 나와요.</p>
-      <div class="ranking-tabs">
-        <button type="button" class="ranking-tab-btn active" id="rankingTabBtn-today" onclick="switchRankingTab('today')">오늘의 랭킹</button>
-        <button type="button" class="ranking-tab-btn" id="rankingTabBtn-week" onclick="switchRankingTab('week')">이번 주 랭킹</button>
-      </div>
-      <div class="ranking-my-status" id="rankingMyStatus"></div>
-      <div class="ranking-list" id="rankingList">
-        <div class="ranking-empty">불러오는 중...</div>
-      </div>
+      <p>로드맵 독서실 '학습 관리 시스템'(이하 "서비스")은 학생의 개인정보를 소중히 다루며, 아래와 같이 처리합니다.</p>
+      <h4>1. 수집하는 정보</h4>
+      <ul>
+        <li>가입 · 계정: 이름, 아이디, 비밀번호(암호화해서 저장), 학교, 학년, 생년월일, 성별, 소속(관), 프로필 사진(선택)</li>
+        <li>학습 기록: 학습 계획, 공부 일기, 자기평가 점수, 모의고사 · 내신 기록, AI와 나눈 대화, 스케줄, D-Day와 목표(선택)</li>
+        <li>상담 신청: 학생 · 학부모 연락처, 상담 내용</li>
+      </ul>
+      <h4>2. 이용 목적</h4>
+      <ul>
+        <li>학습 관리, 학습 분석지 제공, 학습 상담과 수업 안내</li>
+        <li>독서실 이용 관리와 공지, 문의 응대</li>
+      </ul>
+      <h4>3. 보유 기간</h4>
+      <p>서비스 이용 기간 동안 보관하며, 계정이 삭제되면 학생 정보와 대화 기록을 함께 삭제합니다. 법령에 따라 보관해야 하는 정보는 해당 기간 동안 보관합니다.</p>
+      <h4>4. 처리 위탁과 외부 서비스</h4>
+      <ul>
+        <li>데이터 저장: Google Firebase(클라우드 저장소)</li>
+        <li>서버 처리와 기록 저장: Val Town</li>
+        <li>AI 답변 생성: Anthropic(질문과 대화 내용이 답변을 만들기 위해 전송됩니다)</li>
+      </ul>
+      <h4>5. 이용자의 권리</h4>
+      <p>학생과 보호자는 개인정보의 열람, 정정, 삭제를 요청할 수 있습니다. 14세 미만 학생의 정보는 법정대리인의 동의를 받아 처리합니다. 요청은 독서실 관리자에게 해 주세요.</p>
+      <h4>6. 안전성 확보 조치</h4>
+      <p>비밀번호는 암호화해서 저장하고, 본인만 자신의 기록을 볼 수 있도록 로그인 확인을 거칩니다.</p>
+      <h4>7. 문의</h4>
+      <p>개인정보에 관한 문의는 로드맵 독서실 관리자에게 해 주세요.</p>
+    </div>
+  </section>
+
+  <!-- ─── 이용약관 (마이페이지 아래 링크) — 시행 전에 전문가 검토 권장 ─── -->
+  <section class="view" id="view-terms">
+    <div class="consult-page legal-page">
+      <h2>이용약관</h2>
+      <div class="split"></div>
+      <h4>1. 서비스</h4>
+      <p>로드맵 독서실의 학습 관리 시스템은 학습 계획 · 기록, AI 학습 상담, 분석지 등을 제공합니다. 서비스는 로드맵 독서실 이용 학생을 위한 것입니다.</p>
+      <h4>2. 계정</h4>
+      <p>학생은 본인의 계정을 직접 관리하고 비밀번호를 타인에게 알려 주지 않습니다. 계정 정보를 타인이 사용해 생긴 문제는 본인 책임입니다.</p>
+      <h4>3. AI 답변</h4>
+      <p>AI의 답변은 학습 참고용이며, 입시 결과나 성적 향상을 보장하지 않습니다. 중요한 결정은 선생님과 상의해 주세요. 서비스 안정을 위해 AI 질문에는 하루 사용 횟수 제한이 있습니다.</p>
+      <h4>4. 이용자의 의무</h4>
+      <p>다른 사람의 정보를 도용하거나, 서비스를 방해하거나, 학습과 무관한 용도로 반복 사용하는 행위는 제한될 수 있습니다.</p>
+      <h4>5. 서비스 변경과 중단</h4>
+      <p>서비스는 운영상 필요에 따라 변경되거나 중단될 수 있으며, 중요한 변경은 미리 안내합니다.</p>
     </div>
   </section>
 
   <!-- ─── 마이페이지 ─── -->
   <section class="view" id="view-mypage">
     <div class="consult-page">
-      <span class="eyebrow">MY PAGE</span>
       <h2>마이페이지</h2>
       <div class="split"></div>
-      <div class="mypage-top-row">
-        <div class="mypage-profile-card">
-          <div class="mypage-avatar-wrap">
-            <div class="mypage-avatar" id="mypageAvatar">홀</div>
-            <label class="mypage-avatar-edit-btn" for="mypagePhotoInput" title="사진 변경" aria-label="사진 변경">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8a2 2 0 0 1 2-2h2l1.5-2h5L16 6h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><circle cx="12" cy="13" r="3.3"/></svg>
-            </label>
-            <input type="file" id="mypagePhotoInput" accept="image/*" style="display:none;" onchange="handleMypagePhotoChange(event)">
+      <div class="mpx">
+        <!-- 왼쪽: 나 -->
+        <aside class="mpx-side">
+          <div class="mpx-card mpx-me">
+            <div class="mypage-avatar-wrap">
+              <div class="mypage-avatar" id="mypageAvatar">홀</div>
+              <label class="mypage-avatar-edit-btn" for="mypagePhotoInput" title="사진 변경" aria-label="사진 변경">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8a2 2 0 0 1 2-2h2l1.5-2h5L16 6h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><circle cx="12" cy="13" r="3.3"/></svg>
+              </label>
+              <input type="file" id="mypagePhotoInput" accept="image/*" style="display:none;" onchange="handleMypagePhotoChange(event)">
+            </div>
+            <div class="mpx-name mypage-name" id="mypageName">-</div>
+            <div class="mpx-sub" id="mypageSub"></div>
+            <dl class="mpx-dl">
+              <div><dt>학교</dt><dd id="mypageSchool"></dd></div>
+              <div><dt>학년</dt><dd id="mypageGrade"></dd></div>
+              <div><dt>생년월일</dt><dd id="mypageBirth"></dd></div>
+              <div><dt>소속</dt><dd id="mypageBranch"></dd></div>
+              <div><dt>아이디</dt><dd id="mypageId"></dd></div>
+            </dl>
+            <div class="mpx-actions">
+              <button type="button" class="mpx-btn" onclick="mpTogglePw()">비밀번호 변경</button>
+              <button type="button" class="mpx-btn mpx-btn-ghost" onclick="studentLogout()">로그아웃</button>
+            </div>
+            <div class="mp-pw" id="mpPw" hidden>
+              <input type="password" id="mpPwOld" placeholder="현재 비밀번호" autocomplete="current-password">
+              <input type="password" id="mpPwNew" placeholder="새 비밀번호 (4자 이상)" autocomplete="new-password">
+              <input type="password" id="mpPwNew2" placeholder="새 비밀번호 확인" autocomplete="new-password">
+              <button type="button" class="mypage-field-save-btn" onclick="changeMypagePassword()">변경하기</button>
+              <div class="mypage-field-status" id="mpPwStatus"></div>
+            </div>
           </div>
-          <div class="mypage-info">
-            <div class="mypage-name" id="mypageName">-</div>
-            <div class="mypage-school" id="mypageSchool"></div>
-            <div class="mypage-id" id="mypageId"></div>
-          </div>
-        </div>
+          <div class="mpx-legal"><a href="#" onclick="go('privacy');return false;">개인정보 처리방침</a><span>·</span><a href="#" onclick="go('terms');return false;">이용약관</a></div>
+        </aside>
 
-        <div class="mypage-field-card">
-          <div class="mypage-field-head">닉네임 <span class="mypage-field-hint">설정 후 변경 불가능합니다.</span></div>
-          <div class="mypage-field-body">
-          <div class="mypage-field-row">
-            <input type="text" id="mypageNicknameInput" maxlength="12" placeholder="예: 열공왕">
-            <button type="button" class="mypage-field-save-btn" id="mypageNicknameSaveBtn" onclick="saveMypageNickname()">저장</button>
-          </div>
-          <div class="mypage-field-status" id="mypageNicknameStatus"></div>
-          </div>
+        <!-- 오른쪽: 나를 위한 설정 -->
+        <div class="mpx-main">
+          <section class="mpx-card">
+            <h3 class="mpx-h">D-Day 설정하기</h3>
+            <p class="mpx-p">등록하면 홈에서 확인할 수 있어요</p>
+            <div class="mypage-field-row">
+              <input type="text" id="mypageDdayTitleInput" maxlength="20" placeholder="제목 (예: 수능)">
+              <input type="date" id="mypageDdayDateInput">
+              <button type="button" class="mypage-field-save-btn" onclick="addMypageDday()">추가하기</button>
+            </div>
+            <div class="mypage-field-status" id="mypageDdayStatus"></div>
+            <div class="mypage-dday-list" id="mypageDdayList"></div>
+          </section>
+
+          <section class="mpx-card">
+            <h3 class="mpx-h">목표</h3>
+            <p class="mpx-p">정해 두면 AI 상담이 내 목표에 맞춰 답해요</p>
+            <div class="mypage-field-row">
+              <input type="text" id="mypageGoalUniv" maxlength="20" placeholder="목표 대학">
+              <input type="text" id="mypageGoalMajor" maxlength="20" placeholder="목표 학과">
+              <button type="button" class="mypage-field-save-btn" onclick="saveMypageGoal()">저장</button>
+            </div>
+            <div class="mypage-field-status" id="mypageGoalStatus"></div>
+          </section>
+
+          <section class="mpx-card">
+            <h3 class="mpx-h">오늘의 AI 질문</h3>
+            <p class="mpx-p">하루에 쓸 수 있는 횟수예요. 매일 자정에 다시 채워져요</p>
+            <div class="mp-usage" id="mypageUsage">불러오는 중…</div>
+          </section>
         </div>
       </div>
       <div class="mypage-photo-status" id="mypagePhotoStatus"></div>
-
-      <div class="mypage-field-card">
-        <div class="mypage-field-head">D-Day 설정하기</div>
-        <div class="mypage-field-body">
-        <div class="mypage-field-row">
-          <input type="text" id="mypageDdayTitleInput" maxlength="20" placeholder="제목 (예: 수능)">
-          <input type="date" id="mypageDdayDateInput">
-          <button type="button" class="mypage-field-save-btn" onclick="addMypageDday()">추가하기</button>
-        </div>
-        <div class="mypage-field-status" id="mypageDdayStatus"></div>
-        <div class="mypage-dday-list" id="mypageDdayList"></div>
-        </div>
-      </div>
-
-      <div class="mypage-field-card">
-        <div class="mypage-field-head">기타</div>
-        <div class="mypage-field-body mypage-menu-body">
-          <a href="#" class="mypage-menu-link" onclick="go('howto');return false;">학습 관리 시스템 사용 방법 <span class="arrow">›</span></a>
-          <button type="button" class="mypage-logout-btn" onclick="studentLogout()">로그아웃</button>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -10725,7 +10863,7 @@
     <div class="consult-page">
       <div class="cd-page-head">
         <div>
-          <h2>공부법 칼럼</h2>
+          <h2>선배들의 공부법 칼럼</h2>
         </div>
       </div>
       <div class="split"></div>
@@ -10845,13 +10983,20 @@
             </span>
             <span class="ch2-mbti-text"><b>상담 문의하기</b><span>적합한 수업을 찾아드립니다</span></span>
           </button>
-          <button type="button" class="ch2-mbti" onclick="mbtiOpen()">
+          <div class="ch2-stack">
+          <button type="button" class="ch2-mbti ch2-mini" onclick="mbtiOpen()">
             <span class="ch2-mbti-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5c1 1.3 2.2 2 3.5 2s2.5-.7 3.5-2"/><path d="M9 9.5h.01M15 9.5h.01"/></svg>
             </span>
             <span class="ch2-mbti-text"><b>학습 성향 MBTI 검사하기</b></span>
-            <span class="ch2-mbti-go">검사하기 →</span>
           </button>
+          <button type="button" class="ch2-mbti ch2-mini" onclick="go('consult-column')">
+            <span class="ch2-mbti-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5v-13z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5v-13z"/></svg>
+            </span>
+            <span class="ch2-mbti-text"><b>선배들의 공부법 칼럼</b></span>
+          </button>
+          </div>
           </div>
           <section class="ch2-chat">
             <div class="record-chat-pane ln-chat">
@@ -11872,6 +12017,9 @@
               <button class="admin-nav-item" type="button" onclick="showAdminPanel('profiles', this)">
                 <span class="admin-nav-ico">📣</span> 선생님 소개 페이지
               </button>
+              <button class="admin-nav-item" type="button" onclick="previewHowto()">
+                <span class="admin-nav-ico">📖</span> 학습 관리 시스템 사용 방법
+              </button>
               <button class="admin-nav-item" type="button" onclick="previewLegacyAcademy()">
                 <span class="admin-nav-ico">🗂️</span> Academy(구) 미리보기
               </button>
@@ -12380,7 +12528,7 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", vocabpick: "어휘력 Test", vocab: "영어", consult: "학습 상담 안내", "consult-1": "공부 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-column": "공부법 칼럼", "consult-home": "Holo Study", "consult-myclass": "나의 수업", "consult-programs": "수업 안내", "consult-fee": "수업 비용 및 신청", "consult-inquiry": "상담 문의", "consult-mbti": "학습 성향 MBTI", "consult-purpose": "운영 목적", "consult-2": "문제 풀이 전략 클리닉", "consult-3": "국어 독해력 클리닉", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "공부 계획 세우기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "독서실 스케줄", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", studymusic: "공부 음악", community: "공부중독 커뮤니티", academyHome: "Academy", academyTeacher: "선생님 수업 현황", teacherHome: "내 학생 관리", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", vocabpick: "어휘력 Test", vocab: "영어", consult: "학습 상담 안내", "consult-1": "공부 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-column": "선배들의 공부법 칼럼", "consult-home": "Holo Study", privacy: "개인정보 처리방침", terms: "이용약관", "consult-myclass": "나의 수업", "consult-programs": "수업 안내", "consult-fee": "수업 비용 및 신청", "consult-inquiry": "상담 문의", "consult-mbti": "학습 성향 MBTI", "consult-purpose": "운영 목적", "consult-2": "문제 풀이 전략 클리닉", "consult-3": "국어 독해력 클리닉", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "공부 계획 세우기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "독서실 스케줄", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", mypage: "마이페이지", studymusic: "공부 음악", community: "공부중독 커뮤니티", academyHome: "Academy", academyTeacher: "선생님 수업 현황", teacherHome: "내 학생 관리", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { mathexam: "exam", engexam: "exam" };
   // "← 이전으로"가 상단 흰색 바(topbar)의 제목 오른쪽에 뜨는 페이지들과, 각각이 돌아갈 곳.
   const BACK_TARGET = {
@@ -12393,7 +12541,7 @@
     examSuneung: "examhub", examNaeshin: "examhub", mexlist: "examhub",
     mathexam: "examhub", engexam: "examhub",
     recordhub: "home", plannerPage: "home", scheduleManage: "home", mockexam: "home",
-    examhub: "home", howto: "home", ranking: "home", mypage: "home", studymusic: "home", community: "home",
+    examhub: "home", privacy: "mypage", terms: "mypage", howto: "home", mypage: "home", studymusic: "home", community: "home",
     academyTeacher: "academyHome",
   };
   // "← 이전으로"는 항상 실제로 직전에 보던 페이지로 돌아간다(홈에서 바로 들어왔으면 홈, 시험 시뮬레이션을 거쳐 들어왔으면 그쪽).
@@ -12654,7 +12802,6 @@
     if (view === "examSuneung") initExamSuneung();
     if (view === "examNaeshin") initExamNaeshin();
     if (view === "mexlist") initMexlist();
-    if (view === "ranking") switchRankingTab("today"); // 매번 "오늘의 랭킹" 탭부터 새로 불러온다
     if (view === "academyHome") loadAcademyData();
     if (view === "teacherHome") tdShowTab("home"); // 선생님 화면은 사이드바가 있는 한 화면 — 들어오면 홈 페이지부터 보여 준다
   }
@@ -12880,9 +13027,9 @@
   const HOME_POSTERS = [
     // ── 지금 돌아가는 5장(선생님이 고른 것). 칼럼 포스터가 연달아 나오지 않게 사이사이에 끼웠다. 칼럼은 전용 페이지가 없어서 선생님 소개로 연결해 둔 상태 ──
     // tags: 오른쪽 아래에 붙는 작은 알약 문구(빈 자리를 채우는 용도, 선택). ※ 로드맵 독서실 프로그램의 실제 내용(기간 · 대상 · 구성)을 확정하면 그에 맞게 고칠 것
-    { head: "입시 관리형 로드맵 독서실", headQuiet: true, sub: "겨울방학 1:1 학습 프로그램", subAccent: true, tags: ["학습 컨설팅", "수학 클리닉", "문학 클리닉", "비문학 클리닉"], cta: "살펴보기", go: "consult-programs" },
-    { kicker: "공부법 칼럼", kickerLow: true, head: "수능 국어, 수학 *3등급*에서 *1등급*으로 올린 방법", cta: "읽어보기", go: "consult-teacher" },
-    { kicker: "양치기 공부의 함정", kickerLow: true, head: "*100000문제* 풀어도", headMid: true, sub: "수학 성적이 안 오르는 이유를 알려드립니다.", cta: "바로 알아보기", go: "consult-math" },
+    { head: "입시 관리형 로드맵 독서실", headQuiet: true, sub: "겨울방학 1:1 학습 프로그램", subAccent: true, tags: ["공부 컨설팅", "수학 클리닉", "국어 독해력 클리닉"], cta: "살펴보기", go: "consult-programs" },
+    { kicker: "공부법 칼럼", kickerLow: true, head: "수능 국어, 수학 *3등급*에서 *1등급*으로 올린 방법", cta: "읽어보기", go: "consult-column" },
+    { kicker: "양치기 공부의 함정", kickerLow: true, head: "*100000문제* 풀어도", headMid: true, sub: "수학 성적이 안 오르는 이유를 알려드립니다.", cta: "바로 알아보기", go: "consult-column" },
     { kicker: "겨울방학 또 흐지부지 보낼 건가요?", kickerLow: true, head: "실제로 이행 가능한 *공부 전략*을 세워드립니다", cta: "내 상황 상담해보기", go: "consult-teacher" },
     // ── 아래는 꺼 둔 후보(on:false를 지우면 돌아가는 포스터에 들어간다) ──
     { head: "만년 *3등급* → *1등급* 만들기", sub: "구체적인 방법 살펴보기", cta: "살펴보기", go: "consult-1", on: false },
@@ -12900,7 +13047,8 @@
   function homePosterGo(dest) {
     if (dest === "chat") { const t = document.getElementById("q-chat"); if (t) { t.scrollIntoView({ block: "center", behavior: "smooth" }); t.focus(); } return; }
     // 스터디 홀로(Manager)에서 아카데미(학습 상담 · 수업 프로그램 · 선생님 소개 쪽 페이지)로 넘어갈 때는 "Study Holo Academy" 전환 화면을 거친다
-    if (/^consult/.test(dest)) { showProductSplash("academy", "consult-home"); return; } // 포스터는 어디를 눌러도 Study Addict 홈으로
+    if (dest === "consult-column") { showProductSplash("academy", "consult-column"); return; } // 칼럼: 전환 화면을 거쳐 학습 프로그램의 "선배들의 공부법 칼럼" 페이지로
+    if (/^consult/.test(dest)) { showProductSplash("academy", "consult-home"); return; } // 그 밖의 포스터는 어디를 눌러도 Study Addict 홈으로
     go(dest);
   }
   function renderHomePosters() {
@@ -13150,84 +13298,6 @@
         el.classList.add("s" + Math.min(3, Math.round(avg)));
       })
       .catch(() => { /* 조회 실패 시 기본 표시(2.3점 예시)를 그대로 둔다 */ });
-  }
-
-  // ── "우리 독서실 랭킹" ──
-  // 학생 명단·닉네임은 Firestore에서, 점수는 valtown.ts(ranking_scores)에서 받아와 프론트에서
-  // 합친다. 닉네임을 설정한 학생만 표시하고, 전체 등록 학생 수 기준 상위 50%까지만 등수를 낸다
-  // (닉네임 없는 학생이 그 안에 있으면 그 자리는 그냥 건너뛴다 — 실명 노출 없이 익명 참여).
-  let rankingCurrentTab = "today";
-  function switchRankingTab(tab) {
-    rankingCurrentTab = tab;
-    const todayBtn = document.getElementById("rankingTabBtn-today");
-    const weekBtn = document.getElementById("rankingTabBtn-week");
-    if (todayBtn) todayBtn.classList.toggle("active", tab === "today");
-    if (weekBtn) weekBtn.classList.toggle("active", tab === "week");
-    loadRanking();
-  }
-  function renderRankingList(rows, myId) {
-    const listEl = document.getElementById("rankingList");
-    if (!listEl) return;
-    listEl.innerHTML = rows.length
-      ? rows.map(r =>
-          '<div class="ranking-row' + (r.id === myId ? ' me' : '') + '">' +
-            '<span class="ranking-rank">' + r.rank + '</span>' +
-            '<span class="ranking-nickname">' + escapeHtml(r.nickname) + '</span>' +
-            (r.id === myId ? '<span class="ranking-me-badge">나</span>' : '') +
-            '<span class="ranking-score">' + r.score + '점</span>' +
-          '</div>'
-        ).join("")
-      : '<div class="ranking-empty">아직 닉네임을 설정한 학생이 없어요.</div>';
-  }
-  function loadRanking() {
-    const listEl = document.getElementById("rankingList");
-    const myStatusEl = document.getElementById("rankingMyStatus");
-    if (!listEl) return;
-    listEl.innerHTML = '<div class="ranking-empty">불러오는 중...</div>';
-    if (myStatusEl) myStatusEl.textContent = "";
-    const myId = localStorage.getItem("holoStudentId");
-    db.collection("students").get().then(snap => {
-      const roster = [];
-      snap.forEach(doc => {
-        const d = doc.data() || {};
-        roster.push({ id: doc.id, nickname: (d.rankingNickname || "").trim() });
-      });
-      const totalCount = roster.length;
-      if (!totalCount) { listEl.innerHTML = '<div class="ranking-empty">등록된 학생이 없어요.</div>'; return; }
-      const ids = roster.map(r => r.id);
-      fetch(CHAT_API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "ranking_scores", period: rankingCurrentTab, date: getLocalDateKey(), studentIds: ids }),
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.error) throw new Error(data.error);
-          const scores = data.scores || {};
-          const combined = roster.map(r => ({ id: r.id, nickname: r.nickname, score: scores[r.id] || 0 }));
-          combined.sort((a, b) => b.score - a.score || (a.id < b.id ? -1 : 1)); // 동점이면 id 순으로 안정 정렬
-          const cutoff = Math.ceil(totalCount / 2);
-          const ranked = combined.slice(0, cutoff).map((r, i) => ({ ...r, rank: i + 1 }));
-          renderRankingList(ranked.filter(r => r.nickname), myId);
-          if (myStatusEl) {
-            const myIndex = combined.findIndex(r => r.id === myId);
-            if (myIndex === -1 || myIndex >= cutoff) {
-              myStatusEl.textContent = "아직 상위 50% 밖이에요 — 계획·일기·AI홀로를 꾸준히 채워보세요!";
-            } else if (!combined[myIndex].nickname) {
-              myStatusEl.textContent = "닉네임을 설정하면 랭킹에 표시돼요 → 마이페이지";
-            } else {
-              myStatusEl.textContent = "";
-            }
-          }
-        })
-        .catch(err => {
-          console.error(err);
-          listEl.innerHTML = '<div class="ranking-empty">랭킹을 불러오지 못했어요.</div>';
-        });
-    }).catch(err => {
-      console.error(err);
-      listEl.innerHTML = '<div class="ranking-empty">학생 목록을 불러오지 못했어요.</div>';
-    });
   }
 
   // ── "오늘의 학습 기록" 카드(계획/일기/AI 홀로 사용 상태 + 점수) — 이제 홈 화면에 있고,
@@ -19346,6 +19416,7 @@
           // 기본 정보를 되묻지 않고 답변에 참고하도록 매 요청에 함께 실어 보낸다.
           studentBranch: localStorage.getItem("holoStudentBranch") || null,
           studentGrade: localStorage.getItem("holoStudentGrade") || null,
+          studentGoal: [localStorage.getItem("holoStudentGoalUniv") || "", localStorage.getItem("holoStudentGoalMajor") || ""].filter(Boolean).join(" ") || null,
         }),
       })
         .then(res => res.json())
@@ -20259,6 +20330,12 @@
   }
   // ── 관리자: 기존(재구성 전) Academy 콘텐츠 미리보기 — 삭제하지 않고 그대로 두되, 학생들이
   // 더 이상 거쳐가지 않는 화면이라 관리자만 이 버튼으로 들어가 확인할 수 있게 한다.
+  // ── 관리자: "학습 관리 시스템 사용 방법" 안내 페이지 보기 (예전에는 학생 마이페이지에 있던 메뉴) ──
+  function previewHowto() {
+    document.documentElement.removeAttribute("data-boot");
+    document.body.classList.remove("is-admin");
+    go("howto");
+  }
   function previewLegacyAcademy() {
     document.documentElement.removeAttribute("data-boot");
     document.body.classList.remove("is-admin");
@@ -20962,6 +21039,9 @@
     localStorage.removeItem("holoStudentGender");
     localStorage.removeItem("holoStudentBranch");
     localStorage.removeItem("holoStudentGrade");
+    localStorage.removeItem("holoStudentBirth");
+    localStorage.removeItem("holoStudentGoalUniv");
+    localStorage.removeItem("holoStudentGoalMajor");
     localStorage.removeItem("holoStudentPhoto");
     localStorage.removeItem("holoStudentDdayList");
     localStorage.removeItem("holoStudentNickname");
@@ -26535,6 +26615,10 @@
       // 알아보고 참고하게 하는 용도(예: 스케줄 챗봇이 관 유형을 매번 안 묻도록).
       if (data && data.branch) localStorage.setItem("holoStudentBranch", data.branch);
       else localStorage.removeItem("holoStudentBranch");
+      if (data && data.goalUniv) localStorage.setItem("holoStudentGoalUniv", data.goalUniv); else localStorage.removeItem("holoStudentGoalUniv");
+      if (data && data.goalMajor) localStorage.setItem("holoStudentGoalMajor", data.goalMajor); else localStorage.removeItem("holoStudentGoalMajor");
+      if (data && data.birth) localStorage.setItem("holoStudentBirth", data.birth);
+      else localStorage.removeItem("holoStudentBirth");
       if (data && data.grade) localStorage.setItem("holoStudentGrade", data.grade);
       else localStorage.removeItem("holoStudentGrade");
       if (data && data.photoData) localStorage.setItem("holoStudentPhoto", data.photoData);
@@ -26583,21 +26667,86 @@
     const idEl = document.getElementById("mypageId");
     const avatarEl = document.getElementById("mypageAvatar");
     if (nameEl) nameEl.textContent = name || "학생";
-    if (schoolEl) schoolEl.textContent = school;
-    if (idEl) idEl.textContent = id ? "아이디: " + id : "";
+    // 이름 아래에 학교 · 학년 · 생년월일 · 아이디를 줄마다 보여준다(값이 없는 줄은 숨긴다)
+    const mpRows = [["mypageSchool", school], ["mypageGrade", localStorage.getItem("holoStudentGrade") || ""], ["mypageBirth", localStorage.getItem("holoStudentBirth") || ""], ["mypageId", id]];
+    mpRows.forEach(r => { const el = document.getElementById(r[0]); if (!el) return; el.textContent = r[1]; if (el.parentNode) el.parentNode.style.display = r[1] ? "" : "none"; });
     renderAvatarInto(avatarEl, name, photo);
     const statusEl = document.getElementById("mypagePhotoStatus");
     if (statusEl) { statusEl.textContent = ""; statusEl.className = "mypage-photo-status"; }
     renderMypageDdayList();
+    mpFillExtras();
     const ddayStatusEl = document.getElementById("mypageDdayStatus");
     if (ddayStatusEl) { ddayStatusEl.textContent = ""; ddayStatusEl.className = "mypage-field-status"; }
-    const savedNickname = localStorage.getItem("holoStudentNickname") || "";
-    const nicknameEl = document.getElementById("mypageNicknameInput");
-    const nicknameBtn = document.getElementById("mypageNicknameSaveBtn");
-    if (nicknameEl) { nicknameEl.value = savedNickname; nicknameEl.disabled = !!savedNickname; }
-    if (nicknameBtn) nicknameBtn.disabled = !!savedNickname;
-    const nicknameStatusEl = document.getElementById("mypageNicknameStatus");
-    if (nicknameStatusEl) { nicknameStatusEl.textContent = ""; nicknameStatusEl.className = "mypage-field-status"; }
+  }
+  // ── 마이페이지: 소속 · 목표 · 오늘 AI 질문 · 비밀번호 변경 ──
+  // 이름 아래 한 줄 소개: "용인백현고 · 고3 · 하이엔드관"
+  function mpRenderSub() {
+    const el = document.getElementById("mypageSub");
+    if (!el) return;
+    el.textContent = [localStorage.getItem("holoStudentSchool"), localStorage.getItem("holoStudentGrade"), localStorage.getItem("holoStudentBranch")].filter(Boolean).join(" · ");
+  }
+  function mpFillExtras() {
+    mpRenderSub();
+    const id = localStorage.getItem("holoStudentId") || "";
+    const branchEl = document.getElementById("mypageBranch");
+    const br = localStorage.getItem("holoStudentBranch") || "";
+    if (branchEl) { branchEl.textContent = br; if (branchEl.parentNode) branchEl.parentNode.style.display = br ? "" : "none"; }
+    const uEl = document.getElementById("mypageGoalUniv"), mEl = document.getElementById("mypageGoalMajor");
+    if (uEl) uEl.value = localStorage.getItem("holoStudentGoalUniv") || "";
+    if (mEl) mEl.value = localStorage.getItem("holoStudentGoalMajor") || "";
+    // 보안 개편 전에 로그인해 둔 기기에는 학년 · 생년월일 · 목표가 아직 저장돼 있지 않을 수 있어서, 한 번 읽어서 채운다
+    if (id && (!localStorage.getItem("holoStudentBirth") || !localStorage.getItem("holoStudentGrade") || !localStorage.getItem("holoStudentBranch"))) {
+      db.collection("students").doc(id).get().then(doc => {
+        if (!doc.exists) return;
+        storeStudentJoinYm(doc.data());
+        const mpRows = [["mypageSchool", localStorage.getItem("holoStudentSchool") || ""], ["mypageGrade", localStorage.getItem("holoStudentGrade") || ""], ["mypageBirth", localStorage.getItem("holoStudentBirth") || ""], ["mypageBranch", localStorage.getItem("holoStudentBranch") || ""], ["mypageId", id]];
+        mpRows.forEach(r => { const el = document.getElementById(r[0]); if (!el) return; el.textContent = r[1]; if (el.parentNode) el.parentNode.style.display = r[1] ? "" : "none"; });
+        mpRenderSub();
+        if (uEl && !uEl.value) uEl.value = localStorage.getItem("holoStudentGoalUniv") || "";
+        if (mEl && !mEl.value) mEl.value = localStorage.getItem("holoStudentGoalMajor") || "";
+      }).catch(() => {});
+    }
+    const usageEl = document.getElementById("mypageUsage");
+    if (usageEl) {
+      usageEl.textContent = "불러오는 중…";
+      authPost({ action: "auth_usage" }).then(res => {
+        if (!res || !res.ok) { usageEl.textContent = "지금은 확인할 수 없어요."; return; }
+        const names = { chat: "통합 질문", consult: "학습 상담 AI", plan: "공부 계획 챗봇", schedule: "독서실 스케줄 챗봇" };
+        usageEl.innerHTML = Object.keys(names).filter(k => res.usage && res.usage[k]).map(k => { const u = res.usage[k], pct = Math.min(100, Math.round(u.used / Math.max(1, u.limit) * 100)); return '<div class="item"><div class="row"><span>' + names[k] + '</span><b>' + u.used + ' / ' + u.limit + '회</b></div><div class="mp-meter' + (pct >= 100 ? ' full' : '') + '"><i style="width:' + pct + '%"></i></div></div>'; }).join("") || "-";
+      }).catch(() => { usageEl.textContent = "지금은 확인할 수 없어요."; });
+    }
+  }
+  function saveMypageGoal() {
+    const id = localStorage.getItem("holoStudentId");
+    const statusEl = document.getElementById("mypageGoalStatus");
+    const univ = document.getElementById("mypageGoalUniv").value.trim();
+    const major = document.getElementById("mypageGoalMajor").value.trim();
+    if (!id) return;
+    db.collection("students").doc(id).update({ goalUniv: univ, goalMajor: major }).then(() => {
+      if (univ) localStorage.setItem("holoStudentGoalUniv", univ); else localStorage.removeItem("holoStudentGoalUniv");
+      if (major) localStorage.setItem("holoStudentGoalMajor", major); else localStorage.removeItem("holoStudentGoalMajor");
+      if (statusEl) { statusEl.textContent = "저장했어요."; statusEl.className = "mypage-field-status success"; }
+    }).catch(err => {
+      console.error(err);
+      if (statusEl) { statusEl.textContent = "저장 중 오류가 발생했어요."; statusEl.className = "mypage-field-status error"; }
+    });
+  }
+  function mpTogglePw() {
+    const box = document.getElementById("mpPw");
+    if (box) box.hidden = !box.hidden;
+  }
+  function changeMypagePassword() {
+    const statusEl = document.getElementById("mpPwStatus");
+    const oldPw = document.getElementById("mpPwOld").value, newPw = document.getElementById("mpPwNew").value, newPw2 = document.getElementById("mpPwNew2").value;
+    const say = (t, ok) => { if (statusEl) { statusEl.textContent = t; statusEl.className = "mypage-field-status " + (ok ? "success" : "error"); } };
+    if (!oldPw || !newPw) { say("현재 비밀번호와 새 비밀번호를 입력해주세요.", false); return; }
+    if (newPw.length < 4) { say("새 비밀번호는 4자 이상이어야 해요.", false); return; }
+    if (newPw !== newPw2) { say("새 비밀번호가 서로 일치하지 않아요.", false); return; }
+    authPost({ action: "auth_change_password", oldPw: oldPw, newPw: newPw, token: localStorage.getItem("holoStudentToken") || "" }).then(res => {
+      if (!res || !res.ok) { say((res && res.error) || "변경하지 못했어요.", false); return; }
+      ["mpPwOld", "mpPwNew", "mpPwNew2"].forEach(i => { document.getElementById(i).value = ""; });
+      say("비밀번호를 바꿨어요.", true);
+    }).catch(() => say("변경 중 오류가 발생했어요.", false));
   }
   // 마이페이지 "D-Day 설정하기" — 최대 3개까지, 제목+날짜로 여러 개 등록할 수 있다.
   // 학생 문서(students/{id}.ddayList)에 배열로 저장하고, 캐시(holoStudentDdayList, JSON
@@ -26661,35 +26810,6 @@
     const statusEl = document.getElementById("mypageDdayStatus");
     saveMypageDdayList(list.slice(0, index).concat(list.slice(index + 1)), statusEl);
   }
-  // 마이페이지에서 "닉네임"을 저장하면 students/{id}.rankingNickname에 저장된다 — 이
-  // 값이 없는 학생은 "우리 독서실 랭킹"에 아예 표시되지 않는다(설정해야 참여하는 방식).
-  // 한 번 설정하면 그 뒤로는 바꿀 수 없다(고정 닉네임) — 저장에 성공하면 입력칸·버튼을
-  // 잠가서 다시 못 누르게 한다(initMypage()에서도 이미 설정돼 있으면 똑같이 잠근다).
-  function saveMypageNickname() {
-    const input = document.getElementById("mypageNicknameInput");
-    const btn = document.getElementById("mypageNicknameSaveBtn");
-    const statusEl = document.getElementById("mypageNicknameStatus");
-    const val = input ? input.value.trim() : "";
-    if (!val) {
-      if (statusEl) { statusEl.textContent = "닉네임을 입력해주세요."; statusEl.className = "mypage-field-status error"; }
-      return;
-    }
-    if (localStorage.getItem("holoStudentNickname")) {
-      if (statusEl) { statusEl.textContent = "이미 설정한 닉네임은 변경할 수 없어요."; statusEl.className = "mypage-field-status error"; }
-      return;
-    }
-    const id = localStorage.getItem("holoStudentId");
-    if (!id) return;
-    db.collection("students").doc(id).update({ rankingNickname: val }).then(() => {
-      localStorage.setItem("holoStudentNickname", val);
-      if (statusEl) { statusEl.textContent = ""; statusEl.className = "mypage-field-status"; }
-      if (input) input.disabled = true;
-      if (btn) btn.disabled = true;
-    }).catch(err => {
-      console.error(err);
-      if (statusEl) { statusEl.textContent = "저장 중 오류가 발생했어요."; statusEl.className = "mypage-field-status error"; }
-    });
-  }
   // 마이페이지에서 프로필 사진을 바꾸면, 별도 파일 저장소 없이 학생 문서(students/{id})
   // 안에 바로 넣을 수 있도록 브라우저에서 정사각형으로 잘라 작게 압축한 뒤 base64로 저장한다.
   function handleMypagePhotoChange(e) {
@@ -26744,7 +26864,7 @@
     const loginDate = localStorage.getItem("holoStudentLoginDate");
     return loginDate !== getCalendarDateKey();
   }
-  const STUDENT_LOCAL_KEYS = ["holoStudentId", "holoStudentPw", "holoStudentToken", "holoStudentJoinYm", "holoStudentJoinDate", "holoStudentName", "holoStudentSchool", "holoStudentGender", "holoStudentBranch", "holoStudentGrade", "holoStudentPhoto", "holoStudentDdayList", "holoStudentNickname", "holoStudentNicknameChangeCount", "holoStudentLoginDate", "holoActiveProduct"];
+  const STUDENT_LOCAL_KEYS = ["holoStudentId", "holoStudentPw", "holoStudentToken", "holoStudentJoinYm", "holoStudentJoinDate", "holoStudentName", "holoStudentSchool", "holoStudentGender", "holoStudentBranch", "holoStudentGrade", "holoStudentBirth", "holoStudentGoalUniv", "holoStudentGoalMajor", "holoStudentPhoto", "holoStudentDdayList", "holoStudentNickname", "holoStudentNicknameChangeCount", "holoStudentLoginDate", "holoActiveProduct"];
   function clearStudentLocal() { STUDENT_LOCAL_KEYS.forEach(k => localStorage.removeItem(k)); }
   function checkStudentSession() {
     const id = localStorage.getItem("holoStudentId");
