@@ -2222,6 +2222,7 @@
     transition: color 0.15s;
   }
   .consult-nav-link:hover, .consult-nav-link.on { color: var(--green-deep); }
+  .consult-nav-sep { width: 1px; height: 16px; background: #B9C0CE; flex: none; }
 
   /* ── 아카데미(Study Addict) 홈: 왼쪽 선생님 소개 / 오른쪽 학습 성향 MBTI 버튼 + 공부중독 AI 챗봇 / 아래 목차 + 스크롤하면 하나씩 나타나는 내용 ── */
   .ch2-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: stretch; }
@@ -2329,6 +2330,13 @@
   .pc-blue .pc-list li { color: #17294F; }
   .pc-blue .pc-list li::before { color: #0D2155; }
   .pc-blue .pcar-btn { background: #F0A04B; color: #1B2440; }
+  .pc-sand { background: #F6EBD3; color: #3A2F18; border: 1px solid #E8D9B5; }
+  .pc-sand .pc-kicker { color: #8A5A12; }
+  .pc-sand .pc-sub { color: #4A4030; }
+  .pc-sand .pc-list { border-top-color: #E0D1AC; }
+  .pc-sand .pc-list li { color: #3A2F18; }
+  .pc-sand .pc-list li::before { color: #8A5A12; }
+  .pc-sand .pcar-btn { background: #0D2155; color: #fff; }
   .pcar-arrow { position: absolute; top: 172px; z-index: 300; width: 24px; height: 24px; margin-top: -12px; border-radius: 50%; border: 1px solid var(--line, #d9dce4); background: #fff; color: #0D2155; font-size: 0.95rem; line-height: 1; padding: 0 0 2px; cursor: pointer; box-shadow: 0 2px 8px rgba(13,33,85,0.12); transition: background 0.15s, transform 0.15s; }
   .pcar-arrow:hover { background: #0D2155; color: #fff; }
   .pcar-prev { left: 22px; }
@@ -5771,7 +5779,7 @@
     padding: 28px 26px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.25);
   }
-  .apply-modal h3 { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 4px; }
+  .apply-modal h3 { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 18px; text-align: center; }
   .apply-modal .apply-sub { font-size: 0.82rem; color: var(--ink-soft); margin-bottom: 18px; word-break: keep-all; }
   .apply-ai-recommend {
     background: var(--green-soft); border: 1px solid #C9D2E6; border-radius: 10px;
@@ -5827,6 +5835,22 @@
   @media (max-width: 480px) { .apply-row { grid-template-columns: 1fr; gap: 0; } }
   .apply-checks.apply-progs { grid-template-columns: 1fr; }
   .apply-field .apply-check.apply-prog { justify-content: flex-start; padding: 12px 14px; }
+  .apply-pgroup + .apply-pgroup { margin-top: 14px; }
+  .apply-pgroup-t { font-size: 0.86rem; font-weight: 800; color: var(--ink); margin: 0 0 7px; }
+  /* 프로그램 선택 버튼: 글자에 딱 맞는 얇은 알약, 한 줄로 가로 나열 */
+  .apply-pcols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; align-items: start; }
+  .apply-pcols .apply-pgroup + .apply-pgroup { margin-top: 0; }
+  .apply-pgroup-row { display: flex; flex-wrap: wrap; gap: 5px; }
+  .apply-pcols .apply-pgroup-row { flex-direction: column; flex-wrap: nowrap; }
+  .apply-pcols .apply-pgroup-row .apply-prog { width: 100%; box-sizing: border-box; }
+  .apply-pcols .apply-pgroup-row .apply-prog-p { margin-left: auto; }
+  @media (max-width: 520px) { .apply-pcols { grid-template-columns: 1fr; gap: 12px; } }
+  .apply-field .apply-check.apply-prog { display: inline-flex; flex-direction: row; align-items: center; width: auto; gap: 6px; padding: 3px 10px 3px 8px; border-radius: 999px; white-space: nowrap; line-height: 1.2; }
+  .apply-pgroup-row .apply-prog .apply-check-box { width: 14px; height: 14px; }
+  .apply-pgroup-row .apply-prog-t { flex: none; flex-direction: row; align-items: baseline; gap: 6px; }
+  .apply-pgroup-row .apply-prog-t b { font-size: 0.72rem; }
+  .apply-pgroup-row .apply-prog-t em { font-size: 0.64rem; }
+  .apply-pgroup-row .apply-prog-p { align-self: center; font-size: 0.74rem; margin-left: 1px; padding-left: 7px; border-left: 1px solid #D5D2C6; }
   .apply-prog-t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
   .apply-prog-t b { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
   .apply-prog-t em { font-style: normal; font-size: 0.74rem; color: var(--ink-soft); font-weight: 500; }
@@ -5834,6 +5858,7 @@
   .apply-notice { margin: 0 0 10px; padding: 12px 14px 12px 28px; background: var(--cream); border: 1px solid var(--line-dark); border-radius: 8px; font-size: 0.78rem; line-height: 1.6; color: var(--ink); word-break: keep-all; }
   .apply-notice li + li { margin-top: 4px; }
   .apply-notice em { font-style: normal; font-weight: 800; color: #B3261E; }
+  .apply-agree.apply-agree-top { margin: 6px 0 6px; padding: 10px 12px; background: var(--cream); border: 1px solid var(--line-dark); border-radius: 10px; font-size: 0.8rem; line-height: 1.5; }
   .apply-agree { position: relative; display: flex; align-items: center; gap: 10px; font-size: 0.82rem; font-weight: 700; color: var(--ink); cursor: pointer; margin-bottom: 16px; }
   .apply-agree input { position: absolute; opacity: 0; width: 0; height: 0; }
   .apply-agree:has(input:checked) .apply-check-box { background: var(--green); border-color: var(--green); }
@@ -6847,6 +6872,11 @@
   .prog-side .ts-link { font-size: 0.74rem; white-space: nowrap; }
   .prog-side .ts-link.ts-sub { font-size: 0.72rem; font-weight: 500; color: var(--ink-soft); text-align: center; padding: 4px 2px; }
   .prog-side .ts-link.ts-sub:hover { color: var(--green-deep); font-weight: 700; }
+  /* 지금 보고 있는 목차는 진한 남색 알약으로 확 눈에 띄게 */
+  .prog-side .ts-link { border-radius: 8px; padding: 6px 8px; transition: background 0.15s, color 0.15s; }
+  .prog-side .ts-link:hover { background: #EEF2FA; }
+  .prog-side .ts-link.on, .prog-side .ts-link.ts-sub.on { background: #0D2155; color: #fff; font-weight: 800; }
+  .prog-side .ts-link.on:hover, .prog-side .ts-link.ts-sub.on:hover { background: #0D2155; color: #fff; }
   .prog-side .teacher-sidebar { padding: 11px 10px; }
   .prog-ask { align-self: center; width: 130px; box-sizing: border-box; background: #0D2155; border: none; border-radius: 16px; padding: 16px 10px 14px; box-shadow: 0 10px 28px rgba(13,33,85,0.25); }
   .prog-ask { transition: transform 0.22s ease, box-shadow 0.22s ease; }
@@ -6873,13 +6903,17 @@
   .vocab-callout.prog-notice ul { margin: 0; padding: 0; list-style: none; }
   .vocab-callout.prog-notice li { position: relative; padding-left: 12px; font-size: 0.76rem; line-height: 1.65; color: var(--ink); font-weight: 600; }
   .vocab-callout.prog-notice li::before { content: ''; position: absolute; left: 0; top: 0.82em; width: 4px; height: 4px; border-radius: 50%; background: var(--green-deep); }
-  .prog-vs { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: stretch; margin-top: 44px; width: max-content; max-width: 100%; margin-left: auto; margin-right: auto; }
+  .prog-vs { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: stretch; margin-top: 18px; width: max-content; max-width: 100%; margin-left: auto; margin-right: auto; }
   .prog-vs-box { border-radius: 14px; padding: 11px 16px 9px; border: 1px solid #DDE2EA; }
   .prog-vs-box h4 { margin: 0 0 5px; font-size: 0.78rem; font-weight: 800; letter-spacing: -0.01em; }
   .prog-vs-box.cut { background: #F1F3F7; border-color: #D7DCE6; }
   .prog-vs-box.cut h4 { color: #55607A; }
   .prog-vs-box.keep { background: #fff; border-color: #C9D2E3; box-shadow: 0 6px 20px rgba(13,33,85,0.05); }
   .prog-vs-box.keep h4 { color: var(--green-deep); }
+  /* "합친 장점" 박스: 형광 강조는 빼고, 관리형 독서실 항목은 빨간색으로 */
+  .prog-vs-box.keep .pp-em { background: none; font-weight: inherit; color: inherit; padding: 0; }
+  .prog-vs-box.keep .prog-vs-group + .prog-vs-group li, .prog-vs-box.keep .prog-vs-group + .prog-vs-group small { color: #D4271C; }
+  .prog-vs-box.keep .prog-vs-group:first-of-type li { color: #1F5FD6; }
   .prog-vs-group + .prog-vs-group { margin-top: 5px; padding-top: 5px; border-top: 1px dashed #DDE2EA; }
   .prog-vs-group > span { display: inline-block; font-size: 0.62rem; font-weight: 700; border-radius: 6px; padding: 0 8px; margin-bottom: 2px; }
   .cut .prog-vs-group > span { color: #55607A; background: #E3E7EF; }
@@ -6929,6 +6963,41 @@
   .fee-sum-c ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
   .fee-sum-c li::before { content: ""; position: absolute; left: 2px; top: 0.62em; width: 4px; height: 4px; border-radius: 50%; background: #8FA6CC; }
   .fee-chip { display: inline-block; vertical-align: middle; font-size: 0.72rem; font-weight: 700; color: #0D2155; background: #fff; border: 1px solid #B9C9E6; border-radius: 6px; padding: 0 7px; margin: 0 2px; position: relative; top: -1px; }
+  .fee-hchips { margin-left: 10px; white-space: nowrap; }
+  .fee-chip.sm { font-size: 0.6rem; padding: 0 6px; margin: 0 2px; top: -1px; }
+  .fee-cmp.lab2 { grid-template-columns: 1fr auto 1.45fr; margin-top: 14px; }
+  .fee-cmp.lab2 .fee-cmp-box li { align-items: baseline; }
+  .fee-cmp.lab2 .fee-cmp-box li span { width: 44px; }
+  .fee-cmp.lab2 .fee-cmp-box.us li b { font-size: 0.74rem; }
+  /* 요약 박스의 2번째 칸("수업은 어떻게 진행되나요?")에서 아래의 수업 진행 과정 박스로 이어지는 화살표 */
+  .fee-sum-c li.red { color: #D4271C; }
+  .ef-hl.ef-red { background: linear-gradient(transparent 55%, rgba(226,52,40,0.32) 55%); }
+  .prog-step li.fee-blue { color: #1F5FD6; font-weight: 600; }
+  .prog-step li.fee-red { color: #D4271C; font-weight: 600; }
+  #progSec-flow, #progSec-programs { display: none !important; }
+  .prog-sec#progSec-notice, .prog-sec#progSec-intro { margin-top: 0; } /* 앞 섹션이 숨겨져도 남아 있던 76px 간격 제거 */
+  /* 프로그램 소개: 제목 · 공식 · 비교를 큰 박스 하나에 담고, 배경을 주변과 살짝 다르게 */
+  #progSec-intro, .prog-intro-copy { background: #FFFFFF; border: 1px solid #E1E6F0; border-radius: 20px; padding: 18px 24px 20px; box-shadow: 0 10px 28px rgba(13,33,85,0.05); }
+  .prog-side .ts-group-label { font-size: 0.74rem; font-weight: 700; color: var(--ink); text-align: center; padding: 3px 2px 2px; }
+  .prog-more-btn { margin-left: auto; align-self: center; font-family: inherit; font-size: 0.8rem; font-weight: 700; color: #0D2155; background: #fff; border: 1px solid #0D2155; border-radius: 10px; padding: 9px 16px; cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s; }
+  .prog-more-btn:hover { background: #0D2155; color: #fff; }
+  .prog-more-back { font-family: inherit; font-size: 0.76rem; font-weight: 700; color: var(--ink-soft); background: #fff; border: 1px solid var(--line-dark); border-radius: 999px; padding: 6px 14px; cursor: pointer; margin: 0 0 12px; }
+  .prog-more-back:hover { color: var(--green-deep); border-color: #B9C3D6; }
+  .prog-detail .fee-sum { margin-bottom: 0; }
+  .fee-flow-arw { position: relative; height: 38px; }
+  .fee-flow-arw::before { content: ""; position: absolute; left: 50%; top: 0; width: 2px; height: 26px; margin-left: -1px; background: #9FB4DA; }
+  .fee-flow-arw::after { content: ""; position: absolute; left: 50%; top: 22px; margin-left: -7px; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 11px solid #9FB4DA; }
+  /* 가격 안내(시범 수업 · 4주 8회 · 4주 4회): 같은 구조의 세 칸 — 이름 → 가격 → 시간 → 절약 */
+  .fee-plans { display: grid; grid-template-columns: 1fr 1fr 1fr; margin-top: 8px; padding: 18px 0 16px; border-bottom: 1px solid var(--line); }
+  .fee-plan { text-align: center; padding: 0 12px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .fee-plan + .fee-plan { border-left: 1px solid #E3E8F2; }
+  .fp-l { font-size: 0.74rem; font-weight: 600; color: #6B7280; }
+  .fp-p { font-size: 1.55rem; font-weight: 800; letter-spacing: -0.04em; color: #0D2155; line-height: 1.15; }
+  .fee-plan.trial .fp-p { color: #8A5A12; }
+  .fp-c { font-size: 0.72rem; color: #8A90A0; }
+  .fp-s { margin-top: 6px; font-size: 0.66rem; color: #6B7280; }
+  .fp-s b { font-weight: 700; color: #2A5BBF; }
+  @media (max-width: 640px) { .fee-plans { grid-template-columns: 1fr; gap: 16px; } .fee-plan + .fee-plan { border-left: none; border-top: 1px solid #E3E8F2; padding-top: 14px; } }
   .fee-sum-more { display: flex; align-items: center; gap: 10px; margin: 0 0 28px; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.06em; color: var(--ink-soft); }
   .fee-sum-more::before, .fee-sum-more::after { content: ""; flex: 1; height: 1px; background: var(--line-dark); }
   .prog-detail .cd-promo-head { font-size: 0.95rem; }
@@ -6953,10 +7022,99 @@
   .prog-detail .cd-pullquotes { gap: 8px; }
   .prog-detail .cd-pullquote { font-size: 0.8rem; line-height: 1.6; padding: 13px 18px 13px 44px; border-radius: 10px; }
   .prog-detail .cd-pullquote::before { font-size: 2.1rem; top: 6px; left: 14px; }
-  .prog-detail .cd-faq-btn { font-size: 0.76rem; padding: 11px 13px; }
+  /* 질문 버튼(1. 상위권 학생 / 2. 중하위권 학생 / 3. …): 얇고 줄 바꿈 없이, 알약 모양 */
+  .prog-detail .cd-faq-btns { gap: 8px; }
+  .prog-detail .cd-faq-btn { flex: 0 1 auto; min-width: 0; white-space: nowrap; font-size: 0.72rem; font-weight: 700; padding: 6px 8px 6px 14px; gap: 10px; border: 1px solid #C9D2E3; border-bottom-width: 1px; border-radius: 999px; background: #fff; box-shadow: none; }
+  .prog-detail .cd-faq-btn:hover { background: #F2F5FB; border-color: #9FB0D0; box-shadow: none; transform: none; }
+  .prog-detail .cd-faq-btn.open { background: #0D2155; border-color: #0D2155; color: #fff; box-shadow: none; }
+  .prog-detail .cd-faq-btn .arrow { width: 16px; height: 16px; font-size: 0.72rem; }
+  .prog-detail .cd-faq-btn.open .arrow { background: #fff; color: #0D2155; }
   .prog-detail .cd-faq-answer-body { padding: 16px 18px; }
-  .fee-wrap { max-width: 640px; display: flex; flex-direction: column; gap: 12px; }
+  /* 공부 컨설팅 · 수학 · 국어 탭: 회색 바 안에서 선택된 칸만 흰색으로 떠오르는 분할 버튼 */
+  .fee-tabs { display: flex; gap: 4px; max-width: 720px; margin: 4px auto 22px; padding: 3px; background: #E9E7E1; border-radius: 13px; }
+  .fee-tab { flex: 1 1 0; min-width: 0; font-family: inherit; font-size: 0.8rem; font-weight: 700; color: #6F6D66; background: transparent; border: none; border-radius: 10px; padding: 6px 8px; cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s, box-shadow 0.15s; }
+  .fee-tab:hover { color: #17181A; }
+  .fee-tab.on { background: #fff; color: #17181A; box-shadow: 0 2px 6px rgba(23,24,26,0.12); }
+  /* 왜 이 가격에 제공할 수 있나요?: 프로그램 소개 박스와 같은 느낌(큰 흰 박스 · 원 · 화살표 · 테두리 박스) */
+  .fee-why { margin-top: 24px; background: #FFFFFF; border: 1px solid #E1E6F0; border-radius: 20px; padding: 24px 24px 24px; box-shadow: 0 10px 28px rgba(13,33,85,0.05); text-align: center; }
+  .fw-title { margin: 0; font-size: 1.45rem; font-weight: 800; letter-spacing: -0.035em; color: #0D2155; line-height: 1.35; }
+  .fw-sub { margin: 6px 0 0; font-size: 0.95rem; font-weight: 800; letter-spacing: -0.02em; color: #0D2155; }
+  .fw-sub em { font-style: normal; background: linear-gradient(transparent 58%, #F3DFA0 58%); padding: 0 2px; }
+  .fw-eq { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 18px 0 18px; }
+  .fw-eq span { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; flex: none; width: 150px; height: 150px; box-sizing: border-box; padding: 0 8px; border-radius: 50%; background: #fff; border: 1px solid #C9D2E3; box-shadow: 0 6px 18px rgba(13,33,85,0.05); font-size: 0.68rem; font-weight: 600; line-height: 1.5; color: var(--ink); }
+  .fw-eq span b { font-size: 0.64rem; font-weight: 700; color: var(--green-deep); background: #E9EDF4; border-radius: 6px; padding: 2px 9px; }
+  .fw-eq i { font-style: normal; font-size: 1.05rem; color: #9AA8C4; }
+  .fw-box { background: #fff; border: 1px solid #C9D2E3; border-radius: 14px; padding: 16px 20px 14px; box-shadow: 0 6px 20px rgba(13,33,85,0.05); text-align: left; }
+  .fw-box ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .fw-box li { display: flex; gap: 12px; align-items: flex-start; }
+  .fw-box li i { font-style: normal; flex: none; width: 20px; height: 20px; border-radius: 50%; background: #0D2155; color: #fff; font-size: 0.68rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; margin-top: 1px; }
+  .fw-box li p { margin: 0; font-size: 0.8rem; line-height: 1.7; color: var(--ink-soft); word-break: keep-all; }
+  .fw-box li p b { font-weight: 800; color: #0D2155; }
+  @media (max-width: 640px) { .fw-eq { flex-direction: column; } .fw-eq i { transform: rotate(90deg); } }
+  .fee-wrap { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px; }
+  .fee-chap { display: flex; flex-direction: column; gap: 10px; }
+  .fee-apply { align-self: center; font-family: inherit; font-size: 0.8rem; font-weight: 800; color: #0D2155; background: #E6EEFB; border: 1px solid #B9C9E6; border-radius: 999px; padding: 9px 22px; cursor: pointer; white-space: nowrap; transition: background 0.15s; }
+  .fee-apply:hover { background: #D5E2F7; }
+  #view-consult-fee .cd-page-head { justify-content: center; text-align: center; }
+  #view-consult-fee .consult-page .split { margin-left: auto; margin-right: auto; }
   .fee-box { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; }
+  .fee-h i { font-style: normal; width: 19px; height: 19px; border-radius: 50%; background: #0D2155; color: #fff; font-size: 0.66rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; margin-right: 8px; vertical-align: middle; position: relative; top: -1px; }
+  .fee-h { display: flex; align-items: center; flex-wrap: wrap; }
+  .fee-more { margin-left: auto; font-family: inherit; font-size: 0.68rem; font-weight: 700; color: #0D2155; background: #fff; border: 1px solid #0D2155; border-radius: 999px; padding: 4px 12px; cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s; }
+  .fee-more:hover { background: #0D2155; color: #fff; }
+  .fee-h em { font-style: normal; font-size: 0.74rem; font-weight: 600; color: var(--ink-soft); margin-left: 8px; }
+  .fee-bul { list-style: none; margin: 8px 0 4px; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+  .fee-bul li { position: relative; padding-left: 14px; font-size: 0.8rem; line-height: 1.55; color: var(--ink); font-weight: 600; }
+  .fee-bul.ctr { align-items: center; margin: 10px 0 6px; }
+  .fee-bul.ctr li { padding-left: 0; text-align: center; }
+  .fee-bul.ctr li::before { display: none; }
+  .fee-bul li::before { content: ""; position: absolute; left: 2px; top: 0.62em; width: 4px; height: 4px; border-radius: 50%; background: #8FA6CC; }
+  .fee-hl { background: linear-gradient(transparent 58%, #F3DFA0 58%); font-weight: 800; }
+  .fee-two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  .fee-pbox { background: #F6F8FC; border: 1px solid #DCE4F2; border-radius: 12px; padding: 14px 16px 12px; display: flex; flex-direction: column; gap: 8px; }
+  .fee-pbox ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+  .fee-pbox li { position: relative; padding-left: 14px; font-size: 0.8rem; font-weight: 600; color: var(--ink); line-height: 1.5; }
+  .fee-pbox li::before { content: ""; position: absolute; left: 2px; top: 0.62em; width: 4px; height: 4px; border-radius: 50%; background: #8FA6CC; }
+  .fee-pp { font-size: 1.15rem; font-weight: 800; color: #0D2155; border-top: 1px dashed #CCD6EA; padding-top: 8px; }
+  @media (max-width: 560px) { .fee-two { grid-template-columns: 1fr; } }
+  .fee-opt { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 0; }
+  .fee-opt + .fee-opt { border-top: 1px dashed var(--line); }
+  .fee-opt-t { display: flex; align-items: center; gap: 10px; min-width: 0; flex-wrap: wrap; }
+  .fee-opt-t small { font-size: 0.74rem; color: var(--ink-soft); }
+  .fee-cmp { display: grid; grid-template-columns: 1fr auto 1.2fr; align-items: center; gap: 10px; margin-top: 14px; }
+  .fee-cmp-arw { font-size: 1.1rem; color: #9AA8C4; }
+  .fee-cmp-box { border-radius: 12px; padding: 11px 14px 10px; min-width: 0; }
+  .fee-cmp-box.other { background: #F0F1F5; border: 1px solid #DADDE8; color: #6B7280; }
+  .fee-cmp-box.us { background: #fff; border: 2px solid #0D2155; box-shadow: 0 8px 22px rgba(13,33,85,0.12); padding-top: 12px; padding-bottom: 11px; }
+  .fee-cmp-h { font-size: 0.74rem; font-weight: 800; margin-bottom: 6px; }
+  .fee-cmp-box.other .fee-cmp-h { color: #6B7280; }
+  .fee-cmp-box.us .fee-cmp-h { color: #0D2155; font-size: 0.8rem; }
+  .fee-cmp-box ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  .fee-cmp-box li { display: flex; align-items: baseline; gap: 7px; font-size: 0.72rem; }
+  .fee-cmp-box li i { font-style: normal; font-weight: 800; flex: none; width: 14px; }
+  .fee-cmp-box.other li i { color: #C0564D; }
+  .fee-cmp-box.us li i { color: #0D2155; }
+  .fee-cmp-box li span { flex: none; width: 26px; font-size: 0.62rem; font-weight: 700; color: #9AA0AE; }
+  .fee-cmp-box.us li span { color: var(--ink-soft); }
+  .fee-cmp-box li b { font-weight: 700; }
+  .fee-cmp-box.us li b { color: var(--ink); font-weight: 800; font-size: 0.78rem; }
+  .fee-cmp-box.us li b.pr { font-size: 0.88rem; }
+  .fee-cmp-box.us u { text-decoration: none; background: linear-gradient(transparent 58%, #F3DFA0 58%); color: #0D2155; padding: 0 1px; }
+  .fee-cmp-box.us small { font-size: 0.6rem; font-weight: 800; color: #0D2155; background: #E6EEFB; border-radius: 999px; padding: 1px 8px; margin-left: 4px; vertical-align: middle; }
+  @media (max-width: 640px) { .fee-cmp { grid-template-columns: 1fr; } .fee-cmp-arw { transform: rotate(90deg); justify-self: center; } }
+  .fee-common { margin: 8px 0 9px; text-align: center; font-size: 0.72rem; font-weight: 700; color: var(--ink-soft); }
+  .fee-diff { margin-top: 10px; background: #F6F8FC; border: 1px solid #DCE4F2; border-radius: 10px; padding: 9px 12px; }
+  .fee-diff-h { font-size: 0.72rem; font-weight: 800; color: var(--ink); margin-bottom: 5px; }
+  .fee-diff-h em { font-style: normal; font-size: 0.62rem; font-weight: 600; color: var(--ink-soft); margin-left: 4px; }
+  .fee-diff-row { display: grid; grid-template-columns: 64px 1fr 1.15fr; gap: 8px; align-items: center; padding: 5px 0; font-size: 0.68rem; }
+  .fee-diff-row + .fee-diff-row { border-top: 1px dashed #D4DCEC; }
+  .fee-diff-row.head { font-size: 0.62rem; font-weight: 800; color: var(--ink-soft); padding-top: 0; }
+  .fee-diff-row.head span:last-child { color: #0D2155; }
+  .fee-diff-row > span:first-child { font-size: 0.64rem; font-weight: 700; color: var(--ink-soft); }
+  .fee-diff-row .no { color: #8A90A0; }
+  .fee-diff-row .yes { color: var(--ink); font-weight: 700; }
+  .fee-diff-row .yes u { text-decoration: none; background: linear-gradient(transparent 58%, #F3DFA0 58%); color: #0D2155; font-weight: 800; }
+  @media (max-width: 640px) { .fee-plans { grid-template-columns: 1fr; } .fee-diff-row { grid-template-columns: 54px 1fr; } .fee-diff-row .yes { grid-column: 2; } .fee-diff-row.head span:nth-child(3) { display: none; } }
   .fee-h { font-size: 0.86rem; font-weight: 800; color: var(--ink); padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
   .fee-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; }
   .fee-row + .fee-row { border-top: 1px dashed var(--line); }
@@ -6970,8 +7128,8 @@
   .fee-go { align-self: stretch; font-family: inherit; font-size: 0.88rem; font-weight: 800; color: #fff; background: #0D2155; border: none; border-radius: 11px; padding: 13px; cursor: pointer; transition: background 0.15s; }
   .fee-go:hover { background: #17294F; }
   .prog-top { margin: 6px 0 0; text-align: center; font-size: 1.7rem; font-weight: 800; letter-spacing: -0.035em; color: #0D2155; line-height: 1.35; }
-  .prog-merge { margin: 26px 0 0; max-width: none; text-align: center; padding: 4px 0 0; background: none; border: none; box-shadow: none; display: flex; flex-direction: column-reverse; }
-  .prog-merge-eq { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 24px 0 0; padding-bottom: 0; border-bottom: none; }
+  .prog-merge { margin: 14px 0 0; max-width: none; text-align: center; padding: 4px 0 0; background: none; border: none; box-shadow: none; display: flex; flex-direction: column-reverse; }
+  .prog-merge-eq { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 14px 0 0; padding-bottom: 0; border-bottom: none; }
   .prog-merge-eq span { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; flex: none; width: 140px; height: 140px; padding: 0 8px; box-sizing: border-box; border-radius: 50%; background: #fff; border: 1px solid #C9D2E3; box-shadow: 0 6px 18px rgba(13,33,85,0.05); }
   .prog-merge-eq span b { font-size: 0.66rem; font-weight: 700; color: var(--green-deep); background: #E9EDF4; border-radius: 6px; padding: 2px 10px; letter-spacing: 0; }
   .prog-merge-eq span small { font-size: 0.68rem; font-weight: 600; line-height: 1.5; color: var(--ink); white-space: nowrap; }
@@ -7973,12 +8131,12 @@
 <div class="apply-modal-overlay" id="applyModalOverlay" onclick="if(event.target===this) closeApplyModal()">
   <div class="apply-modal">
     <h3 id="applyModalTitle">로드맵 학습 프로그램 신청하기</h3>
-    <div class="apply-sub">아래의 내용 입력 후 신청해주시면, 구체적인 절차 안내해 드리겠습니다.</div>
     <div class="apply-ai-recommend" id="applyAiRecommend" style="display:none">
       <span class="apply-ai-recommend-label">🤖 AI 홀로의 추천</span>
       <div class="apply-ai-recommend-body" id="applyAiRecommendBody"></div>
     </div>
     <form id="applyForm" onsubmit="submitApply(event)">
+      <label class="apply-agree apply-agree-top"><input type="checkbox" id="apply-agree-contact" required><span class="apply-check-box"></span><span>아래의 내용 입력 후 신청해주시면, 금일 내로 연락드리겠습니다. <span class="apply-req">*</span></span></label>
       <div class="apply-step"><span>1</span>기본 정보</div>
       <div class="apply-row">
         <div class="apply-field"><label for="apply-name">학생 이름 <span class="apply-req">*</span></label><input type="text" id="apply-name" required autocomplete="name"></div>
@@ -7995,17 +8153,27 @@
       <div class="apply-step"><span>2</span>학습 프로그램 종류 및 비용 <em>(중복 선택 가능)</em></div>
       <div class="apply-field">
         <div class="apply-checks apply-progs" id="applyChecks">
-          <label class="apply-check apply-prog"><input type="checkbox" name="apply-type" value="학습 상담 90분 (1회, 5만원)"><span class="apply-check-box"></span><span class="apply-prog-t"><b>학습 상담</b><em>90분 · 1회</em></span><span class="apply-prog-p">5만원</span></label>
-          <label class="apply-check apply-prog"><input type="checkbox" name="apply-type" value="수학 클리닉 4주 8회 (주 2회, 1회 2시간, 65만원)"><span class="apply-check-box"></span><span class="apply-prog-t"><b>수학 클리닉</b><em>4주 · 8회 (주 2회, 1회 2시간)</em></span><span class="apply-prog-p">65만원</span></label>
-          <label class="apply-check apply-prog"><input type="checkbox" name="apply-type" value="수학 클리닉 4주 4회 (주 1회, 1회 2시간 30분, 41만원)"><span class="apply-check-box"></span><span class="apply-prog-t"><b>수학 클리닉</b><em>4주 · 4회 (주 1회, 1회 2시간 30분)</em></span><span class="apply-prog-p">41만원</span></label>
-          <label class="apply-check apply-prog"><input type="checkbox" name="apply-type" value="독해력 클리닉 4주 8회 (주 2회, 1회 2시간, 65만원)"><span class="apply-check-box"></span><span class="apply-prog-t"><b>국어 독해력 클리닉</b><em>4주 · 8회 (주 2회, 1회 2시간)</em></span><span class="apply-prog-p">65만원</span></label>
+          <div class="apply-pgroup"><div class="apply-pgroup-t">공부 컨설팅</div><div class="apply-pgroup-row">
+            <label class="apply-check apply-prog"><input type="checkbox" name="apply-type" value="공부 컨설팅 90분 (1회, 6만원)"><span class="apply-check-box"></span><span class="apply-prog-t"><b>90분 · 1회</b><em>1:1 대면 상담</em></span><span class="apply-prog-p">6만원</span></label>
+          </div></div>
+          <div class="apply-pcols">
+          <div class="apply-pgroup"><div class="apply-pgroup-t">수학 클리닉</div><div class="apply-pgroup-row">
+            <label class="apply-check apply-prog"><input type="checkbox" name="apply-type" value="수학 클리닉 4주 8회 (주 2회, 1회 2시간, 60만원)"><span class="apply-check-box"></span><span class="apply-prog-t"><b>4주 · 8회</b><em>주 2회, 1회 2시간</em></span><span class="apply-prog-p">60만원</span></label>
+            <label class="apply-check apply-prog"><input type="checkbox" name="apply-type" value="수학 클리닉 4주 4회 (주 1회, 1회 2시간 30분, 38만원)"><span class="apply-check-box"></span><span class="apply-prog-t"><b>4주 · 4회</b><em>주 1회, 1회 2시간 30분</em></span><span class="apply-prog-p">38만원</span></label>
+            <label class="apply-check apply-prog"><input type="checkbox" name="apply-type" value="수학 클리닉 시범 수업 · 1회성 특강 (90분, 6만원)"><span class="apply-check-box"></span><span class="apply-prog-t"><b>시범 수업</b><em>1회성 특강 · 90분</em></span><span class="apply-prog-p">6만원</span></label>
+          </div></div>
+          <div class="apply-pgroup"><div class="apply-pgroup-t">국어 독해력 클리닉</div><div class="apply-pgroup-row">
+            <label class="apply-check apply-prog"><input type="checkbox" name="apply-type" value="독해력 클리닉 4주 8회 (주 2회, 1회 2시간, 60만원)"><span class="apply-check-box"></span><span class="apply-prog-t"><b>4주 · 8회</b><em>주 2회, 1회 2시간</em></span><span class="apply-prog-p">60만원</span></label>
+            <label class="apply-check apply-prog"><input type="checkbox" name="apply-type" value="독해력 클리닉 4주 4회 (주 1회, 1회 2시간 30분, 38만원)"><span class="apply-check-box"></span><span class="apply-prog-t"><b>4주 · 4회</b><em>주 1회, 1회 2시간 30분</em></span><span class="apply-prog-p">38만원</span></label>
+            <label class="apply-check apply-prog"><input type="checkbox" name="apply-type" value="독해력 클리닉 시범 수업 · 1회성 특강 (90분, 6만원)"><span class="apply-check-box"></span><span class="apply-prog-t"><b>시범 수업</b><em>1회성 특강 · 90분</em></span><span class="apply-prog-p">6만원</span></label>
+          </div></div>
+          </div>
         </div>
       </div>
       <div class="apply-step"><span>3</span>유의 사항 확인</div>
       <ul class="apply-notice">
         <li>공부에 열의가 없는 학생은 받지 않습니다.</li>
-        <li><em>숙제를 3회 이상 해오지 않을 시 수업은 자동으로 종료되며, 환불은 불가능합니다.</em></li>
-        <li>수업 직후, 오늘 수업에서 배운 내용을 총정리해서 제출해야 합니다. <em>이를 지키지 않을 시 수업은 자동으로 종료되며, 환불은 불가능합니다.</em></li>
+        <li>수업 직후, 오늘 수업에서 배운 내용을 총정리해서 제출해야 합니다.<br><em>이를 지키지 않을 시 수업은 자동으로 종료되며, 환불은 불가능합니다.</em></li>
       </ul>
       <label class="apply-agree"><input type="checkbox" id="apply-agree" required><span class="apply-check-box"></span>위 유의 사항을 모두 확인했습니다 <span class="apply-req">*</span></label>
       <div class="apply-actions">
@@ -8053,6 +8221,7 @@
     <nav class="consult-nav-row">
       <button type="button" class="consult-nav-link" id="consultNav-home" onclick="go('consult-home')">홈</button>
       <button type="button" class="consult-nav-link" id="consultNav-purpose" onclick="go('consult-purpose')">운영 목적</button>
+      <span class="consult-nav-sep" aria-hidden="true"></span>
       <button type="button" class="consult-nav-link" id="consultNav-teachers" onclick="go('consult-teacher')">선생님 소개</button>
       <button type="button" class="consult-nav-link" id="consultNav-programs" onclick="go('consult-programs')">수업 안내</button>
       <button type="button" class="consult-nav-link" id="consultNav-fee" onclick="go('consult-fee')">수업 비용 및 신청</button>
@@ -10191,37 +10360,141 @@
   <section class="view dark-consult" id="view-consult-fee">
     <div class="consult-page">
       <div class="teacher-layout">
-        <div class="prog-side">
-        <nav class="teacher-sidebar">
-          <div class="ts-group"><button type="button" class="ts-link" id="feeLink-1" onclick="feeShow(1)">① 학습 상담</button></div>
-          <div class="ts-group"><button type="button" class="ts-link" id="feeLink-2" onclick="feeShow(2)">② 수학 클리닉</button></div>
-          <div class="ts-group"><button type="button" class="ts-link" id="feeLink-3" onclick="feeShow(3)">③ 국어 클리닉</button></div>
-          <div class="ts-group ts-group-last"><button type="button" class="ts-link on" id="feeLink-main" onclick="feeShow('main')">수업 비용 및 신청</button></div>
-        </nav>
-        </div>
         <div class="teacher-content">
         <div id="feeMain">
       <div class="cd-page-head">
         <div><h2>수업 비용 및 신청</h2></div>
       </div>
       <div class="split"></div>
+      <div class="fee-tabs" role="tablist">
+        <button type="button" class="fee-tab on" onclick="feeTab(0)">공부 컨설팅</button>
+        <button type="button" class="fee-tab" onclick="feeTab(1)">수학 클리닉</button>
+        <button type="button" class="fee-tab" onclick="feeTab(2)">국어 독해력 클리닉</button>
+      </div>
       <div class="fee-wrap">
+        <div class="fee-chap">
         <div class="fee-box">
-          <div class="fee-h">학습 프로그램 종류 및 비용</div>
-          <div class="fee-row"><div class="fee-t"><b>학습 상담</b><span>90분 · 1회</span></div><div class="fee-p">5만원</div></div>
-          <div class="fee-row"><div class="fee-t"><b>수학 클리닉</b><span>4주 · 8회 (주 2회, 1회 2시간)</span></div><div class="fee-p">65만원</div></div>
-          <div class="fee-row"><div class="fee-t"><b>수학 클리닉</b><span>4주 · 4회 (주 1회, 1회 2시간 30분)</span></div><div class="fee-p">41만원</div></div>
-          <div class="fee-row"><div class="fee-t"><b>국어 독해력 클리닉</b><span>4주 · 8회 (주 2회, 1회 2시간)</span></div><div class="fee-p">65만원</div></div>
+          <div class="fee-h"><i>1</i>공부 컨설팅<button type="button" class="fee-more" onclick="go('consult-1')">자세히 알아보기 &rarr;</button></div>
+          <div class="fee-cmp">
+            <div class="fee-cmp-box other">
+              <div class="fee-cmp-h">타 업체 평균적인 사례</div>
+              <ul>
+                <li><span>방식</span><b>온라인 상담</b></li>
+                <li><span>시간</span><b>60분</b></li>
+                <li><span>비용</span><b class="pr">15만원</b></li>
+              </ul>
+            </div>
+            <div class="fee-cmp-arw">&rarr;</div>
+            <div class="fee-cmp-box us">
+              <div class="fee-cmp-h">로드맵 공부 컨설팅</div>
+              <ul>
+                <li><i>&#10003;</i><span>방식</span><b><u>1:1 대면</u> 상담</b></li>
+                <li><i>&#10003;</i><span>시간</span><b><u>90분</u> <small>30분 더 길게</small></b></li>
+                <li><i>&#10003;</i><span>비용</span><b class="pr"><u>6만원</u> <small>60% 저렴</small></b></li>
+              </ul>
+            </div>
+          </div>
         </div>
+        <button type="button" class="fee-apply" onclick="openApplyModal('공부 컨설팅')">공부 컨설팅 신청하기 &rarr;</button>
+        <div class="fee-why">
+          <h3 class="fw-title">왜 이 가격에 제공할 수 있나요?</h3>
+          <p class="fw-sub">1회성 수업의 특성에 맞춰, <em>저렴한 가격</em>으로 제공합니다</p>
+          <div class="fw-eq">
+            <span><b>공부 컨설팅</b>학습 방향과<br>입시 전략 수립</span>
+            <i>&rarr;</i>
+            <span><b>1회성 수업</b>방향을 꾸준히 따르는<br>것은 학생의 몫</span>
+            <i>&rarr;</i>
+            <span><b>로드맵 + 선생님</b>협업으로 더 많은<br>학생이 부담 없이</span>
+          </div>
+          <div class="fw-box">
+            <ol>
+              <li><i>1</i><p>공부 컨설팅은 <b>학습 방향과 입시 전략</b>을 세워 드리는 수업입니다.<br>매우 중요한 수업이지만, <b>1회성 수업</b>이라는 특성이 있습니다.</p></li>
+              <li><i>2</i><p>성적이 오르려면 그 방향을 <b>의지를 가지고 꾸준히 따라가는 것</b>이 필요하고,<br>그것은 결국 학생의 몫입니다.</p></li>
+              <li><i>3</i><p>그래서 로드맵은 선생님과 협업하여,<br>더 많은 학생이 부담 없이 방향을 잡을 수 있도록 <b>저렴한 가격</b>으로 제공합니다.</p></li>
+            </ol>
+          </div>
+        </div>
+        </div>
+        <div class="fee-chap">
         <div class="fee-box">
-          <div class="fee-h">유의 사항</div>
-          <ul class="fee-notice">
-            <li>공부에 열의가 없는 학생은 받지 않습니다.</li>
-            <li><em>숙제를 3회 이상 해오지 않을 시 수업은 자동으로 종료되며, 환불은 불가능합니다.</em></li>
-            <li>수업 직후, 오늘 수업에서 배운 내용을 총정리해서 제출해야 합니다. <em>이를 지키지 않을 시 수업은 자동으로 종료되며, 환불은 불가능합니다.</em></li>
-          </ul>
+          <div class="fee-h"><i>2</i>수학 클리닉<em>문제 풀이 전략</em><span class="fee-hchips"><span class="fee-chip sm">1:1 대면 수업</span><span class="fee-chip sm">범위: 대수, 미적분1</span></span><button type="button" class="fee-more" onclick="go('consult-2')">자세히 알아보기 &rarr;</button></div>
+                    <div class="fee-plans">
+            <div class="fee-plan trial">
+              <div class="fp-l">시범 수업 · 1회성 특강</div>
+              <div class="fp-p">6만원</div>
+              <div class="fp-c">1회 90분</div>
+            </div>
+            <div class="fee-plan">
+              <div class="fp-l">4주 8회 (총 16시간)</div>
+              <div class="fp-p">60만원</div>
+              <div class="fp-s">최상위대학 과외 평균가 대비 <b>20만원 절약</b></div>
+            </div>
+            <div class="fee-plan">
+              <div class="fp-l">4주 4회 (총 10시간)</div>
+              <div class="fp-p">38만원</div>
+              <div class="fp-s">최상위대학 과외 평균가 대비 <b>12만원 절약</b></div>
+            </div>
+          </div>
+          <div class="fee-cmp lab2">
+            <div class="fee-cmp-box other">
+              <div class="fee-cmp-h">최상위대학 과외 평균가</div>
+              <ul>
+                <li><span>평소 관리</span><b>정확한 공부 현황 확인이 어려워요</b></li>
+                <li><span>복습 과제</span><b>수업 복습 과제 시스템이 거의 없어요</b></li>
+              </ul>
+            </div>
+            <div class="fee-cmp-arw">&rarr;</div>
+            <div class="fee-cmp-box us">
+              <div class="fee-cmp-h">로드맵 수학 클리닉</div>
+              <ul>
+                <li><i>&#10003;</i><span>평소 관리</span><b><u>로드맵 독서실 관리 선생님들이 매일</u> 과외 공부 현황 점검</b></li>
+                <li><i>&#10003;</i><span>복습 과제</span><b><u>수업 직후 1시간 이내</u> 복습 과제 제출 · 검사</b></li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <button type="button" class="fee-go" onclick="openApplyModal()">수업 신청하기 →</button>
+        <button type="button" class="fee-apply" onclick="openApplyModal('수학 클리닉')">수학 클리닉 신청하기 &rarr;</button>
+        </div>
+        <div class="fee-chap">
+        <div class="fee-box">
+          <div class="fee-h"><i>3</i>국어 독해력 클리닉<em>글 읽는 법 · 선지 판단</em><span class="fee-hchips"><span class="fee-chip sm">1:1 대면 수업</span><span class="fee-chip sm">독해법 + 선지 분석</span></span><button type="button" class="fee-more" onclick="go('consult-3')">자세히 알아보기 &rarr;</button></div>
+                    <div class="fee-plans">
+            <div class="fee-plan trial">
+              <div class="fp-l">시범 수업 · 1회성 특강</div>
+              <div class="fp-p">6만원</div>
+              <div class="fp-c">1회 90분</div>
+            </div>
+            <div class="fee-plan">
+              <div class="fp-l">4주 8회 (총 16시간)</div>
+              <div class="fp-p">60만원</div>
+              <div class="fp-s">최상위대학 과외 평균가 대비 <b>20만원 절약</b></div>
+            </div>
+            <div class="fee-plan">
+              <div class="fp-l">4주 4회 (총 10시간)</div>
+              <div class="fp-p">38만원</div>
+              <div class="fp-s">최상위대학 과외 평균가 대비 <b>12만원 절약</b></div>
+            </div>
+          </div>
+          <div class="fee-cmp lab2">
+            <div class="fee-cmp-box other">
+              <div class="fee-cmp-h">최상위대학 과외 평균가</div>
+              <ul>
+                <li><span>평소 관리</span><b>정확한 공부 현황 확인이 어려워요</b></li>
+                <li><span>복습 과제</span><b>수업 복습 과제 시스템이 거의 없어요</b></li>
+              </ul>
+            </div>
+            <div class="fee-cmp-arw">&rarr;</div>
+            <div class="fee-cmp-box us">
+              <div class="fee-cmp-h">로드맵 국어 독해력 클리닉</div>
+              <ul>
+                <li><i>&#10003;</i><span>평소 관리</span><b><u>로드맵 독서실 관리 선생님들이 매일</u> 과외 공부 현황 점검</b></li>
+                <li><i>&#10003;</i><span>복습 과제</span><b><u>수업 직후 1시간 이내</u> 복습 과제 제출 · 검사</b></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="fee-apply" onclick="openApplyModal('독해력 클리닉')">국어 독해력 클리닉 신청하기 &rarr;</button>
+        </div>
       </div>
         </div>
         </div>
@@ -10235,12 +10508,12 @@
       <button type="button" class="cd-back-btn" onclick="go('consult-programs')">&larr; 이전으로</button>
       <div class="cd-page-head">
         <div>
-          <h2><span class="subj-tag lg">컨설팅</span>학습 상담</h2>
+          <h2><span class="subj-tag lg">학습 상담</span>공부 컨설팅</h2>
         </div>
       </div>
       <div class="split"></div>
       <div class="cd-promo">
-        <div class="cd-promo-head"><span class="ef-hl">전국 최상위권 선생님과 함께 공부 계획, 공부 방법을 수립하세요</span></div>
+        <div class="cd-promo-head"><span class="ef-hl ef-red">이번에도 흐지부지 시간을 보낼 건가요?<br>실제로 이행 가능한 입시 전략, 공부 방법을 알려드립니다.</span></div>
       </div>
       <div class="consult-panel on">
         <div class="cd-section">
@@ -10403,7 +10676,7 @@
 
         <div class="cx-block ts-sec" id="teacherPane-preview">
           <div class="cx-title">미리보기</div>
-          <p class="ts-note">학습 상담 및 모든 수업은 로드맵 독서실 내부의 상담실 또는 근처 스터디카페에서 진행됩니다.</p>
+          <p class="ts-note">공부 컨설팅 및 모든 수업은 로드맵 독서실 내부의 상담실 또는 근처 스터디카페에서 진행됩니다.</p>
           <div class="cx-photos">
             <div class="cx-photo is-filled"><video src="preview-1.mp4" autoplay muted loop playsinline></video></div>
             <div class="cx-photo is-filled"><video src="preview-2.mp4" autoplay muted loop playsinline></video></div>
@@ -10529,13 +10802,13 @@
       <div class="ch2-hero">
         <div class="ch2-left">
           <div class="pcar" id="pcar">
-            <p class="pcar-lead"><span class="pl-1">수업은 일주일에 두 번,</span><span class="pl-2">공부 검사는 독서실에서 <u>매일</u> 합니다.</span></p>
+            <p class="pcar-lead"><span class="pl-1">수업은 일주일에 두 번,</span><span class="pl-2">숙제 검사는 독서실에서 <u>매일</u> 합니다.</span></p>
             <div class="pcar-stage" id="pcarStage">
               <article class="pcar-card pc-ivory">
                 <span class="pc-kicker">과외 + 관리형 독서실</span>
                 <h4>과외 따로,<br>독서실 따로?</h4>
                 <p class="pc-sub">둘의 아쉬운 점은 없애고<br>장점만 합쳤습니다.</p>
-                <ul class="pc-list"><li>주 2회 1:1 대면 수업</li><li>매일 독서실에서 점검</li></ul>
+                <ul class="pc-list"><li>매주 1:1 대면 수업</li><li>매일 독서실에서 숙제 검사</li></ul>
                 <button type="button" class="pcar-btn" onclick="go('consult-programs');progShowSection('intro')">무엇이 다른지 보기 &rarr;</button>
               </article>
               <article class="pcar-card pc-navy">
@@ -10549,8 +10822,15 @@
                 <span class="pc-kicker">어떤 수업이 맞을지 모르겠다면</span>
                 <h4>상담 문의부터<br>남겨 주세요</h4>
                 <p class="pc-sub">학생에게 맞는 수업을<br>찾아드립니다.</p>
-                <ul class="pc-list"><li>학습 상담</li><li>수학 클리닉</li><li>국어 독해력 클리닉</li></ul>
+                <ul class="pc-list"><li>공부 컨설팅</li><li>수학 클리닉</li><li>국어 독해력 클리닉</li></ul>
                 <button type="button" class="pcar-btn" onclick="go('consult-inquiry')">상담 문의하기 &rarr;</button>
+              </article>
+              <article class="pcar-card pc-sand">
+                <span class="pc-kicker">수업 비용이 궁금하다면</span>
+                <h4>비용 확인부터<br>신청까지 한 번에</h4>
+                <p class="pc-sub">프로그램별 수업 구성과 비용을<br>한곳에서 확인하세요.</p>
+                <ul class="pc-list"><li>자세한 수업 과정 설명</li><li>필요한 만큼 수업 횟수 선택 가능</li></ul>
+                <button type="button" class="pcar-btn" onclick="go('consult-fee')">비용 및 신청 보기 &rarr;</button>
               </article>
               <button type="button" class="pcar-arrow pcar-prev" id="pcarPrev" aria-label="이전 포스터">&#8249;</button>
               <button type="button" class="pcar-arrow pcar-next" id="pcarNext" aria-label="다음 포스터">&#8250;</button>
@@ -10619,14 +10899,20 @@
         <div class="prog-side">
         <nav class="teacher-sidebar">
           <div class="ts-group"><button type="button" class="ts-link on" id="progLink-intro" onclick="progShowSection('intro')">프로그램 소개</button></div>
-          <div class="ts-group"><button type="button" class="ts-link" id="progLink-flow" onclick="progShowSection('flow')">수업 진행 과정</button></div>
-          <div class="ts-group"><button type="button" class="ts-link" id="progLink-programs" onclick="progShowSection('programs')">수업 프로그램</button>
+          <div class="ts-group"><div class="ts-group-label">수업 프로그램</div>
+            <button type="button" class="ts-link ts-sub" id="progLink-d1" onclick="progShowDetail(1)">① 공부 컨설팅</button>
+            <button type="button" class="ts-link ts-sub" id="progLink-d2" onclick="progShowDetail(2)">② 수학 클리닉</button>
+            <button type="button" class="ts-link ts-sub" id="progLink-d3" onclick="progShowDetail(3)">③ 국어 클리닉</button>
           </div>
           <div class="ts-group ts-group-last"><button type="button" class="ts-link" id="progLink-notice" onclick="progShowSection('notice')">유의 사항</button></div>
         </nav>
           <div class="prog-ask">
             <p>적합한 수업을<br>추천해드립니다</p>
             <button type="button" class="ts-ask-btn" onclick="go('consult-inquiry')">상담 문의하기 &rarr;</button>
+          </div>
+          <div class="prog-ask prog-apply">
+            <p>수업 비용 확인하고<br>바로 신청하세요</p>
+            <button type="button" class="ts-ask-btn" onclick="go('consult-fee')">수업 신청하기 &rarr;</button>
           </div>
         </div>
         <div class="teacher-content">
@@ -10675,7 +10961,7 @@
         <div class="vocab-callout prog-guide"><span class="vc-ico">i</span><p>3가지 수업을 제공합니다. 버튼을 눌러 구체적인 내용을 확인해보세요.</p></div>
         <div class="prog-grid">
           <button type="button" class="prog-card" onclick="go('consult-1')">
-            <b><span class="subj-tag">컨설팅</span>학습 상담</b>
+            <b><span class="subj-tag">학습 상담</span>공부 컨설팅</b>
             <span class="prog-go">자세히 보기 <i>&rarr;</i></span>
           </button>
           <button type="button" class="prog-card" onclick="go('consult-2')">
@@ -10698,8 +10984,7 @@
         <div class="vocab-callout prog-notice"><span class="vc-ico">!</span>
           <ul>
             <li>공부에 열의가 없는 학생은 받지 않습니다.</li>
-            <li><em class="pp-red">숙제를 3회 이상 해오지 않을 시 수업은 자동으로 종료되며, 환불은 불가능합니다.</em></li>
-            <li>수업 직후, 오늘 수업에서 배운 내용을 총정리해서 제출해야 합니다. <em class="pp-red">이를 지키지 않을 시 수업은 자동으로 종료되며, 환불은 불가능합니다.</em></li>
+            <li>수업 직후, 오늘 수업에서 배운 내용을 총정리해서 제출해야 합니다.<br><em class="pp-red">이를 지키지 않을 시 수업은 자동으로 종료되며, 환불은 불가능합니다.</em></li>
           </ul>
         </div>
 
@@ -10862,7 +11147,7 @@
       </div>
       <div class="split"></div>
       <div class="cd-promo">
-        <div class="cd-promo-head"><span class="ef-hl">전국 최상위권 선생님에게 문제 풀이 전략 클리닉을 받아보세요</span></div>
+        <div class="cd-promo-head"><span class="ef-hl ef-red">모든 유형을 하나의 일관된 논리 체계로 푸는 방법을 알려드립니다.</span></div>
       </div>
       <div class="consult-panel on">
         <div class="cd-section">
@@ -10969,7 +11254,7 @@
       </div>
       <div class="split"></div>
       <div class="cd-promo">
-        <div class="cd-promo-head"><span class="ef-hl">공감은 부수적인 것입니다. 문학을 비문학처럼 읽게 만들어 드립니다.</span></div>
+        <div class="cd-promo-head"><span class="ef-hl ef-red">공감은 부수적인 것입니다. 문학을 비문학처럼 읽게 만들어 드립니다.</span></div>
       </div>
       <div class="consult-panel on">
         <div class="cd-section">
@@ -12095,7 +12380,7 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", vocabpick: "어휘력 Test", vocab: "영어", consult: "학습 상담 안내", "consult-1": "학습 상담", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-column": "공부법 칼럼", "consult-home": "Holo Study", "consult-myclass": "나의 수업", "consult-programs": "수업 안내", "consult-fee": "수업 비용 및 신청", "consult-inquiry": "상담 문의", "consult-mbti": "학습 성향 MBTI", "consult-purpose": "운영 목적", "consult-2": "문제 풀이 전략 클리닉", "consult-3": "국어 독해력 클리닉", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "공부 계획 세우기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "독서실 스케줄", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", studymusic: "공부 음악", community: "공부중독 커뮤니티", academyHome: "Academy", academyTeacher: "선생님 수업 현황", teacherHome: "내 학생 관리", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", vocabpick: "어휘력 Test", vocab: "영어", consult: "학습 상담 안내", "consult-1": "공부 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-column": "공부법 칼럼", "consult-home": "Holo Study", "consult-myclass": "나의 수업", "consult-programs": "수업 안내", "consult-fee": "수업 비용 및 신청", "consult-inquiry": "상담 문의", "consult-mbti": "학습 성향 MBTI", "consult-purpose": "운영 목적", "consult-2": "문제 풀이 전략 클리닉", "consult-3": "국어 독해력 클리닉", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "공부 계획 세우기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "독서실 스케줄", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", ranking: "우리 독서실 랭킹", mypage: "마이페이지", studymusic: "공부 음악", community: "공부중독 커뮤니티", academyHome: "Academy", academyTeacher: "선생님 수업 현황", teacherHome: "내 학생 관리", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { mathexam: "exam", engexam: "exam" };
   // "← 이전으로"가 상단 흰색 바(topbar)의 제목 오른쪽에 뜨는 페이지들과, 각각이 돌아갈 곳.
   const BACK_TARGET = {
@@ -12308,8 +12593,9 @@
   let currentView = "home";
   function go(view) {
     const dm = /^consult-([123])$/.exec(view); // 학습 상담 · 수학 · 국어 클리닉은 독립 페이지가 아니라 "수업 비용 및 신청" 목차의 오른쪽에 열린다
-    if (dm) { go("consult-fee"); feeShow(+dm[1]); return; }
-    if (view === "consult-fee" && typeof feeShow === "function") feeShow(1); // 처음에는 학습 상담이 먼저
+    if (dm) { go("consult-programs"); progShowDetail(+dm[1]); return; }
+    if (view === "consult-fee" && typeof feeTab === "function") feeTab(0); // 들어오면 공부 컨설팅부터
+    if (view === "consult-programs" && typeof progShowSection === "function") progShowSection("intro"); // 수업 안내에 들어오면 늘 프로그램 소개부터
     // "선생님 연결하기 / To Do List / 연결된 선생님" 아카데미 홈 페이지는 없앴다 — 아카데미(Study Addict)로 들어오는 모든 길은 학습 상담 홈(consult-home)으로 간다.
     if (view === "academyHome") view = "consult-home";
     if (view === "consult") view = "consult-teacher"; // 선생님 목록 페이지는 없앴다 — 선생님 소개는 바로 프로필 페이지
@@ -16319,53 +16605,94 @@
     if (b && !b.closest(".pvz-pop")) progVsOpen(b);
   });
   document.addEventListener("keydown", e => { if (e.key === "Escape") progVsClose(); });
-  const PROG_SECS = ["intro", "flow", "programs", "notice"];
+  const PROG_SECS = ["intro", "notice"];
   function progSetActive(k) { PROG_SECS.concat(["d1", "d2", "d3"]).forEach(x => { const l = document.getElementById("progLink-" + x); if (l) l.classList.toggle("on", x === k); }); }
-  // 학습 상담 · 수학 · 국어 클리닉 상세 화면(옛 독립 페이지)의 내용을 "수업 비용 및 신청" 페이지 오른쪽으로 옮겨 둔다
-  // 상세 화면 맨 위에 먼저 보여주는 핵심 3가지 — 어떤 경우에 필요한지 / 수업이 어떻게 진행되는지 / 무엇을 배우는지
+  // 상세 화면(공부 컨설팅 · 수학 · 국어)의 핵심 3가지 — 어떤 경우에 필요한지 / 수업이 어떻게 진행되는지 / 무엇을 배우는지
   const FEE_SUM = {
-    1: [["어떤 경우에 필요한가요?", ["열심히 하는데 성적이 오르지 않을 때", "과목별로 무엇부터 할지 모를 때", "공부 방향이 맞는지 점검받고 싶을 때", "재수 · 반수 · 늦게 시작해 전략이 필요할 때"]],
-        ["수업은 어떻게 진행되나요?", ["1회성 1:1 대면 상담 90분", "성적 · 습관 · 교재를 함께 진단", "과목별 공부 순서와 방식 정리"]],
-        ["무엇을 배울 수 있나요?", ["내 공부의 가장 큰 문제가 무엇인지", "무엇을 먼저 바꿔야 하는지", "과목별로 앞으로 어떻게 공부할지"]]],
-    2: [["어떤 경우에 필요한가요?", ["조건이 조금 달라지면 다시 막힐 때", "막혔을 때 왜 막혔는지 설명 못할 때", "일관된 체계 없이 행동강령만 계속 쌓일 때"]],
-        ["수업은 어떻게 진행되나요?", ["1:1 대면 수업 (대수, 미적분I)", "4주 <span class='fee-chip'>8회 (16시간)</span> 또는 <span class='fee-chip'>4회 (10시간)</span>", "수업 직후 복습 검사 · 매일 공부 현황 점검"]],
-        ["무엇을 배울 수 있나요?", ["모든 유형을 하나의 일관된 체계로 푸는 방법", "조건을 해석하는 일관적인 체계", "막힌 이유를 스스로 진단하는 힘"]]],
+    1: [["어떤 경우에 필요한가요?", ["공부 방향이 맞는지 점검받고 싶을 때", "열심히 하는데 성적이 오르지 않을 때", "과목별로 무엇부터 어떻게 할지 모를 때"]],
+        ["수업은 어떻게 진행되나요?", ["<span class='fee-chip'>1회성</span> 1:1 대면 상담 90분", "성적 · 공부 시간 · 교재 · 습관 종합 진단", "과목별 공부 순서와 실행 가능한 계획 설계"]],
+        ["무엇을 배울 수 있나요?", ["내 상황에 적합한 입시 전략", "공부 습관, 성향, 목표를 고려한 학습 전략", "근본적인 문제 파악 후 구체적인 해결법 제시"]]],
+    2: [["어떤 경우에 필요한가요?", ["조건이 조금 달라지면 다시 막힐 때", "막혔을 때, 어디서 왜 막혔는지 설명 못할 때", "일관된 체계 없이 행동강령만 계속 쌓일 때"]],
+        ["수업은 어떻게 진행되나요?", ["1:1 대면 수업 <span class='fee-chip'>대수, 미적분I</span>", "4주 <span class='fee-chip'>8회 (16시간)</span> 또는 <span class='fee-chip'>4회 (10시간)</span>", "수업 직후 복습 검사 · 매일 공부 현황 점검"]],
+        ["무엇을 배울 수 있나요?", ["어떤 상황에도 통하는 일관된 논리 체계", "조건을 해석하는 일관적인 체계", "스스로 진단하고 해결하는 메타인지 능력"]]],
     3: [["어떤 경우에 필요한가요?", ["비문학과 문학을 완전히 구분해서 공부하는 학생", "본인만의 독해 기준이 정립되지 않은 학생", "기출을 풀어도 실력이 안 느는 것 같을 때"]],
-        ["수업은 어떻게 진행되나요?", ["1:1 대면 수업 (독해법 + 선지 분석)", "4주 <span class='fee-chip'>8회 (16시간)</span> 또는 <span class='fee-chip'>4회 (10시간)</span>", "수업 직후 복습 검사 · 매일 공부 현황 점검"]],
-        ["무엇을 배울 수 있나요?", ["글을 읽는 체계 (화제어와 관계)", "선지를 판단하는 체계 (근거 중심)", "새 지문도 스스로 읽고 판단하는 힘"]]],
+        ["수업은 어떻게 진행되나요?", ["1:1 대면 수업 <span class='fee-chip'>독해법 + 선지 분석</span>", "4주 <span class='fee-chip'>8회 (16시간)</span> 또는 <span class='fee-chip'>4회 (10시간)</span>", "수업 직후 복습 검사 · 매일 공부 현황 점검"]],
+        ["무엇을 배울 수 있나요?", ["글을 일관된 구조로 논리적으로 읽는 방법", "선지를 판단하는 일관적인 체계", "처음 보는 글을 스스로 분석할 수 있게 해드립니다"]]],
   };
   function feeSumHtml(n) {
     const d = FEE_SUM[n]; if (!d) return "";
-    return '<div class="fee-sum">' + d.map((c, i) => '<div class="fee-sum-c"><div class="fee-sum-q"><i>' + (i + 1) + '</i>' + c[0] + '</div><ul>' + c[1].map(x => '<li>' + x + '</li>').join("") + '</ul></div>').join("") + '</div><div class="fee-sum-more">자세한 설명</div>';
+    return '<div class="fee-sum">' + d.map((c, i) => '<div class="fee-sum-c"><div class="fee-sum-q"><i>' + (i + 1) + '</i>' + c[0] + '</div><ul>' + c[1].map(x => '<li' + (i === 2 ? ' class="red"' : '') + '>' + x + '</li>').join("") + '</ul></div>').join("") + '</div>';
   }
-  (function feeDetailInit() {
-    const host = document.querySelector("#view-consult-fee .teacher-content"); if (!host) return;
+  // 옛 독립 상세 페이지의 내용을 수업 안내 페이지 오른쪽으로 옮긴다
+  //  · progDetail-N : 요약 화면(제목 · 한 줄 문구 · 핵심 3칸 · 수업 진행 과정) + 오른쪽 "자세히 알아보기" 버튼
+  //  · progMore-N   : 자세히 알아보기를 누르면 나오는 상세 설명(옛 "자세한 설명" 부분)
+  (function progDetailInit() {
+    const host = document.querySelector("#view-consult-programs .teacher-content"); if (!host) return;
     [1, 2, 3].forEach(n => {
       const page = document.querySelector("#view-consult-" + n + " .consult-page"); if (!page) return;
-      const box = document.createElement("div"); box.id = "feeDetail-" + n; box.className = "prog-detail"; box.style.display = "none";
-      Array.from(page.children).forEach(c => { if (!c.classList.contains("cd-back-btn")) box.appendChild(c); });
-      const promo = box.querySelector(".cd-promo"); const html = feeSumHtml(n);
-      if (html) { if (promo) promo.insertAdjacentHTML("afterend", html); else box.insertAdjacentHTML("afterbegin", html); }
-      host.appendChild(box);
+      const kids = Array.from(page.children).filter(c => !c.classList.contains("cd-back-btn"));
+      const head = kids.find(c => c.classList.contains("cd-page-head")), split = kids.find(c => c.classList.contains("split")), promo = kids.find(c => c.classList.contains("cd-promo"));
+      const rest = kids.filter(c => c !== head && c !== split && c !== promo);
+      const ov = document.createElement("div"); ov.id = "progDetail-" + n; ov.className = "prog-detail"; ov.style.display = "none";
+      const more = document.createElement("div"); more.id = "progMore-" + n; more.className = "prog-detail"; more.style.display = "none";
+      const headClone = head ? head.cloneNode(true) : null, splitClone = split ? split.cloneNode(true) : null;
+      if (head) {
+        const b = document.createElement("button"); b.type = "button"; b.className = "prog-more-btn"; b.textContent = "자세히 알아보기 \u2192"; b.onclick = () => progShowMore(n);
+        head.appendChild(b); ov.appendChild(head);
+      }
+      if (split) ov.appendChild(split);
+      if (promo) ov.appendChild(promo);
+      ov.insertAdjacentHTML("beforeend", feeSumHtml(n));
+      // 수학 · 국어: 요약 박스 아래에 화살표와 수업 진행 과정(수업 전 · 중 · 후) 박스
+      if (n !== 1) {
+        const flow = document.querySelector("#progSec-flow .prog-flow"), sum = ov.querySelector(".fee-sum");
+        if (flow && sum) {
+          const c = flow.cloneNode(true); c.style.margin = "0";
+          const first = c.querySelector(".prog-step ul li"); if (first) first.classList.add("fee-blue");
+          const after = c.querySelectorAll(".prog-step ul")[2]; if (after) Array.from(after.querySelectorAll("li")).slice(0, 2).forEach(x => x.classList.add("fee-blue"));
+          const mid = c.querySelectorAll(".prog-step ul")[1];
+          if (mid) { const li = document.createElement("li"); li.className = "fee-red"; li.textContent = n === 3 ? "AI를 활용한 수능 국어 공부법을 알려드립니다!" : "AI를 활용한 수능 수학 공부법을 알려드립니다!"; mid.appendChild(li); }
+          const arw = document.createElement("div"); arw.className = "fee-flow-arw"; arw.setAttribute("aria-hidden", "true");
+          sum.insertAdjacentElement("afterend", arw); arw.insertAdjacentElement("afterend", c);
+        }
+      }
+      const back = document.createElement("button"); back.type = "button"; back.className = "prog-more-back"; back.textContent = "\u2190 요약으로 돌아가기"; back.onclick = () => progShowDetail(n);
+      more.appendChild(back);
+      if (headClone) more.appendChild(headClone);
+      if (splitClone) more.appendChild(splitClone);
+      rest.forEach(c => more.appendChild(c));
+      host.appendChild(ov); host.appendChild(more);
     });
   })();
-  function feeShow(k) {
-    const main = document.getElementById("feeMain"); if (main) main.style.display = k === "main" ? "" : "none";
-    [1, 2, 3].forEach(i => { const d = document.getElementById("feeDetail-" + i); if (d) d.style.display = i === k ? "" : "none"; });
-    ["main", 1, 2, 3].forEach(x => { const l = document.getElementById("feeLink-" + x); if (l) l.classList.toggle("on", x === k); });
-    window.scrollTo(0, 0); const m = document.querySelector(".main"); if (m) m.scrollTop = 0; const v = document.getElementById("view-consult-fee"); if (v) v.scrollTop = 0;
+  // 수업 비용 및 신청: 위의 버튼(공부 컨설팅 · 수학 · 국어)에 따라 해당 박스만 보여준다
+  function feeTab(n) {
+    document.querySelectorAll("#view-consult-fee .fee-chap").forEach((c, i) => { c.style.display = i === n ? "" : "none"; });
+    document.querySelectorAll("#view-consult-fee .fee-tab").forEach((b, i) => b.classList.toggle("on", i === n));
+  }
+  // 수학 · 국어 클리닉의 신청 버튼 아래에 수업 안내의 "프로그램 소개" 박스를 그대로 복사해서 넣는다 (원본을 고치면 여기도 같이 바뀐다)
+  (function feeIntroCopy() {
+    const src = document.getElementById("progSec-intro"); if (!src) return;
+    const chaps = document.querySelectorAll("#view-consult-fee .fee-chap");
+    [1, 2].forEach(i => {
+      if (!chaps[i]) return;
+      const c = src.cloneNode(true); c.removeAttribute("id"); c.classList.add("prog-intro-copy"); c.style.display = ""; c.style.marginTop = "24px";
+      chaps[i].appendChild(c);
+    });
+  })();
+  feeTab(0);
+  function progTop() { window.scrollTo(0, 0); const m = document.querySelector(".main"); if (m) m.scrollTop = 0; const v = document.getElementById("view-consult-programs"); if (v) v.scrollTop = 0; }
+  function progHideAll() {
+    PROG_SECS.forEach(k => { const e = document.getElementById("progSec-" + k); if (e) e.style.display = "none"; });
+    [1, 2, 3].forEach(n => { ["progDetail-", "progMore-"].forEach(pf => { const e = document.getElementById(pf + n); if (e) e.style.display = "none"; }); });
   }
   function progShowSection(k) {
-    const el = document.getElementById("progSec-" + k); if (!el) return;
-    el.scrollIntoView({ behavior: "smooth", block: "start" }); // 맨 위에는 수업 안내 포스터가 있어서, "프로그램 소개"도 그 섹션 위치로 이동
-    progSetActive(k);
+    if (PROG_SECS.indexOf(k) < 0) k = "intro"; // 옛 항목(수업 진행 과정 · 수업 프로그램)은 프로그램 소개로
+    progHideAll(); const el = document.getElementById("progSec-" + k); if (el) el.style.display = "";
+    progSetActive(k); progTop();
   }
-  (function progSpyInit() {
-    const secs = PROG_SECS.map(k => document.getElementById("progSec-" + k)).filter(Boolean);
-    if (!secs.length || !("IntersectionObserver" in window)) return;
-    const spy = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) progSetActive(e.target.id.replace("progSec-", "")); }), { rootMargin: "-30% 0px -60% 0px" });
-    secs.forEach(x => spy.observe(x));
-  })();
+  function progShowDetail(n) { progHideAll(); const e = document.getElementById("progDetail-" + n); if (e) e.style.display = ""; progSetActive("d" + n); progTop(); }
+  function progShowMore(n) { progHideAll(); const e = document.getElementById("progMore-" + n); if (e) e.style.display = ""; progSetActive("d" + n); progTop(); }
+  progShowSection("intro");
   function tsAiToggle(btn) {
     const box = document.getElementById("tsAiSum"); if (!box) return;
     const open = box.classList.toggle("open");
@@ -19048,9 +19375,17 @@
       const first = Array.from(document.querySelectorAll('input[name="apply-type"]')).find(i => i.value.indexOf(type) === 0);
       if (first) first.checked = true;
     }
+    applySyncReq();
     document.getElementById("applyModalOverlay").classList.add("on");
     loadConsultRecommendation();
   }
+  // 학습 프로그램도 유의 사항처럼 "체크해야만" 신청할 수 있다: 하나도 안 골랐을 때만 필수(required) + 안내 문구, 하나라도 고르면 해제
+  function applySyncReq() {
+    const boxes = Array.from(document.querySelectorAll('input[name="apply-type"]'));
+    const any = boxes.some(b => b.checked);
+    boxes.forEach(b => { b.required = !any; b.setCustomValidity(any ? "" : "학습 프로그램을 하나 이상 선택해 주세요."); });
+  }
+  (function applyReqInit() { const w = document.getElementById("applyChecks"); if (w) w.addEventListener("change", applySyncReq); applySyncReq(); })();
   // 상담 신청서를 열 때, 학생의 최신 분석지를 바탕으로 AI가 어떤 상담이 맞을지 짧게 추천해줍니다.
   // 분석지가 아직 없으면 배너 자체를 띄우지 않습니다 (신청 절차를 막지 않기 위해 실패해도 조용히 넘어감).
   function loadConsultRecommendation() {
