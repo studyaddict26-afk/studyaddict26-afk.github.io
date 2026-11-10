@@ -15625,6 +15625,35 @@
   // Cloudflare Worker 배포 후 이 주소를 실제 Worker 주소로 바꿔주세요.
   // (예: https://studyaddict-chat.내계정이름.workers.dev)
   const CHAT_API_URL = "https://studyaddict26afk--be1575be9f7e11f190ff1607ee4eb77e.web.val.run";
+  // ── 로그인 보안: 서버가 발급한 토큰을 챗봇 서버로 가는 모든 요청에 자동으로 붙인다 ──
+  // (비밀번호는 더 이상 이 브라우저에 저장하지 않는다. 서버가 "이 토큰의 주인"만 그 학생의 기록을 열어 준다.)
+  function authPost(body) {
+    return fetch(CHAT_API_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }).then(r => r.json());
+  }
+  // 관리자 화면(Firebase 관리자 로그인 상태)에서 계정을 만들거나 바꾸는 서버 요청
+  function adminAuthPost(body) {
+    const u = auth && auth.currentUser;
+    if (!u) return Promise.resolve({ ok: false, error: "관리자 로그인이 필요해요." });
+    return u.getIdToken().then(t => authPost(Object.assign({ idToken: t }, body)));
+  }
+  (function installAuthFetch() {
+    const orig = window.fetch.bind(window);
+    window.fetch = async function (input, init) {
+      try {
+        const url = typeof input === "string" ? input : (input && input.url) || "";
+        if (url.indexOf(CHAT_API_URL) === 0 && init && typeof init.body === "string") {
+          const b = JSON.parse(init.body);
+          if (b && typeof b === "object" && !Array.isArray(b)) {
+            const tk = localStorage.getItem("holoStudentToken") || localStorage.getItem("holoTeacherToken") || "";
+            if (tk && !b.token) b.token = tk;
+            if (!tk && !b.idToken && typeof auth !== "undefined" && auth && auth.currentUser) { try { b.idToken = await auth.currentUser.getIdToken(); } catch (e) {} }
+            init = Object.assign({}, init, { body: JSON.stringify(b) });
+          }
+        }
+      } catch (e) { /* 토큰을 못 붙여도 요청 자체는 그대로 보낸다 */ }
+      return orig(input, init);
+    };
+  })();
   const AI_SUBJECTS = ["chat", "diary", "mathexam", "engexam", "schedule", "plan", "consult"];
   const chatHistory = {};
   const historyLoaded = {};
@@ -19874,6 +19903,7 @@
     // status 필드를 아예 지운다 — 관리자가 직접 만든 기존 계정들도 status 필드가
     // 없는 상태로 승인된 것으로 취급하고 있으므로(studentLogin() 참고), 같은 규칙을
     // 그대로 따른다.
+    adminAuthPost({ action: "admin_auth_set", role: "student", id: id, status: "approved" }).catch(err => console.error(err)); // 아직 서버로 옮기지 않은 예전 계정이면 서버가 알아서 무시한다
     db.collection("students").doc(id).update({
       status: firebase.firestore.FieldValue.delete()
     }).catch(err => console.error(err));
@@ -19905,10 +19935,13 @@
       // branch(하이엔드관/N수관)·grade(학년)는 AI 챗봇이 답변할 때 학생을 알아보고
       // 참고하도록(예: 스케줄 챗봇이 "하이엔드관이세요 N수관이세요?"를 매번 안 묻도록)
       // 매 채팅 요청에 함께 실어 보내는 학생 프로필 정보다.
-      return db.collection("students").doc(id).set({
-        password: pw, school: school, name: name, birth: birth, gender: gender,
+      return adminAuthPost({ action: "admin_auth_set", role: "student", id: id, pw: pw, status: "approved" }).then(r => {
+        if (!r || !r.ok) throw new Error((r && r.error) || "계정 저장에 실패했어요.");
+        return db.collection("students").doc(id).set({
+        school: school, name: name, birth: birth, gender: gender,
         branch: branch, grade: grade,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
       }).then(() => {
         document.getElementById("studentAddForm").reset();
         msg.textContent = "계정이 추가됐습니다.";
@@ -19922,6 +19955,7 @@
   }
   function deleteStudent(id) {
     if (!confirm("이 학생 계정을 삭제할까요? 삭제하면 그 학생은 즉시 로그인할 수 없게 되고, 나눴던 대화 기록도 함께 삭제됩니다.")) return;
+    adminAuthPost({ action: "admin_auth_delete", role: "student", id: id }).catch(err => console.error(err));
     db.collection("students").doc(id).delete().catch(err => console.error(err));
     fetch(CHAT_API_URL, {
       method: "POST",
@@ -20132,8 +20166,11 @@
         msg.className = "apply-status-msg error";
         return;
       }
-      return db.collection("teachers").doc(id).set({
-        password: pw, name: name, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      return adminAuthPost({ action: "admin_auth_set", role: "teacher", id: id, pw: pw, status: "approved" }).then(r => {
+        if (!r || !r.ok) throw new Error((r && r.error) || "계정 저장에 실패했어요.");
+        return db.collection("teachers").doc(id).set({
+          name: name, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
       }).then(() => {
         document.getElementById("teacherAddForm").reset();
         msg.textContent = "계정이 추가됐습니다.";
@@ -20147,6 +20184,7 @@
   }
   function deleteTeacherAccount(id) {
     if (!confirm("이 선생님 계정을 삭제할까요? 연결된 학생과의 연동 정보는 남아있지만, 이 계정으로는 더 이상 로그인할 수 없게 됩니다.")) return;
+    adminAuthPost({ action: "admin_auth_delete", role: "teacher", id: id }).catch(err => console.error(err));
     db.collection("teachers").doc(id).delete().catch(err => console.error(err));
   }
   // ── 관리자: 선생님 소개 페이지 ──
@@ -20485,18 +20523,22 @@
     if (!id || !pw) return;
     btn.disabled = true;
     btn.textContent = "확인 중...";
-    db.collection("teachers").doc(id).get().then(doc => {
-      btn.disabled = false;
-      btn.textContent = "로그인";
-      if (!doc.exists || doc.data().password !== pw) {
-        msg.textContent = "아이디 또는 비밀번호가 올바르지 않습니다.";
+    authPost({ action: "auth_login", role: "teacher", id: id, pw: pw }).then(res => {
+      if (!res || !res.ok) {
+        btn.disabled = false;
+        btn.textContent = "로그인";
+        msg.textContent = (res && res.error) || "아이디 또는 비밀번호가 올바르지 않습니다.";
         msg.className = "apply-status-msg error";
         return;
       }
-      localStorage.setItem("holoTeacherId", id);
-      localStorage.setItem("holoTeacherPw", pw);
-      localStorage.setItem("holoTeacherName", doc.data().name || "");
-      enterTeacherHome();
+      return db.collection("teachers").doc(id).get().then(doc => {
+        btn.disabled = false;
+        btn.textContent = "로그인";
+        localStorage.setItem("holoTeacherToken", res.token);
+        localStorage.setItem("holoTeacherId", id);
+        localStorage.setItem("holoTeacherName", doc.exists ? (doc.data().name || "") : "");
+        enterTeacherHome();
+      });
     }).catch(err => {
       console.error(err);
       btn.disabled = false;
@@ -20516,26 +20558,24 @@
     if (!id || !pw) return;
     btn.disabled = true;
     btn.textContent = "확인 중...";
-    db.collection("students").doc(id).get().then(doc => {
-      btn.disabled = false;
-      btn.textContent = "로그인";
-      if (!doc.exists || doc.data().password !== pw) {
-        msg.textContent = "아이디 또는 비밀번호가 올바르지 않습니다.";
+    // 로그인 확인은 서버가 한다(비밀번호는 서버에 해시로만 있고, 성공하면 토큰을 준다)
+    authPost({ action: "auth_login", role: "student", id: id, pw: pw }).then(res => {
+      if (!res || !res.ok) {
+        btn.disabled = false;
+        btn.textContent = "로그인";
+        msg.textContent = (res && res.error) || "아이디 또는 비밀번호가 올바르지 않습니다.";
         msg.className = "apply-status-msg error";
         return;
       }
-      // status가 없는 계정(관리자가 직접 만든 예전/기존 계정)은 그냥 승인된 것으로 본다 —
-      // "pending"으로 명시된 경우(학생이 직접 회원가입 신청한 뒤 아직 승인 전)만 막는다.
-      if (doc.data().status === "pending") {
-        msg.textContent = "아직 독서실에서 승인 대기 중이에요. 승인되면 로그인할 수 있어요.";
-        msg.className = "apply-status-msg error";
-        return;
-      }
-      localStorage.setItem("holoStudentId", id);
-      localStorage.setItem("holoStudentPw", pw);
-      localStorage.setItem("holoStudentLoginDate", getCalendarDateKey());
-      storeStudentJoinYm(doc.data());
-      enterAfterLogin();
+      return db.collection("students").doc(id).get().then(doc => {
+        btn.disabled = false;
+        btn.textContent = "로그인";
+        localStorage.setItem("holoStudentToken", res.token);
+        localStorage.setItem("holoStudentId", id);
+        localStorage.setItem("holoStudentLoginDate", getCalendarDateKey());
+        storeStudentJoinYm(doc.exists ? doc.data() : {});
+        enterAfterLogin();
+      });
     }).catch(err => {
       console.error(err);
       btn.disabled = false;
@@ -20869,18 +20909,21 @@
     // 나머지는 "이미 존재" 에러로 안전하게 막힌다(단순 get()→set() 방식은 그 사이에
     // 다른 요청이 끼어들 수 있는 이론적 경합 상태가 있어서 트랜잭션으로 완전히 막는다).
     const ref = db.collection("students").doc(id);
-    db.runTransaction(transaction => {
+    authPost({ action: "auth_register", role: "student", id: id, pw: pw }).then(r => {
+      if (!r || !r.ok) { throw new Error(r && r.error === "이미 존재하는 아이디입니다." ? "DUPLICATE_ID" : "AUTH:" + ((r && r.error) || "")); }
+      return db.runTransaction(transaction => {
       return transaction.get(ref).then(doc => {
         if (doc.exists) {
           throw new Error("DUPLICATE_ID");
         }
         transaction.set(ref, {
-          password: pw, school: school, name: name, birth: birth, gender: gender,
+          school: school, name: name, birth: birth, gender: gender,
           branch: branch, grade: grade, status: "pending",
           academy: selectedSignupAcademy || "로드맵 입시 관리형 독서실",
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
       });
+    });
     }).then(() => {
       btn.disabled = false;
       btn.textContent = "가입 신청하기";
@@ -20904,13 +20947,14 @@
       console.error(err);
       btn.disabled = false;
       btn.textContent = "가입 신청하기";
-      msg.textContent = "신청 중 오류가 발생했어요. 다시 시도해주세요.";
+      msg.textContent = (err && err.message && err.message.indexOf("AUTH:") === 0 && err.message.length > 5) ? err.message.slice(5) : "신청 중 오류가 발생했어요. 다시 시도해주세요.";
       msg.className = "apply-status-msg error";
     });
   }
   function studentLogout() {
     localStorage.removeItem("holoStudentId");
     localStorage.removeItem("holoStudentPw");
+    localStorage.removeItem("holoStudentToken");
     localStorage.removeItem("holoStudentJoinYm");
     localStorage.removeItem("holoStudentJoinDate");
     localStorage.removeItem("holoStudentName");
@@ -20930,6 +20974,7 @@
   function teacherLogout() {
     localStorage.removeItem("holoTeacherId");
     localStorage.removeItem("holoTeacherPw");
+    localStorage.removeItem("holoTeacherToken");
     localStorage.removeItem("holoTeacherName");
     location.hash = "";
     location.reload();
@@ -26699,50 +26744,28 @@
     const loginDate = localStorage.getItem("holoStudentLoginDate");
     return loginDate !== getCalendarDateKey();
   }
+  const STUDENT_LOCAL_KEYS = ["holoStudentId", "holoStudentPw", "holoStudentToken", "holoStudentJoinYm", "holoStudentJoinDate", "holoStudentName", "holoStudentSchool", "holoStudentGender", "holoStudentBranch", "holoStudentGrade", "holoStudentPhoto", "holoStudentDdayList", "holoStudentNickname", "holoStudentNicknameChangeCount", "holoStudentLoginDate", "holoActiveProduct"];
+  function clearStudentLocal() { STUDENT_LOCAL_KEYS.forEach(k => localStorage.removeItem(k)); }
   function checkStudentSession() {
     const id = localStorage.getItem("holoStudentId");
-    const pw = localStorage.getItem("holoStudentPw");
-    if (!id || !pw || isStudentSessionExpired()) {
-      localStorage.removeItem("holoStudentId");
-      localStorage.removeItem("holoStudentPw");
-      localStorage.removeItem("holoStudentJoinYm");
-      localStorage.removeItem("holoStudentJoinDate");
-    localStorage.removeItem("holoStudentName");
-    localStorage.removeItem("holoStudentSchool");
-    localStorage.removeItem("holoStudentGender");
-    localStorage.removeItem("holoStudentBranch");
-    localStorage.removeItem("holoStudentGrade");
-    localStorage.removeItem("holoStudentPhoto");
-    localStorage.removeItem("holoStudentDdayList");
-    localStorage.removeItem("holoStudentNickname");
-    localStorage.removeItem("holoStudentNicknameChangeCount");
-      localStorage.removeItem("holoStudentLoginDate");
-    localStorage.removeItem("holoActiveProduct");
+    const token = localStorage.getItem("holoStudentToken");
+    // 보안 개편 전에 로그인해 둔 학생: 저장돼 있던 비밀번호로 딱 한 번 조용히 토큰으로 바꿔 주고, 비밀번호는 바로 지운다
+    const legacyPw = localStorage.getItem("holoStudentPw");
+    if (!id || (!token && !legacyPw) || isStudentSessionExpired()) {
+      clearStudentLocal();
       showStudentGate();
       return;
     }
-    db.collection("students").doc(id).get().then(doc => {
-      if (!doc.exists || doc.data().password !== pw) {
-        localStorage.removeItem("holoStudentId");
-        localStorage.removeItem("holoStudentPw");
-        localStorage.removeItem("holoStudentJoinYm");
-        localStorage.removeItem("holoStudentJoinDate");
-    localStorage.removeItem("holoStudentName");
-    localStorage.removeItem("holoStudentSchool");
-    localStorage.removeItem("holoStudentGender");
-    localStorage.removeItem("holoStudentBranch");
-    localStorage.removeItem("holoStudentGrade");
-    localStorage.removeItem("holoStudentPhoto");
-    localStorage.removeItem("holoStudentDdayList");
-    localStorage.removeItem("holoStudentNickname");
-    localStorage.removeItem("holoStudentNicknameChangeCount");
-        localStorage.removeItem("holoStudentLoginDate");
-    localStorage.removeItem("holoActiveProduct");
-        showStudentGate();
-      } else {
+    const req = token ? authPost({ action: "auth_check", token: token }) : authPost({ action: "auth_login", role: "student", id: id, pw: legacyPw });
+    req.then(res => {
+      if (!res || !res.ok) { clearStudentLocal(); showStudentGate(); return; }
+      localStorage.setItem("holoStudentToken", res.token);
+      localStorage.removeItem("holoStudentPw");
+      return db.collection("students").doc(id).get().then(doc => {
+        if (!doc.exists) { clearStudentLocal(); showStudentGate(); return; }
         storeStudentJoinYm(doc.data());
         enterAfterLogin();
-      }
+      });
     }).catch(err => {
       console.error(err);
       // 네트워크 오류 시에는 일단 통과시켜서 오프라인 상황에 막히지 않게 함
@@ -26750,22 +26773,19 @@
     });
   }
 
-  // 학생 세션 체크와 동일한 패턴 — 저장된 아이디/비번을 teachers 컬렉션과 대조해서 유효하면
-  // 바로 선생님 대시보드로 들어간다(선생님은 자정 자동 로그아웃 대상이 아니다, 매일 쓰는 도구라
-  // 학생처럼 매일 다시 로그인시킬 이유가 없음).
+  // 선생님 세션 확인 — 학생과 같은 방식(토큰). 선생님은 자정 자동 로그아웃 대상이 아니다(매일 쓰는 도구).
   function checkTeacherSession() {
     const id = localStorage.getItem("holoTeacherId");
-    const pw = localStorage.getItem("holoTeacherPw");
-    if (!id || !pw) { showStudentGate(); return; }
-    db.collection("teachers").doc(id).get().then(doc => {
-      if (!doc.exists || doc.data().password !== pw) {
-        localStorage.removeItem("holoTeacherId");
-        localStorage.removeItem("holoTeacherPw");
-        localStorage.removeItem("holoTeacherName");
-        showStudentGate();
-      } else {
-        enterTeacherHome();
-      }
+    const token = localStorage.getItem("holoTeacherToken");
+    const legacyPw = localStorage.getItem("holoTeacherPw");
+    if (!id || (!token && !legacyPw)) { showStudentGate(); return; }
+    const clear = () => { ["holoTeacherId", "holoTeacherPw", "holoTeacherToken", "holoTeacherName"].forEach(k => localStorage.removeItem(k)); };
+    const req = token ? authPost({ action: "auth_check", token: token }) : authPost({ action: "auth_login", role: "teacher", id: id, pw: legacyPw });
+    req.then(res => {
+      if (!res || !res.ok) { clear(); showStudentGate(); return; }
+      localStorage.setItem("holoTeacherToken", res.token);
+      localStorage.removeItem("holoTeacherPw");
+      enterTeacherHome();
     }).catch(err => {
       console.error(err);
       hideStudentGate();
