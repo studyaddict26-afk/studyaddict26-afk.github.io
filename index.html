@@ -2504,11 +2504,30 @@
   .ch2-link-t span { font-size: 0.64rem; font-weight: 600; color: var(--ink-soft); border: 1px solid var(--line-dark); border-radius: 999px; padding: 2px 8px; }
   .ch2-link-go { flex: none; font-size: 0.8rem; color: var(--ink-soft); }
   .ch2-chat { flex: none; height: clamp(340px, calc(100vh - 390px), 470px); display: flex; } /* 페이지가 한 화면에 들어오도록 창 높이에 맞춘다 */
-  .ch2-chat .record-chat-pane { flex: 1; min-height: 0; border-radius: 12px; overflow: hidden; background: #fff; border-color: #DDE2EA; }
+  .ch2-chat .record-chat-pane { flex: 1; min-height: 0; border-radius: 12px; overflow: hidden; background: #fff; border-color: #DDE2EA; } /* 흰 배경 (옆 MBTI · 칼럼 버튼과 같은 색) */
   .ch2-chat .record-chat-pane .chat-pane-title-row { flex: none; padding: 14px 20px 0; align-items: center; }
   .ch2-chat .record-chat-pane .chat-wrap { flex: 1; min-height: 0; max-width: none; padding: 38px 20px 30px; gap: 14px; margin: 0; width: auto; }
   .ch2-chat .record-chat-pane .input-zone { max-width: none; background: transparent; padding: 12px 20px 14px; }
   .ch2-chat .record-chat-pane .input-box { max-width: none; width: auto; margin: 0; }
+  /* 학습 프로그램 안내 (챗봇 모양, AI 아님): 말풍선 안 답변 + 아래 질문 버튼 */
+  .pg-title { display: flex; align-items: center; gap: 7px; }
+  /* AI 표시: 그라데이션 · 그림자 없이 단색 연한 바탕 + 남색 글씨 (사람이 만든 듯 담백하게) */
+  .pg-ai { display: inline-flex; align-items: center; justify-content: center; height: 18px; padding: 0 6px; border-radius: 4px; background: #E3E9F5; color: #0D2155; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.02em; line-height: 1; }
+  .pg-qs { display: flex; flex-wrap: wrap; gap: 5px; margin: -4px 0 0 35px; } /* 봇 말풍선 글자 시작선(아바타 26px + 간격 9px)에 맞춘다 */
+  .pg-q { font-family: inherit; font-size: 0.66rem; font-weight: 600; color: var(--ink); background: #fff; border: 1px solid var(--line-dark); border-radius: 999px; padding: 5px 11px; cursor: pointer; }
+  .pg-q:hover { background: var(--cream); }
+  .pg-q.done { color: #8E9199; } /* 이미 물어본 질문은 흐리게 (다시 누를 수는 있다) */
+  #chat-consult .bubble .pg-lead { margin: 0 0 6px; font-weight: 800; color: var(--ink); }
+  #chat-consult .bubble .pg-list { margin: 0 0 6px; padding-left: 16px; }
+  #chat-consult .bubble .pg-list li { margin-bottom: 4px; }
+  #chat-consult .bubble .pg-list b { color: #0D2155; }
+  #chat-consult .bubble .pg-note { margin: 2px 0 0; font-size: 0.7rem; color: var(--ink-soft); }
+  /* 답 말풍선 맨 위 '자세히 알아보기' — 그라데이션 · 그림자 없이 남색 선 + 남색 글씨, 마우스를 올리면 남색으로 채워진다 */
+  .pg-go-btn { display: inline-flex; align-items: center; gap: 6px; margin: 0 0 10px; padding: 6px 12px; font-family: inherit; font-size: 0.72rem; font-weight: 800; color: #0D2155; background: #fff; border: 1.5px solid #0D2155; border-radius: 6px; cursor: pointer; transition: background 0.15s, color 0.15s; }
+  .pg-go-btn i { font-style: normal; font-weight: 800; transition: transform 0.15s; }
+  .pg-go-btn:hover { background: #0D2155; color: #fff; }
+  .pg-go-btn:hover i { transform: translateX(2px); }
+  .pg-more { font-family: inherit; font-size: 0.7rem; font-weight: 700; color: #0D2155; background: none; border: none; padding: 2px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
   .ch2-chips { display: flex; flex-wrap: wrap; gap: 5px; padding: 0 20px; }
   .ch2-chips button { font-family: inherit; font-size: 0.64rem; font-weight: 600; color: var(--ink-soft); background: #fff; border: 1px solid var(--line-dark); border-radius: 999px; padding: 4px 10px; cursor: pointer; }
   .ch2-chips button:hover { background: var(--cream); color: var(--ink); }
@@ -6240,6 +6259,7 @@
   .admin-status-pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; }
   .admin-status-pill.status-대기 { background: #FDECEA; color: #B3261E; }
   .admin-status-pill.status-확정 { background: var(--green-soft); color: var(--green-deep); }
+  .admin-status-pill.status-취소 { background: #EEEFF2; color: #5B5E66; }
   .admin-status-pill.status-완료 { background: var(--green-soft); color: var(--green-deep); }
   .admin-status-btn { border: none; background: none; color: var(--green); font-weight: 700; font-size: 0.78rem; cursor: pointer; text-decoration: underline; }
   .admin-delete-btn { border: none; background: none; color: #B3261E; font-weight: 700; font-size: 0.78rem; cursor: pointer; text-decoration: underline; }
@@ -6492,6 +6512,20 @@
     transition: background 0.18s;
   }
   .input-box button:hover { background: var(--green-deep); }
+  /* 학습 상담 AI 입력칸 왼쪽 끝의 오늘 사용량 링 (누르면 사용 현황) */
+  .usage-ring-wrap { position: relative; flex: none; display: flex; align-items: center; }
+  .usage-ring-wrap[hidden] { display: none; }
+  .input-box .usage-ring-btn { background: none; padding: 3px; border-radius: 999px; display: flex; align-items: center; justify-content: center; letter-spacing: 0; }
+  .input-box .usage-ring-btn:hover { background: var(--cream); }
+  .input-box .usage-ring-btn svg { display: block; }
+  #chatUsageArc { transition: stroke-dashoffset 0.4s ease; }
+  .usage-pop { display: none; position: absolute; bottom: calc(100% + 12px); left: -6px; width: 230px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 14px 32px rgba(0,0,0,0.14); padding: 12px 14px; z-index: 50; text-align: left; }
+  .usage-pop.on { display: block; }
+  .usage-pop-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.8rem; color: var(--ink); }
+  .usage-pop-row b { font-weight: 700; }
+  .usage-pop-bar { height: 6px; background: var(--cream); border-radius: 999px; margin: 9px 0 8px; overflow: hidden; }
+  .usage-pop-bar i { display: block; height: 100%; width: 0; background: #3B7BF6; border-radius: 999px; transition: width 0.4s ease; }
+  .usage-pop-note { margin: 0; font-size: 0.72rem; line-height: 1.5; color: var(--ink-soft); }
   .input-note {
     max-width: 760px; margin: 8px auto 0 auto;
     font-size: 0.7rem; color: #A6A69E; text-align: center;
@@ -7341,6 +7375,15 @@
   .inq-ch-h { margin: 0; display: flex; align-items: center; gap: 8px; font-size: 0.74rem; font-weight: 800; color: var(--green-deep); letter-spacing: -0.01em; }
   .inq-ch-h i { width: 17px; height: 17px; border-radius: 50%; background: var(--green-deep); color: #fff; font-style: normal; font-size: 0.6rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
   .inq-ch-h::after { content: ''; flex: 1; height: 1px; background: #DCE2EE; }
+  /* MBTI 결과에서 넘어왔을 때 보이는 "검사지 첨부됨" 줄 */
+  .inq-attach { display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid #DCE2EE; border-radius: 9px; padding: 8px 8px 8px 10px; }
+  .inq-attach[hidden] { display: none; }
+  .inq-att-ico { flex: none; width: 30px; height: 30px; border-radius: 7px; background: #EEF2FA; color: var(--green-deep); display: flex; align-items: center; justify-content: center; }
+  .inq-att-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+  .inq-att-txt b { font-size: 0.76rem; font-weight: 700; color: var(--ink); }
+  .inq-att-txt small { font-size: 0.68rem; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .inq-att-x { flex: none; width: 24px; height: 24px; border: none; background: none; color: var(--ink-soft); font-size: 1rem; line-height: 1; border-radius: 6px; cursor: pointer; }
+  .inq-att-x:hover { background: #F0F2F6; color: var(--ink); }
   .inq-grid4 { display: grid; grid-template-columns: 1.1fr 1.4fr 0.8fr 1.3fr; gap: 8px; }
   .inq-ch .inq-f input[type="text"], .inq-ch .inq-f input[type="tel"], .inq-ch .inq-f textarea, .inq-ch .inq-radios .inq-pill:not(.on) { background: #fff; }
   .inq-sep { height: 1px; background: #EDEFF4; margin: 4px 0; }
@@ -7799,6 +7842,7 @@
         </div>
         <button type="submit" class="apply-submit-btn" id="studentLoginBtn" style="width:100%;">로그인</button>
         <div class="apply-status-msg" id="studentLoginMsg"></div>
+        <p class="sl-switch-link" style="margin-top:6px;"><a href="#" onclick="requestPasswordReset();return false;">비밀번호를 잊었어요</a></p>
       </form>
       <p class="sl-switch-link" id="slLoginSwitchLink"><a href="#" onclick="showStudentSignupTypePane();return false;">아직 계정이 없으신가요? 회원가입하기 →</a></p>
       <p class="sl-switch-link" id="slTeacherInquiryLink" style="display:none;"><a href="#" onclick="showComingSoonModal();return false;">선생님 회원가입은 준비 중이에요 — 문의하기 →</a></p>
@@ -8548,6 +8592,16 @@
         <button type="button" class="chat-quick-btn" onclick="homePosterGo('consult-column')">선배들의 공부법 칼럼 구경하기</button>
       </div>
       <div class="input-box">
+        <div class="usage-ring-wrap" id="chatUsageWrap" hidden>
+          <button type="button" class="usage-ring-btn" id="chatUsageBtn" onclick="chatUsageToggle(event)" aria-label="오늘 AI 질문 사용량 보기" aria-expanded="false" title="오늘 AI 사용량">
+            <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="var(--line-dark)" stroke-width="2.4"/><circle id="chatUsageArc" cx="10" cy="10" r="7.5" fill="none" stroke="#3B7BF6" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="47.12" stroke-dashoffset="47.12" transform="rotate(-90 10 10)"/></svg>
+          </button>
+          <div class="usage-pop" id="chatUsagePop" role="dialog" aria-label="오늘 AI 질문 사용량">
+            <div class="usage-pop-row"><span>오늘 AI 질문</span><b id="chatUsageNum">-</b></div>
+            <div class="usage-pop-bar"><i id="chatUsageBar"></i></div>
+            <p class="usage-pop-note" id="chatUsageNote">매일 자정에 다시 채워져요</p>
+          </div>
+        </div>
         <textarea id="q-chat" rows="1" placeholder="궁금한 것을 무엇이든 물어보세요" autocomplete="off"></textarea>
         <button onclick="send('chat')">보내기</button>
       </div>
@@ -10543,12 +10597,6 @@
             </div>
             <div class="mypage-field-status" id="mypageGoalStatus"></div>
           </section>
-
-          <section class="mpx-card">
-            <h3 class="mpx-h">오늘의 AI 질문</h3>
-            <p class="mpx-p">하루에 쓸 수 있는 횟수예요. 매일 자정에 다시 채워져요</p>
-            <div class="mp-usage" id="mypageUsage">불러오는 중…</div>
-          </section>
         </div>
       </div>
       <div class="mypage-photo-status" id="mypagePhotoStatus"></div>
@@ -11064,24 +11112,14 @@
           </button>
           </div>
           </div>
+          <!-- 학습 프로그램 안내 (대화형 AI 아님): 질문 버튼을 누르면 다른 목차에 정리된 내용을 요약해 보여 주고, 원문 페이지로 보낸다. 내용은 스크립트의 PROG_GUIDE -->
           <section class="ch2-chat">
             <div class="record-chat-pane ln-chat">
               <div class="chat-pane-title-row">
-                <h3 class="record-pane-title">학습 상담 AI</h3>
-                <button type="button" class="chat-new-btn" onclick="ch2NewChat()">+ 새 채팅</button>
+                <h3 class="record-pane-title pg-title"><span class="pg-ai">AI</span>무엇이든 물어보세요</h3>
+                <button type="button" class="chat-new-btn" onclick="pgReset()">처음으로</button>
               </div>
-              <div class="chat-wrap" id="chat-consult"></div>
-              <div class="ch2-chips" id="ch2Chips">
-                <button type="button" onclick="send('consult', this.textContent)">성적이 안 올라요</button>
-                <button type="button" onclick="send('consult', this.textContent)">어떤 수업이 맞을까요?</button>
-                <button type="button" onclick="send('consult', this.textContent)">공부 방법이 막막해요</button>
-              </div>
-              <div class="input-zone">
-                <div class="input-box">
-                  <textarea id="q-consult" rows="1" placeholder="학습 고민을 편하게 적어 보세요" autocomplete="off"></textarea>
-                  <button type="button" onclick="send('consult')">보내기</button>
-                </div>
-              </div>
+              <div class="chat-wrap" id="chat-consult" aria-live="polite"></div>
             </div>
           </section>
         </div>
@@ -11271,6 +11309,7 @@
             <div class="inq-colL">
             <section class="inq-ch">
               <h5 class="inq-ch-h"><i>1</i>가장 고민되는 점</h5>
+              <div class="inq-attach" id="inqMbtiAttach" hidden></div>
               <label class="inq-f"><textarea id="inq-topic" aria-label="가장 고민되는 점" rows="3" required placeholder="가장 고민되는 점을 먼저 적어 주세요 (예: 열심히 하는데 수학 성적이 안 올라요)"></textarea></label>
             </section>
             <section class="inq-ch">
@@ -12346,7 +12385,8 @@
             <div>
               <h2>학생 계정 관리 <span class="admin-status-pill status-대기" id="adminStudentsPendingCount" style="display:none;"></span></h2>
               <div class="split"></div>
-              <p class="admin-page-sub">'AI 홀로' 사이트에 로그인할 수 있는 학생 계정을 관리합니다. 계정을 삭제하면 그 즉시 로그인이 막힙니다. 학생이 직접 회원가입한 계정은 '승인 대기' 상태로 뜨며, 승인해야 로그인할 수 있습니다.</p>
+              <p class="admin-page-sub">'AI 홀로' 사이트에 로그인할 수 있는 학생 계정을 관리합니다. 학생이 직접 회원가입한 계정은 '승인 대기' 상태로 뜨며, 승인해야 로그인할 수 있습니다. 독서실을 그만둔 학생은 '이용 중지'를 누르면 기록은 남긴 채 바로 로그인이 막히고, '다시 이용'으로 되살릴 수 있습니다. '삭제'는 기록까지 지웁니다. 학생이 비밀번호 찾기를 요청하면 '재설정 요청' 표시가 뜨니, '비밀번호 재설정'으로 임시 비밀번호를 정해 학생에게 알려주세요.</p>
+              <p class="admin-page-sub" id="adminAiSpend"></p>
             </div>
           </div>
           <div class="admin-toolbar">
@@ -12894,12 +12934,73 @@
         (x.tags && x.tags.length ? '<span class="ch2-link-t">' + x.tags.map(t => '<span>' + escapeHtml(t) + '</span>').join("") + '</span>' : "") + '</span>' +
         '<span class="ch2-link-go">→</span></button>';
     }).join("");
-    addMsg("consult", "bot", escapeHtml("학습 고민을 편하게 말해 주세요. 적합한 수업을 추천해 드릴게요."));
+    pgReset();
   }
-  function ch2NewChat() {
-    chatHistory["consult"] = [];
-    const w = document.getElementById("chat-consult"); if (w) w.innerHTML = "";
-    ch2Setup();
+
+  // ── 학습 프로그램 안내 박스: 질문 버튼 → 다른 목차에 정리된 내용 요약 + 원문 바로가기 (AI 호출 없음) ──
+  // 내용을 바꾸려면 여기만 고치면 된다. go: 원문 페이지, sec: 수업 안내 안의 칸(progShowSection 이름).
+  const PROG_GUIDE = [
+    { q: "어떤 프로그램이 있나요?", lead: "3가지 1:1 대면 수업이 있어요.",
+      items: ["학습 컨설팅", "수학 문제 풀이 전략 클리닉", "국어 독해력 클리닉"],
+      go: "consult-programs", sec: "programs", more: "수업 프로그램 보기" },
+    { q: "학원, 과외와 무엇이 다른가요?", lead: "과외와 관리형 독서실의 단점은 없애고 장점만 합쳤어요.",
+      items: ["수능 상위 0.8% 선생님의 1:1 대면 수업", "수업 직후 총정리 복습 검사", "매일 독서실에서 숙제 점검"],
+      go: "consult-programs", sec: "intro", more: "프로그램 소개 보기" },
+    { q: "누가 가르치나요?", lead: "로드맵이 직접 선택한 송의준 선생님이 수업합니다.",
+      items: ["노베이스 축구선수 출신", "수능 13등급 상승하여, 전과목 1등급 (전국 상위 0.8%)", "온오프라인 학습 프로그램 운영 중"],
+      go: "consult-teacher", more: "선생님 소개 보기" },
+    { q: "수업은 어떻게 진행되나요?", lead: "수업 전 · 중 · 후로 나눠 관리해요.",
+      items: ["수업 전 · 맞춤 수업 설계", "수업 중 · 1:1 대면 수업", "수업 후 · 총정리 복습 · 매일 숙제 점검"],
+      go: "consult-programs", sec: "flow", more: "수업 진행 과정 보기" },
+    { q: "비용이 궁금해요", lead: "시중 과외보다 저렴하고, 학습 관리는 더 철저해요.",
+      items: ["최상위대학 과외 평균가보다 4주에 최대 20만 원 저렴", "로드맵 관리 선생님이 매일 공부 현황 점검", "수업 직후 1시간 이내 복습 과제 제출 · 검사"],
+      note: "구체적인 비용은 위의 '자세히 알아보기'를 눌러 확인해 주세요.",
+      go: "consult-fee", more: "비용 및 신청 보기" },
+  ];
+  // 모양은 챗봇(말풍선)이지만 AI가 아니다: 질문 버튼을 누르면 내 말풍선 → 잠깐 입력 중 표시 → 정해진 답 말풍선.
+  // 질문 버튼은 늘 봇의 마지막 말풍선 바로 아래에 붙는다.
+  let pgAsked = new Set(), pgBusy = false;
+  function pgRender() {
+    const wrap = document.getElementById("chat-consult");
+    if (!wrap) return;
+    const old = wrap.querySelector(".pg-qs"); if (old) old.remove();
+    const qs = document.createElement("div");
+    qs.className = "pg-qs";
+    qs.innerHTML = PROG_GUIDE.map((g, i) => '<button type="button" class="pg-q' + (pgAsked.has(i) ? " done" : "") + '" onclick="pgShow(' + i + ')">' + escapeHtml(g.q) + '</button>').join("");
+    wrap.appendChild(qs);
+    wrap.scrollTop = wrap.scrollHeight;
+  }
+  function pgReset() {
+    const wrap = document.getElementById("chat-consult");
+    if (!wrap) return;
+    wrap.innerHTML = "";
+    pgAsked = new Set(); pgBusy = false;
+    addMsg("consult", "bot", "안녕하세요! 아래에서 궁금한 질문을 눌러 보세요.");
+    pgRender();
+  }
+  function pgShow(i) {
+    if (pgBusy) return;
+    const g = PROG_GUIDE[i], wrap = document.getElementById("chat-consult");
+    if (!g || !wrap) return;
+    pgBusy = true;
+    pgAsked.add(i);
+    const old = wrap.querySelector(".pg-qs"); if (old) old.remove();
+    addMsg("consult", "user", escapeHtml(g.q));
+    const t = addMsg("consult", "bot", '<span class="typing"><span></span><span></span><span></span></span>');
+    setTimeout(() => {
+      // '자세히 알아보기' 버튼을 먼저, 그 아래 요약. 답 뒤에는 질문 버튼을 다시 띄우지 않는다(처음으로 버튼으로 돌아간다)
+      t.querySelector(".bubble").innerHTML = '<button type="button" class="pg-go-btn" onclick="pgGo(' + i + ')"><span>자세히 알아보기</span><i aria-hidden="true">&rarr;</i></button>' +
+        '<p class="pg-lead">' + escapeHtml(g.lead) + '</p>' +
+        '<ul class="pg-list">' + g.items.map(x => '<li>' + x + '</li>').join("") + '</ul>' +
+        (g.note ? '<p class="pg-note">' + escapeHtml(g.note) + '</p>' : '');
+      wrap.scrollTop = wrap.scrollHeight;
+      pgBusy = false;
+    }, 450);
+  }
+  function pgGo(i) {
+    const g = PROG_GUIDE[i];
+    go(g.go);
+    if (g.sec && typeof progShowSection === "function") progShowSection(g.sec);
   }
   function ch2Enter() {
     if (!ch2Ready) ch2Setup();
@@ -13074,17 +13175,27 @@
       '<div class="mbti-sec mbti-two"><div><h4>이런 점이 힘이에요</h4><ul>' + top.map(r => '<li>' + escapeHtml(MBTI_STRONG[r.code]) + '</li>').join("") + '</ul></div>' +
       '<div><h4>이런 점은 조심해요</h4><ul>' + top.map(r => '<li>' + escapeHtml(MBTI_WATCH[r.code]) + '</li>').join("") + '</ul></div></div>' +
       mbtiDetailHtml(res) +
-      '<div class="mbti-actions"><button type="button" class="solid" onclick="mbtiAskChat()">이 결과로 학습 상담 AI에게 상담받기</button>' +
+      '<div class="mbti-actions"><button type="button" class="solid" onclick="mbtiAskChat()">이 결과로 상담 문의하기</button>' +
       '<button type="button" onclick="mbtiStart()">다시 검사하기</button><button type="button" onclick="mbtiClose()">닫기</button></div>');
   }
-  // 검사 결과를 챗봇에 실어 보내서, 공부 방식에 맞는 공부 방법과 수업을 추천받는다.
+  // 검사 결과를 상담 문의 칸에 미리 적어 두고 상담 문의 페이지로 보낸다 (학습 상담 AI 대신 선생님이 직접 답한다).
+  // 검사 결과를 상담 문의에 "검사지 첨부"로 붙여서 보낸다. 고민 내용은 학생이 직접 적는다.
+  let inqMbti = null;
   function mbtiAskChat() {
     const s = mbtiSummaryText(mbtiCompute());
     mbtiClose();
-    const text = "[학습 성향 MBTI 결과] " + s.names + " (" + s.code + ") — " + s.nick + ". 이 결과를 참고해서 제 공부 방식에 맞는 공부 방법과 수업을 추천해 주세요.";
-    const q = document.getElementById("q-consult");
-    if (q) { q.scrollIntoView({ behavior: "smooth", block: "center" }); }
-    send("consult", text);
+    inqMbti = { code: s.code, nick: s.nick, names: s.names };
+    go("consult-inquiry");
+    inqRenderMbti();
+  }
+  function inqRenderMbti() {
+    const box = document.getElementById("inqMbtiAttach");
+    if (!box) return;
+    if (!inqMbti) { box.hidden = true; box.innerHTML = ""; return; }
+    box.hidden = false;
+    box.innerHTML = '<span class="inq-att-ico" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13l2 2 4-4"/></svg></span>' +
+      '<span class="inq-att-txt"><b>학습 성향 MBTI 검사지</b><small>' + escapeHtml(inqMbti.code + " · " + inqMbti.nick) + ' · 첨부됨</small></span>' +
+      '<button type="button" class="inq-att-x" onclick="inqMbti=null;inqRenderMbti()" aria-label="검사지 첨부 빼기">×</button>';
   }
 
   // ── 홈 오른쪽 위 홍보 포스터 목록 ──
@@ -15788,9 +15899,39 @@
           }
         }
       } catch (e) { /* 토큰을 못 붙여도 요청 자체는 그대로 보낸다 */ }
-      return orig(input, init);
+      const res = await orig(input, init);
+      // 서버가 "이 로그인은 더 이상 유효하지 않다"(이용 중지 · 삭제 · 비밀번호 재설정)고 하면 바로 로그인 화면으로 보낸다
+      try {
+        const url2 = typeof input === "string" ? input : (input && input.url) || "";
+        if (res.status === 401 && url2.indexOf(CHAT_API_URL) === 0) {
+          const j = await res.clone().json();
+          if (j && j.needLogin) forceRelogin(j.error);
+        }
+      } catch (e) {}
+      return res;
     };
   })();
+  let forceReloginShown = false;
+  function forceRelogin(msg) {
+    if (forceReloginShown) return;
+    forceReloginShown = true;
+    try {
+      if (localStorage.getItem("holoStudentToken") && typeof clearStudentLocal === "function") clearStudentLocal();
+      ["holoTeacherId", "holoTeacherPw", "holoTeacherToken", "holoTeacherName"].forEach(k => localStorage.removeItem(k));
+    } catch (e) {}
+    alert(msg || "로그인이 만료됐어요. 다시 로그인해주세요.");
+    location.reload();
+  }
+  // 로그인 화면 "비밀번호를 잊었어요" — 독서실 관리자에게 재설정 요청을 보낸다
+  function requestPasswordReset() {
+    const msg = document.getElementById("studentLoginMsg");
+    const typed = (document.getElementById("sl-id") || {}).value || "";
+    const id = (prompt("아이디를 입력해 주세요. 독서실 선생님께 비밀번호 재설정을 요청할게요.", typed.trim()) || "").trim();
+    if (!id) return;
+    authPost({ action: "auth_reset_request", role: "student", id: id }).then(res => {
+      if (msg) { msg.textContent = (res && (res.message || res.error)) || "요청을 보내지 못했어요."; msg.className = "apply-status-msg" + (res && res.ok ? " success" : " error"); }
+    }).catch(() => { if (msg) { msg.textContent = "요청 중 오류가 발생했어요. 독서실 선생님께 직접 말씀해 주세요."; msg.className = "apply-status-msg error"; } });
+  }
   const AI_SUBJECTS = ["chat", "diary", "mathexam", "engexam", "schedule", "plan", "consult"];
   const chatHistory = {};
   const historyLoaded = {};
@@ -19498,16 +19639,57 @@
           // "schedule" 챗봇이 돌발 스케줄 추가 흐름에서 증빙자료 단계에 도달하면 답변에
           // evidenceChoice가 실려오는데, 그러면 "지금 제출"/"재입실 때 제출" 선택 카드를 띄운다.
           if (subject === "schedule" && data.evidenceChoice) showEvidenceChoiceCard();
+          if (subject === "chat") chatUsageRefresh();
         })
         .catch(err => {
           console.error(err);
           chatHistory[subject].pop();
+          if (subject === "chat") chatUsageRefresh();
           t.querySelector(".bubble").innerHTML = "⚠️ 답변을 가져오지 못했어요. 잠시 후 다시 시도해주세요.";
           document.getElementById("chat-" + subject).scrollTop = 1e9;
         });
       return;
     }
   }
+
+  // ── 학습 상담 AI 입력칸의 사용량 링 ── 로그인한 학생에게만 보이고, 답변을 받을 때마다 새로 읽는다
+  function chatUsageRefresh() {
+    const wrap = document.getElementById("chatUsageWrap");
+    if (!wrap) return;
+    if (!localStorage.getItem("holoStudentToken")) { wrap.hidden = true; return; }
+    wrap.hidden = false; // 로그인한 학생에게는 링을 항상 보여 주고, 숫자를 못 읽으면 창에 안내만 띄운다
+    const unknown = () => { document.getElementById("chatUsageNum").textContent = "-"; document.getElementById("chatUsageNote").textContent = "지금은 사용량을 확인할 수 없어요."; };
+    authPost({ action: "auth_usage" }).then(res => {
+      const u = res && res.ok && res.usage && (res.usage.total || res.usage.chat); // 예전 서버는 total 없이 과목별로만 준다
+      if (!u) { unknown(); return; }
+      const limit = Math.max(0, u.limit | 0), used = Math.max(0, u.used | 0);
+      const pct = limit ? Math.min(1, used / limit) : 1;
+      const arc = document.getElementById("chatUsageArc");
+      arc.setAttribute("stroke-dashoffset", String(47.12 * (1 - pct)));
+      arc.setAttribute("stroke", pct >= 1 ? "#D9534F" : "#3B7BF6");
+      document.getElementById("chatUsageNum").textContent = used + " / " + limit + "회";
+      const bar = document.getElementById("chatUsageBar");
+      bar.style.width = Math.round(pct * 100) + "%";
+      bar.style.background = pct >= 1 ? "#D9534F" : "";
+      document.getElementById("chatUsageNote").textContent = limit === 0
+        ? "이번 달 AI 사용량이 많아 잠시 쉬어요. 다음 달 1일에 다시 열려요."
+        : (used >= limit ? "오늘 질문을 다 썼어요. " : "남은 질문 " + (limit - used) + "회 · ") + "매일 자정에 다시 채워져요";
+      document.getElementById("chatUsageBtn").title = "오늘 AI 질문 " + used + " / " + limit + "회";
+    }).catch(unknown);
+  }
+  function chatUsageToggle(e) {
+    if (e) e.stopPropagation();
+    const pop = document.getElementById("chatUsagePop"), btn = document.getElementById("chatUsageBtn");
+    const on = !pop.classList.contains("on");
+    pop.classList.toggle("on", on);
+    btn.setAttribute("aria-expanded", on ? "true" : "false");
+    if (on) chatUsageRefresh();
+  }
+  document.addEventListener("click", e => {
+    const pop = document.getElementById("chatUsagePop");
+    if (pop && pop.classList.contains("on") && !e.target.closest("#chatUsageWrap")) { pop.classList.remove("on"); document.getElementById("chatUsageBtn").setAttribute("aria-expanded", "false"); }
+  });
+  setTimeout(chatUsageRefresh, 800);
 
   ["chat", "diary", "mathexam", "engexam", "schedule", "plan", "consult"].forEach(s => {
     const qEl = document.getElementById("q-" + s);
@@ -19636,6 +19818,7 @@
       naesinGrade: naesin ? naesin.value : "",
       mockGrades: mock,
       topic: val("inq-topic"),
+      mbti: inqMbti ? (inqMbti.names + " (" + inqMbti.code + ") — " + inqMbti.nick) : "",
       source: "선생님 소개",
       status: "대기",
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -19646,6 +19829,7 @@
       msg.className = "inq-msg success";
       btn.textContent = "제출 완료";
       document.getElementById("inqForm").reset();
+      inqMbti = null; inqRenderMbti();
       document.querySelectorAll(".inq-pill.on").forEach(b => { b.classList.remove("on"); b.setAttribute("aria-pressed", "false"); }); inqSyncUnknown();
       setTimeout(() => { btn.disabled = false; btn.textContent = "제출하기"; }, 2500);
     }).catch(err => {
@@ -19975,7 +20159,47 @@
   // ── 학생 계정 관리 ──
   let unsubscribeStudents = null;
   let adminAllStudents = [];
+  // 학생이 보낸 "비밀번호 찾기" 요청 목록(서버) — 학생 목록에 '재설정 요청' 표시를 붙이는 데 쓴다
+  let adminResetReqs = {};
+  function loadResetRequests() {
+    adminAuthPost({ action: "admin_auth_reset_list" }).then(r => {
+      adminResetReqs = {};
+      ((r && r.items) || []).forEach(x => { adminResetReqs[x.role + ":" + x.id] = x; });
+      renderStudents();
+    }).catch(err => console.error(err));
+  }
+  // 관리자: 임시 비밀번호로 재설정 — 학생이 이미 로그인해 둔 기기도 바로 로그아웃된다
+  function resetStudentPassword(id) {
+    const pw = prompt("'" + id + "' 학생의 새 임시 비밀번호를 입력하세요 (4자 이상).\n학생에게 알려주고, 로그인 후 마이페이지에서 바꾸도록 안내해 주세요.");
+    if (pw === null) return;
+    if (pw.length < 4) { alert("비밀번호는 4자 이상이어야 해요."); return; }
+    adminAuthPost({ action: "admin_auth_set", role: "student", id: id, pw: pw }).then(r => {
+      if (!r || !r.ok) { alert((r && r.error) || "재설정하지 못했어요."); return; }
+      alert("비밀번호를 재설정했어요. 학생의 기존 로그인은 모두 끊겼어요.");
+      loadResetRequests();
+    }).catch(() => alert("재설정 중 오류가 발생했어요."));
+  }
+  // 관리자: 이용 중지 / 다시 이용 — 기록은 그대로 두고 로그인만 막거나 푼다
+  function setStudentActive(id, active) {
+    if (!active && !confirm("'" + id + "' 학생의 이용을 중지할까요?\n기록은 남고, 이미 로그인해 둔 기기도 바로 로그아웃됩니다. 나중에 '다시 이용'으로 되살릴 수 있어요.")) return;
+    adminAuthPost({ action: "admin_auth_set", role: "student", id: id, status: active ? "approved" : "disabled" }).then(r => {
+      if (!r || !r.ok) { alert((r && r.error) || "바꾸지 못했어요."); return; }
+      return db.collection("students").doc(id).update({ status: active ? firebase.firestore.FieldValue.delete() : "disabled" });
+    }).catch(err => { console.error(err); alert("바꾸는 중 오류가 발생했어요."); });
+  }
+  // 이번 달 AI 사용액 — 예산(15만 원)의 70%를 넘으면 학생 하루 한도가 자동으로 줄어든다
+  function loadAiSpend() {
+    const el = document.getElementById("adminAiSpend");
+    if (!el) return;
+    adminAuthPost({ action: "admin_auth_ai_spend" }).then(r => {
+      if (!r || !r.ok) { el.textContent = ""; return; }
+      const won = n => Number(n).toLocaleString("ko-KR") + "원";
+      el.textContent = "이번 달 AI 사용액 약 " + won(r.spentKrw) + " / 예산 " + won(r.budgetKrw) + " · 지금 학생 하루 한도 " + r.dailyLimit + "개";
+    }).catch(() => { el.textContent = ""; });
+  }
   function loadStudents() {
+    loadResetRequests();
+    loadAiSpend();
     if (unsubscribeStudents) return;
     unsubscribeStudents = db.collection("students").orderBy("createdAt", "desc")
       .onSnapshot(snap => {
@@ -19989,7 +20213,7 @@
   // 비인증 사용자에게 절대 열어주지 않고(비밀번호 등 개인정보 보호), 숫자 하나만 담은 이
   // 별도 문서만 공개로 읽게 한다(Firestore 규칙에서 stats/{docId}만 read:true 필요).
   function syncPublicStudentCount() {
-    const approvedCount = adminAllStudents.filter(s => s.status !== "pending").length;
+    const approvedCount = adminAllStudents.filter(s => s.status !== "pending" && s.status !== "disabled").length;
     db.collection("stats").doc("public").set({ studentCount: approvedCount }, { merge: true })
       .catch(err => console.error(err));
   }
@@ -20021,11 +20245,20 @@
     body.innerHTML = sorted.map(s => {
       const created = s.createdAt && s.createdAt.toDate ? s.createdAt.toDate().toISOString().slice(0, 10) : "-";
       const isPending = s.status === "pending";
-      const statusHtml = isPending
+      const isDisabled = s.status === "disabled";
+      const resetReq = adminResetReqs["student:" + s.id];
+      const statusHtml = (isPending
         ? "<span class=\"admin-status-pill status-대기\">승인 대기</span>"
-        : "<span class=\"admin-status-pill status-확정\">승인됨</span>";
-      const actionHtml = (isPending ? "<button type=\"button\" class=\"admin-status-btn\" onclick=\"approveStudent('" + s.id + "')\">승인</button> " : "")
-        + "<button type=\"button\" class=\"admin-delete-btn\" onclick=\"deleteStudent('" + s.id + "')\">삭제</button>";
+        : isDisabled
+        ? "<span class=\"admin-status-pill status-취소\">이용 중지</span>"
+        : "<span class=\"admin-status-pill status-확정\">승인됨</span>")
+        + (resetReq ? " <span class=\"admin-status-pill status-대기\" title=\"" + escapeHtml(resetReq.at || "") + "\">재설정 요청</span>" : "");
+      const sid = escapeHtml(s.id).replace(/'/g, "&#39;");
+      const actionHtml = (isPending ? "<button type=\"button\" class=\"admin-status-btn\" onclick=\"approveStudent('" + sid + "')\">승인</button> " : "")
+        + (!isPending ? "<button type=\"button\" class=\"admin-status-btn\" onclick=\"resetStudentPassword('" + sid + "')\">비밀번호 재설정</button> " : "")
+        + (!isPending && !isDisabled ? "<button type=\"button\" class=\"admin-status-btn\" onclick=\"setStudentActive('" + sid + "', false)\">이용 중지</button> " : "")
+        + (isDisabled ? "<button type=\"button\" class=\"admin-status-btn\" onclick=\"setStudentActive('" + sid + "', true)\">다시 이용</button> " : "")
+        + "<button type=\"button\" class=\"admin-delete-btn\" onclick=\"deleteStudent('" + sid + "')\">삭제</button>";
       return "<tr>"
         + "<td>" + escapeHtml(s.id) + "</td>"
         + "<td>" + escapeHtml(s.school || "-") + "</td>"
@@ -20707,7 +20940,8 @@
       if (!res || !res.ok) {
         btn.disabled = false;
         btn.textContent = "로그인";
-        msg.textContent = (res && res.error) || "아이디 또는 비밀번호가 올바르지 않습니다.";
+        // 서버가 고장 나 오류를 글이 아닌 형태로 주면 "[object Object]"가 보이므로, 글일 때만 그대로 쓴다
+        msg.textContent = (res && typeof res.error === "string" && res.error) || (res && res.error ? "서버에 잠시 문제가 있어요. 잠시 후 다시 시도해주세요." : "아이디 또는 비밀번호가 올바르지 않습니다.");
         msg.className = "apply-status-msg error";
         return;
       }
@@ -20719,6 +20953,7 @@
         localStorage.setItem("holoStudentLoginDate", getCalendarDateKey());
         storeStudentJoinYm(doc.exists ? doc.data() : {});
         enterAfterLogin();
+        chatUsageRefresh();
       });
     }).catch(err => {
       console.error(err);
@@ -27023,15 +27258,6 @@
         if (mEl && !mEl.value) mEl.value = localStorage.getItem("holoStudentGoalMajor") || "";
       }).catch(() => {});
     }
-    const usageEl = document.getElementById("mypageUsage");
-    if (usageEl) {
-      usageEl.textContent = "불러오는 중…";
-      authPost({ action: "auth_usage" }).then(res => {
-        if (!res || !res.ok) { usageEl.textContent = "지금은 확인할 수 없어요."; return; }
-        const names = { chat: "통합 질문", consult: "학습 상담 AI", plan: "공부 계획 챗봇", schedule: "독서실 스케줄 챗봇" };
-        usageEl.innerHTML = Object.keys(names).filter(k => res.usage && res.usage[k]).map(k => { const u = res.usage[k], pct = Math.min(100, Math.round(u.used / Math.max(1, u.limit) * 100)); return '<div class="item"><div class="row"><span>' + names[k] + '</span><b>' + u.used + ' / ' + u.limit + '회</b></div><div class="mp-meter' + (pct >= 100 ? ' full' : '') + '"><i style="width:' + pct + '%"></i></div></div>'; }).join("") || "-";
-      }).catch(() => { usageEl.textContent = "지금은 확인할 수 없어요."; });
-    }
   }
   function saveMypageGoal() {
     const id = localStorage.getItem("holoStudentId");
@@ -27061,8 +27287,10 @@
     if (newPw !== newPw2) { say("새 비밀번호가 서로 일치하지 않아요.", false); return; }
     authPost({ action: "auth_change_password", oldPw: oldPw, newPw: newPw, token: localStorage.getItem("holoStudentToken") || "" }).then(res => {
       if (!res || !res.ok) { say((res && res.error) || "변경하지 못했어요.", false); return; }
+      // 바뀐 걸 확실히 알도록 이 기기도 로그아웃하고 새 비밀번호로 다시 로그인하게 한다
       ["mpPwOld", "mpPwNew", "mpPwNew2"].forEach(i => { document.getElementById(i).value = ""; });
       say("비밀번호를 바꿨어요.", true);
+      forceRelogin("비밀번호를 바꿨어요. 새 비밀번호로 다시 로그인해 주세요.");
     }).catch(() => say("변경 중 오류가 발생했어요.", false));
   }
   // 마이페이지 "D-Day 설정하기" — 최대 3개까지, 제목+날짜로 여러 개 등록할 수 있다.
