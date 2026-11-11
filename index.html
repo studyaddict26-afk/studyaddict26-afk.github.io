@@ -3178,6 +3178,9 @@
   .home-dash .home-week-overview, .home-dash .hd-today-col .rh-tile { transition: background 0.18s, border-color 0.18s, box-shadow 0.18s; }
   .home-dash .home-week-overview:hover, .home-dash .home-week-overview:active,
   .home-dash .hd-today-col .rh-tile:hover, .home-dash .hd-today-col .rh-tile:active { background: var(--cream); border-color: var(--line-dark); box-shadow: 0 2px 12px rgba(23,24,26,0.05); }
+  /* "이번 주 학습 현황"은 점수 확인용 — 누르는 박스처럼 보이지 않게 */
+  .home-dash .home-week-overview.hwo-static { cursor: default; }
+  .home-dash .home-week-overview.hwo-static:hover, .home-dash .home-week-overview.hwo-static:active { background: var(--paper); border-color: var(--line); box-shadow: none; }
   .home-nav-btn .hn-title {
     font-size: 0.88rem; font-weight: 600; letter-spacing: -0.01em; color: var(--ink);
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -3962,10 +3965,35 @@
     width: 100%; max-width: 1480px; margin: 0 auto auto; box-sizing: border-box; padding: 0 40px 24px 40px; /* margin:auto = 선생님 홈처럼 남는 높이의 가운데에 놓는다 */
     display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: var(--ln-top-h) var(--ln-cal-h); row-gap: var(--ln-gap); column-gap: 48px; /* 왼쪽 흰 박스들과 오른쪽 파란/AI 박스들 사이를 넓게 — 박스 가로 폭이 그만큼 줄어든다 */
   }
+  /* ── 홈 두 페이지(2026-11-11): 1쪽 = 공부(왼쪽 묶음), 2쪽 = 독서실(포스터 · 공지 · 스케줄 · 데스크 요청).
+     예전 2칸 격자를 그대로 두고 폭을 2배로 늘린 뒤, 한 칸만 보이게 잘라서 옆으로 민다(translateX). */
+  .hd-viewport { position: relative; width: 100%; max-width: 1480px; margin: 0 auto auto; overflow: hidden; touch-action: pan-y; }
+  /* 각 페이지는 가운데에 좁게(최대 700px, 예전 반쪽 폭과 비슷) — space-around로 두 칸이 각자 자기 절반의 가운데에 놓인다 */
+  .hd-viewport .home-dash { width: 200%; max-width: none; margin: 0; padding: 0 0 28px; column-gap: 0; grid-template-columns: repeat(2, minmax(0, min(700px, calc(50% - 80px)))); justify-content: space-around; transition: transform 0.7s cubic-bezier(.22,.8,.24,1); will-change: transform; }
+  /* 넘어갈 때 나가는 쪽은 서서히 흐려지고 들어오는 쪽은 서서히 또렷해진다 */
+  .hd-viewport .home-top-row, .hd-viewport .home-nav-grid, .hd-viewport .home-promo-slot,
+  .hd-viewport .hd-right-top, .hd-viewport .hd-ai { transition: opacity 0.55s ease, transform 0.7s cubic-bezier(.22,.8,.24,1); }
+  .hd-viewport[data-page="1"] .home-top-row, .hd-viewport[data-page="1"] .home-nav-grid, .hd-viewport[data-page="1"] .home-promo-slot,
+  .hd-viewport[data-page="0"] .hd-right-top, .hd-viewport[data-page="0"] .hd-ai { opacity: 0; }
+  .hd-viewport[data-page="1"] .home-top-row, .hd-viewport[data-page="1"] .home-nav-grid, .hd-viewport[data-page="1"] .home-promo-slot { transform: translateX(-24px); }
+  .hd-viewport[data-page="0"] .hd-right-top, .hd-viewport[data-page="0"] .hd-ai { transform: translateX(24px); }
+  /* 함께 보기 ↔ 한 쪽 보기로 바꿀 때는 배치가 달라지므로 살짝 떠오르며 나타나게 */
+  @keyframes hdFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .hd-viewport .home-dash.hd-fade { animation: hdFadeIn 0.5s cubic-bezier(.22,.8,.24,1); }
+  .hd-viewport[data-page="1"] .home-dash.hd-fade { animation-name: hdFadeIn1; }
+  @keyframes hdFadeIn1 { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .hd-viewport .home-dash, .hd-viewport .home-dash * { transition: none !important; animation: none !important; } }
+  .hd-viewport[data-page="1"] .home-dash { transform: translateX(-50%); }
+  /* 아래 가운데 전환 버튼: 학습 관리 / 생활 관리 — 지금 보고 있는 쪽만 진하게 */
+  .hd-viewport .home-dash { padding-bottom: 92px; } /* 아래 전환 버튼과 박스 사이 여유 */
+  .hd-tabs { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 5; display: flex; padding: 3px; gap: 2px; background: #fff; border: 1px solid var(--line-dark); border-radius: 999px; box-shadow: 0 2px 10px rgba(23,24,26,0.06); }
+  .hd-tabs button { font-family: inherit; font-size: 0.8rem; font-weight: 700; color: var(--ink-soft); background: none; border: none; border-radius: 999px; padding: 7px 20px; cursor: pointer; transition: background 0.2s, color 0.2s; white-space: nowrap; }
+  .hd-tabs button:hover { color: var(--ink); }
+  .hd-viewport[data-page="0"] #hdTab0, .hd-viewport[data-page="1"] #hdTab1, .hd-viewport[data-page="all"] #hdTabAll { background: #0D2155; color: #fff; }
+  /* 함께 보기: 예전처럼 한 화면에 왼쪽(학습) · 오른쪽(생활) 나란히, 가운데 얇은 세로선 */
+  .hd-viewport[data-page="all"] .home-dash { width: 100%; transform: none; transition: none; padding: 0 40px 92px; column-gap: 48px; grid-template-columns: repeat(2, minmax(0, 1fr)); justify-content: normal; position: relative; }
   @media (min-width: 901px) {
-    /* 왼쪽 묶음과 오른쪽 묶음(AI · 공지) 사이 가운데의 얇은 세로 실선 */
-    .home-dash { position: relative; }
-    .home-dash::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 24px; width: 1px; background: var(--line-dark); transform: translateX(-0.5px); pointer-events: none; }
+    .hd-viewport[data-page="all"] .home-dash::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 92px; width: 1px; background: var(--line-dark); pointer-events: none; }
   }
   .hd-left, .hd-right { display: contents; }
   /* 로고 줄(2027 수능 D-day · 로고 · 마이페이지)을 맨 위가 아니라 박스 바로 위로 — 로고 줄 + 박스 묶음이 함께 세로 가운데에 놓인다 */
@@ -3981,7 +4009,14 @@
   #view-home .hwo-stat-label { font-size: 0.62rem; }
   #view-home .rh-tile-score-big { font-weight: 500; } /* 오늘의 공부 점수(N/2점)도 볼드 없이 — 모바일 포함 */
   #view-home .home-brand-actions { margin-right: 16px; } /* 마이페이지도 D-day와 같은 만큼 안쪽으로 */
-  #view-home .home-brand-row, .home-dash { zoom: 0.94; } /* 비율은 그대로 두고 전체를 6% 줄여 양옆 여백을 늘린다 */
+  /* 학습 관리 · 생활 관리 한 쪽 보기에서는 위 줄(D-day · 로고 · 마이페이지 · 학습 프로그램)도 가운데 박스 폭(700px)에 맞춰
+     D-day는 박스 왼쪽 끝, 학습 프로그램 버튼은 박스 오른쪽 끝에 오게 한다. 함께 보기에서는 예전처럼 넓게. */
+  @media (min-width: 901px) {
+    #view-home .home-brand-inner { transition: max-width 0.5s cubic-bezier(.22,.8,.24,1), padding 0.5s; }
+    #view-home:not([data-home-view="all"]) .home-brand-inner { max-width: 700px; padding: 0; }    #view-home .home-dday-group { margin-left: 0; }       /* 함께 보기에서도 박스 양끝과 맞춘다 */
+    #view-home .home-brand-actions { margin-right: 0; }
+  }
+  #view-home .home-brand-row, .hd-viewport { zoom: 0.94; } /* 비율은 그대로 두고 전체를 6% 줄여 양옆 여백을 늘린다 */
   #view-home .home-brand-icon { width: 24px; height: 24px; }
   .hd-topleft { display: contents; } /* 점수 박스는 윗줄, 버튼 3개는 아랫줄 맨 위(= 공부중독 AI 박스 윗선과 같은 높이) */
   .home-dash .home-top-row,
@@ -4030,6 +4065,188 @@
   .hn-notice-title { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
   .hn-notice-empty { font-size: 0.78rem; color: var(--ink-soft); }
   .hd-ai { grid-column: 2; grid-row: 2; display: flex; min-height: 0; min-width: 0; }
+  /* ── 독서실 스케줄 + 데스크 요청 (홈 오른쪽 아래) ── 선 + 글씨 위계, 진한 버튼은 '보내기' 하나 */
+  .hdk { flex: 1; min-width: 0; min-height: 0; display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr); grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); /* 고정 스케줄(위) : 돌발 · 데스크(아래) = 1 : 1 */ gap: var(--ln-gap, 12px); }
+  .hdk-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+  .hdk-fixed { grid-column: 1 / -1; }
+  .hdk-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex: none; }
+  .hdk-title { margin: 0; font-size: 0.86rem; font-weight: 700; color: var(--ink); }
+  .hdk-state { font-size: 0.66rem; color: var(--ink-soft); }
+  .hdk-state.wait { color: #B26A00; font-weight: 700; }
+  .hdk-state.rej { color: #C0392B; font-weight: 700; }
+  .hdk-btn { margin-left: auto; flex: none; font-family: inherit; font-size: 0.68rem; font-weight: 700; color: var(--ink); background: #fff; border: 1px solid var(--line-dark); border-radius: 8px; padding: 4px 10px; cursor: pointer; }
+  .hdk-btn:hover { background: var(--cream); }
+  .hdk-btn:disabled { color: #A0A3AA; cursor: default; background: #fff; }
+  .hdk-week { flex: 1; min-height: 0; overflow-y: auto; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); align-content: start; border-top: 1px solid var(--line); }
+  .hdk-day { padding: 7px 6px 2px; min-width: 0; border-left: 1px solid var(--line); }
+  .hdk-day:first-child { border-left: none; }
+  .hdk-day-name { font-size: 0.7rem; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+  .hdk-day.today .hdk-day-name { color: #0D2155; }
+  .hdk-day.today .hdk-day-name::after { content: " 오늘"; font-size: 0.58rem; font-weight: 700; color: #3B5BA9; }
+  .hdk-ev { display: flex; justify-content: space-between; gap: 4px; font-size: 0.64rem; line-height: 1.6; color: var(--ink); white-space: nowrap; }
+  .hdk-ev span { color: var(--ink-soft); }
+  .hdk-day-plain { font-size: 0.64rem; color: var(--ink-soft); line-height: 1.5; }
+  .hdk-empty { font-size: 0.7rem; color: var(--ink-soft); padding: 6px 0; }
+  .hdk-week .hdk-empty { grid-column: 1 / -1; }
+  .hdk-sub { flex: none; font-size: 0.66rem; font-weight: 700; color: var(--ink-soft); padding-bottom: 4px; border-bottom: 1px solid var(--line); }
+  .hdk-sub2 { margin-top: 10px; }
+  .hdk-list { flex: none; padding: 4px 0; }
+  .hdk-list-scroll { flex: 1 1 0; min-height: 0; overflow-y: auto; }
+  .hdk-ad { display: flex; gap: 6px; align-items: baseline; font-size: 0.68rem; line-height: 1.55; padding: 3px 0; color: var(--ink); }
+  .hdk-ad-date { flex: none; font-weight: 700; color: var(--ink); min-width: 34px; }
+  .hdk-ad-body { flex: 1; min-width: 0; }
+  .hdk-ad-tag { flex: none; font-size: 0.6rem; font-weight: 700; color: var(--ink-soft); }
+  .hdk-ad-tag.wait { color: #B26A00; }
+  .hdk-ad-tag.rej { color: #C0392B; }
+  .hdk-ad.past { color: var(--ink-soft); }
+  .hdk-desk { padding-bottom: 10px; background: #F4F4F5; } /* 예전 학습 상담 AI 박스와 같은 배경 — 안내 말풍선은 흰색으로 */
+  .hdk-seat { flex: none; align-self: center; font-size: 0.64rem; font-weight: 700; color: var(--ink-soft); padding-right: 8px; border-right: 1px solid var(--line); white-space: nowrap; }
+  .hdk-seat:empty { display: none; }
+  .hdk-msgs { flex: 1 1 0; min-height: 60px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 4px 2px 8px; }
+  /* 안내 말: 챗봇 인사와 같은 모양 — 사람 아이콘 + 글씨, 말풍선 배경 없음 */
+  .hdk-desk-hello, .hdk-sys { display: flex; align-items: flex-start; gap: 9px; align-self: flex-start; max-width: 92%; font-size: 0.74rem; line-height: 1.55; color: var(--ink); background: none; border-radius: 0; padding: 0; }
+  .hdk-desk-hello span, .hdk-sys > span { padding-top: 4px; }
+  .hdk-av { flex: none; width: 26px; height: 26px; border-radius: 8px; object-fit: cover; }
+  .hdk-m { align-self: flex-end; max-width: 86%; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+  .hdk-m-b { background: #0D2155; color: #fff; font-size: 0.7rem; line-height: 1.5; border-radius: 12px 12px 4px 12px; padding: 6px 10px; word-break: break-all; }
+  .hdk-m-meta { font-size: 0.58rem; color: var(--ink-soft); }
+  .hdk-m-meta b { font-weight: 700; }
+  .hdk-m-meta b.s-new { color: #8E9199; }
+  .hdk-m-meta b.s-doing { color: #B26A00; }
+  .hdk-m-meta b.s-done { color: #2E7D4F; }
+  .hdk-sys b { color: #0D2155; }
+  .hdk-sys button { display: block; margin-top: 6px; font-family: inherit; font-size: 0.66rem; font-weight: 700; color: #0D2155; background: #fff; border: 1px solid #0D2155; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+  .hdk-sys .done { display: block; margin-top: 4px; font-weight: 700; color: #2E7D4F; }
+  .hdk-quick { flex: none; display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0 6px; }
+  /* 데스크 요청: 제목 · 좌석 · 빠른 버튼을 한 줄로(좁으면 버튼이 다음 줄로) */
+  .hdk-desk-head { justify-content: center; } /* 제목 가운데 */
+  .hdk-desk .hdk-quick { justify-content: center; } /* 빠른 버튼: 입력칸 바로 위, 가운데 */
+  .hdk-desk .hdk-msgs { padding-top: 6px; }
+  .hdk-quick button { font-family: inherit; font-size: 0.64rem; font-weight: 600; color: var(--ink); background: #fff; border: 1px solid var(--line-dark); border-radius: 999px; padding: 3px 9px; cursor: pointer; }
+  .hdk-quick button:hover { background: var(--cream); }
+  .hdk-quick button.on { border-color: #0D2155; color: #0D2155; font-weight: 800; }
+  .hdk-input { flex: none; display: flex; gap: 6px; border: 1px solid var(--line-dark); border-radius: 10px; padding: 4px 4px 4px 10px; background: #fff; }
+  .hdk-input:focus-within { border-color: #0D2155; }
+  .hdk-input input { flex: 1; min-width: 0; border: none; outline: none; font-family: inherit; font-size: 0.74rem; background: transparent; color: var(--ink); }
+  .hdk-input button { flex: none; font-family: inherit; font-size: 0.72rem; font-weight: 700; color: #fff; background: var(--ink); border: none; border-radius: 7px; padding: 6px 12px; cursor: pointer; }
+  @media (max-width: 900px) {
+    .hdk { grid-template-columns: 1fr; grid-template-rows: none; }
+    .hdk-week { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .hdk-day:nth-child(4) { border-left: none; }
+    .hdk-adhoc { min-height: 220px; }
+    .hdk-desk { min-height: 360px; }
+  }
+  /* 홈 "6일 분석지 확인하기" 박스 */
+  .hrp-inner { justify-content: center; align-items: center; text-align: center; gap: 6px; }
+  .hrp-latest { font-size: 0.78rem; font-weight: 700; color: var(--ink); line-height: 1.5; }
+  .hrp-note { font-size: 0.66rem; color: var(--ink-soft); }
+  /* ── 관리자: 독서실 관리 (adk-) ── */
+  .adk-badge { display: inline-block; min-width: 18px; padding: 1px 6px; margin-left: 6px; border-radius: 999px; background: #E05A47; color: #fff; font-size: 0.66rem; font-weight: 800; text-align: center; line-height: 1.5; }
+  .adk-badge[hidden] { display: none; }
+  .adk-list { display: flex; flex-direction: column; gap: 10px; }
+  .adk-item { background: #fff; border: 1px solid #E2E5EC; border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem; line-height: 1.55; }
+  .adk-item.is-new { border-color: #E05A47; box-shadow: 0 0 0 1px rgba(224,90,71,0.15); }
+  .adk-item-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .adk-dim { font-size: 0.74rem; color: #8A8F99; }
+  .adk-seat-tag { font-weight: 800; color: #0D2155; background: #EEF1F8; border-radius: 6px; padding: 1px 8px; }
+  .adk-kind { font-size: 0.72rem; font-weight: 700; color: #0D2155; border: 1px solid #C9D1E6; border-radius: 6px; padding: 1px 7px; margin-right: 8px; }
+  .adk-kind.k-noise { color: #B03A2E; border-color: #E8B9B2; }
+  .adk-pdf { font-size: 0.74rem; font-weight: 700; color: #B26A00; margin-left: 6px; }
+  .adk-pdf.ok { color: #2E7D4F; }
+  .adk-sts { display: flex; gap: 6px; flex-wrap: wrap; }
+  .adk-st { font-family: inherit; font-size: 0.74rem; font-weight: 600; color: #555B66; background: #fff; border: 1px solid #D5D9E1; border-radius: 7px; padding: 5px 10px; cursor: pointer; }
+  .adk-st.on { color: #fff; font-weight: 700; }
+  .adk-st.on.s-new { background: #8A8F99; border-color: #8A8F99; }
+  .adk-st.on.s-doing { background: #C27C0E; border-color: #C27C0E; }
+  .adk-st.on.s-done { background: #2E7D4F; border-color: #2E7D4F; }
+  .adk-days { display: flex; flex-direction: column; gap: 2px; font-size: 0.8rem; }
+  .adk-days b { display: inline-block; min-width: 18px; color: #0D2155; }
+  .adk-reason { font-size: 0.8rem; color: #333; background: #F6F7FA; border-radius: 6px; padding: 6px 10px; }
+  .adk-ev { font-size: 0.78rem; color: #333; }
+  .adk-ev-img img { margin-top: 8px; max-width: 360px; max-height: 420px; border-radius: 8px; border: 1px solid #E2E5EC; display: block; }
+  .adk-acts { display: flex; gap: 8px; }
+  .adk-btn { font-family: inherit; font-size: 0.78rem; font-weight: 700; color: #0D2155; background: #fff; border: 1px solid #C9D1E6; border-radius: 7px; padding: 6px 14px; cursor: pointer; }
+  .adk-btn:hover { background: #F3F5FA; }
+  .adk-btn-ok { color: #fff; background: #0D2155; border-color: #0D2155; }
+  .adk-btn-ok:hover { background: #1B2F6B; }
+  .adk-btn-no { color: #B03A2E; border-color: #E8B9B2; }
+  .adk-chk { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #555B66; cursor: pointer; }
+  .adk-seat { width: 64px; font-family: inherit; font-size: 0.8rem; border: 1px solid #D5D9E1; border-radius: 6px; padding: 3px 6px; transition: border-color 0.3s; }
+  /* ── 고정 · 돌발 스케줄 페이지 (sp-) ── */
+  .sp-page { max-width: 860px; }
+  .sp-h { margin: 0 0 6px; font-size: 1.2rem; font-weight: 800; color: var(--ink); }
+  .sp-lead { margin: 0 0 14px; font-size: 0.82rem; line-height: 1.6; color: var(--ink-soft); }
+  .sp-hours { font-size: 0.76rem; color: var(--ink); background: #F4F4F5; border-radius: 8px; padding: 8px 12px; margin-bottom: 8px; }
+  .sp-rules { margin: 0 0 16px; padding-left: 18px; font-size: 0.76rem; line-height: 1.7; color: var(--ink-soft); }
+  .sp-rules b { color: var(--ink); }
+  .sp-box { border: 1px solid var(--line-dark); border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; font-size: 0.8rem; line-height: 1.6; background: #fff; }
+  .sp-box-rej { border-color: #E3B4AE; background: #FDF6F5; }
+  .sp-days { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+  .sp-day { padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .sp-day-h { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .sp-wd { font-size: 0.86rem; min-width: 52px; color: var(--ink); }
+  .sp-seg { display: inline-flex; border: 1px solid var(--line-dark); border-radius: 8px; overflow: hidden; flex-wrap: wrap; }
+  .sp-seg button { font-family: inherit; font-size: 0.72rem; font-weight: 600; color: var(--ink-soft); background: #fff; border: none; border-left: 1px solid var(--line); padding: 6px 11px; cursor: pointer; }
+  .sp-seg button:first-child { border-left: none; }
+  .sp-seg button.on { background: #0D2155; color: #fff; font-weight: 700; }
+  .sp-copy { margin-left: auto; font-family: inherit; font-size: 0.68rem; color: var(--ink-soft); background: none; border: none; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .sp-day-plain { font-size: 0.74rem; color: var(--ink-soft); padding: 8px 0 0 62px; }
+  .sp-times { display: flex; flex-direction: column; gap: 6px; padding: 10px 0 0 62px; }
+  .sp-tl { display: inline-flex; align-items: center; gap: 8px; font-size: 0.74rem; color: var(--ink); }
+  .sp-tl span { min-width: 40px; color: var(--ink-soft); font-weight: 600; }
+  .sp-time { font-family: inherit; font-size: 0.78rem; border: 1px solid var(--line-dark); border-radius: 7px; padding: 4px 6px; background: #fff; color: var(--ink); }
+  .sp-out { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 6px 8px; border-left: 2px solid var(--line-dark); margin-left: 2px; }
+  .sp-reason { flex: 1; min-width: 160px; font-family: inherit; font-size: 0.74rem; border: 1px solid var(--line-dark); border-radius: 7px; padding: 5px 8px; }
+  .sp-x { font-family: inherit; border: none; background: none; color: var(--ink-soft); font-size: 1rem; cursor: pointer; padding: 0 4px; }
+  .sp-add { align-self: flex-start; font-family: inherit; font-size: 0.7rem; font-weight: 700; color: #0D2155; background: none; border: 1px dashed #9AA6C4; border-radius: 7px; padding: 4px 10px; cursor: pointer; }
+  .sp-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+  .sp-actions-top { justify-content: flex-start; margin: 0 0 14px; }
+  .sp-btn { font-family: inherit; font-size: 0.8rem; font-weight: 700; color: #fff; background: #0D2155; border: none; border-radius: 8px; padding: 9px 18px; cursor: pointer; }
+  .sp-btn:disabled { opacity: 0.6; cursor: default; }
+  .sp-btn2 { font-family: inherit; font-size: 0.74rem; font-weight: 700; color: var(--ink); background: #fff; border: 1px solid var(--line-dark); border-radius: 8px; padding: 7px 12px; cursor: pointer; }
+  .sp-btn2:hover { background: var(--cream); }
+  .sp-card { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; background: #fff; }
+  .sp-card-warn { border-color: #E8C98F; background: #FFFBF2; font-size: 0.76rem; line-height: 1.6; }
+  .sp-h3 { margin: 0 0 10px; font-size: 0.86rem; font-weight: 800; color: var(--ink); }
+  .sp-sum { display: flex; flex-direction: column; gap: 4px; font-size: 0.76rem; line-height: 1.6; margin: 6px 0 10px; }
+  .sp-sum b { display: inline-block; min-width: 18px; color: #0D2155; }
+  .sp-dim { font-size: 0.7rem; color: var(--ink-soft); font-weight: 400; }
+  .sp-sugg { font-size: 0.76rem; line-height: 1.6; padding: 6px 0; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 8px; justify-content: space-between; flex-wrap: wrap; }
+  .sp-chk { display: flex; align-items: flex-start; gap: 8px; font-size: 0.76rem; line-height: 1.6; margin: 8px 0; cursor: pointer; }
+  .sp-chk input { margin-top: 4px; }
+  .sp-lab { display: block; font-size: 0.76rem; font-weight: 700; color: var(--ink); margin: 12px 0 6px; }
+  .sp-ta { width: 100%; box-sizing: border-box; font-family: inherit; font-size: 0.78rem; line-height: 1.6; border: 1px solid var(--line-dark); border-radius: 8px; padding: 8px 10px; resize: vertical; }
+  .sp-file { display: inline-flex; align-items: center; gap: 6px; font-size: 0.74rem; font-weight: 700; color: #0D2155; border: 1px solid #0D2155; border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+  .sp-file input { display: none; }
+  .sp-ev-prev { margin-top: 8px; font-size: 0.72rem; color: var(--ink-soft); }
+  .sp-ev-prev img { max-width: 220px; max-height: 220px; border-radius: 8px; border: 1px solid var(--line); display: block; }
+  .sp-msg { margin-top: 12px; }
+  .sp-err { font-size: 0.78rem; line-height: 1.6; color: #B03A2E; background: #FDF3F2; border-radius: 8px; padding: 9px 12px; }
+  .sp-ok { font-size: 0.8rem; color: #2E6B47; background: #F1F8F3; border-radius: 8px; padding: 9px 12px; font-weight: 700; }
+  .sp-empty { font-size: 0.76rem; color: var(--ink-soft); padding: 6px 0; }
+  .sp-row { display: flex; align-items: baseline; gap: 10px; font-size: 0.76rem; line-height: 1.6; padding: 7px 0; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .sp-row:last-child { border-bottom: none; }
+  .sp-row.past { color: var(--ink-soft); }
+  .sp-row-d { flex: none; min-width: 40px; font-weight: 700; }
+  .sp-row-b { flex: 1; min-width: 160px; }
+  .sp-row-r { flex: none; display: inline-flex; gap: 8px; align-items: baseline; }
+  .sp-tag { font-size: 0.68rem; font-weight: 700; color: var(--ink-soft); }
+  .sp-tag.wait { color: #B26A00; }
+  .sp-tag.rej { color: #C0392B; }
+  .sp-link { font-family: inherit; font-size: 0.7rem; font-weight: 700; color: #0D2155; background: none; border: none; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .sp-step { display: flex; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
+  .sp-step:first-of-type { border-top: none; }
+  .sp-num { flex: none; width: 22px; height: 22px; border-radius: 50%; background: #0D2155; color: #fff; font-size: 0.7rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; margin-top: 10px; }
+  .sp-step-b { flex: 1; min-width: 0; }
+  .sp-step-b .sp-times { padding-left: 0; }
+  .sp-date { font-family: inherit; font-size: 0.8rem; border: 1px solid var(--line-dark); border-radius: 7px; padding: 5px 8px; }
+  .sp-radio { display: flex; align-items: flex-start; gap: 8px; font-size: 0.76rem; line-height: 1.5; margin: 6px 0; cursor: pointer; }
+  .sp-radio input { margin-top: 3px; }
+  .sp-radio small { display: block; font-size: 0.68rem; color: var(--ink-soft); }
+  @media (max-width: 600px) {
+    .sp-times, .sp-day-plain { padding-left: 0; }
+    .sp-copy { margin-left: 0; }
+  }
   .hd-ai .record-chat-pane { flex: 1; min-height: 0; border-radius: 12px; overflow: hidden; background: #F4F4F5; border-color: var(--line); } /* 커뮤니티 · 공지사항 · AI 세 칸은 같은 배경색 */
   .hd-ai .record-chat-pane .chat-pane-title-row { flex: none; padding: 14px 20px 0; }
   .hd-ai .record-chat-pane .chat-wrap { max-width: none; padding: 38px 20px 30px; gap: 14px; }
@@ -4079,6 +4296,15 @@
     .home-dash .home-promo-slot { flex-direction: column; }
     .hd-right-top { flex-direction: column; }
     .home-poster-rot { min-height: 110px; }
+    /* 휴대폰 · 태블릿: 두 페이지를 세로 묶음 두 개로 나란히 놓고 옆으로 민다. 전환 버튼은 화면 아래에 떠 있게 */
+    .hd-viewport .home-dash { display: flex; align-items: flex-start; gap: 32px; padding: 16px 16px 84px; }
+    .hd-left, .hd-right { display: flex; flex-direction: column; gap: var(--ln-gap); flex: 0 0 calc(50% - 32px); min-width: 0; }
+    .hd-tabs { position: fixed; bottom: 16px; }
+    .hd-tabs button { padding: 7px 14px; }
+    .hd-viewport { transition: height 0.3s; }
+    /* 함께 보기(휴대폰): 두 묶음을 위아래로 이어서 */
+    .hd-viewport[data-page="all"] .home-dash { flex-direction: column; padding: 16px 16px 84px; }
+    .hd-viewport[data-page="all"] .hd-left, .hd-viewport[data-page="all"] .hd-right { flex: none; width: 100%; }
   }
 
   /* 태블릿 · 모바일(1100px 이하): 홈이 답답하지 않게 제목 · 요일 · 날짜 글자를 한 단계 줄인다 */
@@ -8448,27 +8674,28 @@
       </div>
     </div>
 
-    <div class="home-dash">
+    <div class="hd-viewport" id="hdViewport" data-page="0">
+    <div class="home-dash" id="homeDash">
       <div class="hd-left">
       <div class="hd-topleft">
     <div class="home-top-row">
-      <div class="home-week-overview" onclick="homeBoxGo(event,'recordhub')">
+      <div class="home-week-overview hwo-static"><!-- 점수 확인용(누르는 기능 없음). 분석지는 '6일 분석지 확인하기' 박스로 간다 -->
         <div class="hwo-top-row">
           <span class="hwo-title-group">
             <span class="hwo-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z" stroke-linejoin="round"/><path d="M4 9h16M9 4v16"/></svg>
             </span>
-            <span class="hwo-title">누적 공부 기록 확인하기 <span class="hwo-title-arrow">›</span></span>
+            <span class="hwo-title">이번 주 학습 현황</span>
           </span>
         </div>
         <div class="hwo-body">
+          <div class="hwo-stat-pair">
+            <div class="hwo-stat-row"><span class="hwo-stat-label">이번 주 누적 평균</span><span class="hwo-stat-val" id="hwoWeekTotal">0.0점</span></div>
+            <div class="hwo-stat-row"><span class="hwo-stat-label">전체 하루 평균</span><span class="hwo-stat-val" id="hwoWeekAvg">0.0점</span></div>
+          </div>
           <div class="hwo-chart-col">
             <svg class="hwo-chart-svg" id="hwoChartSvg" viewBox="0 0 476 26" preserveAspectRatio="none"></svg>
             <div class="hwo-day-labels" id="hwoDayLabels"></div>
-          </div>
-          <div class="hwo-stat-pair">
-            <div class="hwo-stat-row"><span class="hwo-stat-label">이번 주 누적</span><span class="hwo-stat-val" id="hwoWeekTotal">0점</span></div>
-            <div class="hwo-stat-row"><span class="hwo-stat-label">전체 하루 평균</span><span class="hwo-stat-val" id="hwoWeekAvg">0.0점</span></div>
           </div>
         </div>
       </div>
@@ -8524,15 +8751,14 @@
           </div>
         </div>
       </div>
-      <div class="home-schedule-box" onclick="homeBoxGo(event,'scheduleManage')">
+      <!-- 예전 "독서실 스케줄" 박스 자리 → 6일 분석지 바로가기 (스케줄은 오른쪽 큰 박스로 옮겼다) -->
+      <div class="home-schedule-box hrp-box" onclick="hrpGo(event)">
         <div class="home-schedule-head">
-          <a class="home-schedule-title" href="#">독서실 스케줄 <span class="arrow">›</span></a>
+          <a class="home-schedule-title" href="#">6일 분석지 확인하기 <span class="arrow">›</span></a>
         </div>
-        <div class="home-schedule-inner">
-          <div class="home-schedule-date" id="homeScheduleDate">확인 중…</div>
-          <ul class="home-schedule-log" id="homeScheduleLog">
-            <li class="sched-empty-msg">확인 중…</li>
-          </ul>
+        <div class="home-schedule-inner hrp-inner">
+          <div class="hrp-latest" id="hrpLatest">확인 중…</div>
+          <div class="hrp-note" id="hrpNote">매주 일요일에 도착해요</div>
         </div>
       </div>
       <div class="home-schedule-box home-eng-test" onclick="event.preventDefault();go('vocabpick')">
@@ -8568,7 +8794,47 @@
           <div class="home-notice-rot" id="homeNoticeRot"><!-- 공지는 아래 스크립트의 HOME_NOTICES 목록에서 만든다(renderHomeNotices) --></div>
         </div>
         <div class="hd-ai">
-      <div class="record-chat-pane ln-chat">
+      <!-- 독서실 스케줄 + 데스크 요청 (학습 상담 AI 자리). 고정 스케줄(위, 가로) / 돌발 스케줄(왼쪽 아래) / 데스크 요청 채팅(오른쪽 아래) -->
+      <div class="hdk" id="hdk">
+        <section class="hdk-card hdk-fixed">
+          <div class="hdk-head">
+            <h3 class="hdk-title">고정 스케줄</h3>
+            <span class="hdk-state" id="hdkFixedState"></span>
+            <button type="button" class="hdk-btn" id="hdkFixedBtn" onclick="go('schedFixed')">제출하기</button>
+          </div>
+          <div class="hdk-week" id="hdkWeek"><div class="hdk-empty">확인 중…</div></div>
+        </section>
+        <section class="hdk-card hdk-adhoc">
+          <div class="hdk-head">
+            <h3 class="hdk-title">돌발 스케줄</h3>
+            <button type="button" class="hdk-btn" onclick="go('schedAdhoc')">수정하기</button>
+          </div>
+          <div class="hdk-sub">오늘</div>
+          <div class="hdk-list" id="hdkAdhocToday"><div class="hdk-empty">확인 중…</div></div>
+          <div class="hdk-sub hdk-sub2">누적 <span id="hdkAdhocCount"></span></div>
+          <div class="hdk-list hdk-list-scroll" id="hdkAdhocAll"></div>
+        </section>
+        <section class="hdk-card hdk-desk">
+          <div class="hdk-head hdk-desk-head">
+            <h3 class="hdk-title">데스크에 요청하기</h3>
+          </div>
+          <div class="hdk-msgs" id="hdkMsgs"></div>
+          <div class="hdk-quick">
+            <button type="button" onclick="hdkQuick('pdf')">PDF 프린트</button>
+            <button type="button" onclick="hdkQuick('water')">얼음물</button>
+            <button type="button" onclick="hdkQuick('cold')">추워요</button>
+            <button type="button" onclick="hdkQuick('hot')">더워요</button>
+            <button type="button" onclick="hdkQuick('noise')">주변 소음</button>
+          </div>
+          <div class="hdk-input">
+            <span class="hdk-seat" id="hdkSeat"></span>
+            <input type="text" id="hdkInput" maxlength="300" placeholder="요청 사항을 적어 주세요" autocomplete="off" onkeydown="if(event.key==='Enter'&&!event.isComposing){event.preventDefault();hdkSend();}">
+            <button type="button" onclick="hdkSend()">보내기</button>
+          </div>
+        </section>
+      </div>
+      <!-- 학습 상담 AI: 잠시 꺼 둠(HOLO_CHAT_ENABLED). 코드와 화면 요소는 남겨 두고 숨기기만 한다 -->
+      <div class="record-chat-pane ln-chat" hidden style="display:none">
         <div class="chat-pane-title-row">
           <button type="button" class="chat-side-btn" id="chatSideBtn" onclick="chatToggleConvPanel()" aria-label="이전 채팅 보기" title="이전 채팅"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button>
           <h3 class="record-pane-title">학습 상담 AI</h3>
@@ -8608,6 +8874,13 @@
     </div>
       </div>
         </div>
+      </div>
+    </div>
+      <!-- 홈 두 페이지 전환 버튼 (손가락으로 옆으로 밀어도 넘어간다) -->
+      <div class="hd-tabs" role="tablist" aria-label="홈 화면 전환">
+        <button type="button" role="tab" id="hdTab0" onclick="hdPage(0)">학습 관리</button>
+        <button type="button" role="tab" id="hdTabAll" onclick="hdPage('all')">Home</button>
+        <button type="button" role="tab" id="hdTab1" onclick="hdPage(1)">생활 관리</button>
       </div>
     </div>
 
@@ -8962,6 +9235,29 @@
     </div>
   </section>
 
+  <!-- ─── 고정 스케줄 제출 · 수정 (승인 대기 → 관리자 승인 후 반영) ─── -->
+  <section class="view" id="view-schedFixed">
+    <div class="consult-page sp-page">
+      <h2 class="sp-h" id="sfTitle">고정 스케줄 제출하기</h2>
+      <p class="sp-lead" id="sfLead">요일마다 매주 반복되는 독서실 이용 시간을 정해요. 제출하면 관리 선생님이 확인한 뒤 반영돼요.</p>
+      <div class="sp-note" id="sfNote"></div>
+      <div id="sfEditor"></div>
+      <div id="sfReview" hidden></div>
+      <div class="sp-msg" id="sfMsg"></div>
+    </div>
+  </section>
+
+  <!-- ─── 돌발 스케줄 등록 · 수정 · 취소 (승인 대기 → 관리자 승인 후 반영) ─── -->
+  <section class="view" id="view-schedAdhoc">
+    <div class="consult-page sp-page">
+      <h2 class="sp-h">돌발 스케줄</h2>
+      <p class="sp-lead">특정 날짜 하루만 지각 · 조퇴 · 결석 · 외출하는 일정이에요. 증빙자료와 함께 제출하면 관리 선생님이 확인한 뒤 반영돼요.</p>
+      <div id="saList"></div>
+      <div id="saForm"></div>
+      <div class="sp-msg" id="saMsg"></div>
+    </div>
+  </section>
+
   <!-- ─── 내 스케줄 관리하기 ─── -->
   <section class="view" id="view-scheduleManage">
     <div class="consult-page">
@@ -9201,10 +9497,10 @@
   <div class="ss-pop" id="selfScorePop">
     <div class="ss-card">
       <div class="ss-title">오늘 하루, 나에게 몇 점을 줄까요?</div>
-      <div class="ss-sub">공부한 양과 집중한 정도를 떠올려서 0~100점 사이로 정해 보세요.</div>
+      <div class="ss-sub">공부한 양과 집중한 정도를 떠올려서 0~98점 사이로 정해 보세요. 계획 제출 1점 · 일기 제출 1점과 합쳐 오늘의 점수(100점 만점)가 돼요.</div>
       <div class="ss-num"><b id="ssNum">70</b><span>점</span></div>
-      <input type="range" id="ssRange" min="0" max="100" step="1" value="70" oninput="ssInput(this.value)" aria-label="자기평가 점수">
-      <div class="ss-scale"><span>0</span><span>50</span><span>100</span></div>
+      <input type="range" id="ssRange" min="0" max="98" step="1" value="70" oninput="ssInput(this.value)" aria-label="자기평가 점수">
+      <div class="ss-scale"><span>0</span><span>49</span><span>98</span></div>
       <div class="ss-actions">
         <button type="button" class="ghost" onclick="selfScoreCancel()">취소</button>
         <button type="button" id="ssConfirmBtn" onclick="selfScoreConfirm()">점수 남기고 제출하기</button>
@@ -12108,6 +12404,21 @@
           </button>
 
           <div class="admin-nav-group">
+            <div class="admin-nav-group-title">독서실 관리</div>
+            <div class="admin-nav-group-items">
+              <button class="admin-nav-item" type="button" onclick="showAdminPanel('deskReq', this)">
+                <span class="admin-nav-ico">💬</span> 데스크 요청 <span class="adk-badge" id="adkReqBadge" hidden></span>
+              </button>
+              <button class="admin-nav-item" type="button" onclick="showAdminPanel('deskSched', this)">
+                <span class="admin-nav-ico">🗓️</span> 스케줄 승인 <span class="adk-badge" id="adkSchedBadge" hidden></span>
+              </button>
+              <button class="admin-nav-item" type="button" onclick="showAdminPanel('deskVac', this)">
+                <span class="admin-nav-ico">🏖️</span> 방학 운영 기간
+              </button>
+            </div>
+          </div>
+
+          <div class="admin-nav-group">
             <div class="admin-nav-group-title">AI HOLO</div>
             <div class="admin-nav-group-items">
               <button class="admin-nav-item" type="button" onclick="showAdminPanel('links', this)">
@@ -12202,6 +12513,67 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- 독서실 관리: 데스크 요청 -->
+        <div class="admin-panel" id="adminPanelDeskReq" style="display:none;">
+          <div class="admin-page-head">
+            <span class="admin-page-ico">💬</span>
+            <div>
+              <h2>데스크 요청</h2>
+              <div class="split"></div>
+              <p class="admin-page-sub">학생이 홈 화면 '데스크에 요청하기'로 보낸 요청이에요. 확인하면 '확인 완료, 처리 중', 끝나면 '처리 완료'를 눌러 주세요. 학생 화면에 그대로 표시돼요. 소음 신고는 신고한 학생 이름이 이 화면에만 보여요. 이 화면을 켜 두면 20초마다 새로 확인하고, 새 요청이 오면 소리가 나요.</p>
+            </div>
+          </div>
+          <div class="admin-toolbar"><label class="adk-chk"><input type="checkbox" id="adkReqShowDone" onchange="adkRenderReq()"> 처리 완료된 것도 보기</label></div>
+          <div id="adkReqList" class="adk-list"></div>
+        </div>
+
+        <!-- 독서실 관리: 스케줄 승인 -->
+        <div class="admin-panel" id="adminPanelDeskSched" style="display:none;">
+          <div class="admin-page-head">
+            <span class="admin-page-ico">🗓️</span>
+            <div>
+              <h2>스케줄 승인</h2>
+              <div class="split"></div>
+              <p class="admin-page-sub">학생이 제출한 고정 스케줄(처음 제출 · 수정)과 돌발 스케줄(등록 · 수정 · 취소)이에요. 증빙자료를 확인하고 승인하면 학생 스케줄에 바로 반영돼요. 반려할 때 사유를 적으면 학생 화면에 보여요.</p>
+            </div>
+          </div>
+          <div class="admin-toolbar">
+            <div class="admin-filter-tabs">
+              <button class="admin-filter-tab active" id="adkTabPending" onclick="adkSchedTab('pending')">승인 대기</button>
+              <button class="admin-filter-tab" id="adkTabDone" onclick="adkSchedTab('done')">처리한 요청</button>
+            </div>
+          </div>
+          <div id="adkSchedList" class="adk-list"></div>
+        </div>
+
+        <!-- 독서실 관리: 방학 운영 기간 -->
+        <div class="admin-panel" id="adminPanelDeskVac" style="display:none;">
+          <div class="admin-page-head">
+            <span class="admin-page-ico">🏖️</span>
+            <div>
+              <h2>방학 운영 기간</h2>
+              <div class="split"></div>
+              <p class="admin-page-sub">하이엔드관은 학기 중과 방학 중의 운영 시간이 달라요. 여기에 넣은 기간에는 학생이 스케줄을 낼 때 방학 시간표(08:30 ~ 22:50) 기준으로 확인해요. N수관은 늘 같은 시간표예요.</p>
+            </div>
+          </div>
+          <div class="admin-toolbar">
+            <form onsubmit="adkVacAdd(event)" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;">
+              <div class="apply-field" style="flex:none; margin-bottom:0;"><label for="adkVacStart">시작일</label><input type="date" id="adkVacStart" required></div>
+              <div class="apply-field" style="flex:none; margin-bottom:0;"><label for="adkVacEnd">종료일</label><input type="date" id="adkVacEnd" required></div>
+              <div class="apply-field" style="flex:none; width:160px; margin-bottom:0;"><label for="adkVacLabel">이름 (선택)</label><input type="text" id="adkVacLabel" maxlength="40" placeholder="예: 2026 겨울방학"></div>
+              <button type="submit" class="apply-submit-btn" style="flex:none;">+ 기간 추가</button>
+            </form>
+          </div>
+          <div class="apply-status-msg" id="adkVacMsg" style="margin-bottom:10px;"></div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>이름</th><th>시작일</th><th>종료일</th><th></th></tr></thead>
+              <tbody id="adkVacBody"></tbody>
+            </table>
+            <div class="admin-empty" id="adkVacEmpty" style="display:none;">등록된 방학 운영 기간이 없습니다.</div>
           </div>
         </div>
 
@@ -12441,6 +12813,7 @@
                   <th>학교</th>
                   <th>이름</th>
                   <th>생년월일</th>
+                  <th>좌석</th>
                   <th>등록일</th>
                   <th>상태</th>
                   <th></th>
@@ -12634,8 +13007,10 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", vocabpick: "어휘력 Test", vocab: "영어", consult: "학습 상담 안내", "consult-1": "공부 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-column": "선배들의 공부법 칼럼", "consult-home": "Holo Study", privacy: "개인정보 처리방침", terms: "이용약관", "consult-myclass": "나의 수업", "consult-programs": "수업 안내", "consult-fee": "수업 비용 및 신청", "consult-inquiry": "상담 문의", "consult-mbti": "학습 성향 MBTI", "consult-purpose": "운영 목적", "consult-2": "문제 풀이 전략 클리닉", "consult-3": "국어 독해력 클리닉", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "공부 계획 세우기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "독서실 스케줄", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", mypage: "마이페이지", studymusic: "공부 음악", community: "공부중독 커뮤니티", academyHome: "Academy", academyTeacher: "선생님 수업 현황", teacherHome: "내 학생 관리", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", vocabpick: "어휘력 Test", vocab: "영어", consult: "학습 상담 안내", "consult-1": "공부 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-column": "선배들의 공부법 칼럼", "consult-home": "Holo Study", privacy: "개인정보 처리방침", terms: "이용약관", "consult-myclass": "나의 수업", "consult-programs": "수업 안내", "consult-fee": "수업 비용 및 신청", "consult-inquiry": "상담 문의", "consult-mbti": "학습 성향 MBTI", "consult-purpose": "운영 목적", "consult-2": "문제 풀이 전략 클리닉", "consult-3": "국어 독해력 클리닉", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "공부 계획 세우기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "독서실 스케줄", schedFixed: "고정 스케줄", schedAdhoc: "돌발 스케줄", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", mypage: "마이페이지", studymusic: "공부 음악", community: "공부중독 커뮤니티", academyHome: "Academy", academyTeacher: "선생님 수업 현황", teacherHome: "내 학생 관리", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { mathexam: "exam", engexam: "exam" };
+  // 학습 상담 AI(홈 대화)를 잠시 꺼 둔다(2026-11-11). 다시 켜려면 true로 바꾸고, 서버 main.ts의 PAUSED_SUBJECTS에서 "chat"을 빼면 된다.
+  const HOLO_CHAT_ENABLED = false;
   // "← 이전으로"가 상단 흰색 바(topbar)의 제목 오른쪽에 뜨는 페이지들과, 각각이 돌아갈 곳.
   const BACK_TARGET = {
     "consult-1": "consult-programs", "consult-2": "consult-programs", "consult-3": "consult-programs",
@@ -12646,7 +13021,7 @@
     vocabpick: "home", vocab: "vocabpick", todayrecord: "home", cumulative: "recordhub", reports: "recordhub", dayDetail: "cumulative",
     examSuneung: "examhub", examNaeshin: "examhub", mexlist: "examhub",
     mathexam: "examhub", engexam: "examhub",
-    recordhub: "home", plannerPage: "home", scheduleManage: "home", mockexam: "home",
+    recordhub: "home", plannerPage: "home", scheduleManage: "home", schedFixed: "home", schedAdhoc: "home", mockexam: "home",
     examhub: "home", privacy: "mypage", terms: "mypage", howto: "home", mypage: "home", studymusic: "home", community: "home",
     academyTeacher: "academyHome",
   };
@@ -12892,7 +13267,7 @@
     }
     loadChatHistory(view);
     if (view === "todayrecord") initTodayRecord();
-    if (view === "home") { chatInit(); }
+    if (view === "home" && HOLO_CHAT_ENABLED) { chatInit(); }
     if (view === "plannerPage") initPlannerPage();
     if (view === "mypage") initMypage();
     if (view === "consult-column") colInit();
@@ -12903,6 +13278,10 @@
     if (view === "home") { syncHomeCardHeights(); loadTodayTileStatus(); engVocabRender(); restRender(); loadHomeScheduleToday(); loadHomePlannerToday(); loadHomeWeeklyOverview(); }
     if (view === "recordhub") { loadRecordHubStatus(); setRhWeekLabels(); loadRhWeekScore(); }
     if (view === "scheduleManage") loadScheduleManage();
+    if (view === "schedFixed") sfEnter();
+    if (view === "schedAdhoc") saEnter();
+    if (view === "home") { hdkLoad(); hrpLoad(); }
+    if (view !== "home") hdkStopPoll();
     if (view === "examhub") initExamHub();
     if (view === "vocab") { vocabStage = "home"; initVocab(); }
     if (view === "vocabpick") engVocabRender();
@@ -13415,7 +13794,7 @@
           const rec = byDate[dateStr];
           const score = rec ? (Number(rec.score) || 0) : 0;
           if (!isFuture) { total += score; countedDays++; }
-          const y = HWO_CHART_BASE_Y - (score / 3) * (HWO_CHART_BASE_Y - HWO_CHART_TOP_Y);
+          const y = HWO_CHART_BASE_Y - (Math.min(score, 100) / 100) * (HWO_CHART_BASE_Y - HWO_CHART_TOP_Y); // 하루 점수 100점 만점
           return { x: HWO_CHART_X[i], y: y, score: score, isFuture: isFuture, isToday: dateStr === todayKey };
         });
         const knownPts = points.filter(p => !p.isFuture);
@@ -13437,7 +13816,8 @@
         ).join("");
         const totalEl = document.getElementById("hwoWeekTotal");
         const avgEl = document.getElementById("hwoWeekAvg");
-        if (totalEl) totalEl.textContent = total + "점";
+        // 이번 주 누적 평균 = 이번 주 월요일부터 오늘까지(일요일 제외) 하루 점수의 평균. 기록 없는 날은 0점으로 센다
+        if (totalEl) totalEl.textContent = (countedDays ? total / countedDays : 0).toFixed(1) + "점";
         // 전체 하루 평균 = 첫 기록한 날부터 오늘까지의 모든 날로 계산(안 쓴 날은 0점). 일요일은 점수 집계 대상이 아니라서(분석지가 나오는 날) 분모 · 분자 모두에서 뺀다.
         if (avgEl) avgEl.textContent = homeAllTimeDailyAvg(byDate, todayKey).toFixed(1) + "점";
       })
@@ -14122,6 +14502,8 @@
       loadHomeScheduleToday();
       loadHomePlannerToday();
       chatInit();
+      hdkLoad();
+      hrpLoad();
     }
   }, 0);
 
@@ -14228,7 +14610,8 @@
     { id: "diary-q3", num: "3" },
     { id: "diary-q4", num: "4" },
   ];
-  // ── 자기평가 점수: 공부일기 제출 직전에 뜨는 작은 팝업(0~100점, 서버 holo_self_scores에 저장) ──
+  // ── 자기평가 점수: 공부일기 제출 직전에 뜨는 작은 팝업(0~98점, 서버 holo_self_scores에 저장) ──
+  // 하루 점수(100점) = 계획 제출 1 + 일기 완성 1 + 자기평가(0~98). 계산은 서버 records.ts(selfScoreMap)
   let selfScoreConfirmed = false, selfScoreAfter = null, ssTouched = false;
   function ssSync(v) { document.getElementById("ssNum").textContent = v; }
   function ssInput(v) { ssTouched = true; ssSync(v); } // 학생이 직접 움직이면, 뒤늦게 도착한 이전 점수가 그 값을 덮어쓰지 않게 표시해 둔다
@@ -14239,7 +14622,7 @@
     document.getElementById("selfScorePop").classList.add("on");
     // 다시 제출할 때는 이미 남긴 점수를 미리 채워 보여주고, 그 자리에서 자유롭게 수정할 수 있다
     planApi({ action: "self_score_get", date: getLocalDateKey() })
-      .then(d => { if (!ssTouched && d && typeof d.score === "number") { range.value = d.score; ssSync(d.score); } })
+      .then(d => { if (!ssTouched && d && typeof d.score === "number") { const v = Math.min(98, d.score); range.value = v; ssSync(v); } }) // 예전에 99~100점을 남긴 날은 98로
       .catch(() => {});
   }
   function selfScoreCancel() { document.getElementById("selfScorePop").classList.remove("on"); selfScoreAfter = null; }
@@ -15411,6 +15794,675 @@
       .catch(() => { listEl.innerHTML = '<li class="sched-empty-msg">불러오지 못했어요.</li>'; });
   }
 
+  // ══════════════════════════════════════════════════════════════════════════
+  // 독서실 스케줄(고정 · 돌발) + 데스크 요청 — 서버 desk.ts
+  //  · 고정 스케줄: 맨 처음은 "제출하기"(증빙 없음), 그 뒤엔 "수정하기"(사유 + 증빙 사진 필수) → 관리자 승인 후 반영
+  //  · 돌발 스케줄: 등록 · 수정 · 취소 모두 관리자 승인 후 반영, 증빙(지금 사진 / 재입실 때 데스크 제출 / 학부모 연락)
+  //  · 규칙은 예전 스케줄 챗봇(chatbot-data/system-prompt-schedule.txt, data-schedule.txt)에 있던 내용을 화면 절차로 옮긴 것
+  // ══════════════════════════════════════════════════════════════════════════
+  // PDF 프린트 요청 때 학생에게 알려 줄 메일 주소(선생님이 정해 주면 여기에 적는다)
+  const DESK_PDF_EMAIL = "";
+  const DESK_KIND_LABEL = { pdf: "PDF 프린트 요청", water: "얼음물 주세요", cold: "추워요", hot: "더워요", noise: "주변 소음 신고", etc: "" };
+  const DESK_STATUS_LABEL = { new: "미확인", doing: "확인 완료, 처리 중", done: "처리 완료" };
+  // 운영 시간표(분 단위, 새벽 1시 같은 자정 넘는 시각은 24:00 이후로 센다). 쉬는시간 · 점심 · 저녁시간 = brk
+  const SCHED_HOURS = {
+    "하이엔드관|학기": {
+      wk: { open: "16:00", close: "25:00", brk: [["19:10", "19:20"], ["20:50", "21:00"], ["22:20", "22:30"]] },
+      sat: { open: "09:00", close: "22:50", brk: [["11:20", "11:30"], ["12:50", "14:10"], ["15:10", "15:20"], ["16:40", "16:50"]] },
+    },
+    "하이엔드관|방학": {
+      wk: { open: "08:30", close: "22:50", brk: [["10:50", "11:00"], ["12:40", "14:00"], ["15:10", "15:20"], ["16:50", "17:00"], ["18:10", "19:20"], ["20:30", "20:40"]] },
+      sat: { open: "08:30", close: "22:50", brk: [["10:50", "11:00"], ["12:40", "14:00"], ["15:10", "15:20"], ["16:50", "17:00"]] },
+    },
+    "N수관": {
+      wk: { open: "07:40", close: "22:50", brk: [["09:20", "09:30"], ["10:50", "11:00"], ["12:40", "14:00"], ["15:10", "15:20"], ["16:50", "17:00"], ["18:10", "19:20"], ["20:30", "20:40"]] },
+      sat: { open: "07:40", close: "22:50", brk: [["09:20", "09:30"], ["10:50", "11:00"], ["12:40", "14:00"], ["15:10", "15:20"], ["16:50", "17:00"]] },
+    },
+  };
+  const SCHED_SUNDAY = { open: "09:00", close: "22:00", brk: [] };
+  const SCHED_WD = ["일", "월", "화", "수", "목", "금", "토"];
+  let schedData = null; // sched_overview 결과
+
+  function smin(hhmm) { // "HH:MM" → 분. 새벽 6시 전은 다음 날 새벽으로 본다(하이엔드관 학기 중 01:00 마감)
+    if (!/^\d{1,2}:\d{2}$/.test(hhmm || "")) return null;
+    const [h, m] = hhmm.split(":").map(Number);
+    const v = h * 60 + m;
+    return v < 360 ? v + 1440 : v;
+  }
+  function sfmt(hhmm) { return hhmm ? hhmm.replace(/^0/, "") : ""; }
+  function schedBranch() { return localStorage.getItem("holoStudentBranch") || ""; }
+  function schedVacationOn(dateStr) {
+    const v = (schedData && schedData.vacations) || [];
+    return v.find(x => x.start_date <= dateStr && dateStr <= x.end_date) || null;
+  }
+  // 그 날짜(또는 요일)에 적용되는 운영 시간. 관 유형을 모르면 null(확인 건너뜀)
+  function schedHoursFor(weekday, dateStr) {
+    if (weekday === 0) return Object.assign({ label: "일요일 자율 운영" }, SCHED_SUNDAY);
+    const br = schedBranch();
+    let key = null, label = "";
+    if (br === "N수관") { key = "N수관"; label = "N수관"; }
+    else if (br === "하이엔드관") {
+      const vac = schedVacationOn(dateStr || getCalendarDateKey());
+      key = "하이엔드관|" + (vac ? "방학" : "학기");
+      label = "하이엔드관 " + (vac ? "방학 중" : "학기 중");
+    }
+    if (!key) return null;
+    const h = SCHED_HOURS[key][weekday === 6 ? "sat" : "wk"];
+    return Object.assign({ label: label + (weekday === 6 ? " 토요일" : " 평일") }, h);
+  }
+  // 입실 · 외출들 · 퇴실 → 독서실 안에 있는 구간들
+  function schedToBlocks(d) {
+    const pts = [d.entry];
+    (d.outs || []).forEach(o => { pts.push(o.out); pts.push(o.back); });
+    pts.push(d.exit);
+    const blocks = [];
+    for (let i = 0; i < pts.length; i += 2) blocks.push({ start: pts[i], end: pts[i + 1] });
+    return blocks;
+  }
+  function schedFromBlocks(blocks, reason) {
+    const b = (blocks || []).slice();
+    if (!b.length) return { entry: "", exit: "", outs: [] };
+    const reasons = String(reason || "").split(" / ");
+    const outs = [];
+    for (let i = 0; i < b.length - 1; i++) outs.push({ out: b[i].end, back: b[i + 1].start, reason: reasons[i] || "" });
+    return { entry: b[0].start, exit: b[b.length - 1].end, outs: outs };
+  }
+  function schedEventsHtml(blocks) {
+    const b = blocks || [];
+    if (!b.length) return "";
+    let h = '<div class="hdk-ev"><span>입실</span>' + sfmt(b[0].start) + '</div>';
+    for (let i = 0; i < b.length - 1; i++) h += '<div class="hdk-ev"><span>외출</span>' + sfmt(b[i].end) + '</div><div class="hdk-ev"><span>재입실</span>' + sfmt(b[i + 1].start) + '</div>';
+    return h + '<div class="hdk-ev"><span>퇴실</span>' + sfmt(b[b.length - 1].end) + '</div>';
+  }
+  function schedBlocksText(blocks) {
+    const b = blocks || [];
+    if (!b.length) return "등원 안 함";
+    let t = sfmt(b[0].start) + " 입실";
+    for (let i = 0; i < b.length - 1; i++) t += " → " + sfmt(b[i].end) + " 외출 → " + sfmt(b[i + 1].start) + " 재입실";
+    return t + " → " + sfmt(b[b.length - 1].end) + " 퇴실";
+  }
+  // "학원", "과외"처럼 뭉뚱그린 사유는 받지 않는다(무슨 과목 · 어떤 일인지까지)
+  function schedVague(s) { return /^(학원|과외|일|약속|사정|개인\s*사정|집안일|볼일|기타|그냥|일정|개인\s*일정)$/.test(String(s || "").trim()); }
+  // 시간 순서 · 빈칸 검사 → 문제 문장 목록
+  function schedCheckDay(d, who) {
+    const errs = [];
+    if (!d.entry || !d.exit) { errs.push(who + " 입실 · 퇴실 시각을 모두 넣어 주세요."); return errs; }
+    const pts = [d.entry];
+    (d.outs || []).forEach((o, i) => {
+      if (!o.out || !o.back) errs.push(who + " " + (i + 1) + "번째 외출 · 재입실 시각을 모두 넣어 주세요.");
+      if (!String(o.reason || "").trim()) errs.push(who + " " + (i + 1) + "번째 외출 사유를 적어 주세요.");
+      else if (schedVague(o.reason)) errs.push(who + " 외출 사유 '" + o.reason + "'는 너무 짧아요. 무슨 과목 학원 · 과외인지, 어떤 일인지까지 적어 주세요.");
+      pts.push(o.out); pts.push(o.back);
+    });
+    pts.push(d.exit);
+    if (!errs.length) for (let i = 1; i < pts.length; i++) if (smin(pts[i]) <= smin(pts[i - 1])) { errs.push(who + " 시각 순서가 맞지 않아요. (입실 → 외출 → 재입실 → 퇴실 순서)"); break; }
+    return errs;
+  }
+  // 운영 시간 밖인지 + 쉬는시간에 맞추면 좋을 외출 · 재입실 (챗봇 규칙: 10~15분 이내면 쉬는시간에 맞추도록 제안, 학생이 안 맞춰도 됨)
+  function schedHourNotes(d, hours, who) {
+    const out = { warn: [], sugg: [] };
+    if (!hours) return out;
+    const o = smin(hours.open), c = smin(hours.close);
+    if (smin(d.entry) < o) out.warn.push(who + " 입실 " + sfmt(d.entry) + "는 운영 시작(" + sfmt(hours.open) + ") 전이에요.");
+    if (smin(d.exit) > c) out.warn.push(who + " 퇴실 " + sfmt(d.exit) + "는 운영 마감(" + (hours.close === "25:00" ? "새벽 1:00" : sfmt(hours.close)) + ") 뒤예요.");
+    (d.outs || []).forEach((x, i) => {
+      hours.brk.forEach(b => {
+        const bs = smin(b[0]), be = smin(b[1]);
+        const to = smin(x.out), tb = smin(x.back);
+        if (to !== bs && Math.abs(to - bs) <= 15) out.sugg.push({ who: who, i: i, field: "out", value: b[0], text: who + " 외출 " + sfmt(x.out) + " → 쉬는시간 시작 " + sfmt(b[0]) + "에 맞추면 의무교시 중간에 자리를 비우지 않아요." });
+        if (tb !== be && Math.abs(tb - be) <= 15) out.sugg.push({ who: who, i: i, field: "back", value: b[1], text: who + " 재입실 " + sfmt(x.back) + " → 쉬는시간 끝 " + sfmt(b[1]) + "에 맞추면 의무교시 중간에 들어오지 않아요." });
+      });
+    });
+    return out;
+  }
+  // 증빙 사진: 긴 변 1280px JPEG로 줄여서 보낸다
+  function schedCompressImage(file) {
+    return new Promise((resolve, reject) => {
+      if (!file || !/^image\//.test(file.type)) { reject(new Error("사진 파일만 올릴 수 있어요.")); return; }
+      const rd = new FileReader();
+      rd.onerror = () => reject(new Error("사진을 읽지 못했어요."));
+      rd.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error("사진을 읽지 못했어요."));
+        img.onload = () => {
+          const k = Math.min(1, 1280 / Math.max(img.width, img.height));
+          const cv = document.createElement("canvas");
+          cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
+          cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height);
+          let q = 0.78, url = cv.toDataURL("image/jpeg", q);
+          while (url.length > 1500000 && q > 0.4) { q -= 0.12; url = cv.toDataURL("image/jpeg", q); }
+          resolve(url);
+        };
+        img.src = rd.result;
+      };
+      rd.readAsDataURL(file);
+    });
+  }
+  function schedFetch() {
+    return planApi({ action: "sched_overview" }).then(d => {
+      if (d && d.ok) schedData = d;
+      return schedData;
+    });
+  }
+  function schedLatestReq(kind) { return ((schedData && schedData.requests) || []).find(r => r.kind === kind) || null; }
+  function schedPendingFixed() { return ((schedData && schedData.requests) || []).find(r => r.kind === "fixed" && r.status === "pending") || null; }
+  function schedMd(dateStr) { const p = String(dateStr || "").split("-"); return p.length === 3 ? Number(p[1]) + "/" + Number(p[2]) : dateStr; }
+  function schedAdhocDesc(a) { // a: {type, blocks, reason}
+    const t = a.type ? a.type + " · " : "";
+    const b = a.blocks;
+    const time = b == null ? (sfmt(a.start) + " 외출 → " + sfmt(a.end) + " 재입실") : (b.length ? schedBlocksText(b) : "등원 안 함");
+    return t + (a.reason ? a.reason + " · " : "") + time;
+  }
+
+  // ── 홈 두 페이지 넘기기: 0 = 공부, 1 = 독서실(스케줄 · 데스크 요청). 화살표 · 손가락으로 옆으로 밀기 ──
+  // n: 0(학습 관리) · 1(생활 관리) · "all"(함께 보기). 마지막으로 고른 보기를 기억한다(이 기기에만)
+  function hdPage(n) {
+    const vp = document.getElementById("hdViewport"); if (!vp) return;
+    const mode = n === "all" ? "all" : String(n ? 1 : 0);
+    const prev = vp.dataset.page;
+    vp.dataset.page = mode;
+    const vh = document.getElementById("view-home"); if (vh) vh.dataset.homeView = mode; // 위 줄(D-day · 버튼들) 폭 맞추기용
+    // 함께 보기로 들어가거나 나올 때는 옆으로 미는 대신 부드럽게 나타나게
+    const dash = document.getElementById("homeDash");
+    if (dash && prev && prev !== mode && (prev === "all" || mode === "all")) {
+      dash.classList.remove("hd-fade"); void dash.offsetWidth; dash.classList.add("hd-fade");
+      clearTimeout(hdPage._t); hdPage._t = setTimeout(() => dash.classList.remove("hd-fade"), 600);
+    }
+    [["hdTab0", "0"], ["hdTab1", "1"], ["hdTabAll", "all"]].forEach(([id, m]) => { const b = document.getElementById(id); if (b) b.setAttribute("aria-selected", String(m === mode)); });
+    const left = vp.querySelector(".hd-left"), right = vp.querySelector(".hd-right");
+    if (left) left.inert = mode === "1";      // 보이지 않는 쪽은 Tab으로 들어가지 않게
+    if (right) right.inert = mode === "0";
+    try { localStorage.setItem("holoHomeView", mode); } catch (e) {}
+    hdSyncHeight();
+  }
+  // 휴대폰에서는 두 페이지 높이가 달라서, 보이는 페이지 높이에 맞춘다(아래 빈칸 방지)
+  function hdSyncHeight() {
+    const vp = document.getElementById("hdViewport"); if (!vp) return;
+    if (window.innerWidth > 900 || vp.dataset.page === "all") { vp.style.height = ""; return; }
+    const page = vp.querySelector(vp.dataset.page === "1" ? ".hd-right" : ".hd-left");
+    if (page) vp.style.height = (page.offsetHeight + 100) + "px";
+  }
+  (function hdSwipeInit() {
+    const vp = document.getElementById("hdViewport"); if (!vp) return;
+    let sx = null, sy = null;
+    vp.addEventListener("touchstart", e => { if (e.touches.length === 1) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; } }, { passive: true });
+    vp.addEventListener("touchend", e => {
+      if (sx === null) return;
+      const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+      sx = null;
+      if (vp.dataset.page === "all") return; // 함께 보기에서는 밀어도 넘어가지 않는다
+      if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return; // 세로 스크롤 · 짧은 터치는 무시
+      if (e.target.closest("input, textarea, .hdk-msgs, .hdk-list-scroll, .home-poster-rot, .home-notice-rot")) return; // 안에서 따로 넘기는 칸은 건드리지 않는다
+      hdPage(dx < 0 ? 1 : 0);
+    }, { passive: true });
+    window.addEventListener("resize", hdSyncHeight);
+    let saved = "0";
+    try { saved = localStorage.getItem("holoHomeView") || "0"; } catch (e) {}
+    hdPage(saved === "all" ? "all" : saved === "1" ? 1 : 0);
+  })();
+
+  // ── 홈: 고정 · 돌발 스케줄 박스 ──
+  function hdkLoad() {
+    if (!localStorage.getItem("holoStudentId")) return;
+    schedFetch().then(hdkRender).catch(() => {
+      const w = document.getElementById("hdkWeek"); if (w) w.innerHTML = '<div class="hdk-empty">불러오지 못했어요.</div>';
+    });
+    hdkDeskLoad();
+    hdkStartPoll();
+  }
+  function hdkRender() {
+    const d = schedData; if (!d) return;
+    const week = document.getElementById("hdkWeek"), st = document.getElementById("hdkFixedState"), btn = document.getElementById("hdkFixedBtn");
+    const pend = schedPendingFixed(), last = schedLatestReq("fixed");
+    const hasFixed = Object.keys(d.fixed || {}).length > 0;
+    if (btn) { btn.textContent = d.firstDone ? "수정하기" : "제출하기"; btn.disabled = false; }
+    if (st) {
+      st.className = "hdk-state" + (pend ? " wait" : (last && last.status === "rejected" ? " rej" : ""));
+      st.textContent = pend ? "승인 대기 중" : (last && last.status === "rejected" ? "반려됨 · 다시 제출해 주세요" : (hasFixed ? "" : (d.firstDone ? "" : "아직 제출하지 않았어요")));
+    }
+    if (week) {
+      const todayWd = new Date().getDay();
+      // 아직 승인된 게 없고 대기 중인 최초 제출이 있으면 그 내용을 미리 보여 준다
+      const src = hasFixed ? d.fixed : null;
+      const pendDays = !hasFixed && pend && pend.payload && pend.payload.days ? pend.payload.days : null;
+      if (!src && !pendDays) { week.innerHTML = '<div class="hdk-empty">독서실에 처음 오셨다면 요일별 고정 스케줄을 먼저 제출해 주세요.</div>'; }
+      else week.innerHTML = [1, 2, 3, 4, 5, 6].map(wd => {
+        let body;
+        if (src) {
+          const f = src[String(wd)];
+          body = !f ? '<div class="hdk-day-plain">의무 시간표대로</div>' : (f.off ? '<div class="hdk-day-plain">등원 안 함</div>' : schedEventsHtml(f.blocks));
+        } else {
+          const f = pendDays.find(x => Number(x.weekday) === wd);
+          body = !f || f.mode === "duty" ? '<div class="hdk-day-plain">의무 시간표대로</div>' : (f.mode === "off" ? '<div class="hdk-day-plain">등원 안 함</div>' : schedEventsHtml(f.blocks));
+        }
+        return '<div class="hdk-day' + (wd === todayWd ? " today" : "") + '"><div class="hdk-day-name">' + SCHED_WD[wd] + '</div>' + body + '</div>';
+      }).join("");
+    }
+    // 돌발 스케줄: 오늘 / 누적(예정 + 이번 달 지난 것)
+    const today = getCalendarDateKey(), ym = today.slice(0, 7);
+    const adhoc = d.adhoc || [];
+    const reqs = (d.requests || []).filter(r => r.kind === "adhoc" && (r.status === "pending" || r.status === "rejected"));
+    const row = (date, desc, tag, cls, past) => '<div class="hdk-ad' + (past ? " past" : "") + '"><span class="hdk-ad-date">' + schedMd(date) + '</span><span class="hdk-ad-body">' + escapeHtml(desc) + '</span>' + (tag ? '<span class="hdk-ad-tag ' + (cls || "") + '">' + tag + '</span>' : "") + '</div>';
+    const todayRows = adhoc.filter(a => a.date === today).map(a => row(a.date, schedAdhocDesc(a), "승인", "", false))
+      .concat(reqs.filter(r => r.status === "pending" && r.payload.date === today).map(r => row(r.payload.date, r.payload.cancel ? "취소 요청" : schedAdhocDesc(r.payload), "승인 대기", "wait", false)));
+    const tEl = document.getElementById("hdkAdhocToday");
+    if (tEl) tEl.innerHTML = todayRows.length ? todayRows.join("") : '<div class="hdk-empty">오늘 돌발 스케줄이 없어요.</div>';
+    const upcoming = adhoc.filter(a => a.date > today).sort((x, y) => x.date.localeCompare(y.date));
+    const pastMonth = adhoc.filter(a => a.date < today && a.date.slice(0, 7) === ym);
+    const monthCount = adhoc.filter(a => a.date.slice(0, 7) === ym).length;
+    const cEl = document.getElementById("hdkAdhocCount");
+    if (cEl) cEl.textContent = "· 이번 달 " + monthCount + "회";
+    const allRows = upcoming.map(a => row(a.date, schedAdhocDesc(a), "예정", "", false))
+      .concat(reqs.filter(r => r.payload.date !== today || r.status === "rejected").map(r => row(r.payload.date, r.payload.cancel ? "취소 요청" : schedAdhocDesc(r.payload), r.status === "pending" ? "승인 대기" : "반려", r.status === "pending" ? "wait" : "rej", false)))
+      .concat(pastMonth.map(a => row(a.date, schedAdhocDesc(a), "", "", true)));
+    const aEl = document.getElementById("hdkAdhocAll");
+    if (aEl) aEl.innerHTML = allRows.length ? allRows.join("") : '<div class="hdk-empty">이번 달 돌발 스케줄이 없어요.</div>';
+    hdSyncHeight();
+  }
+
+  // ── 홈: 데스크 요청 채팅 ──
+  let hdkDeskItems = [], hdkNoise = false, hdkPollTimer = null, hdkBusy = false;
+  function hdkDeskLoad() {
+    if (!localStorage.getItem("holoStudentId")) return;
+    if (!hdkDeskItems.length) hdkRenderMsgs(); // 서버 응답 전에도 안내 문구는 먼저 보이게
+    planApi({ action: "desk_list" }).then(d => {
+      if (!d || !d.ok) return;
+      hdkDeskItems = d.items || [];
+      const seat = document.getElementById("hdkSeat");
+      if (seat) seat.textContent = d.seat ? "좌석 " + d.seat + "번" : "좌석 미등록";
+      hdkRenderMsgs();
+    }).catch(() => {});
+  }
+  // 안내 말: 챗봇 인사처럼 사람 아이콘 + 글씨(말풍선 배경 없음)
+  function hdkAv() { return '<img class="hdk-av" src="' + AVATAR + '" alt="">'; }
+  function hdkRenderMsgs() {
+    const el = document.getElementById("hdkMsgs"); if (!el) return;
+    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 40;
+    const hello = '<div class="hdk-desk-hello">' + hdkAv() + '<span>최대한 구체적으로 요청 사항을 보내주세요.</span></div>';
+    el.innerHTML = hello + hdkDeskItems.map(m => {
+      const label = DESK_KIND_LABEL[m.kind] || "";
+      const text = label && m.text ? label + " · " + m.text : (m.text || label);
+      const t = String(m.created_at || "");
+      const dt = new Date(t);
+      const hm = isNaN(dt) ? "" : (dt.getHours() + ":" + String(dt.getMinutes()).padStart(2, "0"));
+      let h = '<div class="hdk-m"><div class="hdk-m-b">' + escapeHtml(text) + '</div><div class="hdk-m-meta">' + hm + ' · <b class="s-' + m.status + '">' + (DESK_STATUS_LABEL[m.status] || "") + '</b></div></div>';
+      if (m.kind === "pdf") {
+        h += '<div class="hdk-sys">' + hdkAv() + '<span>프린트할 자료를 아래 메일로 보내 주세요.<br><b>' + (DESK_PDF_EMAIL ? escapeHtml(DESK_PDF_EMAIL) : "메일 주소는 데스크에 물어봐 주세요") + '</b><br>자료를 보낸 뒤에는 꼭 아래 버튼을 눌러 주세요.' +
+          (Number(m.pdf_sent) ? '<span class="done">자료 전송 완료 ✓</span>' : '<button type="button" onclick="hdkPdfSent(' + Number(m.id) + ')">자료 전송 완료</button>') + '</span></div>';
+      }
+      if (m.kind === "noise") h += '<div class="hdk-sys">' + hdkAv() + '<span>신고한 사람은 관리 선생님만 알 수 있어요.</span></div>';
+      return h;
+    }).join("");
+    if (atBottom || hdkBusy) el.scrollTop = el.scrollHeight;
+  }
+  function hdkQuick(kind) {
+    if (kind === "noise") {
+      hdkNoise = !hdkNoise;
+      document.querySelectorAll(".hdk-quick button").forEach(b => b.classList.toggle("on", hdkNoise && b.textContent === "주변 소음"));
+      const inp = document.getElementById("hdkInput");
+      inp.placeholder = hdkNoise ? "어떤 소음인지 적어 주세요 (예: 옆자리에서 다리를 떨어요)" : "요청 사항을 적어 주세요";
+      inp.focus();
+      return;
+    }
+    hdkPost(kind, (document.getElementById("hdkInput").value || "").trim());
+  }
+  function hdkSend() {
+    const inp = document.getElementById("hdkInput");
+    const text = (inp.value || "").trim();
+    if (!text) { inp.focus(); return; }
+    hdkPost(hdkNoise ? "noise" : "etc", text);
+  }
+  function hdkPost(kind, text) {
+    if (hdkBusy) return;
+    hdkBusy = true;
+    planApi({ action: "desk_send", kind: kind, text: text }).then(d => {
+      if (!d || !d.ok) { showToast((d && d.error) || "보내지 못했어요. 잠시 후 다시 시도해 주세요."); return; }
+      document.getElementById("hdkInput").value = "";
+      if (hdkNoise) hdkQuick("noise");
+      return planApi({ action: "desk_list" }).then(r => { if (r && r.ok) { hdkDeskItems = r.items || []; hdkRenderMsgs(); } });
+    }).catch(() => showToast("보내지 못했어요. 잠시 후 다시 시도해 주세요.")).finally(() => { hdkBusy = false; });
+  }
+  function hdkPdfSent(id) {
+    planApi({ action: "desk_pdf_sent", id: id }).then(() => hdkDeskLoad()).catch(() => {});
+  }
+  // 홈을 보고 있는 동안만 20초마다 처리 상태를 새로 읽는다
+  function hdkStartPoll() {
+    if (hdkPollTimer) return;
+    hdkPollTimer = setInterval(() => {
+      if (document.hidden || currentView !== "home") return;
+      if (hdkDeskItems.some(m => m.status !== "done")) hdkDeskLoad();
+    }, 20000);
+  }
+  function hdkStopPoll() { if (hdkPollTimer) { clearInterval(hdkPollTimer); hdkPollTimer = null; } }
+
+  // ── 홈: 6일 분석지 바로가기 ──
+  function hrpLoad() {
+    const el = document.getElementById("hrpLatest"); if (!el) return;
+    if (!localStorage.getItem("holoStudentId")) return;
+    planApi({ action: "reports" }).then(d => {
+      const list = ((d && d.reports) || []).filter(r => r.report_type !== "daily");
+      if (!list.length) { el.textContent = "아직 도착한 분석지가 없어요"; return; }
+      const r = list[0], s = (r.period_start || "").slice(0, 10), e = (r.period_end || "").slice(0, 10);
+      el.textContent = "최근 분석지 " + schedMd(s) + " ~ " + schedMd(e);
+    }).catch(() => { el.textContent = "분석지 보러 가기"; });
+  }
+  function hrpGo(e) {
+    if (e) e.preventDefault();
+    go("recordhub"); // "내 학습 기록 살펴보기" (분석지 목록 + 내용)
+  }
+
+  // ── 공통: 입실 · 외출/재입실 · 퇴실 입력칸 ──
+  function schedTimesHtml(key, d, withReason) {
+    const t = (f, v, i) => '<input type="time" step="300" class="sp-time" data-k="' + key + '" data-f="' + f + '"' + (i != null ? ' data-i="' + i + '"' : "") + ' value="' + escapeHtml(v || "") + '">';
+    let h = '<div class="sp-times"><label class="sp-tl"><span>입실</span>' + t("entry", d.entry) + '</label>';
+    (d.outs || []).forEach((o, i) => {
+      h += '<div class="sp-out"><label class="sp-tl"><span>외출</span>' + t("out", o.out, i) + '</label><label class="sp-tl"><span>재입실</span>' + t("back", o.back, i) + '</label>' +
+        (withReason ? '<input type="text" class="sp-reason" maxlength="40" data-k="' + key + '" data-f="reason" data-i="' + i + '" placeholder="외출 사유 (예: 수학 학원)" value="' + escapeHtml(o.reason || "") + '">' : "") +
+        '<button type="button" class="sp-x" onclick="schedOutDel(\'' + key + '\',' + i + ')" aria-label="이 외출 빼기">×</button></div>';
+    });
+    h += '<button type="button" class="sp-add" onclick="schedOutAdd(\'' + key + '\')">+ 외출 · 재입실 추가</button>';
+    h += '<label class="sp-tl"><span>퇴실</span>' + t("exit", d.exit) + '</label></div>';
+    return h;
+  }
+  function schedReadTimes(key, root) {
+    const q = f => Array.from(root.querySelectorAll('[data-k="' + key + '"][data-f="' + f + '"]'));
+    const one = f => { const el = q(f)[0]; return el ? el.value : ""; };
+    const outs = q("out").map((el, i) => ({ out: el.value, back: (q("back")[i] || {}).value || "", reason: (q("reason")[i] || {}).value || "" }));
+    return { entry: one("entry"), exit: one("exit"), outs: outs };
+  }
+  function schedOutAdd(key) { if (key === "ad") { saRead(); saF.outs.push({ out: "", back: "", reason: "" }); saRenderForm(); } else { sfRead(); sfS.days[key].outs.push({ out: "", back: "", reason: "" }); sfRenderEditor(); } }
+  function schedOutDel(key, i) { if (key === "ad") { saRead(); saF.outs.splice(i, 1); saRenderForm(); } else { sfRead(); sfS.days[key].outs.splice(i, 1); sfRenderEditor(); } }
+  function schedRulesHtml(extra) {
+    return '<ul class="sp-rules">' +
+      '<li>학원 · 과외 등으로 나갔다 오면 <b>외출 · 재입실</b>을 넣고, 사유에 <b>무슨 과목 학원 · 과외인지</b>까지 적어요. (예: 수학 학원)</li>' +
+      '<li>외출 · 재입실 시각은 수업 시간이 아니라 <b>이동 시간과 식사 시간까지 포함</b>해서 실제로 나가고 들어오는 시각이에요.</li>' +
+      '<li>가능하면 <b>쉬는시간에 맞춰</b> 나가고 들어와요. 의무교시 중간에 자리를 비우지 않도록요.</li>' +
+      (extra || "") + '</ul>';
+  }
+  function schedHoursLine(weekdays, dateStr) {
+    const br = schedBranch();
+    if (!br) return '관 유형이 등록되어 있지 않아 운영 시간 확인은 건너뛰어요.';
+    const wk = schedHoursFor(1, dateStr), sat = schedHoursFor(6, dateStr);
+    const c = h => sfmt(h.open) + " ~ " + (h.close === "25:00" ? "새벽 1:00" : sfmt(h.close));
+    const vac = br === "하이엔드관" ? schedVacationOn(dateStr || getCalendarDateKey()) : null;
+    return '<b>' + escapeHtml(br) + (br === "하이엔드관" ? (vac ? " · 방학 운영 기간" : " · 학기 중") : "") + '</b> 운영 시간: 평일 ' + c(wk) + ' · 토요일 ' + c(sat) + ' · 일요일 09:00 ~ 22:00 자율';
+  }
+
+  // ══ 고정 스케줄 페이지 ══
+  let sfS = null; // { isFirst, days: {1..6: {mode, entry, exit, outs}} }
+  let sfSugg = [];
+  function sfEnter() {
+    document.getElementById("sfEditor").innerHTML = '<div class="sp-empty">불러오는 중…</div>';
+    document.getElementById("sfReview").hidden = true;
+    document.getElementById("sfMsg").textContent = "";
+    schedFetch().then(sfInit).catch(() => { document.getElementById("sfEditor").innerHTML = '<div class="sp-empty">불러오지 못했어요. 잠시 후 다시 들어와 주세요.</div>'; });
+  }
+  function sfInit() {
+    const d = schedData || {};
+    const pend = schedPendingFixed(), last = schedLatestReq("fixed");
+    const isFirst = !d.firstDone;
+    document.getElementById("sfTitle").textContent = isFirst ? "고정 스케줄 제출하기" : "고정 스케줄 수정하기";
+    document.getElementById("sfLead").textContent = isFirst
+      ? "독서실에 처음 오면 요일마다 매주 반복되는 이용 시간을 먼저 제출해요. 관리 선생님이 확인한 뒤 반영돼요."
+      : "고정 스케줄을 바꾸려면 변경 사유와 증빙자료가 필요해요. 관리 선생님이 확인한 뒤 반영돼요.";
+    const note = document.getElementById("sfNote");
+    if (pend) {
+      note.innerHTML = '<div class="sp-box"><b>승인 대기 중인 고정 스케줄이 있어요.</b> 관리 선생님이 확인하면 반영돼요. 내용을 바꾸려면 요청을 취소하고 다시 제출해 주세요.' +
+        '<div class="sp-sum">' + [1, 2, 3, 4, 5, 6].map(wd => { const f = (pend.payload.days || []).find(x => Number(x.weekday) === wd); return '<div><b>' + SCHED_WD[wd] + '</b> ' + (!f || f.mode === "duty" ? "의무 시간표대로" : f.mode === "off" ? "등원 안 함" : escapeHtml(schedBlocksText(f.blocks))) + '</div>'; }).join("") + '</div>' +
+        '<button type="button" class="sp-btn2" onclick="sfCancelPending(' + Number(pend.id) + ')">요청 취소하기</button></div>';
+      document.getElementById("sfEditor").innerHTML = "";
+      return;
+    }
+    note.innerHTML = (last && last.status === "rejected" ? '<div class="sp-box sp-box-rej"><b>지난번 제출이 반려됐어요.</b>' + (last.admin_note ? " 사유: " + escapeHtml(last.admin_note) : "") + '</div>' : "") +
+      '<div class="sp-hours">' + schedHoursLine() + '</div>' + schedRulesHtml(isFirst ? "" : '<li>고정 스케줄을 바꿀 때는 <b>증빙자료</b>(학원 시간표 문자, 학원 선생님과의 카톡 등)가 필요해요.</li>');
+    const days = {};
+    [1, 2, 3, 4, 5, 6].forEach(wd => {
+      const f = (d.fixed || {})[String(wd)];
+      if (!f) days[wd] = { mode: "duty", entry: "", exit: "", outs: [] };
+      else if (f.off) days[wd] = { mode: "off", entry: "", exit: "", outs: [] };
+      else days[wd] = Object.assign({ mode: "custom" }, schedFromBlocks(f.blocks, f.reason));
+    });
+    sfS = { isFirst: isFirst, days: days };
+    sfRenderEditor();
+  }
+  function sfRenderEditor() {
+    const el = document.getElementById("sfEditor");
+    const seg = (wd, m, label) => '<button type="button" class="' + (sfS.days[wd].mode === m ? "on" : "") + '" onclick="sfSetMode(' + wd + ',\'' + m + '\')">' + label + '</button>';
+    el.innerHTML = '<div class="sp-days">' + [1, 2, 3, 4, 5, 6].map(wd => {
+      const d = sfS.days[wd];
+      return '<div class="sp-day"><div class="sp-day-h"><b class="sp-wd">' + SCHED_WD[wd] + '요일</b><div class="sp-seg">' + seg(wd, "duty", "의무 시간표대로") + seg(wd, "custom", "시간 직접 입력") + seg(wd, "off", "등원 안 함") + '</div>' +
+        (wd > 1 ? '<button type="button" class="sp-copy" onclick="sfCopyPrev(' + wd + ')">앞 요일과 같게</button>' : "") + '</div>' +
+        (d.mode === "custom" ? schedTimesHtml(String(wd), d, true) : '<div class="sp-day-plain">' + (d.mode === "off" ? "이 요일에는 독서실에 오지 않아요." : "독서실 의무 시간표대로 공부해요.") + '</div>') +
+        '</div>';
+    }).join("") + '</div><div class="sp-actions"><button type="button" class="sp-btn" onclick="sfReview()">다음: 확인하기</button></div>';
+    document.getElementById("sfReview").hidden = true;
+    el.hidden = false;
+  }
+  function sfRead() {
+    if (!sfS) return;
+    const root = document.getElementById("sfEditor");
+    [1, 2, 3, 4, 5, 6].forEach(wd => { if (sfS.days[wd].mode === "custom") Object.assign(sfS.days[wd], schedReadTimes(String(wd), root)); });
+  }
+  function sfSetMode(wd, m) { sfRead(); sfS.days[wd].mode = m; sfRenderEditor(); }
+  function sfCopyPrev(wd) { sfRead(); sfS.days[wd] = JSON.parse(JSON.stringify(sfS.days[wd - 1])); sfRenderEditor(); }
+  function sfReview(skipRead) {
+    if (!skipRead) sfRead();
+    const msg = document.getElementById("sfMsg");
+    msg.textContent = "";
+    let errs = [];
+    [1, 2, 3, 4, 5, 6].forEach(wd => { const d = sfS.days[wd]; if (d.mode === "custom") errs = errs.concat(schedCheckDay(d, SCHED_WD[wd] + "요일")); });
+    if (errs.length) { msg.innerHTML = '<div class="sp-err">' + errs.map(escapeHtml).join("<br>") + '</div>'; return; }
+    let warn = [], hasOut = false;
+    sfSugg = [];
+    [1, 2, 3, 4, 5, 6].forEach(wd => {
+      const d = sfS.days[wd]; if (d.mode !== "custom") return;
+      if (d.outs.length) hasOut = true;
+      const n = schedHourNotes(d, schedHoursFor(wd), SCHED_WD[wd] + "요일");
+      warn = warn.concat(n.warn);
+      n.sugg.forEach(s => sfSugg.push(Object.assign({ wd: wd }, s)));
+    });
+    const rv = document.getElementById("sfReview");
+    rv.innerHTML = '<div class="sp-card"><h3 class="sp-h3">제출할 고정 스케줄</h3><div class="sp-sum">' + [1, 2, 3, 4, 5, 6].map(wd => {
+        const d = sfS.days[wd];
+        const reasons = d.mode === "custom" ? d.outs.map(o => o.reason).filter(Boolean).join(", ") : "";
+        return '<div><b>' + SCHED_WD[wd] + '</b> ' + (d.mode === "duty" ? "의무 시간표대로" : d.mode === "off" ? "등원 안 함" : escapeHtml(schedBlocksText(schedToBlocks(d))) + (reasons ? ' <span class="sp-dim">(' + escapeHtml(reasons) + ')</span>' : "")) + '</div>';
+      }).join("") + '</div></div>' +
+      (sfSugg.length ? '<div class="sp-card"><h3 class="sp-h3">쉬는시간에 맞춰 볼까요?</h3>' + sfSugg.map((s, k) => '<div class="sp-sugg">' + escapeHtml(s.text) + ' <button type="button" class="sp-btn2" onclick="sfApplySugg(' + k + ')">이렇게 맞추기</button></div>').join("") + '<p class="sp-dim">원래 시간 그대로 두고 싶으면 그냥 넘어가도 돼요.</p></div>' : "") +
+      (warn.length ? '<div class="sp-card sp-card-warn"><h3 class="sp-h3">운영 시간을 벗어난 시간이 있어요</h3>' + warn.map(w => '<div>' + escapeHtml(w) + '</div>').join("") + '<label class="sp-chk"><input type="checkbox" id="sfAckHours"> <span>운영 시간 밖인 걸 알고 그대로 제출할게요</span></label></div>' : "") +
+      '<div class="sp-card"><h3 class="sp-h3">마지막 확인</h3>' +
+        (hasOut ? '<label class="sp-chk"><input type="checkbox" id="sfAckTravel"> <span>외출 · 재입실 시각은 학원 · 과외 수업 시간이 아니라, <b>이동 시간과 식사 시간까지 포함한</b> 실제로 나가고 들어오는 시각이에요.</span></label>' : "") +
+        (!sfS.isFirst ? '<label class="sp-lab">변경 사유</label><textarea id="sfReason" class="sp-ta" rows="2" maxlength="300" placeholder="예: 화요일에 수학 학원(19:00~21:00)이 새로 생겼어요"></textarea>' +
+          schedEvidenceHtml("sf") : '<p class="sp-dim">처음 제출할 때는 증빙자료가 필요 없어요.</p>') +
+      '</div>' +
+      '<div class="sp-actions"><button type="button" class="sp-btn2" onclick="sfBack()">← 다시 고치기</button><button type="button" class="sp-btn" id="sfSubmitBtn" onclick="sfSubmit()">' + (sfS.isFirst ? "제출하기" : "수정 요청 보내기") + '</button></div>';
+    document.getElementById("sfEditor").hidden = true;
+    rv.hidden = false;
+    rv.scrollIntoView({ block: "start", behavior: "smooth" });
+  }
+  function sfBack() { sfRenderEditor(); }
+  function sfApplySugg(k) {
+    const s = sfSugg[k]; if (!s) return;
+    const o = sfS.days[s.wd].outs[s.i]; if (o) o[s.field] = s.value;
+    const ta = document.getElementById("sfReason"), keep = ta ? ta.value : "";
+    sfRenderEditor(); // 편집 화면에도 바뀐 값을 반영해 둔다
+    sfReview(true);
+    const ta2 = document.getElementById("sfReason"); if (ta2) ta2.value = keep;
+  }
+  function sfCancelPending(id) {
+    if (!confirm("승인 대기 중인 고정 스케줄 요청을 취소할까요?")) return;
+    planApi({ action: "sched_req_cancel", id: id }).then(() => sfEnter());
+  }
+  // 증빙 사진 올리기 칸 (고정 수정 · 돌발 공용)
+  const schedEvidence = { sf: null, sa: null };
+  function schedEvidenceHtml(key) {
+    return '<label class="sp-lab">증빙자료 사진</label>' +
+      '<p class="sp-dim">병원 예약 문자, 학원 선생님과 주고받은 카톡(수업 시간이 적힌 것)처럼 <b>일이 생기기 전에 미리 받은 자료</b>예요. 다녀온 뒤 받는 확인서가 아니에요.</p>' +
+      '<label class="sp-file"><input type="file" accept="image/*" onchange="schedPickEvidence(\'' + key + '\', this)"><span>사진 고르기</span></label>' +
+      '<div class="sp-ev-prev" id="' + key + 'EvPrev">' + (schedEvidence[key] ? '<img src="' + schedEvidence[key] + '" alt="증빙자료">' : "") + '</div>';
+  }
+  function schedPickEvidence(key, input) {
+    const f = input.files && input.files[0];
+    if (!f) return;
+    const prev = document.getElementById(key + "EvPrev");
+    if (prev) prev.textContent = "사진 줄이는 중…";
+    schedCompressImage(f).then(url => {
+      schedEvidence[key] = url;
+      if (prev) prev.innerHTML = '<img src="' + url + '" alt="증빙자료">';
+    }).catch(e => { schedEvidence[key] = null; if (prev) prev.textContent = e.message; });
+  }
+  function sfSubmit() {
+    const msg = document.getElementById("sfMsg");
+    const say = t => { msg.innerHTML = '<div class="sp-err">' + escapeHtml(t) + '</div>'; };
+    const tr = document.getElementById("sfAckTravel"), hr = document.getElementById("sfAckHours");
+    if (tr && !tr.checked) { say("외출 · 재입실 시각이 이동 · 식사 시간까지 포함한 시각인지 확인하고 체크해 주세요."); return; }
+    if (hr && !hr.checked) { say("운영 시간을 벗어난 시간을 고치거나, 알고 제출한다고 체크해 주세요."); return; }
+    let reason = "";
+    if (!sfS.isFirst) {
+      reason = (document.getElementById("sfReason").value || "").trim();
+      if (!reason) { say("변경 사유를 적어 주세요."); return; }
+      if (schedVague(reason)) { say("변경 사유를 조금 더 구체적으로 적어 주세요. (예: 화요일 수학 학원이 새로 생겼어요)"); return; }
+      if (!schedEvidence.sf) { say("고정 스케줄을 바꿀 때는 증빙자료 사진이 필요해요."); return; }
+    }
+    const days = [1, 2, 3, 4, 5, 6].map(wd => {
+      const d = sfS.days[wd];
+      return d.mode === "custom" ? { weekday: wd, mode: "custom", blocks: schedToBlocks(d), reason: d.outs.map(o => o.reason).filter(Boolean).join(" / ") } : { weekday: wd, mode: d.mode, blocks: [] };
+    });
+    const btn = document.getElementById("sfSubmitBtn"); btn.disabled = true; btn.textContent = "보내는 중…";
+    planApi({ action: "sched_fixed_submit", days: days, reason: reason, evidence: sfS.isFirst ? null : schedEvidence.sf }).then(r => {
+      if (!r || !r.ok) { say((r && r.error) || "제출하지 못했어요."); btn.disabled = false; btn.textContent = "다시 제출하기"; return; }
+      schedEvidence.sf = null;
+      msg.innerHTML = '<div class="sp-ok">제출했어요. 관리 선생님이 확인하면 반영돼요.</div>';
+      setTimeout(() => go("home"), 1400);
+    }).catch(() => { say("제출하지 못했어요. 잠시 후 다시 시도해 주세요."); btn.disabled = false; btn.textContent = "다시 제출하기"; });
+  }
+
+  // ══ 돌발 스케줄 페이지 ══
+  let saF = null; // 입력 중인 돌발 스케줄 { replaces, date, type, entry, exit, outs, reason, ev }
+  function saEnter() {
+    saF = null;
+    document.getElementById("saForm").innerHTML = "";
+    document.getElementById("saMsg").textContent = "";
+    document.getElementById("saList").innerHTML = '<div class="sp-empty">불러오는 중…</div>';
+    schedFetch().then(saRenderList).catch(() => { document.getElementById("saList").innerHTML = '<div class="sp-empty">불러오지 못했어요. 잠시 후 다시 들어와 주세요.</div>'; });
+  }
+  function saRenderList() {
+    const d = schedData || {}, today = getCalendarDateKey(), ym = today.slice(0, 7);
+    const adhoc = d.adhoc || [];
+    const reqs = (d.requests || []).filter(r => r.kind === "adhoc" && (r.status === "pending" || r.status === "rejected")).slice(0, 15);
+    const upcoming = adhoc.filter(a => a.date >= today).sort((x, y) => x.date.localeCompare(y.date));
+    const past = adhoc.filter(a => a.date < today && a.date.slice(0, 7) === ym);
+    const monthCount = adhoc.filter(a => a.date.slice(0, 7) === ym).length;
+    const pendingFor = id => reqs.some(r => r.status === "pending" && Number(r.payload.replaces) === Number(id));
+    const row = (date, desc, right, cls) => '<div class="sp-row' + (cls ? " " + cls : "") + '"><span class="sp-row-d">' + schedMd(date) + '</span><span class="sp-row-b">' + escapeHtml(desc) + '</span><span class="sp-row-r">' + right + '</span></div>';
+    document.getElementById("saList").innerHTML =
+      '<div class="sp-actions sp-actions-top"><button type="button" class="sp-btn" onclick="saOpen()">+ 돌발 스케줄 등록하기</button></div>' +
+      (reqs.length ? '<div class="sp-card"><h3 class="sp-h3">승인 대기 · 반려</h3>' + reqs.map(r => row(r.payload.date,
+          (r.payload.cancel ? "취소 요청" : (r.payload.replaces ? "수정 요청 · " : "") + schedAdhocDesc(r.payload)),
+          r.status === "pending" ? '<span class="sp-tag wait">승인 대기</span><button type="button" class="sp-link" onclick="saCancelReq(' + Number(r.id) + ')">요청 취소</button>'
+            : '<span class="sp-tag rej">반려</span>' + (r.admin_note ? '<span class="sp-dim"> ' + escapeHtml(r.admin_note) + '</span>' : ""))).join("") + '</div>' : "") +
+      '<div class="sp-card"><h3 class="sp-h3">예정된 돌발 스케줄</h3>' + (upcoming.length ? upcoming.map(a => row(a.date, schedAdhocDesc(a),
+          pendingFor(a.id) ? '<span class="sp-tag wait">변경 승인 대기</span>' : '<button type="button" class="sp-link" onclick="saOpen(' + Number(a.id) + ')">수정</button><button type="button" class="sp-link" onclick="saCancelApproved(' + Number(a.id) + ')">취소 요청</button>')).join("") : '<div class="sp-empty">예정된 돌발 스케줄이 없어요.</div>') + '</div>' +
+      '<div class="sp-card"><h3 class="sp-h3">이번 달 지난 돌발 스케줄 <span class="sp-dim">· 이번 달 ' + monthCount + '회</span></h3>' + (past.length ? past.map(a => row(a.date, schedAdhocDesc(a), "", "past")).join("") : '<div class="sp-empty">없어요.</div>') + '</div>';
+  }
+  function saCancelReq(id) {
+    if (!confirm("이 요청을 취소할까요?")) return;
+    planApi({ action: "sched_req_cancel", id: id }).then(() => schedFetch()).then(saRenderList);
+  }
+  function saCancelApproved(id) {
+    const a = ((schedData && schedData.adhoc) || []).find(x => Number(x.id) === Number(id)); if (!a) return;
+    if (!confirm(schedMd(a.date) + " 돌발 스케줄을 취소할까요? 관리 선생님이 확인하면 취소돼요.")) return;
+    planApi({ action: "sched_adhoc_submit", date: a.date, cancel: true, replaces: a.id }).then(r => {
+      if (!r || !r.ok) { showToast((r && r.error) || "요청하지 못했어요."); return; }
+      showToast("취소 요청을 보냈어요.");
+      return schedFetch().then(saRenderList);
+    });
+  }
+  function saFixedFor(dateStr) { // 그 날짜 요일의 고정 스케줄로 시간을 미리 채운다
+    const wd = new Date(dateStr + "T12:00:00").getDay();
+    const f = ((schedData && schedData.fixed) || {})[String(wd)];
+    return f && !f.off ? schedFromBlocks(f.blocks, "") : { entry: "", exit: "", outs: [] };
+  }
+  function saOpen(editId) {
+    const today = getCalendarDateKey();
+    if (editId) {
+      const a = ((schedData && schedData.adhoc) || []).find(x => Number(x.id) === Number(editId)); if (!a) return;
+      const t = a.blocks ? schedFromBlocks(a.blocks, "") : { entry: "", exit: "", outs: [{ out: a.start, back: a.end, reason: "" }] };
+      saF = Object.assign({ replaces: a.id, date: a.date, type: a.type || "외출", reason: a.reason || "", ev: "" }, t);
+    } else {
+      saF = Object.assign({ replaces: null, date: today, type: "", reason: "", ev: "" }, saFixedFor(today));
+    }
+    schedEvidence.sa = null;
+    saRenderForm();
+    document.getElementById("saForm").scrollIntoView({ block: "start", behavior: "smooth" });
+  }
+  function saRead() {
+    if (!saF) return;
+    const root = document.getElementById("saForm");
+    const g = id => (document.getElementById(id) || {}).value || "";
+    saF.date = g("saDate") || saF.date;
+    saF.reason = g("saReason");
+    if (saF.type !== "결석" && root.querySelector('[data-k="ad"]')) Object.assign(saF, schedReadTimes("ad", root)); // 시간 칸이 화면에 있을 때만(미리 채운 값 보존)
+    const ev = root.querySelector('input[name="saEv"]:checked'); saF.ev = ev ? ev.value : "";
+  }
+  function saSetType(t) { saRead(); saF.type = t; saRenderForm(); }
+  function saSetDate(v) { saRead(); saF.date = v; if (!saF.replaces) Object.assign(saF, saFixedFor(v)); saRenderForm(); }
+  function saSetEv(v) { saRead(); saF.ev = v; saRenderForm(); }
+  function saRenderForm() {
+    const f = saF, today = getCalendarDateKey();
+    const types = ["지각", "조퇴", "결석", "외출", "기타"];
+    const guide = { "지각": "그날 늦게 오는 입실 시각을 넣어요.", "조퇴": "그날 일찍 가는 퇴실 시각을 넣어요.", "외출": "그날 나갔다 오는 외출 · 재입실 시각을 넣어요.", "기타": "그날 실제로 독서실에 있는 시간을 넣어요." }[f.type] || "";
+    const wd = new Date(f.date + "T12:00:00").getDay();
+    const evOpt = (v, label, desc) => '<label class="sp-radio"><input type="radio" name="saEv" value="' + v + '"' + (f.ev === v ? " checked" : "") + ' onchange="saSetEv(\'' + v + '\')"> <span><b>' + label + '</b>' + (desc ? '<small>' + desc + '</small>' : "") + '</span></label>';
+    document.getElementById("saForm").innerHTML = '<div class="sp-card sp-form"><h3 class="sp-h3">' + (f.replaces ? "돌발 스케줄 수정하기" : "돌발 스케줄 등록하기") + '</h3>' +
+      '<div class="sp-step"><span class="sp-num">1</span><div class="sp-step-b"><label class="sp-lab">날짜</label><input type="date" id="saDate" class="sp-date" min="' + today + '" value="' + escapeHtml(f.date) + '" onchange="saSetDate(this.value)"> <span class="sp-dim">' + SCHED_WD[wd] + '요일</span></div></div>' +
+      '<div class="sp-step"><span class="sp-num">2</span><div class="sp-step-b"><label class="sp-lab">종류</label><div class="sp-seg">' + types.map(t => '<button type="button" class="' + (f.type === t ? "on" : "") + '" onclick="saSetType(\'' + t + '\')">' + t + '</button>').join("") + '</div></div></div>' +
+      '<div class="sp-step"><span class="sp-num">3</span><div class="sp-step-b"><label class="sp-lab">사유 <span class="sp-dim">무슨 과목 학원 · 과외인지, 어떤 일인지까지 구체적으로</span></label><textarea id="saReason" class="sp-ta" rows="2" maxlength="300" placeholder="예: 치과 진료(OO치과 15:30 예약) / 수학 학원 보강">' + escapeHtml(f.reason) + '</textarea></div></div>' +
+      (f.type && f.type !== "결석" ? '<div class="sp-step"><span class="sp-num">4</span><div class="sp-step-b"><label class="sp-lab">그날 시간 <span class="sp-dim">' + guide + ' 고정 스케줄 시간이 미리 채워져 있어요.</span></label>' + schedTimesHtml("ad", f, false) +
+        '<label class="sp-chk"><input type="checkbox" id="saAckTravel"> <span>이 시각은 일정 시간만이 아니라 <b>이동 시간과 식사 시간까지 포함한</b> 실제로 나가고 들어오는 시각이에요.</span></label></div></div>' : "") +
+      (f.type ? '<div class="sp-step"><span class="sp-num">' + (f.type === "결석" ? 4 : 5) + '</span><div class="sp-step-b"><label class="sp-lab">증빙자료 <span class="sp-dim">돌발 스케줄은 증빙자료가 꼭 필요해요</span></label>' +
+        evOpt("now", "지금 사진 올리기", "") +
+        evOpt("later", "외출 후 재입실할 때 데스크에 직접 제출하기", "관리 선생님의 별도 허락이 필요해요.") +
+        evOpt("parent", "가족 일정이라 증빙자료가 없어요", "학부모님이 독서실로 직접 연락해 주셔야 돌발 스케줄로 바꿀 수 있어요.") +
+        (f.ev === "now" ? schedEvidenceHtml("sa") : "") + '</div></div>' : "") +
+      '<div class="sp-actions"><button type="button" class="sp-btn2" onclick="saClose()">닫기</button>' + (f.type ? '<button type="button" class="sp-btn" id="saSubmitBtn" onclick="saSubmit()">제출하기</button>' : "") + '</div>' +
+      '<div id="saNotes"></div></div>';
+  }
+  function saClose() { saF = null; document.getElementById("saForm").innerHTML = ""; document.getElementById("saMsg").textContent = ""; }
+  function saSubmit() {
+    saRead();
+    const f = saF, msg = document.getElementById("saMsg");
+    const say = t => { msg.innerHTML = '<div class="sp-err">' + escapeHtml(t) + '</div>'; msg.scrollIntoView({ block: "center", behavior: "smooth" }); };
+    if (!f.date || f.date < getCalendarDateKey()) { say("날짜를 오늘이나 그 뒤로 골라 주세요."); return; }
+    if (!f.reason.trim()) { say("사유를 적어 주세요."); return; }
+    if (schedVague(f.reason)) { say("사유를 조금 더 구체적으로 적어 주세요. 무슨 과목 학원 · 과외인지, 어떤 일인지까지요."); return; }
+    let blocks = [];
+    if (f.type !== "결석") {
+      const day = { entry: f.entry, exit: f.exit, outs: f.outs.map(o => Object.assign({}, o, { reason: f.reason })) };
+      const errs = schedCheckDay(day, "");
+      if (errs.length) { say(errs[0].trim()); return; }
+      const ack = document.getElementById("saAckTravel");
+      if (ack && !ack.checked) { say("시각이 이동 · 식사 시간까지 포함한 시각인지 확인하고 체크해 주세요."); return; }
+      const wd = new Date(f.date + "T12:00:00").getDay();
+      const n = schedHourNotes(day, schedHoursFor(wd, f.date), "");
+      if (n.warn.length && !confirm(n.warn.map(w => w.trim()).join("\n") + "\n\n그래도 이대로 제출할까요?")) return;
+      if (n.sugg.length && confirm(n.sugg.map(s => s.text.trim()).join("\n") + "\n\n쉬는시간에 맞춰 바꿀까요? (취소를 누르면 지금 시간 그대로 제출해요)")) {
+        n.sugg.forEach(s => { if (f.outs[s.i]) f.outs[s.i][s.field] = s.value; });
+        saRenderForm(); showToast("쉬는시간에 맞췄어요. 확인하고 다시 제출해 주세요."); return;
+      }
+      blocks = schedToBlocks(day);
+    }
+    if (!f.ev) { say("증빙자료를 어떻게 낼지 골라 주세요."); return; }
+    if (f.ev === "now" && !schedEvidence.sa) { say("증빙자료 사진을 올려 주세요."); return; }
+    const btn = document.getElementById("saSubmitBtn"); btn.disabled = true; btn.textContent = "보내는 중…";
+    planApi({ action: "sched_adhoc_submit", date: f.date, type: f.type, blocks: blocks, reason: f.reason.trim(), evidenceMode: f.ev, evidence: f.ev === "now" ? schedEvidence.sa : null, replaces: f.replaces || null }).then(r => {
+      if (!r || !r.ok) { say((r && r.error) || "제출하지 못했어요."); btn.disabled = false; btn.textContent = "제출하기"; return; }
+      schedEvidence.sa = null;
+      saClose();
+      msg.innerHTML = '<div class="sp-ok">' + (f.ev === "later" ? "제출했어요. 재입실할 때 데스크에 증빙자료를 꼭 내 주세요." : f.ev === "parent" ? "제출했어요. 학부모님께 독서실로 연락해 달라고 꼭 말씀드려 주세요." : "제출했어요. 관리 선생님이 확인하면 반영돼요.") + '</div>';
+      return schedFetch().then(saRenderList);
+    }).catch(() => { say("제출하지 못했어요. 잠시 후 다시 시도해 주세요."); btn.disabled = false; btn.textContent = "제출하기"; });
+  }
+
   // 오늘 "최초 계획"이 이미 있는지 — 없으면 지금부터 넣는 항목이 "최초 계획"이 되고,
   // 있으면(나중에 "+ 추가하기"로 넣는 것) "계획 수정하기"에만 반영되고 최초 계획에는 안 남는다.
   // 최초 계획은 이 페이지의 게이트 팝업 안에서 바로 세운다 — 이 페이지에 다시 들어올
@@ -16203,6 +17255,7 @@
   }
   // 홈이 열릴 때(학생이 바뀌면 다시): 오늘 쓰던 채팅이 있으면 이어서 보여 주고, 없으면 새 채팅(인사말)으로 시작한다.
   function chatInit() {
+    if (!HOLO_CHAT_ENABLED) return; // 학습 상담 AI는 잠시 꺼 둔 상태
     const sid = chatStudentId();
     const el = document.getElementById("chat-chat");
     if (!sid || !el || chatInitFor === sid) return;
@@ -16682,8 +17735,11 @@
     if (!d || !d.summary || !Array.isArray(d.days)) return "";
     const s = d.summary, n = s.periodDays || d.days.length;
     const fmtRest = sec => sec >= 60 ? Math.round(sec / 60) + "분" : sec + "초";
+    // 하루 점수(100점 만점 = 계획 1 + 일기 1 + 자기평가 0~98)가 있는 새 분석지는 그걸, 예전 분석지는 자기평가 평균을 보여 준다
+    const hasDay = typeof s.dayScoreAvg === "number";
     const cells = [
-      ["자기평가 평균 점수", s.selfScoreAvg === null ? "기록 없음" : s.selfScoreAvg + "점", s.selfScoreDays ? s.selfScoreDays + "일 기준" : ""],
+      hasDay ? ["하루 점수 평균", s.dayScoreAvg + "점", "100점 만점 · 6일 합계 " + s.dayScoreTotal + "점"]
+             : ["자기평가 평균 점수", s.selfScoreAvg === null ? "기록 없음" : s.selfScoreAvg + "점", s.selfScoreDays ? s.selfScoreDays + "일 기준" : ""],
       ["플래너 제출률", s.plannerSubmitDays + " / " + n + "일", ""],
       ["공부일기 제출률", s.diarySubmitDays + " / " + n + "일", ""],
       ["어휘력 Test 응시", "단어 " + s.vocabWordDays + "일 · 문법 " + s.vocabGrammarDays + "일", ""],
@@ -16693,11 +17749,11 @@
     const mark = on => on ? '<span class="rpt-ok">✓</span>' : '<span class="rpt-no">–</span>';
     const rows = d.days.map(x => '<tr><td>' + escapeHtml(x.date.slice(5).replace("-", "/")) + ' (' + escapeHtml(x.weekday) + ')</td>' +
       '<td>' + mark(x.plannerSubmitted) + '</td><td>' + mark(x.diarySubmitted) + '</td>' +
-      '<td>' + (x.selfScore === null ? '<span class="rpt-no">–</span>' : x.selfScore + '점') + '</td>' +
+      '<td>' + (hasDay ? x.dayScore + '점' + (x.selfScore === null ? '' : ' <span class="rpt-sub">(자기평가 ' + x.selfScore + ')</span>') : (x.selfScore === null ? '<span class="rpt-no">–</span>' : x.selfScore + '점')) + '</td>' +
       '<td>' + (x.vocabWord || x.vocabGrammar ? (x.vocabWord ? "단어" : "") + (x.vocabWord && x.vocabGrammar ? " · " : "") + (x.vocabGrammar ? "문법" : "") : '<span class="rpt-no">–</span>') + '</td>' +
       '<td>' + (x.restCount ? fmtRest(x.restSec) + " · " + x.restCount + "번" : '<span class="rpt-no">–</span>') + '</td></tr>').join("");
     return '<div class="rpt-stats">' + cells.map(c => '<div class="rpt-stat"><span class="rpt-label">' + c[0] + '</span><b>' + escapeHtml(c[1]) + '</b>' + (c[2] ? '<span class="rpt-sub">' + escapeHtml(c[2]) + '</span>' : '') + '</div>').join("") + '</div>' +
-      '<table class="rpt-days"><thead><tr><th>날짜</th><th>플래너</th><th>공부일기</th><th>자기평가</th><th>어휘력 Test</th><th>머리 식히기</th></tr></thead><tbody>' + rows + '</tbody></table>';
+      '<table class="rpt-days"><thead><tr><th>날짜</th><th>플래너</th><th>공부일기</th><th>' + (hasDay ? "하루 점수" : "자기평가") + '</th><th>어휘력 Test</th><th>머리 식히기</th></tr></thead><tbody>' + rows + '</tbody></table>';
   }
   // 분석지 글 부분: "## 제목" 단위로 구역을 나눠서, 구역마다 어울리는 모양(요약 · 목록 · 한마디 · 제안)으로 보여준다.
   // 예전 분석지(지난 한 주 요약 / 반복되는 패턴 …)와 새 분석지(한 줄 요약 / 이번 6일에 한 일 …) 둘 다 같은 규칙으로 처리한다.
@@ -17165,7 +18221,7 @@
           '<span class="day-row-date">' + escapeHtml(d.date) + '</span>' +
           '<span class="day-row-flag ' + (d.hasPlan ? "yes" : "no") + '">플래너 ' + (d.hasPlan ? "O" : "X") + '</span>' +
           '<span class="day-row-flag ' + (d.hasDiary ? "yes" : "no") + '">일기 ' + (d.hasDiary ? "O" : "X") + '</span>' +
-          '<span class="day-row-flag ' + (d.hasChat ? "yes" : "no") + '">질의응답 ' + (d.hasChat ? "O" : "X") + '</span>' +
+          '<span class="day-row-flag ' + (d.selfScore != null ? "yes" : "no") + '">자기평가 ' + (d.selfScore != null ? d.selfScore + "점" : "X") + '</span>' +
           '<span class="day-row-score">' + (Number(d.score) || 0) + '점</span>' +
           '<span class="day-row-arrow">›</span>' +
         '</button>' +
@@ -19656,7 +20712,7 @@
   function chatUsageRefresh() {
     const wrap = document.getElementById("chatUsageWrap");
     if (!wrap) return;
-    if (!localStorage.getItem("holoStudentToken")) { wrap.hidden = true; return; }
+    if (!HOLO_CHAT_ENABLED || !localStorage.getItem("holoStudentToken")) { wrap.hidden = true; return; }
     wrap.hidden = false; // 로그인한 학생에게는 링을 항상 보여 주고, 숫자를 못 읽으면 창에 안내만 띄운다
     const unknown = () => { document.getElementById("chatUsageNum").textContent = "-"; document.getElementById("chatUsageNote").textContent = "지금은 사용량을 확인할 수 없어요."; };
     authPost({ action: "auth_usage" }).then(res => {
@@ -20200,6 +21256,7 @@
   function loadStudents() {
     loadResetRequests();
     loadAiSpend();
+    adkLoadSeats();
     if (unsubscribeStudents) return;
     unsubscribeStudents = db.collection("students").orderBy("createdAt", "desc")
       .onSnapshot(snap => {
@@ -20264,6 +21321,7 @@
         + "<td>" + escapeHtml(s.school || "-") + "</td>"
         + "<td>" + escapeHtml(s.name || "-") + "</td>"
         + "<td>" + escapeHtml(s.birth || "-") + "</td>"
+        + "<td><input type=\"text\" class=\"adk-seat\" maxlength=\"20\" value=\"" + escapeHtml(adkSeats[s.id] || "") + "\" placeholder=\"-\" onchange=\"adkSeatSave('" + sid + "', this)\" aria-label=\"좌석 번호\"></td>"
         + "<td>" + created + "</td>"
         + "<td>" + statusHtml + "</td>"
         + "<td>" + actionHtml + "</td>"
@@ -20493,6 +21551,14 @@
     document.getElementById("adminPanelProfiles").style.display = name === "profiles" ? "block" : "none";
     document.getElementById("adminPanelLinks").style.display = name === "links" ? "block" : "none";
     document.getElementById("adminPanelMex").style.display = name === "mex" ? "block" : "none";
+    document.getElementById("adminPanelDeskReq").style.display = name === "deskReq" ? "block" : "none";
+    document.getElementById("adminPanelDeskSched").style.display = name === "deskSched" ? "block" : "none";
+    document.getElementById("adminPanelDeskVac").style.display = name === "deskVac" ? "block" : "none";
+    adkPanel = name;
+    if (name === "deskReq" || name === "deskSched") { loadStudents(); adkStart(); }
+    if (name === "deskReq") adkLoadReq();
+    if (name === "deskSched") adkLoadSched();
+    if (name === "deskVac") adkLoadVac();
     if (name === "mex") loadAdminMex();
     if (name === "schedule") renderAdminSchedule();
     if (name === "availability") renderAvailability();
@@ -20793,6 +21859,160 @@
     }).join("");
   }
 
+  // ══ 관리자: 독서실 관리 (데스크 요청 · 스케줄 승인 · 방학 운영 기간 · 좌석 번호) — 서버 desk.ts ══
+  let adkPanel = "", adkSeats = {}, adkReqItems = [], adkSchedItems = [], adkSchedMode = "pending", adkTimer = null, adkSeenIds = null;
+  const adkStudentName = id => { const s = adminAllStudents.find(x => x.id === id); return s && s.name ? s.name : id; };
+  const adkTime = iso => { const d = new Date(iso); return isNaN(d) ? "" : (d.getMonth() + 1) + "/" + d.getDate() + " " + d.getHours() + ":" + String(d.getMinutes()).padStart(2, "0"); };
+  function adkLoadSeats() {
+    adminAuthPost({ action: "admin_desk_seats" }).then(r => { if (r && r.ok) { adkSeats = r.seats || {}; renderStudents(); } }).catch(() => {});
+  }
+  function adkSeatSave(id, input) {
+    const v = (input.value || "").trim();
+    adminAuthPost({ action: "admin_desk_seat_set", studentId: id, seat: v }).then(r => {
+      if (r && r.ok) { adkSeats[id] = v; input.style.borderColor = "#7BB28F"; setTimeout(() => { input.style.borderColor = ""; }, 1200); }
+      else alert((r && r.error) || "저장하지 못했어요.");
+    });
+  }
+  // 새 요청 알림음 (짧은 "띵" 두 번)
+  function adkBeep() {
+    try {
+      const ac = new (window.AudioContext || window.webkitAudioContext)();
+      [0, 0.22].forEach(t => {
+        const o = ac.createOscillator(), g = ac.createGain();
+        o.frequency.value = 880; o.connect(g); g.connect(ac.destination);
+        g.gain.setValueAtTime(0.0001, ac.currentTime + t);
+        g.gain.exponentialRampToValueAtTime(0.25, ac.currentTime + t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + t + 0.18);
+        o.start(ac.currentTime + t); o.stop(ac.currentTime + t + 0.2);
+      });
+    } catch (e) {}
+  }
+  function adkBadge(id, n) { const el = document.getElementById(id); if (!el) return; el.hidden = !n; el.textContent = n > 99 ? "99+" : String(n); }
+  // 관리자 화면이 열려 있는 동안 20초마다: 데스크 요청 · 승인 대기 수를 새로 읽고, 새 요청이면 소리
+  function adkTick() {
+    adminAuthPost({ action: "admin_desk_list" }).then(r => {
+      if (!r || !r.ok) return;
+      adkReqItems = r.items || [];
+      const ids = new Set(adkReqItems.map(x => x.id));
+      if (adkSeenIds && adkReqItems.some(x => !adkSeenIds.has(x.id) && x.status === "new")) adkBeep();
+      adkSeenIds = ids;
+      adkBadge("adkReqBadge", adkReqItems.filter(x => x.status === "new").length);
+      if (adkPanel === "deskReq") adkRenderReq();
+    }).catch(() => {});
+    adminAuthPost({ action: "admin_desk_sched_list", status: "pending" }).then(r => {
+      if (!r || !r.ok) return;
+      adkBadge("adkSchedBadge", (r.items || []).length);
+      if (adkPanel === "deskSched" && adkSchedMode === "pending") { adkSchedItems = r.items || []; adkRenderSched(); }
+    }).catch(() => {});
+  }
+  function adkStart() { if (adkTimer) return; adkTick(); adkTimer = setInterval(() => { if (!document.hidden) adkTick(); }, 20000); }
+  function adkStop() { if (adkTimer) { clearInterval(adkTimer); adkTimer = null; } adkSeenIds = null; }
+
+  function adkLoadReq() { document.getElementById("adkReqList").innerHTML = '<div class="admin-empty" style="display:block">불러오는 중…</div>'; adkTick(); }
+  function adkRenderReq() {
+    const el = document.getElementById("adkReqList"); if (!el) return;
+    const showDone = document.getElementById("adkReqShowDone").checked;
+    const items = adkReqItems.filter(x => showDone || x.status !== "done");
+    if (!items.length) { el.innerHTML = '<div class="admin-empty" style="display:block">' + (showDone ? "최근 7일 요청이 없습니다." : "처리할 요청이 없습니다.") + '</div>'; return; }
+    el.innerHTML = items.map(x => {
+      const label = DESK_KIND_LABEL[x.kind] || "요청";
+      const st = (v, t) => '<button type="button" class="adk-st' + (x.status === v ? " on s-" + v : "") + '" onclick="adkSetStatus(' + Number(x.id) + ',\'' + v + '\')">' + t + '</button>';
+      return '<div class="adk-item' + (x.status === "new" ? " is-new" : "") + '">' +
+        '<div class="adk-item-top"><span class="adk-seat-tag">' + (x.seat ? "좌석 " + escapeHtml(x.seat) : "좌석 미등록") + '</span><b>' + escapeHtml(adkStudentName(x.student_id)) + '</b><span class="adk-dim">' + escapeHtml(x.student_id) + ' · ' + adkTime(x.created_at) + '</span></div>' +
+        '<div class="adk-item-body"><span class="adk-kind k-' + x.kind + '">' + escapeHtml(label || "직접 입력") + '</span>' + (x.text ? escapeHtml(x.text) : "") +
+          (x.kind === "pdf" ? ' <span class="adk-pdf' + (Number(x.pdf_sent) ? " ok" : "") + '">' + (Number(x.pdf_sent) ? "자료 전송 완료 · 메일 확인" : "아직 자료 전송 전") + '</span>' : "") + '</div>' +
+        '<div class="adk-sts">' + st("new", "미확인") + st("doing", "확인 완료, 처리 중") + st("done", "처리 완료") + '</div></div>';
+    }).join("");
+  }
+  function adkSetStatus(id, status) {
+    const it = adkReqItems.find(x => Number(x.id) === Number(id)); if (it) it.status = status;
+    adkRenderReq();
+    adkBadge("adkReqBadge", adkReqItems.filter(x => x.status === "new").length);
+    adminAuthPost({ action: "admin_desk_status", id: id, status: status }).then(r => { if (!r || !r.ok) { alert((r && r.error) || "바꾸지 못했어요."); adkTick(); } });
+  }
+
+  function adkSchedTab(mode) {
+    adkSchedMode = mode;
+    document.getElementById("adkTabPending").classList.toggle("active", mode === "pending");
+    document.getElementById("adkTabDone").classList.toggle("active", mode === "done");
+    adkLoadSched();
+  }
+  function adkLoadSched() {
+    document.getElementById("adkSchedList").innerHTML = '<div class="admin-empty" style="display:block">불러오는 중…</div>';
+    adminAuthPost({ action: "admin_desk_sched_list", status: adkSchedMode }).then(r => {
+      adkSchedItems = (r && r.items) || [];
+      if (adkSchedMode === "pending") adkBadge("adkSchedBadge", adkSchedItems.length);
+      adkRenderSched();
+    }).catch(() => { document.getElementById("adkSchedList").innerHTML = '<div class="admin-empty" style="display:block">불러오지 못했어요.</div>'; });
+  }
+  const ADK_EV_LABEL = { none: "증빙 없음", now: "사진 제출", later: "재입실 때 데스크에 직접 제출 (관리 선생님 허락 필요)", parent: "가족 일정 · 학부모님이 직접 연락하기로 함" };
+  const ADK_ST_LABEL = { approved: "승인함", rejected: "반려함", canceled: "학생이 취소함", pending: "승인 대기" };
+  function adkRenderSched() {
+    const el = document.getElementById("adkSchedList"); if (!el) return;
+    if (!adkSchedItems.length) { el.innerHTML = '<div class="admin-empty" style="display:block">' + (adkSchedMode === "pending" ? "승인을 기다리는 요청이 없습니다." : "처리한 요청이 없습니다.") + '</div>'; return; }
+    el.innerHTML = adkSchedItems.map(r => {
+      const p = r.payload || {};
+      let title, body;
+      if (r.kind === "fixed") {
+        title = Number(r.is_first) ? "고정 스케줄 · 처음 제출" : "고정 스케줄 · 수정";
+        body = '<div class="adk-days">' + [1, 2, 3, 4, 5, 6].map(wd => {
+          const f = (p.days || []).find(x => Number(x.weekday) === wd);
+          return '<div><b>' + SCHED_WD[wd] + '</b> ' + (!f || f.mode === "duty" ? "의무 시간표대로" : f.mode === "off" ? "등원 안 함" : escapeHtml(schedBlocksText(f.blocks)) + (f.reason ? ' <span class="adk-dim">(' + escapeHtml(f.reason) + ')</span>' : "")) + '</div>';
+        }).join("") + '</div>';
+      } else {
+        title = "돌발 스케줄 · " + (p.cancel ? "취소" : p.replaces ? "수정" : "등록") + " · " + escapeHtml(p.date || "") + " (" + SCHED_WD[new Date((p.date || "") + "T12:00:00").getDay()] + ")";
+        body = p.cancel ? '<div>승인된 돌발 스케줄을 취소하겠다는 요청이에요.</div>' : '<div><b>' + escapeHtml(p.type || "") + '</b> · ' + escapeHtml(schedBlocksText(p.blocks)) + '</div>';
+      }
+      const ev = r.evidence_mode && r.evidence_mode !== "none" ? '<div class="adk-ev"><span>증빙: ' + escapeHtml(ADK_EV_LABEL[r.evidence_mode] || r.evidence_mode) + '</span>' + (r.has_evidence ? ' <button type="button" class="adk-btn" onclick="adkShowEvidence(' + Number(r.id) + ', this)">증빙 사진 보기</button>' : "") + '<div class="adk-ev-img" id="adkEv' + Number(r.id) + '"></div></div>' : "";
+      const actions = r.status === "pending"
+        ? '<div class="adk-acts"><button type="button" class="adk-btn adk-btn-ok" onclick="adkDecide(' + Number(r.id) + ',\'approved\')">승인</button><button type="button" class="adk-btn adk-btn-no" onclick="adkDecide(' + Number(r.id) + ',\'rejected\')">반려</button></div>'
+        : '<div class="adk-dim">' + (ADK_ST_LABEL[r.status] || r.status) + (r.decided_at ? " · " + adkTime(r.decided_at) : "") + (r.admin_note ? " · 사유: " + escapeHtml(r.admin_note) : "") + '</div>';
+      return '<div class="adk-item">' +
+        '<div class="adk-item-top"><b>' + escapeHtml(adkStudentName(r.student_id)) + '</b><span class="adk-dim">' + escapeHtml(r.student_id) + ' · ' + adkTime(r.created_at) + '</span><span class="adk-kind">' + title + '</span></div>' +
+        body + (r.reason && r.reason !== "최초 제출" ? '<div class="adk-reason">사유: ' + escapeHtml(r.reason) + '</div>' : "") + ev + actions + '</div>';
+    }).join("");
+  }
+  function adkShowEvidence(id, btn) {
+    const box = document.getElementById("adkEv" + id); if (!box) return;
+    if (box.innerHTML) { box.innerHTML = ""; return; }
+    box.textContent = "불러오는 중…";
+    adminAuthPost({ action: "admin_desk_sched_evidence", id: id }).then(r => {
+      box.innerHTML = r && r.evidence ? '<a href="' + r.evidence + '" target="_blank" rel="noopener"><img src="' + r.evidence + '" alt="증빙자료"></a>' : "사진이 없어요.";
+    }).catch(() => { box.textContent = "불러오지 못했어요."; });
+  }
+  function adkDecide(id, decision) {
+    let note = "";
+    if (decision === "rejected") {
+      note = prompt("반려 사유를 적어 주세요. (학생 화면에 보여요)", "");
+      if (note === null) return;
+    } else if (!confirm("승인할까요? 승인하면 학생 스케줄에 바로 반영돼요.")) return;
+    adminAuthPost({ action: "admin_desk_sched_decide", id: id, decision: decision, note: note }).then(r => {
+      if (!r || !r.ok) { alert((r && r.error) || "처리하지 못했어요."); return; }
+      adkLoadSched();
+    });
+  }
+
+  function adkLoadVac() {
+    adminAuthPost({ action: "admin_desk_vac_list" }).then(r => {
+      const items = (r && r.items) || [];
+      document.getElementById("adkVacEmpty").style.display = items.length ? "none" : "block";
+      document.getElementById("adkVacBody").innerHTML = items.map(v => "<tr><td>" + escapeHtml(v.label || "-") + "</td><td>" + escapeHtml(v.start_date) + "</td><td>" + escapeHtml(v.end_date) + "</td><td><button type=\"button\" class=\"admin-delete-btn\" onclick=\"adkVacDel(" + Number(v.id) + ")\">삭제</button></td></tr>").join("");
+    });
+  }
+  function adkVacAdd(e) {
+    e.preventDefault();
+    const msg = document.getElementById("adkVacMsg");
+    adminAuthPost({ action: "admin_desk_vac_add", start: document.getElementById("adkVacStart").value, end: document.getElementById("adkVacEnd").value, label: document.getElementById("adkVacLabel").value }).then(r => {
+      if (!r || !r.ok) { msg.textContent = (r && r.error) || "추가하지 못했어요."; msg.className = "apply-status-msg error"; return; }
+      msg.textContent = "추가했어요."; msg.className = "apply-status-msg success";
+      e.target.reset(); adkLoadVac();
+    });
+  }
+  function adkVacDel(id) {
+    if (!confirm("이 방학 운영 기간을 삭제할까요?")) return;
+    adminAuthPost({ action: "admin_desk_vac_delete", id: id }).then(() => adkLoadVac());
+  }
+
   auth.onAuthStateChanged(user => {
     const loginBox = document.getElementById("adminLoginBox");
     const dash = document.getElementById("adminDashboard");
@@ -20805,9 +22025,11 @@
       loadForms();
       loadStudents();
       loadNotices();
+      adkStart();
     } else {
       loginBox.style.display = "block";
       dash.style.display = "none";
+      adkStop();
     }
   });
 
