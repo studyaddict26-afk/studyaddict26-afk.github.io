@@ -4064,11 +4064,16 @@
   }
   .hn-notice-title { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
   .hn-notice-empty { font-size: 0.78rem; color: var(--ink-soft); }
-  .hd-ai { grid-column: 2; grid-row: 2; display: flex; min-height: 0; min-width: 0; }
+  .hd-ai { grid-column: 2; grid-row: 1 / 3; display: flex; min-height: 0; min-width: 0; } /* 오른쪽 열 전체(윗줄 + 아랫줄)를 쓴다 */
   /* ── 독서실 스케줄 + 데스크 요청 (홈 오른쪽 아래) ── 선 + 글씨 위계, 진한 버튼은 '보내기' 하나 */
-  .hdk { flex: 1; min-width: 0; min-height: 0; display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr); grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); /* 고정 스케줄(위) : 돌발 · 데스크(아래) = 1 : 1 */ gap: var(--ln-gap, 12px); }
-  .hdk-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
-  .hdk-fixed { grid-column: 1 / -1; }
+  .hdk { flex: 1; min-width: 0; min-height: 0; display: grid; grid-template-columns: repeat(22, minmax(0, 1fr)); grid-template-rows: 210px minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--ln-gap, 12px); /* 22칸 격자: 윗줄은 15 : 7(고정 : 돌발), 아랫줄은 9 : 13(공지 · 포스터 : 데스크) */ }
+  .hdk .hd-right-top { display: contents; }
+  .hdk .home-notice-rot { grid-column: 1 / 10; grid-row: 2; min-height: 0; }
+  .hdk .home-poster-rot { grid-column: 1 / 10; grid-row: 3; min-height: 0; }
+  .hdk-card { background: #F4F4F5; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+  .hdk-fixed { grid-column: 1 / 16; grid-row: 1; }
+  .hdk-adhoc { grid-column: 16 / 23; grid-row: 1; }
+  .hdk-desk { grid-column: 10 / 23; grid-row: 2 / 4; }
   .hdk-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex: none; }
   .hdk-title { margin: 0; font-size: 0.86rem; font-weight: 700; color: var(--ink); }
   .hdk-state { font-size: 0.66rem; color: var(--ink-soft); }
@@ -4078,12 +4083,11 @@
   .hdk-btn:hover { background: var(--cream); }
   .hdk-btn:disabled { color: #A0A3AA; cursor: default; background: #fff; }
   .hdk-week { flex: 1; min-height: 0; overflow-y: auto; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); align-content: start; border-top: 1px solid var(--line); }
-  .hdk-day { padding: 7px 6px 2px; min-width: 0; border-left: 1px solid var(--line); }
+  .hdk-day { padding: 7px 5px 2px; min-width: 0; border-left: 1px solid var(--line); }
   .hdk-day:first-child { border-left: none; }
   .hdk-day-name { font-size: 0.7rem; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
   .hdk-day.today .hdk-day-name { color: #0D2155; }
-  .hdk-day.today .hdk-day-name::after { content: " 오늘"; font-size: 0.58rem; font-weight: 700; color: #3B5BA9; }
-  .hdk-ev { display: flex; justify-content: space-between; gap: 4px; font-size: 0.64rem; line-height: 1.6; color: var(--ink); white-space: nowrap; }
+  .hdk-ev { display: flex; justify-content: space-between; gap: 2px; font-size: 0.6rem; line-height: 1.6; color: var(--ink); white-space: nowrap; }
   .hdk-ev span { color: var(--ink-soft); }
   .hdk-day-plain { font-size: 0.64rem; color: var(--ink-soft); line-height: 1.5; }
   .hdk-empty { font-size: 0.7rem; color: var(--ink-soft); padding: 6px 0; }
@@ -4099,7 +4103,9 @@
   .hdk-ad-tag.wait { color: #B26A00; }
   .hdk-ad-tag.rej { color: #C0392B; }
   .hdk-ad.past { color: var(--ink-soft); }
-  .hdk-desk { padding-bottom: 10px; background: #F4F4F5; } /* 예전 학습 상담 AI 박스와 같은 배경 — 안내 말풍선은 흰색으로 */
+  /* 색 배치: 고정 · 돌발 스케줄 = 연한 회색, 공지사항 · 데스크 요청 = 흰색 */
+  .hdk-desk { padding-bottom: 10px; background: #fff; }
+  .hdk .home-notice-box { background: #fff; }
   .hdk-seat { flex: none; align-self: center; font-size: 0.64rem; font-weight: 700; color: var(--ink-soft); padding-right: 8px; border-right: 1px solid var(--line); white-space: nowrap; }
   .hdk-seat:empty { display: none; }
   .hdk-msgs { flex: 1 1 0; min-height: 60px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 4px 2px 8px; }
@@ -4131,6 +4137,9 @@
   .hdk-input button { flex: none; font-family: inherit; font-size: 0.72rem; font-weight: 700; color: #fff; background: var(--ink); border: none; border-radius: 7px; padding: 6px 12px; cursor: pointer; }
   @media (max-width: 900px) {
     .hdk { grid-template-columns: 1fr; grid-template-rows: none; }
+    .hdk { grid-template-columns: 1fr; }
+    .hdk-fixed, .hdk-adhoc, .hdk-desk, .hdk .home-notice-rot, .hdk .home-poster-rot { grid-column: 1; grid-row: auto; }
+    .hdk-fixed { order: 1; } .hdk-adhoc { order: 2; } .hdk .home-notice-rot { order: 3; min-height: 64px; } .hdk .home-poster-rot { order: 4; min-height: 110px; } .hdk-desk { order: 5; }
     .hdk-week { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .hdk-day:nth-child(4) { border-left: none; }
     .hdk-adhoc { min-height: 220px; }
@@ -8787,15 +8796,16 @@
     </div>
       </div>
       <div class="hd-right">
+        <div class="hd-ai">
+      <!-- 생활 관리 화면. 위: 고정 스케줄 · 돌발 스케줄 / 아래 왼쪽: 공지사항 → 포스터(위아래) / 아래 오른쪽: 데스크 요청(세로로 길게) -->
+      <div class="hdk" id="hdk">
+        <!-- 포스터 · 공지 칸(예전 .hd-right-top)은 스타일에서 display: contents로 두어 이 격자의 칸으로 바로 놓인다 -->
         <div class="hd-right-top">
       <div class="home-poster-rot" id="homePosterRot">
         <!-- 포스터는 아래 스크립트의 HOME_POSTERS 목록에서 만든다(renderHomePosters). 문구를 바꾸거나 켜고 끄려면 그 목록만 고치면 된다. -->
       </div>
           <div class="home-notice-rot" id="homeNoticeRot"><!-- 공지는 아래 스크립트의 HOME_NOTICES 목록에서 만든다(renderHomeNotices) --></div>
         </div>
-        <div class="hd-ai">
-      <!-- 독서실 스케줄 + 데스크 요청 (학습 상담 AI 자리). 고정 스케줄(위, 가로) / 돌발 스케줄(왼쪽 아래) / 데스크 요청 채팅(오른쪽 아래) -->
-      <div class="hdk" id="hdk">
         <section class="hdk-card hdk-fixed">
           <div class="hdk-head">
             <h3 class="hdk-title">고정 스케줄</h3>
@@ -16030,10 +16040,10 @@
         let body;
         if (src) {
           const f = src[String(wd)];
-          body = !f ? '<div class="hdk-day-plain">의무 시간표대로</div>' : (f.off ? '<div class="hdk-day-plain">등원 안 함</div>' : schedEventsHtml(f.blocks));
+          body = !f ? '<div class="hdk-day-plain">정상 학습</div>' : (f.off ? '<div class="hdk-day-plain">등원 안 함</div>' : schedEventsHtml(f.blocks));
         } else {
           const f = pendDays.find(x => Number(x.weekday) === wd);
-          body = !f || f.mode === "duty" ? '<div class="hdk-day-plain">의무 시간표대로</div>' : (f.mode === "off" ? '<div class="hdk-day-plain">등원 안 함</div>' : schedEventsHtml(f.blocks));
+          body = !f || f.mode === "duty" ? '<div class="hdk-day-plain">정상 학습</div>' : (f.mode === "off" ? '<div class="hdk-day-plain">등원 안 함</div>' : schedEventsHtml(f.blocks));
         }
         return '<div class="hdk-day' + (wd === todayWd ? " today" : "") + '"><div class="hdk-day-name">' + SCHED_WD[wd] + '</div>' + body + '</div>';
       }).join("");
@@ -16208,7 +16218,7 @@
     const note = document.getElementById("sfNote");
     if (pend) {
       note.innerHTML = '<div class="sp-box"><b>승인 대기 중인 고정 스케줄이 있어요.</b> 관리 선생님이 확인하면 반영돼요. 내용을 바꾸려면 요청을 취소하고 다시 제출해 주세요.' +
-        '<div class="sp-sum">' + [1, 2, 3, 4, 5, 6].map(wd => { const f = (pend.payload.days || []).find(x => Number(x.weekday) === wd); return '<div><b>' + SCHED_WD[wd] + '</b> ' + (!f || f.mode === "duty" ? "의무 시간표대로" : f.mode === "off" ? "등원 안 함" : escapeHtml(schedBlocksText(f.blocks))) + '</div>'; }).join("") + '</div>' +
+        '<div class="sp-sum">' + [1, 2, 3, 4, 5, 6].map(wd => { const f = (pend.payload.days || []).find(x => Number(x.weekday) === wd); return '<div><b>' + SCHED_WD[wd] + '</b> ' + (!f || f.mode === "duty" ? "정상 학습" : f.mode === "off" ? "등원 안 함" : escapeHtml(schedBlocksText(f.blocks))) + '</div>'; }).join("") + '</div>' +
         '<button type="button" class="sp-btn2" onclick="sfCancelPending(' + Number(pend.id) + ')">요청 취소하기</button></div>';
       document.getElementById("sfEditor").innerHTML = "";
       return;
@@ -16230,9 +16240,9 @@
     const seg = (wd, m, label) => '<button type="button" class="' + (sfS.days[wd].mode === m ? "on" : "") + '" onclick="sfSetMode(' + wd + ',\'' + m + '\')">' + label + '</button>';
     el.innerHTML = '<div class="sp-days">' + [1, 2, 3, 4, 5, 6].map(wd => {
       const d = sfS.days[wd];
-      return '<div class="sp-day"><div class="sp-day-h"><b class="sp-wd">' + SCHED_WD[wd] + '요일</b><div class="sp-seg">' + seg(wd, "duty", "의무 시간표대로") + seg(wd, "custom", "시간 직접 입력") + seg(wd, "off", "등원 안 함") + '</div>' +
+      return '<div class="sp-day"><div class="sp-day-h"><b class="sp-wd">' + SCHED_WD[wd] + '요일</b><div class="sp-seg">' + seg(wd, "duty", "정상 학습") + seg(wd, "custom", "시간 직접 입력") + seg(wd, "off", "등원 안 함") + '</div>' +
         (wd > 1 ? '<button type="button" class="sp-copy" onclick="sfCopyPrev(' + wd + ')">앞 요일과 같게</button>' : "") + '</div>' +
-        (d.mode === "custom" ? schedTimesHtml(String(wd), d, true) : '<div class="sp-day-plain">' + (d.mode === "off" ? "이 요일에는 독서실에 오지 않아요." : "독서실 의무 시간표대로 공부해요.") + '</div>') +
+        (d.mode === "custom" ? schedTimesHtml(String(wd), d, true) : '<div class="sp-day-plain">' + (d.mode === "off" ? "이 요일에는 독서실에 오지 않아요." : "정상 학습으로 공부해요. (독서실 운영 시간표대로 이용)") + '</div>') +
         '</div>';
     }).join("") + '</div><div class="sp-actions"><button type="button" class="sp-btn" onclick="sfReview()">다음: 확인하기</button></div>';
     document.getElementById("sfReview").hidden = true;
@@ -16265,7 +16275,7 @@
     rv.innerHTML = '<div class="sp-card"><h3 class="sp-h3">제출할 고정 스케줄</h3><div class="sp-sum">' + [1, 2, 3, 4, 5, 6].map(wd => {
         const d = sfS.days[wd];
         const reasons = d.mode === "custom" ? d.outs.map(o => o.reason).filter(Boolean).join(", ") : "";
-        return '<div><b>' + SCHED_WD[wd] + '</b> ' + (d.mode === "duty" ? "의무 시간표대로" : d.mode === "off" ? "등원 안 함" : escapeHtml(schedBlocksText(schedToBlocks(d))) + (reasons ? ' <span class="sp-dim">(' + escapeHtml(reasons) + ')</span>' : "")) + '</div>';
+        return '<div><b>' + SCHED_WD[wd] + '</b> ' + (d.mode === "duty" ? "정상 학습" : d.mode === "off" ? "등원 안 함" : escapeHtml(schedBlocksText(schedToBlocks(d))) + (reasons ? ' <span class="sp-dim">(' + escapeHtml(reasons) + ')</span>' : "")) + '</div>';
       }).join("") + '</div></div>' +
       (sfSugg.length ? '<div class="sp-card"><h3 class="sp-h3">쉬는시간에 맞춰 볼까요?</h3>' + sfSugg.map((s, k) => '<div class="sp-sugg">' + escapeHtml(s.text) + ' <button type="button" class="sp-btn2" onclick="sfApplySugg(' + k + ')">이렇게 맞추기</button></div>').join("") + '<p class="sp-dim">원래 시간 그대로 두고 싶으면 그냥 넘어가도 돼요.</p></div>' : "") +
       (warn.length ? '<div class="sp-card sp-card-warn"><h3 class="sp-h3">운영 시간을 벗어난 시간이 있어요</h3>' + warn.map(w => '<div>' + escapeHtml(w) + '</div>').join("") + '<label class="sp-chk"><input type="checkbox" id="sfAckHours"> <span>운영 시간 밖인 걸 알고 그대로 제출할게요</span></label></div>' : "") +
@@ -21957,7 +21967,7 @@
         title = Number(r.is_first) ? "고정 스케줄 · 처음 제출" : "고정 스케줄 · 수정";
         body = '<div class="adk-days">' + [1, 2, 3, 4, 5, 6].map(wd => {
           const f = (p.days || []).find(x => Number(x.weekday) === wd);
-          return '<div><b>' + SCHED_WD[wd] + '</b> ' + (!f || f.mode === "duty" ? "의무 시간표대로" : f.mode === "off" ? "등원 안 함" : escapeHtml(schedBlocksText(f.blocks)) + (f.reason ? ' <span class="adk-dim">(' + escapeHtml(f.reason) + ')</span>' : "")) + '</div>';
+          return '<div><b>' + SCHED_WD[wd] + '</b> ' + (!f || f.mode === "duty" ? "정상 학습" : f.mode === "off" ? "등원 안 함" : escapeHtml(schedBlocksText(f.blocks)) + (f.reason ? ' <span class="adk-dim">(' + escapeHtml(f.reason) + ')</span>' : "")) + '</div>';
         }).join("") + '</div>';
       } else {
         title = "돌발 스케줄 · " + (p.cancel ? "취소" : p.replaces ? "수정" : "등록") + " · " + escapeHtml(p.date || "") + " (" + SCHED_WD[new Date((p.date || "") + "T12:00:00").getDay()] + ")";
