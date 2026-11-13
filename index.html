@@ -3316,8 +3316,14 @@
   .hp-dot { width: 11px; height: 10px; padding: 0; border: 3px solid transparent; border-width: 3px 3.5px; border-radius: 999px; background: #C9C6BC; background-clip: padding-box; cursor: pointer; transition: width 0.25s, background-color 0.25s; box-sizing: border-box; } /* 눈에 보이는 점은 4px, 누르는 칸은 조금 더 넓게 */
   .hp-dot.on { width: 19px; background-color: #0D2155; }
   .hp-dot:focus:not(:focus-visible) { outline: none; } /* 마우스로 누른 뒤에 점 둘레에 검은 테두리가 남지 않게(키보드로 이동할 때는 그대로 보인다) */
-  .hp-tags { position: absolute; right: 12px; bottom: 9px; z-index: 1; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; max-width: 56%; }
-  .hp-tags > span { font-size: 0.6rem; font-weight: 700; color: rgba(255,255,255,0.9); border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
+  .hp-tags { position: absolute; left: 20px; right: 14px; bottom: 12px; z-index: 1; display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 4px; }
+  /* 포스터가 좁아진 홈 칸에 맞춤: 글은 버튼 아래부터 시작하고 줄이 바뀔 수 있게, 알약 문구는 글 아래 왼쪽 */
+  .home-poster-rot .hp-text { justify-content: flex-start; padding: 40px 18px 12px 20px; gap: 3px; }
+  .home-poster-rot .hp-headline, .home-poster-rot .hp-sub, .home-poster-rot .hp-eyebrow { white-space: nowrap; } /* 줄이 바뀌지 않게: 넘치면 글자를 줄여 맞춘다(homePosterFit) */
+  .home-poster-rot .hp-tags { flex-wrap: nowrap; }
+  .hp-tags { font-size: 0.6rem; }
+  .home-poster-rot .home-poster:has(.hp-tags) .hp-text { padding-bottom: 38px; }
+  .hp-tags > span { font-size: inherit; font-weight: 700; color: rgba(255,255,255,0.9); border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
   .hp-bullets { display: flex; flex-direction: column; gap: 3px; font-size: 0.78rem; line-height: 1.4; color: rgba(255,255,255,0.92); }
   .hp-bullets > span::before { content: "•"; margin-right: 6px; color: #FFD44D; }
   @media (prefers-reduced-motion: reduce) { .hp-dot { transition: none; } }
@@ -4068,12 +4074,18 @@
   /* ── 독서실 스케줄 + 데스크 요청 (홈 오른쪽 아래) ── 선 + 글씨 위계, 진한 버튼은 '보내기' 하나 */
   .hdk { flex: 1; min-width: 0; min-height: 0; display: grid; grid-template-columns: repeat(22, minmax(0, 1fr)); grid-template-rows: 210px minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--ln-gap, 12px); /* 22칸 격자: 윗줄은 15 : 7(고정 : 돌발), 아랫줄은 9 : 13(공지 · 포스터 : 데스크) */ }
   .hdk .hd-right-top { display: contents; }
-  .hdk .home-notice-rot { grid-column: 1 / 10; grid-row: 2; min-height: 0; }
-  .hdk .home-poster-rot { grid-column: 1 / 10; grid-row: 3; min-height: 0; }
+  .hdk .home-notice-rot { grid-column: 1 / 9; grid-row: 2; min-height: 0; }
+  .hdk .home-poster-rot { grid-column: 1 / 9; grid-row: 3; min-height: 0; }
+  .hdk-fixed { position: relative; }
+  .hdk-first { position: absolute; inset: 0; border: 1px solid #E8A59E; border-radius: 12px; background: rgba(253,226,222,0.93); color: #B42318; font: inherit; font-size: 1.25rem; font-weight: 800; letter-spacing: -0.01em; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; z-index: 2; transition: background .15s; }
+  .hdk-first:hover { background: rgba(251,214,209,0.97); }
+  .hdk-first span { display: inline-block; transition: transform .2s ease; }
+  .hdk-first:hover span { transform: translateX(5px); }
+  .hdk-first[hidden] { display: none; }
   .hdk-card { background: #F4F4F5; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
   .hdk-fixed { grid-column: 1 / 16; grid-row: 1; }
   .hdk-adhoc { grid-column: 16 / 23; grid-row: 1; }
-  .hdk-desk { grid-column: 10 / 23; grid-row: 2 / 4; }
+  .hdk-desk { grid-column: 9 / 23; grid-row: 2 / 4; }
   .hdk-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex: none; }
   .hdk-title { margin: 0; font-size: 0.86rem; font-weight: 700; color: var(--ink); }
   .hdk-state { font-size: 0.66rem; color: var(--ink-soft); }
@@ -4114,9 +4126,14 @@
   .hdk-desk-hello span, .hdk-sys > span { padding-top: 4px; }
   .hdk-av { flex: none; width: 26px; height: 26px; border-radius: 8px; object-fit: cover; }
   .hdk-m { align-self: flex-end; max-width: 86%; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
-  .hdk-m-b { background: #0D2155; color: #fff; font-size: 0.7rem; line-height: 1.5; border-radius: 12px 12px 4px 12px; padding: 6px 10px; word-break: break-all; }
-  .hdk-m-meta { font-size: 0.58rem; color: var(--ink-soft); }
+  .hdk-m-b { background: #252525; color: #F0F0F0; font-size: 0.7rem; line-height: 1.5; border-radius: 12px 12px 4px 12px; padding: 6px 10px; word-break: break-all; }
+  .hdk-m-meta { font-size: 0.58rem; color: var(--ink-soft); white-space: nowrap; }
   .hdk-m-meta b { font-weight: 700; }
+  .hdk-reply-flash > span { animation: hdkReplyFlash 1.8s ease; border-radius: 6px; }
+  @keyframes hdkReplyFlash { 0% { background: #FFF3C4; } 100% { background: transparent; } }
+  .hdk-reply.s-new > span { color: #6B7280; }
+  .hdk-reply.s-doing > span { color: #B26A00; }
+  .hdk-reply.s-done > span { color: #2E7D4F; font-weight: 700; }
   .hdk-m-meta b.s-new { color: #8E9199; }
   .hdk-m-meta b.s-doing { color: #B26A00; }
   .hdk-m-meta b.s-done { color: #2E7D4F; }
@@ -4125,7 +4142,10 @@
   .hdk-sys .done { display: block; margin-top: 4px; font-weight: 700; color: #2E7D4F; }
   .hdk-quick { flex: none; display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0 6px; }
   /* 데스크 요청: 제목 · 좌석 · 빠른 버튼을 한 줄로(좁으면 버튼이 다음 줄로) */
-  .hdk-desk-head { justify-content: center; } /* 제목 가운데 */
+  .hdk-desk-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; } /* 제목 가운데 · 왼쪽 목록 버튼 · 오른쪽 새 채팅 */
+  .hdk-desk-head .chat-side-btn { justify-self: start; }
+  .hdk-desk-head .chat-new-btn { justify-self: end; margin-left: 0; }
+  .hdk-desk { position: relative; overflow: hidden; }
   .hdk-desk .hdk-quick { justify-content: center; } /* 빠른 버튼: 입력칸 바로 위, 가운데 */
   .hdk-desk .hdk-msgs { padding-top: 6px; }
   .hdk-quick button { font-family: inherit; font-size: 0.64rem; font-weight: 600; color: var(--ink); background: #fff; border: 1px solid var(--line-dark); border-radius: 999px; padding: 3px 9px; cursor: pointer; }
@@ -4168,6 +4188,80 @@
   .adk-st.on.s-new { background: #8A8F99; border-color: #8A8F99; }
   .adk-st.on.s-doing { background: #C27C0E; border-color: #C27C0E; }
   .adk-st.on.s-done { background: #2E7D4F; border-color: #2E7D4F; }
+  .adk-thread { display: flex; flex-direction: column; gap: 6px; border-top: 1px solid #EEF0F4; padding-top: 8px; }
+  .adk-msg { display: flex; align-items: flex-end; gap: 6px; max-width: 100%; }
+  .adk-msg.me { align-self: flex-end; flex-direction: row-reverse; }
+  .adk-msg.stu { align-self: flex-start; }
+  .adk-msg-b { max-width: 70%; padding: 6px 10px; border-radius: 12px; font-size: 0.8rem; line-height: 1.5; word-break: break-all; }
+  .adk-msg.me .adk-msg-b { background: #0D2155; color: #fff; border-bottom-right-radius: 4px; }
+  .adk-msg.stu .adk-msg-b { background: #F0F1F4; color: #222; border-bottom-left-radius: 4px; }
+  .adk-msg-t { font-size: 0.64rem; color: #8A8F99; white-space: nowrap; }
+  .adk-ask { display: flex; gap: 6px; }
+  .adk-ask-in { flex: 1; min-width: 0; font-family: inherit; font-size: 0.8rem; border: 1px solid #D5D9E1; border-radius: 8px; padding: 7px 10px; outline: none; }
+  .adk-ask-in:focus { border-color: #0D2155; }
+  .adk-ask button { font-family: inherit; font-size: 0.78rem; font-weight: 700; color: #fff; background: #0D2155; border: none; border-radius: 8px; padding: 7px 14px; cursor: pointer; }
+  /* 데스크 요청 관리: 카톡 같은 어두운 채팅 화면 */
+  .adkc { display: grid; grid-template-columns: 330px minmax(0, 1fr); height: calc(100vh - 210px); min-height: 480px; background: #0B0B0B; color: #EDEDED; border-radius: 14px; overflow: hidden; }
+  .adkc-list { display: flex; flex-direction: column; min-height: 0; background: #0F0F0F; border-right: 1px solid #1E1E1E; }
+  .adkc-list-h { flex: none; display: flex; align-items: center; justify-content: space-between; padding: 18px 18px 10px; }
+  .adkc-list-h b { font-size: 1.25rem; font-weight: 800; }
+  .adkc-chk { display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; color: #9A9A9F; cursor: pointer; }
+  .adkc-tabs { flex: none; display: flex; gap: 8px; padding: 2px 18px 12px; }
+  .adkc-tab { white-space: nowrap; font-family: inherit; font-size: 0.8rem; font-weight: 700; color: #C8C8CC; background: #1E1E20; border: none; border-radius: 999px; padding: 8px 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+  .adkc-tab.on { background: #F2F2F2; color: #111; }
+  .adkc-tab i { font-style: normal; min-width: 17px; height: 17px; padding: 0 5px; box-sizing: border-box; border-radius: 999px; background: #EB5A3C; color: #fff; font-size: 0.64rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; }
+  .adkc-items { flex: 1; min-height: 0; overflow-y: auto; }
+  .adkc-item { display: flex; align-items: center; gap: 12px; padding: 12px 18px; cursor: pointer; }
+  .adkc-item:hover { background: #151515; }
+  .adkc-item.on { background: #1D1D1F; }
+  .adkc-av { flex: none; width: 46px; height: 46px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #0B3B36; font-size: 1.05rem; }
+  .adkc-mid { flex: 1; min-width: 0; }
+  .adkc-name { font-size: 0.92rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .adkc-seat { margin-left: 8px; font-size: 0.68rem; font-weight: 600; color: #8A8A90; }
+  .adkc-prev { margin-top: 3px; font-size: 0.8rem; color: #A0A0A6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .adkc-side { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .adkc-time { font-size: 0.68rem; color: #8A8A90; }
+  .adkc-dot { min-width: 20px; height: 20px; padding: 0 6px; box-sizing: border-box; border-radius: 999px; background: #EB5A3C; color: #fff; font-size: 0.68rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; }
+  .adkc-done { font-size: 0.64rem; color: #6FBF8A; font-weight: 700; }
+  .adkc-none, .adkc-empty { padding: 40px 20px; text-align: center; font-size: 0.84rem; color: #77777C; }
+  .adkc-chat { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: #0B0B0B; }
+  .adkc-chat > .adkc-empty { margin: auto; }
+  .adkc-head { flex: none; display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-bottom: 1px solid #1A1A1A; }
+  .adkc-back { display: none; border: none; background: none; color: #EDEDED; font-size: 1.6rem; line-height: 1; cursor: pointer; padding: 0 6px 4px 0; }
+  .adkc-hn { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .adkc-hn b { font-size: 1rem; }
+  .adkc-hn span { font-size: 0.7rem; color: #8A8A90; }
+  .adkc-pdf { margin-left: auto; font-size: 0.74rem; font-weight: 700; color: #E0A23A; }
+  .adkc-pdf.ok { color: #6FBF8A; }
+  .adkc-msgs { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 16px 18px; }
+  .adkc-day { align-self: center; font-size: 0.68rem; color: #8A8A90; background: #1A1A1A; border-radius: 999px; padding: 3px 12px; margin-bottom: 4px; }
+  .adkc-row { display: flex; align-items: flex-end; gap: 7px; max-width: 78%; }
+  .adkc-row.me { align-self: flex-end; flex-direction: row-reverse; }
+  .adkc-row.stu { align-self: flex-start; }
+  .adkc-row .adkc-t { flex: none; font-size: 0.64rem; color: #8A8A90; white-space: nowrap; }
+  .adkc-b { padding: 9px 13px; border-radius: 16px; font-size: 0.88rem; line-height: 1.5; word-break: break-all; }
+  .adkc-row.stu .adkc-b { background: #262626; color: #F0F0F0; border-top-left-radius: 5px; }
+  .adkc-row.me .adkc-b { background: #FEE500; color: #1A1A1A; border-top-right-radius: 5px; }
+  .adkc-kind { display: inline-block; font-size: 0.68rem; font-weight: 800; color: #FEE500; border: 1px solid #5A5320; border-radius: 6px; padding: 0 6px; margin-right: 6px; }
+  .adkc-kind.k-noise { color: #FF8A7A; border-color: #5E2B25; }
+  .adkc-foot { flex: none; padding: 8px 14px 14px; display: flex; flex-direction: column; gap: 8px; }
+  .adkc-sts { display: flex; gap: 6px; flex-wrap: wrap; }
+  .adkc-st { font-family: inherit; font-size: 0.74rem; font-weight: 600; color: #B5B5BA; background: #1A1A1A; border: 1px solid #2A2A2D; border-radius: 999px; padding: 6px 13px; cursor: pointer; }
+  .adkc-st:hover { background: #222; }
+  .adkc-st.on { color: #fff; font-weight: 700; }
+  .adkc-st.on.s-new { background: #6B6B72; border-color: #6B6B72; }
+  .adkc-st.on.s-doing { background: #C27C0E; border-color: #C27C0E; }
+  .adkc-st.on.s-done { background: #2E7D4F; border-color: #2E7D4F; }
+  .adkc-bar { display: flex; align-items: center; gap: 8px; background: #1A1A1A; border-radius: 999px; padding: 6px 8px 6px 18px; }
+  .adkc-bar input { flex: 1; min-width: 0; border: none; background: none; outline: none; color: #EDEDED; font-family: inherit; font-size: 0.9rem; padding: 6px 0; }
+  .adkc-bar input::placeholder { color: #6E6E74; }
+  .adkc-send { flex: none; width: 34px; height: 34px; border: none; border-radius: 50%; background: #FEE500; color: #1A1A1A; font-size: 1.1rem; font-weight: 800; cursor: pointer; }
+  .adkc-send[hidden] { display: none; }
+  @media (max-width: 760px) {
+    .adkc { grid-template-columns: 1fr; height: calc(100vh - 150px); }
+    .adkc .adkc-chat { display: none; } .adkc.sel .adkc-chat { display: flex; } .adkc.sel .adkc-list { display: none; }
+    .adkc-back { display: inline-block; } .adkc-row { max-width: 90%; }
+  }
   .adk-days { display: flex; flex-direction: column; gap: 2px; font-size: 0.8rem; }
   .adk-days b { display: inline-block; min-width: 18px; color: #0D2155; }
   .adk-reason { font-size: 0.8rem; color: #333; background: #F6F7FA; border-radius: 6px; padding: 6px 10px; }
@@ -4183,6 +4277,56 @@
   .adk-seat { width: 64px; font-family: inherit; font-size: 0.8rem; border: 1px solid #D5D9E1; border-radius: 6px; padding: 3px 6px; transition: border-color 0.3s; }
   /* ── 고정 · 돌발 스케줄 페이지 (sp-) ── */
   .sp-page { max-width: 860px; }
+  /* 고정 스케줄 제출 · 수정: 월~토를 가로로 나란히, 각 요일은 세로 카드 */
+  #view-schedFixed .sp-page { max-width: 1120px; }
+  #view-schedFixed .sp-h { margin-bottom: 4px; }
+  #view-schedFixed .sp-lead { margin-bottom: 10px; }
+  .sf-info { background: #EEF2FB; border: 1px solid #D6DFF3; border-radius: 12px; padding: 11px 16px; margin-bottom: 14px; }
+  .sf-info-t { font-size: 0.82rem; font-weight: 800; color: #0D2155; margin-bottom: 4px; }
+  .sf-tts { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; margin-bottom: 6px; align-items: start; }
+  .sf-tt { background: #fff; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; min-width: 0; }
+  .sf-tt.mine { border-color: #2F6FE4; box-shadow: 0 0 0 1px #2F6FE4; }
+  .sf-tt-h { font-size: 0.68rem; font-weight: 800; color: #fff; text-align: center; padding: 5px 4px; line-height: 1.25; background: #0D2155; }
+  .sf-tt-h small { display: block; font-size: 0.6rem; font-weight: 600; opacity: .85; }
+  .sf-tt.camp .sf-tt-h { background: #2F6FE4; }
+  .sf-tt.nsu .sf-tt-h { background: #1B7F55; }
+  .sf-tt-r { display: grid; grid-template-columns: 38px 1fr 26px; gap: 2px; align-items: center; padding: 2px 6px; font-size: 0.62rem; line-height: 1.3; color: #374151; border-top: 1px solid #F0F0F2; font-variant-numeric: tabular-nums; }
+  .sf-tt-r .t { text-align: center; white-space: nowrap; }
+  .sf-tt-r .k { text-align: right; font-weight: 700; }
+  .sf-tt-r.free .k { color: #2F6FE4; } .sf-tt-r.duty .k { color: #0D2155; }
+  .sf-tt-r.rest { color: #9CA3AF; background: #FAFAFA; } .sf-tt-r.rest .k { color: #9CA3AF; }
+  .sf-tt-r.meal { background: #FFF6E5; } .sf-tt-r.meal .k { color: #B45309; }
+  .sf-tt-note { font-size: 0.68rem; color: var(--ink-soft); margin: 0 0 12px; }
+  @media (max-width: 1000px) { .sf-tts { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .sf-tts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .sf-info .sp-hours { background: none; padding: 0; margin: 0 0 6px; font-size: 0.8rem; color: #0D2155; }
+  .sf-info .sp-rules { margin: 0; padding-left: 18px; font-size: 0.74rem; line-height: 1.6; }
+  .sf-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; align-items: start; }
+  .sf-col { background: #fff; border: 1px solid var(--line); border-top: 3px solid #0D2155; border-radius: 12px; padding: 10px 10px 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0; transition: background .15s, border-color .15s; }
+  .sf-col.m-custom { border-top-color: #2F6FE4; background: #F7FAFF; }
+  .sf-col.m-off { border-top-color: #9CA3AF; background: #F5F5F6; }
+  .sf-col.sat { border-top-color: #D9822B; }
+  .sf-col.sat.m-custom { border-top-color: #2F6FE4; } .sf-col.sat.m-off { border-top-color: #9CA3AF; }
+  .sf-col-h { font-size: 0.98rem; font-weight: 800; color: #0D2155; text-align: center; }
+  .sf-col.sat .sf-col-h { color: #B45309; }
+  .sf-modes { display: flex; flex-direction: column; gap: 4px; }
+  .sf-modes button { font-family: inherit; font-size: 0.72rem; font-weight: 600; color: #4B5563; background: #fff; border: 1px solid var(--line-dark); border-radius: 8px; padding: 6px 4px; cursor: pointer; transition: background .12s, color .12s, border-color .12s; }
+  .sf-modes button:hover { border-color: #0D2155; }
+  .sf-modes button.on { color: #fff; font-weight: 700; background: #0D2155; border-color: #0D2155; }
+  .sf-modes button.on.m-custom { background: #2F6FE4; border-color: #2F6FE4; }
+  .sf-modes button.on.m-off { background: #6B7280; border-color: #6B7280; }
+  .sf-plain { font-size: 0.7rem; line-height: 1.5; color: #6B7280; text-align: center; padding: 2px 2px 0; }
+  .sf-col .sp-times { padding: 0; gap: 5px; }
+  .sf-col .sp-tl { justify-content: space-between; font-size: 0.72rem; gap: 4px; }
+  .sf-col .sp-tl span { min-width: 0; }
+  .sf-col .sp-time { width: 92px; min-width: 0; font-size: 0.74rem; padding: 3px 4px; box-sizing: border-box; }
+  .sf-col .sp-out { position: relative; flex-direction: column; align-items: stretch; gap: 4px; padding: 6px 22px 6px 8px; background: #fff; border: 1px solid #D6DFF3; border-left: 3px solid #2F6FE4; border-radius: 8px; margin: 0; }
+  .sf-col .sp-reason { min-width: 0; width: 100%; box-sizing: border-box; font-size: 0.7rem; }
+  .sf-col .sp-x { position: absolute; top: 3px; right: 3px; }
+  .sf-col .sp-add { align-self: stretch; text-align: center; font-size: 0.66rem; padding: 4px 4px; }
+  .sf-col .sp-copy { margin: 0; align-self: center; font-size: 0.66rem; }
+  @media (max-width: 1000px) { .sf-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .sf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   .sp-h { margin: 0 0 6px; font-size: 1.2rem; font-weight: 800; color: var(--ink); }
   .sp-lead { margin: 0 0 14px; font-size: 0.82rem; line-height: 1.6; color: var(--ink-soft); }
   .sp-hours { font-size: 0.76rem; color: var(--ink); background: #F4F4F5; border-radius: 8px; padding: 8px 12px; margin-bottom: 8px; }
@@ -6304,6 +6448,7 @@
     color: #FFFFFF;
     display: flex; flex-direction: column;
     padding: 56px 16px 22px 16px;
+    height: 100vh; position: sticky; top: 0; overflow: hidden;
   }
   .admin-mex-list { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
   .admin-mex-card { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
@@ -6318,7 +6463,7 @@
   .admin-mex-note-head { font-size: 0.8rem; font-weight: 800; color: var(--green-deep); }
   .admin-sidebar-top { padding: 0 6px 20px 6px; border-bottom: 1px solid rgba(255,255,255,0.14); margin-bottom: 16px; text-align: center; }
   .admin-logo { font-size: 1.02rem; font-weight: 800; letter-spacing: -0.01em; text-align: center; }
-  .admin-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .admin-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.25) transparent; }
   .admin-nav-item {
     display: flex; align-items: center; gap: 10px;
     width: 100%; text-align: left;
@@ -6559,7 +6704,7 @@
   .apply-field textarea.cf-questions { min-height: 100px; }
   @media (max-width: 760px) {
     .admin-shell { flex-direction: column; }
-    .admin-sidebar { width: 100%; flex-direction: row; align-items: center; padding: 14px 16px; }
+    .admin-sidebar { height: auto; position: static; width: 100%; flex-direction: row; align-items: center; padding: 14px 16px; }
     .admin-sidebar-top { border-bottom: none; margin-bottom: 0; padding: 0; }
     .admin-nav { display: none; }
     .admin-sidebar-bottom { flex-direction: row; border-top: none; padding-top: 0; margin-left: auto; }
@@ -8813,6 +8958,7 @@
             <button type="button" class="hdk-btn" id="hdkFixedBtn" onclick="go('schedFixed')">제출하기</button>
           </div>
           <div class="hdk-week" id="hdkWeek"><div class="hdk-empty">확인 중…</div></div>
+          <button type="button" class="hdk-first" id="hdkFirst" onclick="go('schedFixed')" hidden>고정 스케줄 제출하러 가기 <span aria-hidden="true">→</span></button>
         </section>
         <section class="hdk-card hdk-adhoc">
           <div class="hdk-head">
@@ -8821,12 +8967,19 @@
           </div>
           <div class="hdk-sub">오늘</div>
           <div class="hdk-list" id="hdkAdhocToday"><div class="hdk-empty">확인 중…</div></div>
-          <div class="hdk-sub hdk-sub2">누적 <span id="hdkAdhocCount"></span></div>
+          <div class="hdk-sub hdk-sub2"><span id="hdkAdhocCount">누적 0회 / 이번 달 0회</span></div>
           <div class="hdk-list hdk-list-scroll" id="hdkAdhocAll"></div>
         </section>
         <section class="hdk-card hdk-desk">
           <div class="hdk-head hdk-desk-head">
+            <button type="button" class="chat-side-btn" onclick="hdkToggleConv()" aria-label="이전 채팅 보기" title="이전 채팅"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button>
             <h3 class="hdk-title">데스크에 요청하기</h3>
+            <button type="button" class="chat-new-btn" onclick="hdkNewConv()">+ 새 채팅</button>
+          </div>
+          <div class="chat-conv-backdrop" id="hdkConvBackdrop" onclick="hdkToggleConv(false)"></div>
+          <div class="chat-conv-panel" id="hdkConvPanel">
+            <div class="chat-conv-head"><button type="button" class="chat-side-btn" onclick="hdkToggleConv(false)" aria-label="목록 닫기" title="목록 닫기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button><span>이전 채팅</span></div>
+            <div class="chat-conv-list" id="hdkConvList"></div>
           </div>
           <div class="hdk-msgs" id="hdkMsgs"></div>
           <div class="hdk-quick">
@@ -12536,8 +12689,14 @@
               <p class="admin-page-sub">학생이 홈 화면 '데스크에 요청하기'로 보낸 요청이에요. 확인하면 '확인 완료, 처리 중', 끝나면 '처리 완료'를 눌러 주세요. 학생 화면에 그대로 표시돼요. 소음 신고는 신고한 학생 이름이 이 화면에만 보여요. 이 화면을 켜 두면 20초마다 새로 확인하고, 새 요청이 오면 소리가 나요.</p>
             </div>
           </div>
-          <div class="admin-toolbar"><label class="adk-chk"><input type="checkbox" id="adkReqShowDone" onchange="adkRenderReq()"> 처리 완료된 것도 보기</label></div>
-          <div id="adkReqList" class="adk-list"></div>
+          <div class="adkc" id="adkc">
+            <div class="adkc-list">
+              <div class="adkc-list-h"><b>채팅</b><label class="adkc-chk"><input type="checkbox" id="adkReqShowDone" onchange="adkRenderReq()"> 처리 완료 포함</label></div>
+              <div class="adkc-tabs" id="adkTabs"></div>
+              <div id="adkReqList" class="adkc-items"></div>
+            </div>
+            <div class="adkc-chat" id="adkChat"><div class="adkc-empty">왼쪽에서 대화를 선택해 주세요.</div></div>
+          </div>
         </div>
 
         <!-- 독서실 관리: 스케줄 승인 -->
@@ -13595,9 +13754,9 @@
     // ── 지금 돌아가는 5장(선생님이 고른 것). 칼럼 포스터가 연달아 나오지 않게 사이사이에 끼웠다. 칼럼은 전용 페이지가 없어서 선생님 소개로 연결해 둔 상태 ──
     // tags: 오른쪽 아래에 붙는 작은 알약 문구(빈 자리를 채우는 용도, 선택). ※ 로드맵 독서실 프로그램의 실제 내용(기간 · 대상 · 구성)을 확정하면 그에 맞게 고칠 것
     { head: "입시 관리형 로드맵 독서실", headQuiet: true, sub: "겨울방학 1:1 학습 프로그램", subAccent: true, tags: ["공부 컨설팅", "수학 클리닉", "국어 독해력 클리닉"], cta: "살펴보기", go: "consult-programs" },
-    { kicker: "공부법 칼럼", kickerLow: true, head: "수능 국어, 수학 *3등급*에서 *1등급*으로 올린 방법", cta: "읽어보기", go: "consult-column" },
+    { kicker: "공부법 칼럼", kickerLow: true, head: "수능 국어, 수학\n*3등급*에서 *1등급*으로 올린 방법", cta: "읽어보기", go: "consult-column" },
     { kicker: "양치기 공부의 함정", kickerLow: true, head: "*100000문제* 풀어도", headMid: true, sub: "수학 성적이 안 오르는 이유를 알려드립니다.", cta: "바로 알아보기", go: "consult-column" },
-    { kicker: "겨울방학 또 흐지부지 보낼 건가요?", kickerLow: true, head: "실제로 이행 가능한 *공부 전략*을 세워드립니다", cta: "내 상황 상담해보기", go: "consult-teacher" },
+    { kicker: "겨울방학 또 흐지부지 보낼 건가요?", kickerLow: true, head: "실제로 이행 가능한\n*공부 전략*을 세워드립니다", cta: "내 상황 상담해보기", go: "consult-teacher" },
     // ── 아래는 꺼 둔 후보(on:false를 지우면 돌아가는 포스터에 들어간다) ──
     { head: "만년 *3등급* → *1등급* 만들기", sub: "구체적인 방법 살펴보기", cta: "살펴보기", go: "consult-1", on: false },
     { head: "수포자 · 국포자", sub: "해결해드립니다. 들어오세요.", cta: "들어가기", go: "consult", on: false },
@@ -13611,6 +13770,17 @@
     { kicker: "공부하다 막힌 그 순간", head: "*바로* 답해주는 공부중독 AI", sub: "계획 · 공부법 · 슬럼프까지 편하게 물어보세요", cta: "지금 물어보기", go: "chat", on: false },
     { kicker: "학원은 보내는데 뭘 하는지 모르겠다면", head: "성적이 안 오르는 이유, *찾아드립니다*", sub: "학부모님도 편하게 문의하세요", cta: "학부모 상담 문의", go: "consult-1", on: false },
   ];
+  // 포스터 글이 칸보다 길면 한 줄을 유지한 채 글자를 조금씩 줄여 맞춘다(줄바꿈 · 겹침 방지)
+  function homePosterFit() {
+    document.querySelectorAll("#hpTrack .hp-headline, #hpTrack .hp-sub, #hpTrack .hp-eyebrow, #hpTrack .hp-tags").forEach(el => {
+      el.style.fontSize = "";
+      if (!el.clientWidth) return; // 화면에 없으면 다음에 맞춘다
+      let fs = parseFloat(getComputedStyle(el).fontSize);
+      while (el.scrollWidth > el.clientWidth + 0.5 && fs > 8) { fs -= 0.5; el.style.fontSize = fs + "px"; }
+    });
+  }
+  window.addEventListener("resize", () => { clearTimeout(homePosterFit._t); homePosterFit._t = setTimeout(homePosterFit, 120); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => homePosterFit());
   function homePosterGo(dest) {
     if (dest === "chat") { const t = document.getElementById("q-chat"); if (t) { t.scrollIntoView({ block: "center", behavior: "smooth" }); t.focus(); } return; }
     // 스터디 홀로(Manager)에서 아카데미(학습 상담 · 수업 프로그램 · 선생님 소개 쪽 페이지)로 넘어갈 때는 "Study Holo Academy" 전환 화면을 거친다
@@ -13623,9 +13793,9 @@
     if (!box) return;
     const list = HOME_POSTERS.filter(p => p.on !== false);
     const posters = list.map(p => {
-      const head = escapeHtml(p.head).replace(/\*(.+?)\*/g, "<em>$1</em>").replace(/__(.+?)__/g, "<u>$1</u>"); // *노란 강조* · __밑줄__
+      const head = escapeHtml(p.head).replace(/\*(.+?)\*/g, "<em>$1</em>").replace(/__(.+?)__/g, "<u>$1</u>").replace(/\n/g, "<br>"); // *노란 강조* · __밑줄__ · 줄바꿈
       const big = String(p.head).replace(/\*/g, "").length <= 16; // 짧은 첫 줄은 크게
-      return '<button type="button" class="home-poster" onclick="homePosterGo(\'' + p.go + '\')" aria-label="' + escapeHtml(String(p.head).replace(/\*/g, "")) + '">' +
+      return '<button type="button" class="home-poster" onclick="homePosterGo(\'' + p.go + '\')" aria-label="' + escapeHtml(String(p.head).replace(/\*/g, "").replace(/\n/g, " ")) + '">' +
         '<span class="hp-text">' + (p.kicker ? '<span class="hp-eyebrow' + (p.kickerQuiet ? " quiet" : "") + (p.kickerLow ? " low" : "") + '">' + escapeHtml(p.kicker) + '</span>' : "") +
         '<span class="hp-headline' + (big ? " big" : "") + (p.headQuiet ? " quiet" : "") + (p.headMid ? " mid" : "") + '">' + head + '</span>' +
         (p.sub ? '<span class="hp-sub' + (p.subAccent ? " accent" : "") + (p.subSmall ? " small" : "") + '">' + escapeHtml(p.sub).replace(/\*(.+?)\*/g, "<em>$1</em>").replace(/__(.+?)__/g, "<u>$1</u>") + '</span>' : "") + '</span>' +
@@ -13638,6 +13808,7 @@
     box.innerHTML = '<div class="hp-track" id="hpTrack">' + posters + '</div>' + dots;
     homePosterIdx = 0;
     homePosterBindTrack();
+    homePosterFit();
   }
   // ── 홈 오른쪽 위 홍보 포스터: 자동으로 넘어가고(6초), 옆으로 밀거나 끌어서 직접 넘길 수도 있다 ──
   let homePosterIdx = 0, homePosterPaused = false, homePosterUserAt = 0, homePosterDragMoved = false, homePosterWinBound = false, homePosterRaf = 0;
@@ -15811,9 +15982,16 @@
   //  · 규칙은 예전 스케줄 챗봇(chatbot-data/system-prompt-schedule.txt, data-schedule.txt)에 있던 내용을 화면 절차로 옮긴 것
   // ══════════════════════════════════════════════════════════════════════════
   // PDF 프린트 요청 때 학생에게 알려 줄 메일 주소(선생님이 정해 주면 여기에 적는다)
-  const DESK_PDF_EMAIL = "";
+  // PDF 프린트 자료를 받는 메일(관별). 관 정보가 없으면 둘 다 알려 준다
+  const DESK_PDF_EMAILS = { "N수관": "roadmapprint1@gmail.com", "하이엔드관": "roadmapprint2@gmail.com" };
+  function deskPdfEmailHtml() {
+    const br = schedBranch();
+    if (DESK_PDF_EMAILS[br]) return escapeHtml(DESK_PDF_EMAILS[br]);
+    return Object.keys(DESK_PDF_EMAILS).map(k => escapeHtml(k) + " " + escapeHtml(DESK_PDF_EMAILS[k])).join("<br>");
+  }
   const DESK_KIND_LABEL = { pdf: "PDF 프린트 요청", water: "얼음물 주세요", cold: "추워요", hot: "더워요", noise: "주변 소음 신고", etc: "" };
-  const DESK_STATUS_LABEL = { new: "미확인", doing: "확인 완료, 처리 중", done: "처리 완료" };
+  const DESK_STATUS_LABEL = { new: "미확인", doing: "확인 완료, 처리 중", done: "처리 완료" }; // 관리자 화면용
+  const DESK_STATUS_STUDENT = { new: "아직 관리 선생님 확인 중입니다.", doing: "확인했습니다. 잠시만 기다려주세요.", done: "해결했습니다. 감사합니다." }; // 학생 채팅에 보이는 3단계
   // 운영 시간표(분 단위, 새벽 1시 같은 자정 넘는 시각은 24:00 이후로 센다). 쉬는시간 · 점심 · 저녁시간 = brk
   const SCHED_HOURS = {
     "하이엔드관|학기": {
@@ -16006,9 +16184,7 @@
       hdPage(dx < 0 ? 1 : 0);
     }, { passive: true });
     window.addEventListener("resize", hdSyncHeight);
-    let saved = "0";
-    try { saved = localStorage.getItem("holoHomeView") || "0"; } catch (e) {}
-    hdPage(saved === "all" ? "all" : saved === "1" ? 1 : 0);
+    hdPage("all"); // 로그인 직후·새로 열 때는 항상 Home(함께 보기)
   })();
 
   // ── 홈: 고정 · 돌발 스케줄 박스 ──
@@ -16025,7 +16201,9 @@
     const week = document.getElementById("hdkWeek"), st = document.getElementById("hdkFixedState"), btn = document.getElementById("hdkFixedBtn");
     const pend = schedPendingFixed(), last = schedLatestReq("fixed");
     const hasFixed = Object.keys(d.fixed || {}).length > 0;
-    if (btn) { btn.textContent = d.firstDone ? "수정하기" : "제출하기"; btn.disabled = false; }
+    if (btn) { btn.textContent = d.firstDone ? "수정하기" : "제출하기"; btn.disabled = false; btn.style.visibility = (!d.firstDone && !hasFixed && !pend) ? "hidden" : ""; }
+    const firstEl = document.getElementById("hdkFirst");
+    if (firstEl) firstEl.hidden = !(!d.firstDone && !hasFixed && !pend); // 아직 한 번도 제출하지 않았다면 막을 씌운다
     if (st) {
       st.className = "hdk-state" + (pend ? " wait" : (last && last.status === "rejected" ? " rej" : ""));
       st.textContent = pend ? "승인 대기 중" : (last && last.status === "rejected" ? "반려됨 · 다시 제출해 주세요" : (hasFixed ? "" : (d.firstDone ? "" : "아직 제출하지 않았어요")));
@@ -16061,7 +16239,7 @@
     const pastMonth = adhoc.filter(a => a.date < today && a.date.slice(0, 7) === ym);
     const monthCount = adhoc.filter(a => a.date.slice(0, 7) === ym).length;
     const cEl = document.getElementById("hdkAdhocCount");
-    if (cEl) cEl.textContent = "· 이번 달 " + monthCount + "회";
+    if (cEl) cEl.textContent = "누적 " + adhoc.length + "회 / 이번 달 " + monthCount + "회";
     const allRows = upcoming.map(a => row(a.date, schedAdhocDesc(a), "예정", "", false))
       .concat(reqs.filter(r => r.payload.date !== today || r.status === "rejected").map(r => row(r.payload.date, r.payload.cancel ? "취소 요청" : schedAdhocDesc(r.payload), r.status === "pending" ? "승인 대기" : "반려", r.status === "pending" ? "wait" : "rej", false)))
       .concat(pastMonth.map(a => row(a.date, schedAdhocDesc(a), "", "", true)));
@@ -16077,33 +16255,123 @@
     if (!hdkDeskItems.length) hdkRenderMsgs(); // 서버 응답 전에도 안내 문구는 먼저 보이게
     planApi({ action: "desk_list" }).then(d => {
       if (!d || !d.ok) return;
-      hdkDeskItems = d.items || [];
       const seat = document.getElementById("hdkSeat");
       if (seat) seat.textContent = d.seat ? "좌석 " + d.seat + "번" : "좌석 미등록";
-      hdkRenderMsgs();
+      hdkApplyItems(d.items || []);
     }).catch(() => {});
   }
   // 안내 말: 챗봇 인사처럼 사람 아이콘 + 글씨(말풍선 배경 없음)
   function hdkAv() { return '<img class="hdk-av" src="' + AVATAR + '" alt="">'; }
+  // ── 데스크 요청: 새 채팅 · 이전 채팅 (공부중독 AI와 같은 모양 · 새벽 6시에 하루가 바뀌면 새 채팅) ──
+  let hdkSelKey = null; // null이면 오늘(현재) 채팅
+  function hdkCutsKey() { return "holoDeskCuts:" + (localStorage.getItem("holoStudentId") || ""); }
+  function hdkCuts() { try { const a = JSON.parse(localStorage.getItem(hdkCutsKey()) || "[]"); return Array.isArray(a) ? a.map(Number).filter(n => n > 0) : []; } catch (e) { return []; } }
+  function hdkDayKey(ts) { const d = new Date(ts - 6 * 3600000); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  function hdkKey(ts, cuts) { return hdkDayKey(ts) + "|" + cuts.filter(c => c <= ts).length; }
+  function hdkGroups() {
+    const cuts = hdkCuts(), g = [];
+    hdkDeskItems.slice().sort((a, b) => (Date.parse(a.created_at) - Date.parse(b.created_at)) || (Number(a.id) - Number(b.id))).forEach(m => {
+      const ts = Date.parse(m.created_at); if (isNaN(ts)) return;
+      const k = hdkKey(ts, cuts), last = g[g.length - 1];
+      if (last && last.key === k) last.items.push(m); else g.push({ key: k, ts: ts, items: [m] });
+    });
+    return g;
+  }
+  function hdkCurKey() { return hdkKey(Date.now(), hdkCuts()); }
+  function hdkShown() {
+    const key = hdkSelKey || hdkCurKey(), f = hdkGroups().find(x => x.key === key);
+    return f ? f.items : [];
+  }
+  function hdkToggleConv(force) {
+    const p = document.getElementById("hdkConvPanel"), b = document.getElementById("hdkConvBackdrop");
+    if (!p) return;
+    const open = typeof force === "boolean" ? force : !p.classList.contains("on");
+    p.classList.toggle("on", open); b.classList.toggle("on", open);
+    if (open) hdkRenderConvList();
+  }
+  function hdkRenderConvList() {
+    const el = document.getElementById("hdkConvList"); if (!el) return;
+    const cur = hdkSelKey || hdkCurKey(), g = hdkGroups().slice().reverse();
+    el.innerHTML = g.length ? g.map(x => {
+      const m = x.items[0], lab = DESK_KIND_LABEL[m.kind] || "";
+      const t = lab && m.text ? lab + " · " + m.text : (m.text || lab || "요청");
+      const d = new Date(x.ts);
+      return '<div class="chat-conv-item' + (x.key === cur ? " on" : "") + '" data-k="' + escapeHtml(x.key) + '" onclick="hdkOpenConv(this.dataset.k)"><span class="t">' + escapeHtml(t) + '</span><span class="d">' + (d.getMonth() + 1) + "." + d.getDate() + '</span></div>';
+    }).join("") : '<div class="chat-conv-empty">이전 채팅이 아직 없어요.</div>';
+  }
+  function hdkOpenConv(k) {
+    hdkSelKey = (k === hdkCurKey()) ? null : k;
+    hdkRenderMsgs(); hdkToggleConv(false);
+    const el = document.getElementById("hdkMsgs"); if (el) el.scrollTop = el.scrollHeight;
+  }
+  function hdkNewConv() {
+    if (!hdkSelKey && !hdkShown().length) { hdkToggleConv(false); return; } // 이미 빈 새 채팅
+    const cuts = hdkCuts(); cuts.push(Date.now());
+    try { localStorage.setItem(hdkCutsKey(), JSON.stringify(cuts.slice(-200))); } catch (e) {}
+    hdkSelKey = null; hdkRenderMsgs(); hdkToggleConv(false);
+  }
+  // 새로 읽어 온 요청 목록을 반영한다. 요청 목록이 그대로이고 처리 상태만 바뀐 경우에는 화면을 다시 그리지 않고
+  // 그 답장 글만 바꿔서(스크롤 · 입력 중인 글 유지) 새로고침 없이 달라진 걸 볼 수 있게 한다.
+  function hdkApplyItems(items) {
+    const old = hdkDeskItems, box = document.getElementById("hdkMsgs");
+    hdkDeskItems = items;
+    const same = old.length === items.length && old.every((o, i) => String(o.id) === String(items[i].id) && String(o.pdf_sent) === String(items[i].pdf_sent) && (o.msgs || []).length === (items[i].msgs || []).length);
+    if (!same || !box || !box.children.length) { hdkRenderMsgs(); return; }
+    items.forEach(m => {
+      const el = box.querySelector('.hdk-reply[data-id="' + Number(m.id) + '"]');
+      if (!el || el.classList.contains("s-" + m.status)) return;
+      el.className = "hdk-sys hdk-reply s-" + m.status + " hdk-reply-flash";
+      const sp = el.querySelector("span"); if (sp) sp.textContent = DESK_STATUS_STUDENT[m.status] || "";
+      setTimeout(() => el.classList.remove("hdk-reply-flash"), 1800);
+    });
+  }
+  // 관리 선생님이 보낸 질문(왼쪽) · 내 답장(오른쪽)
+  function hdkThreadHtml(m) {
+    return (m.msgs || []).map(g => g.sender === "admin"
+      ? '<div class="hdk-sys">' + hdkAv() + '<span>' + escapeHtml(g.text) + '</span></div>'
+      : '<div class="hdk-m"><div class="hdk-m-b">' + escapeHtml(g.text) + '</div></div>').join("");
+  }
+  // 선생님이 질문을 보내서 내 답장을 기다리는 요청(가장 최근 대화가 있는 요청의 마지막 글이 선생님 것일 때)
+  function hdkAskTarget() {
+    const items = hdkShown();
+    for (let i = items.length - 1; i >= 0; i--) {
+      const g = items[i].msgs || [];
+      if (g.length) return g[g.length - 1].sender === "admin" ? items[i] : null;
+    }
+    return null;
+  }
+  function hdkReply(id, text) {
+    if (hdkBusy) return;
+    hdkBusy = true;
+    planApi({ action: "desk_reply", id: id, text: text }).then(d => {
+      if (!d || !d.ok) { showToast((d && d.error) || "보내지 못했어요. 잠시 후 다시 시도해 주세요."); return; }
+      document.getElementById("hdkInput").value = "";
+      return planApi({ action: "desk_list" }).then(r => { if (r && r.ok) { hdkApplyItems(r.items || []); hdkRenderMsgs(); } });
+    }).catch(() => showToast("보내지 못했어요. 잠시 후 다시 시도해 주세요.")).finally(() => { hdkBusy = false; });
+  }
   function hdkRenderMsgs() {
     const el = document.getElementById("hdkMsgs"); if (!el) return;
     const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 40;
     const hello = '<div class="hdk-desk-hello">' + hdkAv() + '<span>최대한 구체적으로 요청 사항을 보내주세요.</span></div>';
-    el.innerHTML = hello + hdkDeskItems.map(m => {
+    el.innerHTML = hello + hdkShown().map(m => {
       const label = DESK_KIND_LABEL[m.kind] || "";
       const text = label && m.text ? label + " · " + m.text : (m.text || label);
       const t = String(m.created_at || "");
       const dt = new Date(t);
       const hm = isNaN(dt) ? "" : (dt.getHours() + ":" + String(dt.getMinutes()).padStart(2, "0"));
-      let h = '<div class="hdk-m"><div class="hdk-m-b">' + escapeHtml(text) + '</div><div class="hdk-m-meta">' + hm + ' · <b class="s-' + m.status + '">' + (DESK_STATUS_LABEL[m.status] || "") + '</b></div></div>';
+      let h = '<div class="hdk-m"><div class="hdk-m-b">' + escapeHtml(text) + '</div><div class="hdk-m-meta">' + hm + '</div></div>' +
+        // 처리 상태는 관리 선생님의 답장처럼 왼쪽에 보여 준다
+        '<div class="hdk-sys hdk-reply s-' + m.status + '" data-id="' + Number(m.id) + '">' + hdkAv() + '<span>' + (DESK_STATUS_STUDENT[m.status] || "") + '</span></div>' + hdkThreadHtml(m);
       if (m.kind === "pdf") {
-        h += '<div class="hdk-sys">' + hdkAv() + '<span>프린트할 자료를 아래 메일로 보내 주세요.<br><b>' + (DESK_PDF_EMAIL ? escapeHtml(DESK_PDF_EMAIL) : "메일 주소는 데스크에 물어봐 주세요") + '</b><br>자료를 보낸 뒤에는 꼭 아래 버튼을 눌러 주세요.' +
+        h += '<div class="hdk-sys">' + hdkAv() + '<span>프린트할 자료를 아래 메일로 보내 주세요.<br><b>' + deskPdfEmailHtml() + '</b><br>자료를 보낸 뒤에는 꼭 아래 버튼을 눌러 주세요.' +
           (Number(m.pdf_sent) ? '<span class="done">자료 전송 완료 ✓</span>' : '<button type="button" onclick="hdkPdfSent(' + Number(m.id) + ')">자료 전송 완료</button>') + '</span></div>';
       }
       if (m.kind === "noise") h += '<div class="hdk-sys">' + hdkAv() + '<span>신고한 사람은 관리 선생님만 알 수 있어요.</span></div>';
       return h;
     }).join("");
     if (atBottom || hdkBusy) el.scrollTop = el.scrollHeight;
+    const inp = document.getElementById("hdkInput");
+    if (inp && !hdkNoise) inp.placeholder = hdkAskTarget() ? "선생님 질문에 답장해 주세요" : "요청 사항을 적어 주세요";
   }
   function hdkQuick(kind) {
     if (kind === "noise") {
@@ -16120,10 +16388,13 @@
     const inp = document.getElementById("hdkInput");
     const text = (inp.value || "").trim();
     if (!text) { inp.focus(); return; }
+    const ask = hdkNoise ? null : hdkAskTarget();
+    if (ask) { hdkReply(ask.id, text); return; } // 선생님 질문이 와 있으면 새 요청이 아니라 답장으로
     hdkPost(hdkNoise ? "noise" : "etc", text);
   }
   function hdkPost(kind, text) {
     if (hdkBusy) return;
+    hdkSelKey = null; // 지난 채팅을 보고 있었더라도 새 요청은 오늘 채팅으로
     hdkBusy = true;
     planApi({ action: "desk_send", kind: kind, text: text }).then(d => {
       if (!d || !d.ok) { showToast((d && d.error) || "보내지 못했어요. 잠시 후 다시 시도해 주세요."); return; }
@@ -16141,7 +16412,7 @@
     hdkPollTimer = setInterval(() => {
       if (document.hidden || currentView !== "home") return;
       if (hdkDeskItems.some(m => m.status !== "done")) hdkDeskLoad();
-    }, 20000);
+    }, 5000);
   }
   function hdkStopPoll() { if (hdkPollTimer) { clearInterval(hdkPollTimer); hdkPollTimer = null; } }
 
@@ -16212,9 +16483,7 @@
     const pend = schedPendingFixed(), last = schedLatestReq("fixed");
     const isFirst = !d.firstDone;
     document.getElementById("sfTitle").textContent = isFirst ? "고정 스케줄 제출하기" : "고정 스케줄 수정하기";
-    document.getElementById("sfLead").textContent = isFirst
-      ? "독서실에 처음 오면 요일마다 매주 반복되는 이용 시간을 먼저 제출해요. 관리 선생님이 확인한 뒤 반영돼요."
-      : "고정 스케줄을 바꾸려면 변경 사유와 증빙자료가 필요해요. 관리 선생님이 확인한 뒤 반영돼요.";
+    document.getElementById("sfLead").hidden = true; // 설명 문장은 아래 "사용 방법" 박스로 옮김
     const note = document.getElementById("sfNote");
     if (pend) {
       note.innerHTML = '<div class="sp-box"><b>승인 대기 중인 고정 스케줄이 있어요.</b> 관리 선생님이 확인하면 반영돼요. 내용을 바꾸려면 요청을 취소하고 다시 제출해 주세요.' +
@@ -16224,7 +16493,7 @@
       return;
     }
     note.innerHTML = (last && last.status === "rejected" ? '<div class="sp-box sp-box-rej"><b>지난번 제출이 반려됐어요.</b>' + (last.admin_note ? " 사유: " + escapeHtml(last.admin_note) : "") + '</div>' : "") +
-      '<div class="sp-hours">' + schedHoursLine() + '</div>' + schedRulesHtml(isFirst ? "" : '<li>고정 스케줄을 바꿀 때는 <b>증빙자료</b>(학원 시간표 문자, 학원 선생님과의 카톡 등)가 필요해요.</li>');
+      '<div class="sf-info"><div class="sf-info-t">사용 방법</div>' + schedRulesHtml('<li>요일마다 <b>매주 반복되는 이용 시간</b>을 제출해요. 관리 선생님이 확인한 뒤 반영돼요.</li>' + (isFirst ? "" : '<li>고정 스케줄을 바꿀 때는 변경 사유와 <b>증빙자료</b>(학원 시간표 문자, 학원 선생님과의 카톡 등)가 필요해요.</li>')) + '</div>' + sfTimetablesHtml();
     const days = {};
     [1, 2, 3, 4, 5, 6].forEach(wd => {
       const f = (d.fixed || {})[String(wd)];
@@ -16235,15 +16504,33 @@
     sfS = { isFirst: isFirst, days: days };
     sfRenderEditor();
   }
+  // 로드맵 독서실 시간표(관별 · 평일/토요일). 줄 = "이름 시간 유형"
+  const SF_TT = [
+    { cls: "", key: "하이엔드관|학기", title: "하이엔드관 학기 중", sub: "평일 16:00~01:00", rows: "0교시 16:00~18:00 자율/1교시 18:00~19:10 의무/쉬는시간 19:10~19:20 휴식/2교시 19:20~20:50 의무/쉬는시간 20:50~21:00 휴식/3교시 21:00~22:20 의무/쉬는시간 22:20~22:30 휴식/4교시 22:30~23:50 의무/5교시 23:50~01:00 자율" },
+    { cls: "", key: "하이엔드관|학기", title: "하이엔드관 학기 중", sub: "토요일 09:00~22:50", rows: "0교시 09:00~10:00 자율/1교시 10:00~11:20 의무/쉬는시간 11:20~11:30 휴식/2교시 11:30~12:50 의무/점심시간 12:50~14:10 식사/3교시 14:10~15:10 의무/쉬는시간 15:10~15:20 휴식/4교시 15:20~16:40 의무/쉬는시간 16:40~16:50 휴식/5교시 16:50~18:00 의무/6교시 18:00~22:50 자율" },
+    { cls: "camp", key: "하이엔드관|방학", title: "하이엔드관 방학 중", sub: "평일 08:30~22:50", rows: "1교시 08:30~09:30 자율/2교시 09:30~10:50 의무/쉬는시간 10:50~11:00 휴식/3교시 11:00~12:40 의무/점심시간 12:40~14:00 식사/4교시 14:00~15:10 의무/쉬는시간 15:10~15:20 휴식/5교시 15:20~16:50 의무/쉬는시간 16:50~17:00 휴식/6교시 17:00~18:10 의무/저녁시간 18:10~19:20 식사/7교시 19:20~20:30 의무/쉬는시간 20:30~20:40 휴식/8교시 20:40~21:50 의무/9교시 21:50~22:50 자율" },
+    { cls: "camp", key: "하이엔드관|방학", title: "하이엔드관 방학 중", sub: "토요일 08:30~22:50", rows: "1교시 08:30~09:30 자율/2교시 09:30~10:50 의무/쉬는시간 10:50~11:00 휴식/3교시 11:00~12:40 의무/점심시간 12:40~14:00 식사/4교시 14:00~15:10 의무/쉬는시간 15:10~15:20 휴식/5교시 15:20~16:50 의무/쉬는시간 16:50~17:00 휴식/6교시 17:00~18:00 의무/7교시 18:00~22:50 자율" },
+    { cls: "nsu", key: "N수관", title: "N수관", sub: "평일 07:40~22:50", rows: "0교시 07:40~08:30 자율/1교시 08:30~09:20 의무/쉬는시간 09:20~09:30 휴식/2교시 09:30~10:50 의무/쉬는시간 10:50~11:00 휴식/3교시 11:00~12:40 의무/점심시간 12:40~14:00 식사/4교시 14:00~15:10 의무/쉬는시간 15:10~15:20 휴식/5교시 15:20~16:50 의무/쉬는시간 16:50~17:00 휴식/6교시 17:00~18:10 의무/저녁시간 18:10~19:20 식사/7교시 19:20~20:30 의무/쉬는시간 20:30~20:40 휴식/8교시 20:40~21:50 의무/9교시 21:50~22:50 자율" },
+    { cls: "nsu", key: "N수관", title: "N수관", sub: "토요일 07:40~22:50", rows: "0교시 07:40~08:30 자율/1교시 08:30~09:20 의무/쉬는시간 09:20~09:30 휴식/2교시 09:30~10:50 의무/쉬는시간 10:50~11:00 휴식/3교시 11:00~12:40 의무/점심시간 12:40~14:00 식사/4교시 14:00~15:10 의무/쉬는시간 15:10~15:20 휴식/5교시 15:20~16:50 의무/쉬는시간 16:50~17:00 휴식/6교시 17:00~18:00 의무/7교시 18:00~22:50 자율" },
+  ];
+  function sfTimetablesHtml() {
+    const br = schedBranch(); let mineKey = "";
+    if (br === "N수관") mineKey = "N수관";
+    else if (br === "하이엔드관") mineKey = "하이엔드관|" + (schedVacationOn(getCalendarDateKey()) ? "방학" : "학기");
+    const kc = { "자율": "free", "의무": "duty", "휴식": "rest", "식사": "meal" };
+    return '<div class="sf-tts">' + SF_TT.map(t => '<div class="sf-tt ' + t.cls + (t.key === mineKey ? " mine" : "") + '"><div class="sf-tt-h">' + t.title + '<small>' + t.sub + '</small></div>' +
+      t.rows.split("/").map(r => { const p = r.split(" "); return '<div class="sf-tt-r ' + kc[p[2]] + '"><span>' + p[0].replace("쉬는시간", "쉬는").replace("점심시간", "점심").replace("저녁시간", "저녁") + '</span><span class="t">' + p[1].replace(/0(d:)/g, "$1") + '</span><span class="k">' + p[2] + '</span></div>'; }).join("") + '</div>').join("") +
+      '</div><div class="sf-tt-note">일요일 09:00~22:00 자율 교시 · 법정 공휴일은 운영 공지를 따르고, 임시 공휴일은 토요일 시간표 또는 자율등원으로 운영돼요.' + (mineKey ? " 파란 테두리가 내가 이용하는 시간표예요." : "") + '</div>';
+  }
   function sfRenderEditor() {
     const el = document.getElementById("sfEditor");
-    const seg = (wd, m, label) => '<button type="button" class="' + (sfS.days[wd].mode === m ? "on" : "") + '" onclick="sfSetMode(' + wd + ',\'' + m + '\')">' + label + '</button>';
-    el.innerHTML = '<div class="sp-days">' + [1, 2, 3, 4, 5, 6].map(wd => {
+    const seg = (wd, m, label) => '<button type="button" class="' + (sfS.days[wd].mode === m ? "on m-" + m : "") + '" onclick="sfSetMode(' + wd + ',\'' + m + '\')">' + label + '</button>';
+    el.innerHTML = '<div class="sf-grid">' + [1, 2, 3, 4, 5, 6].map(wd => {
       const d = sfS.days[wd];
-      return '<div class="sp-day"><div class="sp-day-h"><b class="sp-wd">' + SCHED_WD[wd] + '요일</b><div class="sp-seg">' + seg(wd, "duty", "정상 학습") + seg(wd, "custom", "시간 직접 입력") + seg(wd, "off", "등원 안 함") + '</div>' +
-        (wd > 1 ? '<button type="button" class="sp-copy" onclick="sfCopyPrev(' + wd + ')">앞 요일과 같게</button>' : "") + '</div>' +
-        (d.mode === "custom" ? schedTimesHtml(String(wd), d, true) : '<div class="sp-day-plain">' + (d.mode === "off" ? "이 요일에는 독서실에 오지 않아요." : "정상 학습으로 공부해요. (독서실 운영 시간표대로 이용)") + '</div>') +
-        '</div>';
+      return '<div class="sf-col m-' + d.mode + (wd === 6 ? " sat" : "") + '"><div class="sf-col-h">' + SCHED_WD[wd] + '요일</div>' +
+        '<div class="sf-modes">' + seg(wd, "duty", "정상 학습") + seg(wd, "custom", "시간 직접 입력") + seg(wd, "off", "등원 안 함") + '</div>' +
+        (d.mode === "custom" ? schedTimesHtml(String(wd), d, true) : '<div class="sf-plain">' + (d.mode === "off" ? "이 요일에는 오지 않아요." : "독서실 운영 시간표대로 이용해요.") + '</div>') +
+        (wd > 1 ? '<button type="button" class="sp-copy" onclick="sfCopyPrev(' + wd + ')">앞 요일과 같게</button>' : "") + '</div>';
     }).join("") + '</div><div class="sp-actions"><button type="button" class="sp-btn" onclick="sfReview()">다음: 확인하기</button></div>';
     document.getElementById("sfReview").hidden = true;
     el.hidden = false;
@@ -21904,7 +22191,10 @@
       if (!r || !r.ok) return;
       adkReqItems = r.items || [];
       const ids = new Set(adkReqItems.map(x => x.id));
-      if (adkSeenIds && adkReqItems.some(x => !adkSeenIds.has(x.id) && x.status === "new")) adkBeep();
+      const msgCnt = {}; adkReqItems.forEach(x => { msgCnt[x.id] = (x.msgs || []).length; });
+      const stuReply = adkMsgCnt && adkReqItems.some(x => (x.msgs || []).length > (adkMsgCnt[x.id] || 0) && (x.msgs[x.msgs.length - 1] || {}).sender === "student");
+      adkMsgCnt = msgCnt;
+      if (adkSeenIds && (adkReqItems.some(x => !adkSeenIds.has(x.id) && x.status === "new") || stuReply)) adkBeep();
       adkSeenIds = ids;
       adkBadge("adkReqBadge", adkReqItems.filter(x => x.status === "new").length);
       if (adkPanel === "deskReq") adkRenderReq();
@@ -21916,23 +22206,90 @@
     }).catch(() => {});
   }
   function adkStart() { if (adkTimer) return; adkTick(); adkTimer = setInterval(() => { if (!document.hidden) adkTick(); }, 20000); }
-  function adkStop() { if (adkTimer) { clearInterval(adkTimer); adkTimer = null; } adkSeenIds = null; }
+  let adkMsgCnt = null;
+  function adkStop() { if (adkTimer) { clearInterval(adkTimer); adkTimer = null; } adkSeenIds = null; adkMsgCnt = null; }
 
   function adkLoadReq() { document.getElementById("adkReqList").innerHTML = '<div class="admin-empty" style="display:block">불러오는 중…</div>'; adkTick(); }
+  // ── 데스크 요청: 카톡 같은 채팅 화면(왼쪽 대화 목록 · 오른쪽 대화창, AI 없음) ──
+  let adkSelId = null, adkBranch = "";
+  const adkClock = iso => { const d = new Date(iso); if (isNaN(d)) return ""; const h = d.getHours(); return (h < 12 ? "오전 " : "오후 ") + ((h % 12) || 12) + ":" + String(d.getMinutes()).padStart(2, "0"); };
+  const adkListTime = iso => { const d = new Date(iso); if (isNaN(d)) return ""; const n = new Date(), dk = x => x.getFullYear() * 10000 + (x.getMonth() + 1) * 100 + x.getDate(); const y = new Date(n.getTime() - 86400000); return dk(d) === dk(n) ? adkClock(iso) : dk(d) === dk(y) ? "어제" : (d.getMonth() + 1) + "/" + d.getDate(); };
+  const adkReqLabel = x => { const l = DESK_KIND_LABEL[x.kind] || ""; return l && x.text ? l + " · " + x.text : (x.text || l || "요청"); };
+  const adkLast = x => { const g = x.msgs || []; return g.length ? g[g.length - 1] : null; };
+  const adkActive = x => { const g = adkLast(x); return g ? g.created_at : x.created_at; };
+  const adkStuBranch = id => { const s = adminAllStudents.find(x => x.id === id); return (s && s.branch) || ""; };
+  function adkUnread(x) {
+    if (x.status !== "new") return 0;
+    const g = x.msgs || []; let n = 0;
+    for (let i = g.length - 1; i >= 0 && g[i].sender === "student"; i--) n++;
+    return g.length ? n : 1;
+  }
+  function adkSetBranch(b) { adkBranch = b; adkRenderReq(); }
+  function adkSelect(id) {
+    adkSelId = id == null ? null : Number(id);
+    const box = document.getElementById("adkChat"); if (box) box.dataset.id = "";
+    adkRenderReq();
+    if (adkSelId) { const inp = document.getElementById("adkChIn"); if (inp && window.innerWidth > 760) inp.focus(); }
+  }
   function adkRenderReq() {
     const el = document.getElementById("adkReqList"); if (!el) return;
     const showDone = document.getElementById("adkReqShowDone").checked;
-    const items = adkReqItems.filter(x => showDone || x.status !== "done");
-    if (!items.length) { el.innerHTML = '<div class="admin-empty" style="display:block">' + (showDone ? "최근 7일 요청이 없습니다." : "처리할 요청이 없습니다.") + '</div>'; return; }
-    el.innerHTML = items.map(x => {
-      const label = DESK_KIND_LABEL[x.kind] || "요청";
-      const st = (v, t) => '<button type="button" class="adk-st' + (x.status === v ? " on s-" + v : "") + '" onclick="adkSetStatus(' + Number(x.id) + ',\'' + v + '\')">' + t + '</button>';
-      return '<div class="adk-item' + (x.status === "new" ? " is-new" : "") + '">' +
-        '<div class="adk-item-top"><span class="adk-seat-tag">' + (x.seat ? "좌석 " + escapeHtml(x.seat) : "좌석 미등록") + '</span><b>' + escapeHtml(adkStudentName(x.student_id)) + '</b><span class="adk-dim">' + escapeHtml(x.student_id) + ' · ' + adkTime(x.created_at) + '</span></div>' +
-        '<div class="adk-item-body"><span class="adk-kind k-' + x.kind + '">' + escapeHtml(label || "직접 입력") + '</span>' + (x.text ? escapeHtml(x.text) : "") +
-          (x.kind === "pdf" ? ' <span class="adk-pdf' + (Number(x.pdf_sent) ? " ok" : "") + '">' + (Number(x.pdf_sent) ? "자료 전송 완료 · 메일 확인" : "아직 자료 전송 전") + '</span>' : "") + '</div>' +
-        '<div class="adk-sts">' + st("new", "미확인") + st("doing", "확인 완료, 처리 중") + st("done", "처리 완료") + '</div></div>';
+    const base = adkReqItems.filter(x => showDone || x.status !== "done" || x.id === adkSelId);
+    // 위쪽 관 구분 버튼: 전체 / 하이엔드관 / N수관 (읽지 않은 대화 수 표시)
+    const tabs = document.getElementById("adkTabs");
+    if (tabs) tabs.innerHTML = [["", "전체"], ["하이엔드관", "하이엔드"], ["N수관", "N수"]].map(t => {
+      const n = adkReqItems.filter(x => (!t[0] || adkStuBranch(x.student_id) === t[0])).reduce((a, x) => a + adkUnread(x), 0);
+      return '<button type="button" class="adkc-tab' + (adkBranch === t[0] ? " on" : "") + '" onclick="adkSetBranch(' + "'" + t[0] + "'" + ')">' + t[1] + ' (' + n + ')</button>';
     }).join("");
+    const items = base.filter(x => !adkBranch || adkStuBranch(x.student_id) === adkBranch)
+      .sort((p, q) => String(adkActive(q)).localeCompare(String(adkActive(p))));
+    const wrap = document.getElementById("adkc"); if (wrap) wrap.classList.toggle("sel", !!adkSelId);
+    const pal = ["#8FE0D4", "#A99CF4", "#7FB0F2"];
+    el.innerHTML = items.length ? items.map(x => {
+      const g = adkLast(x), nm = adkStudentName(x.student_id), un = adkUnread(x);
+      const hash = String(x.student_id).split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+      return '<div class="adkc-item' + (x.id === adkSelId ? " on" : "") + '" onclick="adkSelect(' + Number(x.id) + ')">' +
+        '<div class="adkc-av" style="background:' + pal[hash % 3] + '">' + escapeHtml(String(nm).charAt(0)) + '</div>' +
+        '<div class="adkc-mid"><div class="adkc-name">' + escapeHtml(nm) + '<span class="adkc-seat">' + (x.seat ? "좌석 " + escapeHtml(x.seat) : "좌석 미등록") + '</span></div>' +
+        '<div class="adkc-prev">' + (g ? (g.sender === "admin" ? "나: " : "") + escapeHtml(g.text) : escapeHtml(adkReqLabel(x))) + '</div></div>' +
+        '<div class="adkc-side"><span class="adkc-time">' + adkListTime(adkActive(x)) + '</span>' + (un ? '<span class="adkc-dot">' + un + '</span>' : (x.status === "done" ? '<span class="adkc-done">완료</span>' : "")) + '</div></div>';
+    }).join("") : '<div class="adkc-none">' + (showDone ? "최근 7일 요청이 없습니다." : "처리할 요청이 없습니다.") + '</div>';
+    adkRenderChat();
+  }
+  function adkRenderChat() {
+    const box = document.getElementById("adkChat"); if (!box) return;
+    const x = adkSelId ? adkReqItems.find(r => Number(r.id) === adkSelId) : null;
+    if (!x) { box.dataset.id = ""; box.innerHTML = '<div class="adkc-empty">왼쪽에서 대화를 선택해 주세요.</div>'; return; }
+    const first = box.dataset.id !== String(x.id);
+    if (first) {
+      box.dataset.id = String(x.id);
+      box.innerHTML = '<div class="adkc-head" id="adkChHead"></div><div class="adkc-msgs" id="adkChMsgs"></div>' +
+        '<div class="adkc-foot"><div class="adkc-sts" id="adkChSts"></div><div class="adkc-bar"><input type="text" id="adkChIn" maxlength="300" placeholder="메시지 입력" autocomplete="off" onkeydown="adkAskKey(event)" oninput="adkInputChange()"><button type="button" class="adkc-send" id="adkChSend" onclick="adkAsk()" aria-label="보내기" hidden>↑</button></div></div>';
+    }
+    const nm = adkStudentName(x.student_id), br = adkStuBranch(x.student_id);
+    document.getElementById("adkChHead").innerHTML = '<button type="button" class="adkc-back" onclick="adkSelect(null)" aria-label="목록으로">‹</button><div class="adkc-hn"><b>' + escapeHtml(nm) + '</b><span>' + (br ? escapeHtml(br) + " · " : "") + (x.seat ? "좌석 " + escapeHtml(x.seat) + " · " : "") + escapeHtml(x.student_id) + '</span></div>' +
+      (x.kind === "pdf" ? '<span class="adkc-pdf' + (Number(x.pdf_sent) ? " ok" : "") + '">' + (Number(x.pdf_sent) ? "자료 전송 완료 · 메일 확인" : "아직 자료 전송 전") + '</span>' : "");
+    const row = (who, text, t) => '<div class="adkc-row ' + who + '"><span class="adkc-t">' + adkClock(t) + '</span><div class="adkc-b">' + text + '</div></div>';
+    const msgsEl = document.getElementById("adkChMsgs");
+    const atBottom = first || msgsEl.scrollHeight - msgsEl.scrollTop - msgsEl.clientHeight < 60;
+    msgsEl.innerHTML = '<div class="adkc-day">' + adkTime(x.created_at) + ' 요청</div>' +
+      row("stu", '<span class="adkc-kind k-' + escapeHtml(x.kind) + '">' + escapeHtml(DESK_KIND_LABEL[x.kind] || "요청") + '</span>' + (x.text ? escapeHtml(x.text) : ""), x.created_at) +
+      (x.msgs || []).map(g => row(g.sender === "admin" ? "me" : "stu", escapeHtml(g.text), g.created_at)).join("");
+    if (atBottom) msgsEl.scrollTop = msgsEl.scrollHeight;
+    const st = (v, t) => '<button type="button" class="adkc-st' + (x.status === v ? " on s-" + v : "") + '" onclick="adkSetStatus(' + Number(x.id) + ',' + "'" + v + "'" + ')">' + t + '</button>';
+    document.getElementById("adkChSts").innerHTML = st("new", "미확인") + st("doing", "확인 완료, 처리 중") + st("done", "처리 완료");
+  }
+  function adkInputChange() { const i = document.getElementById("adkChIn"), b = document.getElementById("adkChSend"); if (i && b) b.hidden = !i.value.trim(); }
+  function adkAskKey(e) { if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); adkAsk(); } }
+  function adkAsk() {
+    const id = adkSelId, inp = document.getElementById("adkChIn"); if (!id || !inp) return;
+    const text = (inp.value || "").trim(); if (!text) { inp.focus(); return; }
+    inp.disabled = true;
+    adminAuthPost({ action: "admin_desk_reply", id: id, text: text }).then(r => {
+      inp.disabled = false;
+      if (!r || !r.ok) { alert((r && r.error) || "보내지 못했어요."); return; }
+      inp.value = ""; adkInputChange(); inp.focus(); adkTick();
+    }).catch(() => { inp.disabled = false; alert("보내지 못했어요."); });
   }
   function adkSetStatus(id, status) {
     const it = adkReqItems.find(x => Number(x.id) === Number(id)); if (it) it.status = status;
