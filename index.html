@@ -12704,7 +12704,7 @@
           <div class="adkc" id="adkc">
             <div class="adkc-list">
               <div class="adkc-list-h"><b>채팅</b></div>
-              <div class="adkc-search"><input type="text" id="adkSearch" placeholder="학생 이름 검색" autocomplete="off" oninput="adkSetQuery(this.value)"></div>
+              <div class="adkc-search"><input type="text" id="adkSearch" placeholder="학생 이름 · 좌석 번호 검색" autocomplete="off" oninput="adkSetQuery(this.value)"></div>
               <div class="adkc-mode" id="adkMode"><button type="button" class="on" data-m="all" onclick="adkSetMode('all')">모든 채팅 보기</button><button type="button" data-m="unread" onclick="adkSetMode('unread')">미확인 채팅만 보기</button></div>
               <div class="adkc-tabs" id="adkTabs"></div>
               <div id="adkReqList" class="adkc-items"></div>
@@ -22258,7 +22258,7 @@
     const el = document.getElementById("adkReqList"); if (!el) return;
     const showAll = adkMode === "all";
     const q = adkQuery;
-    const base = adkReqItems.filter(x => (showAll || x.status === "new" || x.id === adkSelId) && (!q || (adkStudentName(x.student_id) + " " + x.student_id).toLowerCase().includes(q)));
+    const base = adkReqItems.filter(x => (showAll || x.status === "new" || x.id === adkSelId) && (!q || (adkStudentName(x.student_id) + " " + x.student_id + " " + adkSeatOf(x) + " 좌석 " + adkSeatOf(x)).toLowerCase().includes(q)));
     // 위쪽 관 구분 버튼: 전체 / 하이엔드관 / N수관 (읽지 않은 대화 수 표시)
     const tabs = document.getElementById("adkTabs");
     if (tabs) tabs.innerHTML = [["", "전체"], ["하이엔드관", "하이엔드"], ["N수관", "N수"]].map(t => {
