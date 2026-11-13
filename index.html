@@ -9825,11 +9825,6 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
           <span class="td-nav-label">내 스케줄</span>
         </button>
-        <!-- 옛 "독서실 스케줄" 페이지(시간표 사진 · 오늘 일정 · 고정/돌발 스케줄 확인)를 다시 연다 -->
-        <button type="button" class="td-nav td-nav-top" id="tdNav-roomSched" onclick="go('scheduleManage')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>
-          <span class="td-nav-label">독서실 스케줄</span>
-        </button>
         <div class="td-navgrp open" id="tdNavGrp">
           <button type="button" class="td-nav td-nav-top" id="tdNav-dash" onclick="tdNavClass()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 21.5A2.5 2.5 0 0 1 6.5 19H20"/></svg>
@@ -12612,6 +12607,9 @@
               </button>
               <button class="admin-nav-item" type="button" onclick="showAdminPanel('deskSched', this)">
                 <span class="admin-nav-ico">🗓️</span> 스케줄 승인 <span class="adk-badge" id="adkSchedBadge" hidden></span>
+              </button>
+              <button class="admin-nav-item" type="button" onclick="previewRoomSchedule()">
+                <span class="admin-nav-ico">🕘</span> 독서실 스케줄
               </button>
               <button class="admin-nav-item" type="button" onclick="showAdminPanel('deskVac', this)">
                 <span class="admin-nav-ico">🏖️</span> 방학 운영 기간
@@ -22075,6 +22073,11 @@
     document.documentElement.removeAttribute("data-boot");
     document.body.classList.remove("is-admin");
     go("howto");
+  }
+  function previewRoomSchedule() {
+    document.documentElement.removeAttribute("data-boot");
+    document.body.classList.remove("is-admin");
+    go("scheduleManage");
   }
   function previewLegacyAcademy() {
     document.documentElement.removeAttribute("data-boot");
