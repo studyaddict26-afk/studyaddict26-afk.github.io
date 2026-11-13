@@ -4213,24 +4213,25 @@
   .adkc-search { flex: none; padding: 0 18px 10px; }
   .adkc-search input { width: 100%; box-sizing: border-box; background: #F1F2F4; border: none; border-radius: 12px; padding: 10px 14px; color: #111; font-family: inherit; font-size: 0.86rem; outline: none; }
   .adkc-search input::placeholder { color: #9A9EA6; }
-  .adkc-mode { flex: none; display: flex; gap: 6px; padding: 0 18px 10px; }
-  .adkc-mode button { flex: 1; font-family: inherit; font-size: 0.74rem; font-weight: 700; color: #5A5E66; background: #fff; border: 1px solid #E0E2E6; border-radius: 10px; padding: 8px 6px; cursor: pointer; white-space: nowrap; }
-  .adkc-mode button.on { color: #111; background: #FEE500; border-color: #FEE500; }
-  .adkc-tabs { flex: none; display: flex; gap: 8px; padding: 2px 18px 12px; }
-  .adkc-tab { white-space: nowrap; font-family: inherit; font-size: 0.8rem; font-weight: 700; color: #4B4F57; background: #F1F2F4; border: none; border-radius: 999px; padding: 8px 14px; cursor: pointer; }
+  .adkc-mode { flex: none; display: flex; gap: 6px; padding: 0 18px 8px; }
+  .adkc-mode button { flex: 1; font-family: inherit; font-size: 0.7rem; font-weight: 700; color: #5A5E66; background: #fff; border: 1px solid #E0E2E6; border-radius: 8px; padding: 5px 4px; line-height: 1.3; cursor: pointer; white-space: nowrap; outline: none; }
+  .adkc-mode button.on { color: #fff; background: #1A1A1A; border-color: #1A1A1A; }
+  .adkc-tabs { flex: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 0 18px 10px; }
+  .adkc-tab { white-space: nowrap; font-family: inherit; font-size: 0.7rem; font-weight: 700; color: #4B4F57; background: #F1F2F4; border: none; border-radius: 999px; padding: 5px 4px; line-height: 1.3; cursor: pointer; outline: none; text-align: center; }
   .adkc-tab.on { background: #1A1A1A; color: #fff; }
   .adkc-items { flex: 1; min-height: 0; overflow-y: auto; }
-  .adkc-item { display: flex; align-items: center; gap: 12px; padding: 12px 18px; cursor: pointer; }
+  .adkc-item { display: flex; align-items: center; gap: 10px; padding: 7px 18px; cursor: pointer; }
   .adkc-item:hover { background: #F6F7F8; }
   .adkc-item.on { background: #EFF0F2; }
-  .adkc-av { flex: none; width: 46px; height: 46px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #0B3B36; font-size: 1.05rem; }
+  .adkc-av { flex: none; width: 34px; height: 34px; border-radius: 12px; background: #ECEDF0; overflow: hidden; display: flex; align-items: flex-end; justify-content: center; }
+  .adkc-av svg { width: 100%; height: 100%; display: block; }
   .adkc-mid { flex: 1; min-width: 0; }
-  .adkc-name { font-size: 0.92rem; font-weight: 700; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .adkc-name { font-size: 0.86rem; font-weight: 700; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .adkc-seat { margin-left: 8px; font-size: 0.68rem; font-weight: 600; color: #8A8F99; }
-  .adkc-prev { margin-top: 3px; font-size: 0.8rem; color: #6B7078; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .adkc-side { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .adkc-prev { margin-top: 1px; font-size: 0.76rem; color: #6B7078; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .adkc-side { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
   .adkc-time { font-size: 0.68rem; color: #9A9EA6; }
-  .adkc-dot { min-width: 20px; height: 20px; padding: 0 6px; box-sizing: border-box; border-radius: 999px; background: #EB5A3C; color: #fff; font-size: 0.68rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; }
+  .adkc-dot { min-width: 18px; height: 18px; padding: 0 6px; box-sizing: border-box; border-radius: 999px; background: #EB5A3C; color: #fff; font-size: 0.68rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; }
   .adkc-done { font-size: 0.64rem; color: #2E7D4F; font-weight: 700; }
   .adkc-none, .adkc-empty { padding: 40px 20px; text-align: center; font-size: 0.84rem; color: #9A9EA6; }
   .adkc-chat { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: #fff; }
@@ -22175,7 +22176,7 @@
   const adkStudentName = id => { const s = adminAllStudents.find(x => x.id === id); return s && s.name ? s.name : id; };
   const adkTime = iso => { const d = new Date(iso); return isNaN(d) ? "" : (d.getMonth() + 1) + "/" + d.getDate() + " " + d.getHours() + ":" + String(d.getMinutes()).padStart(2, "0"); };
   function adkLoadSeats() {
-    adminAuthPost({ action: "admin_desk_seats" }).then(r => { if (r && r.ok) { adkSeats = r.seats || {}; renderStudents(); } }).catch(() => {});
+    adminAuthPost({ action: "admin_desk_seats" }).then(r => { if (r && r.ok) { adkSeats = r.seats || {}; renderStudents(); if (adkPanel === "deskReq") adkRenderReq(); } }).catch(() => {});
   }
   function adkSeatSave(id, input) {
     const v = (input.value || "").trim();
@@ -22223,7 +22224,7 @@
   let adkMsgCnt = null;
   function adkStop() { if (adkTimer) { clearInterval(adkTimer); adkTimer = null; } adkSeenIds = null; adkMsgCnt = null; }
 
-  function adkLoadReq() { document.getElementById("adkReqList").innerHTML = '<div class="admin-empty" style="display:block">불러오는 중…</div>'; adkTick(); }
+  function adkLoadReq() { adkLoadSeats(); document.getElementById("adkReqList").innerHTML = '<div class="admin-empty" style="display:block">불러오는 중…</div>'; adkTick(); }
   // ── 데스크 요청: 카톡 같은 채팅 화면(왼쪽 대화 목록 · 오른쪽 대화창, AI 없음) ──
   let adkSelId = null, adkBranch = "", adkMode = "all", adkQuery = "";
   const adkClock = iso => { const d = new Date(iso); if (isNaN(d)) return ""; const h = d.getHours(); return (h < 12 ? "오전 " : "오후 ") + ((h % 12) || 12) + ":" + String(d.getMinutes()).padStart(2, "0"); };
@@ -22231,6 +22232,12 @@
   const adkReqLabel = x => { const l = DESK_KIND_LABEL[x.kind] || ""; return l && x.text ? l + " · " + x.text : (x.text || l || "요청"); };
   const adkLast = x => { const g = x.msgs || []; return g.length ? g[g.length - 1] : null; };
   const adkActive = x => { const g = adkLast(x); return g ? g.created_at : x.created_at; };
+  const adkStuGender = id => { const s = adminAllStudents.find(x => x.id === id); return (s && s.gender) || ""; };
+  const adkSeatOf = x => (adkSeats[x.student_id] || x.seat || "");
+  // 깔끔한 회색 사람 아이콘(남 · 여). 성별을 모르면 남녀 구분 없는 기본 모양
+  const adkAvatar = g => g === "female"
+    ? '<svg viewBox="0 0 40 40" aria-hidden="true"><path fill="#8D939D" d="M12 17.5a8 8 0 0 1 16 0V27c0 1.7-1.3 3-3 3H15c-1.7 0-3-1.3-3-3z"/><circle cx="20" cy="17" r="5.6" fill="#B5BAC2"/><path fill="#B5BAC2" d="M8 38c0-6.8 5.2-10.5 12-10.5S32 31.2 32 38z"/></svg>'
+    : '<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="15.5" r="6.2" fill="#B5BAC2"/><path fill="#B5BAC2" d="M8 38c0-7.2 5.2-11.5 12-11.5S32 30.8 32 38z"/></svg>';
   const adkStuBranch = id => { const s = adminAllStudents.find(x => x.id === id); return (s && s.branch) || ""; };
   function adkUnread(x) {
     if (x.status !== "new") return 0;
@@ -22261,13 +22268,11 @@
     const items = base.filter(x => !adkBranch || adkStuBranch(x.student_id) === adkBranch)
       .sort((p, q) => String(adkActive(q)).localeCompare(String(adkActive(p))));
     const wrap = document.getElementById("adkc"); if (wrap) wrap.classList.toggle("sel", !!adkSelId);
-    const pal = ["#8FE0D4", "#A99CF4", "#7FB0F2"];
     el.innerHTML = items.length ? items.map(x => {
       const g = adkLast(x), nm = adkStudentName(x.student_id), un = adkUnread(x);
-      const hash = String(x.student_id).split("").reduce((a, c) => a + c.charCodeAt(0), 0);
       return '<div class="adkc-item' + (x.id === adkSelId ? " on" : "") + '" onclick="adkSelect(' + Number(x.id) + ')">' +
-        '<div class="adkc-av" style="background:' + pal[hash % 3] + '">' + escapeHtml(String(nm).charAt(0)) + '</div>' +
-        '<div class="adkc-mid"><div class="adkc-name">' + escapeHtml(nm) + '<span class="adkc-seat">' + (x.seat ? "좌석 " + escapeHtml(x.seat) : "좌석 미등록") + '</span></div>' +
+        '<div class="adkc-av">' + adkAvatar(adkStuGender(x.student_id)) + '</div>' +
+        '<div class="adkc-mid"><div class="adkc-name">' + escapeHtml(nm) + '<span class="adkc-seat">' + (adkSeatOf(x) ? "좌석 " + escapeHtml(adkSeatOf(x)) : "좌석 미등록") + '</span></div>' +
         '<div class="adkc-prev">' + (g ? (g.sender === "admin" ? "나: " : "") + escapeHtml(g.text) : escapeHtml(adkReqLabel(x))) + '</div></div>' +
         '<div class="adkc-side"><span class="adkc-time">' + adkListTime(adkActive(x)) + '</span>' + (un ? '<span class="adkc-dot">' + un + '</span>' : (x.status === "done" ? '<span class="adkc-done">완료</span>' : "")) + '</div></div>';
     }).join("") : '<div class="adkc-none">' + (q ? "검색 결과가 없습니다." : showAll ? "최근 7일 요청이 없습니다." : "미확인 채팅이 없습니다.") + '</div>';
@@ -22284,7 +22289,7 @@
         '<div class="adkc-foot"><div class="adkc-sts" id="adkChSts"></div><div class="adkc-bar"><input type="text" id="adkChIn" maxlength="300" placeholder="메시지 입력" autocomplete="off" onkeydown="adkAskKey(event)" oninput="adkInputChange()"><button type="button" class="adkc-send" id="adkChSend" onclick="adkAsk()" aria-label="보내기" hidden>↑</button></div></div>';
     }
     const nm = adkStudentName(x.student_id), br = adkStuBranch(x.student_id);
-    document.getElementById("adkChHead").innerHTML = '<button type="button" class="adkc-back" onclick="adkSelect(null)" aria-label="목록으로">‹</button><div class="adkc-hn"><b>' + escapeHtml(nm) + '</b><span>' + (br ? escapeHtml(br) + " · " : "") + (x.seat ? "좌석 " + escapeHtml(x.seat) + " · " : "") + escapeHtml(x.student_id) + '</span></div>' +
+    document.getElementById("adkChHead").innerHTML = '<button type="button" class="adkc-back" onclick="adkSelect(null)" aria-label="목록으로">‹</button><div class="adkc-hn"><b>' + escapeHtml(nm) + '</b><span>' + (br ? escapeHtml(br) + " · " : "") + (adkSeatOf(x) ? "좌석 " + escapeHtml(adkSeatOf(x)) + " · " : "") + escapeHtml(x.student_id) + '</span></div>' +
       (x.kind === "pdf" ? '<span class="adkc-pdf' + (Number(x.pdf_sent) ? " ok" : "") + '">' + (Number(x.pdf_sent) ? "자료 전송 완료 · 메일 확인" : "아직 자료 전송 전") + '</span>' : "");
     const row = (who, text, t) => '<div class="adkc-row ' + who + '"><span class="adkc-t">' + adkClock(t) + '</span><div class="adkc-b">' + text + '</div></div>';
     const msgsEl = document.getElementById("adkChMsgs");
