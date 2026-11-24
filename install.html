@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>홀로 설치하기</title>
+<meta name="description" content="홀로를 휴대폰, 아이패드, 노트북에 앱처럼 설치하는 방법">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0D2155">
+<link rel="icon" type="image/png" sizes="192x192" href="holo-icon-192.png">
+<link rel="apple-touch-icon" href="holo-icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="홀로">
+<style>
+  :root { --navy: #0D2155; --ink: #111; --sub: #5b6270; --line: #e3e6ec; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif; color: var(--ink); background: #fff; line-height: 1.65; -webkit-text-size-adjust: 100%; }
+  main { max-width: 520px; margin: 0 auto; padding: 40px 22px 56px; }
+  .logo { width: 72px; height: 72px; border-radius: 16px; display: block; }
+  h1 { font-size: 26px; line-height: 1.3; margin: 20px 0 6px; letter-spacing: -0.02em; }
+  .lead { color: var(--sub); margin: 0 0 28px; }
+  h2 { font-size: 17px; margin: 0 0 10px; }
+  .hero { padding: 22px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .hero p { margin: 0 0 14px; }
+  .btn { display: inline-block; border: 0; border-radius: 10px; background: var(--navy); color: #fff; font: inherit; font-weight: 700; font-size: 17px; padding: 14px 22px; cursor: pointer; text-decoration: none; }
+  .btn:active { opacity: .85; }
+  .link { background: none; border: 0; padding: 0; color: var(--navy); font: inherit; text-decoration: underline; cursor: pointer; }
+  ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; }
+  ol.steps li { counter-increment: s; display: flex; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
+  ol.steps li:first-child { border-top: 0; }
+  ol.steps li::before { content: counter(s); flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--navy); color: #fff; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+  .ico { display: inline-block; vertical-align: -4px; width: 20px; height: 20px; margin: 0 2px; }
+  .note { color: var(--sub); font-size: 14px; margin: 12px 0 0; }
+  .others { margin-top: 36px; }
+  .others section { padding: 16px 0; border-top: 1px solid var(--line); }
+  .others section:first-of-type { border-top: 0; }
+  .others p { margin: 0; color: var(--sub); font-size: 15px; }
+  .others strong { color: var(--ink); }
+  [hidden] { display: none !important; }
+  footer { margin-top: 36px; color: var(--sub); font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <img class="logo" src="holo-icon-192.png" alt="홀로">
+  <h1>홀로를 앱처럼 설치하세요</h1>
+  <p class="lead">홈 화면에 아이콘이 생겨서, 주소를 치지 않고 한 번에 열 수 있어요. 따로 받는 파일은 없고 무료예요.</p>
+
+  <!-- 지금 기기에 맞는 안내 하나만 크게 보여 준다 -->
+  <div class="hero" id="heroInstalled" hidden>
+    <h2>이미 설치되어 있어요</h2>
+    <p>지금 이 화면이 설치된 홀로예요. 아래 버튼으로 홀로를 열 수 있어요.</p>
+    <a class="btn" href="./">홀로 열기</a>
+  </div>
+
+  <div class="hero" id="heroPrompt" hidden>
+    <h2>버튼 한 번이면 끝나요</h2>
+    <p>아래 버튼을 누르고, 나타나는 창에서 <strong>설치</strong>를 눌러 주세요.</p>
+    <button class="btn" id="installBtn" type="button">홀로 설치하기</button>
+  </div>
+
+  <div class="hero" id="heroDone" hidden>
+    <h2>설치됐어요</h2>
+    <p>홈 화면(또는 바탕화면·시작 메뉴)에서 홀로 아이콘을 찾아 열어 주세요.</p>
+    <a class="btn" href="./">홀로 열기</a>
+  </div>
+
+  <div class="hero" id="heroInApp" hidden>
+    <h2 id="inAppTitle">다른 브라우저에서 열어 주세요</h2>
+    <p id="inAppText">지금 보고 있는 화면은 카카오톡 같은 앱 안의 간이 브라우저라서 설치할 수 없어요. 아래 버튼으로 주소를 복사한 뒤, 브라우저에 붙여 넣어 열어 주세요.</p>
+    <button class="btn" id="copyBtn" type="button">주소 복사하기</button>
+    <p class="note" id="copyMsg"></p>
+  </div>
+
+  <div class="hero" id="heroIos" hidden>
+    <h2 id="iosTitle">아이패드·아이폰: 이렇게 하세요</h2>
+    <ol class="steps">
+      <li><span>화면 위쪽 또는 아래쪽의 <strong>공유 버튼</strong>
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="#0D2155" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/></svg>
+        (네모에서 화살표가 위로 나가는 모양)을 누르세요.</span></li>
+      <li><span>메뉴에서 <strong>홈 화면에 추가</strong>를 고르세요. 안 보이면 메뉴를 위로 밀어 올려 보세요.</span></li>
+      <li><span>이름이 <strong>홀로</strong>로 나오면 오른쪽 위 <strong>추가</strong>를 누르세요.</span></li>
+    </ol>
+    <p class="note">꼭 <strong>사파리</strong>에서 해야 해요. 크롬이나 다른 앱에서는 이 메뉴가 없어요.</p>
+  </div>
+
+  <div class="hero" id="heroManual" hidden>
+    <h2>이렇게 설치하세요</h2>
+    <ol class="steps">
+      <li><span>브라우저 주소창 <strong>오른쪽 끝</strong>에 설치 아이콘(모니터에 아래 화살표 모양)이 보이면 누르세요.</span></li>
+      <li><span>안 보이면 브라우저 메뉴(점 세 개)에서 <strong>앱 설치</strong> 또는 <strong>홀로 설치</strong>를 찾아 누르세요.</span></li>
+      <li><span>나타나는 창에서 <strong>설치</strong>를 누르세요.</span></li>
+    </ol>
+    <p class="note">메뉴에 설치 항목이 없다면 크롬, 엣지, 웨일에서 다시 열어 보세요. 맥의 사파리는 위쪽 메뉴의 <strong>파일 → Dock에 추가</strong>를 누르세요.</p>
+  </div>
+
+  <div class="others" id="others">
+    <h2>다른 기기에서는</h2>
+    <section id="othIos">
+      <p><strong>아이패드·아이폰</strong> — 사파리에서 열고, 공유 버튼 → <strong>홈 화면에 추가</strong> → <strong>추가</strong>.</p>
+    </section>
+    <section id="othDesk">
+      <p><strong>노트북(크롬·엣지·웨일)</strong> — 주소창 오른쪽 끝의 설치 아이콘, 또는 메뉴 → <strong>앱 설치</strong>.</p>
+    </section>
+    <section id="othAnd">
+      <p><strong>안드로이드</strong> — 크롬에서 열고, 이 페이지의 <strong>홀로 설치하기</strong> 버튼 또는 메뉴(점 세 개) → <strong>홈 화면에 추가</strong>.</p>
+    </section>
+  </div>
+
+  <footer>
+    <p>설치하면 로그인은 앱에서 한 번 더 해야 할 수 있어요. 막히면 독서실 선생님께 문의해 주세요.</p>
+    <p><a class="link" href="./">홀로로 이동</a></p>
+  </footer>
+</main>
+
+<script>
+  // 접속한 기기 판별 — 순수 함수라서 시험하기 쉽다
+  function detectPlatform(ua, platform, touch) {
+    ua = ua || ""; platform = platform || ""; touch = touch || 0;
+    var isIOS = /iPhone|iPad|iPod/.test(ua) || (platform === "MacIntel" && touch > 1); // 아이패드는 맥으로 보고함
+    var isAndroid = /Android/i.test(ua);
+    var inApp = /KAKAOTALK|NAVER\(inapp|Instagram|FBAN|FBAV|Line\/|; wv\)/i.test(ua); // 앱 안의 간이 브라우저
+    var otherIosBrowser = /CriOS|FxiOS|EdgiOS|OPiOS|whale/i.test(ua);
+    return { isIOS: isIOS, isAndroid: isAndroid, inApp: inApp, iosNotSafari: isIOS && otherIosBrowser, isDesktop: !isIOS && !isAndroid };
+  }
+  // 어떤 안내를 크게 보일지(promptReady = 브라우저가 설치 창을 띄울 수 있는 상태)
+  function pickHero(p, standalone, promptReady) {
+    if (standalone) return "heroInstalled";
+    if (p.inApp) return "heroInApp";
+    if (p.isIOS) return p.iosNotSafari ? "heroInApp" : "heroIos";
+    if (promptReady) return "heroPrompt";
+    return "heroManual";
+  }
+  var HEROS = ["heroInstalled", "heroPrompt", "heroDone", "heroInApp", "heroIos", "heroManual"];
+  function show(id) { HEROS.forEach(function (h) { document.getElementById(h).hidden = h !== id; }); }
+
+  var plat = detectPlatform(navigator.userAgent, navigator.platform, navigator.maxTouchPoints);
+  var standalone = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
+  var deferred = null;
+
+  function render() {
+    show(pickHero(plat, standalone, !!deferred));
+    // 지금 기기와 같은 줄은 "다른 기기" 목록에서 뺀다
+    document.getElementById("othIos").hidden = plat.isIOS;
+    document.getElementById("othDesk").hidden = plat.isDesktop;
+    document.getElementById("othAnd").hidden = plat.isAndroid;
+    // 앱 안 간이 브라우저 / 아이폰 다른 브라우저일 때 문구
+    if (plat.iosNotSafari && !plat.inApp) {
+      document.getElementById("inAppTitle").textContent = "사파리에서 열어 주세요";
+      document.getElementById("inAppText").textContent = "아이패드·아이폰은 사파리에서만 홈 화면에 추가할 수 있어요. 아래 버튼으로 주소를 복사해서, 사파리에 붙여 넣어 열어 주세요.";
+    } else if (plat.inApp && plat.isIOS) {
+      document.getElementById("inAppTitle").textContent = "사파리에서 열어 주세요";
+      document.getElementById("inAppText").textContent = "지금은 카카오톡 같은 앱 안의 간이 브라우저라서 설치할 수 없어요. 아래 버튼으로 주소를 복사한 뒤, 사파리에 붙여 넣어 열어 주세요.";
+    } else if (plat.inApp && plat.isAndroid) {
+      document.getElementById("inAppTitle").textContent = "크롬에서 열어 주세요";
+      document.getElementById("inAppText").textContent = "지금은 카카오톡 같은 앱 안의 간이 브라우저라서 설치할 수 없어요. 아래 버튼으로 주소를 복사한 뒤, 크롬에 붙여 넣어 열어 주세요.";
+    }
+  }
+
+  window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); deferred = e; render(); });
+  window.addEventListener("appinstalled", function () { deferred = null; show("heroDone"); });
+
+  document.getElementById("installBtn").addEventListener("click", function () {
+    if (!deferred) return;
+    deferred.prompt();
+    deferred.userChoice.then(function () { deferred = null; render(); });
+  });
+  document.getElementById("copyBtn").addEventListener("click", function () {
+    var url = location.origin + "/install";
+    var msg = document.getElementById("copyMsg");
+    function ok() { msg.textContent = "주소를 복사했어요. 브라우저를 열고 주소창에 붙여 넣어 주세요."; }
+    function manual() { msg.textContent = "복사가 안 되면 이 주소를 직접 입력해 주세요: " + url; }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(ok, manual); else manual();
+  });
+
+  render();
+  if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+    window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });
+  }
+</script>
+</body>
+</html>
