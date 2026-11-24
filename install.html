@@ -160,6 +160,10 @@
   var standalone = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
   var deferred = null;
   var $ = function (id) { return document.getElementById(id); };
+  // 설치 신호를 지원하는 브라우저(크롬, 엣지, 삼성 인터넷, 웨일)에서는 신호가 올 때까지 잠깐(최대 2초) 기다린 뒤 내 기기 줄을 펼친다.
+  // 그래야 "순서 설명 → 버튼"으로 화면이 바뀌며 깜빡이지 않는다. 신호를 안 보내는 브라우저(사파리, 파이어폭스)는 바로 펼친다.
+  var waiting = !plat.isIOS && !plat.inApp && !standalone && ("onbeforeinstallprompt" in window);
+  if (waiting) setTimeout(function () { waiting = false; render(); }, 2000);
 
   function setOpen(key) {
     document.querySelectorAll(".item").forEach(function (it) {
@@ -180,7 +184,7 @@
     var mine = myKey(plat);
     // 내 기기 표시 + 자동으로 펼치기
     document.querySelectorAll(".item").forEach(function (it) { it.querySelector(".mine").hidden = it.getAttribute("data-k") !== mine; });
-    if (!document.querySelector('.row[aria-expanded="true"]')) setOpen(mine);
+    if (!(waiting && !deferred) && !document.querySelector('.row[aria-expanded="true"]')) setOpen(mine);
     // 설치 버튼은 브라우저가 설치 창을 띄울 수 있을 때만, 내 기기 줄에만
     // 설치 버튼이 보이는 줄에서는 설명 없이 버튼만, 버튼이 없을 때만 설명(순서)을 보여 준다
     document.querySelectorAll("[data-install]").forEach(function (b) {
