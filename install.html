@@ -182,9 +182,11 @@
     document.querySelectorAll(".item").forEach(function (it) { it.querySelector(".mine").hidden = it.getAttribute("data-k") !== mine; });
     if (!document.querySelector('.row[aria-expanded="true"]')) setOpen(mine);
     // 설치 버튼은 브라우저가 설치 창을 띄울 수 있을 때만, 내 기기 줄에만
+    // 설치 버튼이 보이는 줄에서는 설명 없이 버튼만, 버튼이 없을 때만 설명(순서)을 보여 준다
     document.querySelectorAll("[data-install]").forEach(function (b) {
       var inItem = b.closest(".item").getAttribute("data-k");
       b.hidden = !(deferred && inItem === mine);
+      b.closest(".panel").querySelectorAll(".steps, .note").forEach(function (el) { el.hidden = !b.hidden; });
     });
     // 카카오톡 같은 앱 안의 간이 브라우저에서는 설치할 수 없으므로, 실제 브라우저로 열도록 안내한다
     var showInApp = plat.inApp && !standalone;
