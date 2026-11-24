@@ -9593,8 +9593,7 @@
       <p>서비스 이용 기간 동안 보관하며, 계정이 삭제되면 학생 정보와 대화 기록을 함께 삭제합니다. 법령에 따라 보관해야 하는 정보는 해당 기간 동안 보관합니다.</p>
       <h4>4. 처리 위탁과 외부 서비스</h4>
       <ul>
-        <li>데이터 저장: Google Firebase(클라우드 저장소)</li>
-        <li>서버 처리와 기록 저장: Val Town</li>
+        <li>서버 처리와 데이터 저장: Cloudflare(서버와 데이터베이스)</li>
         <li>AI 답변 생성: Anthropic(질문과 대화 내용이 답변을 만들기 위해 전송됩니다)</li>
       </ul>
       <h4>5. 이용자의 권리</h4>
@@ -10858,6 +10857,10 @@
         <label for="admin-pw">비밀번호</label>
         <input type="password" id="admin-pw" autocomplete="current-password">
       </div>
+      <div class="apply-field" id="admin-otp-wrap" style="display:none;">
+        <label for="admin-otp">인증 앱의 6자리 숫자</label>
+        <input type="text" id="admin-otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code">
+      </div>
       <button type="button" class="apply-submit-btn" onclick="adminLogin()" style="width:100%;">로그인</button>
       <div class="apply-status-msg" id="adminLoginMsg"></div>
     </div>
@@ -11350,9 +11353,151 @@
     messagingSenderId: "274782162901",
     appId: "1:274782162901:web:4f553f7acff8c5946df75c"
   };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-  const auth = firebase.auth();
+  // ★ 서버 전환 스위치: false = 예전(Firebase + Val Town), true = 새 서버(Cloudflare, studyholo.com).
+  //   true로 바꾸는 것이 "전환"이다. 새 서버가 준비되고 데이터를 옮긴 뒤에만 바꾼다(chatbot/이전-설계.md 참고).
+  const HOLO_NEW_BACKEND = true;
+  const HOLO_NEW_API_URL = "https://api.studyholo.com";
+  let db, auth;
+  if (!HOLO_NEW_BACKEND) {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    auth = firebase.auth();
+  } else {
+    // ── 새 서버용 호환 코드 ──
+    // 이 사이트는 데이터를 db.collection(...).doc(...).get()/set()/update() 같은 Firestore 방식으로 읽고 써 왔다.
+    // 아래는 같은 사용법 그대로 새 서버(CHAT_API_URL)에 요청을 보내는 작은 대용품이다.
+    //  · 누가 무엇을 할 수 있는지는 서버가 정한다(학생 = 자기 것만, 관리자 = 전체, 방문자 = 신청서 제출 등)
+    //  · 실시간 갱신(onSnapshot) 대신 30초마다 확인하고, 내가 저장한 직후에는 바로 다시 확인한다.
+    (function () {
+      const SERVER_TS = { __op: "serverTimestamp" }, DEL = { __op: "delete" };
+      window.firebase = { firestore: { FieldValue: { serverTimestamp: () => SERVER_TS, delete: () => DEL } } };
+      const ADMIN_KEY = "holoAdminToken";
+      const lsGet = k => { try { return localStorage.getItem(k) || ""; } catch (e) { return ""; } };
+      const lsSet = (k, v) => { try { if (v) localStorage.setItem(k, v); else localStorage.removeItem(k); } catch (e) {} };
+      const TS = ms => ({ seconds: Math.floor(ms / 1000), nanoseconds: (ms % 1000) * 1e6, toMillis: () => ms, toDate: () => new Date(ms) });
+      const revive = v => {
+        if (v && typeof v === "object") {
+          if (Array.isArray(v)) return v.map(revive);
+          if ("__ts" in v) return TS(v.__ts);
+          const o = {}; for (const k in v) o[k] = revive(v[k]); return o;
+        }
+        return v;
+      };
+      const pollers = new Set();
+      let refreshTimer = null;
+      const refreshSoon = () => { clearTimeout(refreshTimer); refreshTimer = setTimeout(() => pollers.forEach(t => t(true)), 150); };
+
+      async function call(body, isWrite) {
+        const b = Object.assign({}, body);
+        const st = lsGet("holoStudentToken"); if (st) b.token = st;
+        const at = lsGet(ADMIN_KEY); if (at) b.idToken = at;
+        const r = await fetch(CHAT_API_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(b) });
+        const j = await r.json().catch(() => null);
+        if (!r.ok || !j || j.ok === false) {
+          if (at && (r.status === 401 || r.status === 403)) checkAdmin(); // 관리자 로그인이 만료됐는지 확인
+          const e = new Error((j && j.error) || ("HTTP " + r.status)); e.status = r.status; throw e;
+        }
+        if (isWrite) refreshSoon();
+        return j;
+      }
+      const mkDoc = (id, data, exists) => ({ id, exists: !!exists, data: () => (exists ? revive(data || {}) : undefined) });
+      const cmp = (a, b) => {
+        const n = v => (v && typeof v.toMillis === "function" ? v.toMillis() : v);
+        a = n(a); b = n(b);
+        return a === b ? 0 : (a == null ? -1 : b == null ? 1 : a < b ? -1 : 1);
+      };
+      function poll(fetcher, cb, errCb) {
+        let stopped = false, timer = null, last = null;
+        const tick = async (force) => {
+          if (stopped) return;
+          clearTimeout(timer);
+          try {
+            const res = await fetcher();
+            const sig = JSON.stringify(res.raw);
+            if (force !== "skip" && sig !== last) { last = sig; cb(res.snap); }
+          } catch (e) { if (errCb) errCb(e); }
+          if (!stopped) timer = setTimeout(tick, document.hidden ? 120000 : 30000);
+        };
+        pollers.add(tick);
+        tick();
+        return () => { stopped = true; clearTimeout(timer); pollers.delete(tick); };
+      }
+      function colQuery(name, field, dir) {
+        const fetchSnap = async () => {
+          const j = await call({ action: "fs_list", collection: name });
+          let docs = (j.docs || []).map(d => mkDoc(d.id, d.data, true));
+          if (field) docs = docs.sort((x, y) => (dir === "desc" ? -1 : 1) * cmp(x.data()[field], y.data()[field]));
+          return { raw: j.docs, snap: { docs, size: docs.length, empty: !docs.length, forEach: f => docs.forEach(f) } };
+        };
+        return {
+          get: () => fetchSnap().then(r => r.snap),
+          onSnapshot: (cb, errCb) => poll(fetchSnap, cb, errCb),
+          orderBy: (f, d) => colQuery(name, f, d || "asc"),
+        };
+      }
+      function docRef(col, id) {
+        return {
+          col, id,
+          get: () => call({ action: "fs_get", collection: col, id }).then(j => mkDoc(id, j.data, j.exists)),
+          set: (data, opts) => call({ action: "fs_set", collection: col, id, data, merge: !!(opts && opts.merge) }, true),
+          update: data => call({ action: "fs_update", collection: col, id, data }, true),
+          delete: () => call({ action: "fs_delete", collection: col, id }, true),
+          onSnapshot: (cb, errCb) => poll(async () => {
+            const j = await call({ action: "fs_get", collection: col, id });
+            return { raw: j, snap: mkDoc(id, j.data, j.exists) };
+          }, cb, errCb),
+        };
+      }
+      db = {
+        collection: name => Object.assign(colQuery(name, null, "asc"), {
+          doc: id => docRef(name, id),
+          add: data => call({ action: "fs_add", collection: name, data }, true).then(j => ({ id: j.id })),
+        }),
+        // "확인 후 저장"을 한 번에: 서버가 이미 있으면 DUPLICATE_ID로 막아 준다
+        runTransaction: async fn => {
+          const ops = [];
+          const tx = { get: ref => ref.get(), set: (ref, data) => { ops.push({ ref, data }); return tx; } };
+          await fn(tx);
+          for (const o of ops) await call({ action: "fs_create", collection: o.ref.col, id: o.ref.id, data: o.data }, true);
+        },
+      };
+
+      // ── 관리자 로그인 상태 (예전 Firebase Auth 자리) ──
+      let currentUser = null, ready = false;
+      const listeners = [];
+      const notify = () => listeners.forEach(f => { try { f(currentUser); } catch (e) { console.error(e); } });
+      const setUser = (email, token) => {
+        lsSet(ADMIN_KEY, token || "");
+        currentUser = token ? { email, getIdToken: () => Promise.resolve(lsGet(ADMIN_KEY)) } : null;
+      };
+      async function checkAdmin() {
+        const t = lsGet(ADMIN_KEY);
+        let ok = false;
+        if (t) { try { ok = !!(await authPost({ action: "admin_check", token: t })).ok; } catch (e) { ok = !!currentUser; } }
+        const had = !!currentUser;
+        if (!ok) setUser("", "");
+        else if (!currentUser) setUser(lsGet("holoAdminEmail"), t);
+        if (!ready || had !== !!currentUser) { ready = true; notify(); }
+      }
+      auth = {
+        get currentUser() { return currentUser; },
+        onAuthStateChanged(cb) { listeners.push(cb); if (ready) Promise.resolve().then(() => cb(currentUser)); },
+        signInAdmin(email, pw, code) {
+          return authPost({ action: "admin_login", email, pw, code }).then(r => {
+            if (!r || !r.ok) throw new Error((r && r.error) || "로그인 정보가 올바르지 않아요.");
+            lsSet("holoAdminEmail", r.email);
+            setUser(r.email, r.token);
+            notify();
+          });
+        },
+        signOut() { setUser("", ""); notify(); return Promise.resolve(); },
+      };
+      const otpWrap = document.getElementById("admin-otp-wrap");
+      if (otpWrap) otpWrap.style.display = "";
+      // authPost · CHAT_API_URL은 아래쪽 스크립트에서 정의되므로, 페이지가 모두 읽힌 뒤에 확인한다
+      document.addEventListener("DOMContentLoaded", checkAdmin);
+    })();
+  }
 </script>
 
 <script>
@@ -15769,7 +15914,7 @@
 
   // Cloudflare Worker 배포 후 이 주소를 실제 Worker 주소로 바꿔주세요.
   // (예: https://studyaddict-chat.내계정이름.workers.dev)
-  const CHAT_API_URL = "https://studyaddict26afk--be1575be9f7e11f190ff1607ee4eb77e.web.val.run";
+  const CHAT_API_URL = HOLO_NEW_BACKEND ? HOLO_NEW_API_URL : "https://studyaddict26afk--be1575be9f7e11f190ff1607ee4eb77e.web.val.run";
   // ── 로그인 보안: 서버가 발급한 토큰을 챗봇 서버로 가는 모든 요청에 자동으로 붙인다 ──
   // (비밀번호는 더 이상 이 브라우저에 저장하지 않는다. 서버가 "이 토큰의 주인"만 그 학생의 기록을 열어 준다.)
   function authPost(body) {
@@ -19784,6 +19929,18 @@
     const msg = document.getElementById("adminLoginMsg");
     msg.textContent = "";
     msg.className = "apply-status-msg";
+    if (HOLO_NEW_BACKEND) {
+      // 새 서버: 이메일 + 비밀번호 + 인증 앱 6자리 숫자
+      const code = (document.getElementById("admin-otp").value || "").trim();
+      auth.signInAdmin(email, pw, code).then(() => {
+        document.getElementById("admin-pw").value = "";
+        document.getElementById("admin-otp").value = "";
+      }).catch(err => {
+        msg.textContent = (err && err.message) || "로그인 정보가 올바르지 않아요.";
+        msg.className = "apply-status-msg error";
+      });
+      return;
+    }
     auth.signInWithEmailAndPassword(email, pw).catch(err => {
       msg.textContent = "로그인 정보가 올바르지 않아요.";
       msg.className = "apply-status-msg error";
@@ -20837,6 +20994,8 @@
         msg.className = "apply-status-msg error";
         return;
       }
+      // 새 서버는 "내 정보 읽기"에도 토큰이 필요하므로, 토큰을 먼저 저장한 뒤에 읽는다
+      localStorage.setItem("holoStudentToken", res.token);
       return db.collection("students").doc(id).get().then(doc => {
         btn.disabled = false;
         btn.textContent = "로그인";
