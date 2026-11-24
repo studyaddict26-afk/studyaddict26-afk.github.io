@@ -53,6 +53,7 @@
   .alert strong { display: block; margin-bottom: 2px; }
   .alert .btn { height: 42px; font-size: 15px; margin: 10px 0 0; }
   .alert .msg { margin: 8px 0 0; color: var(--sub); font-size: 13px; }
+  .textbtn { display: block; margin: 10px auto 0; padding: 0; border: 0; background: none; color: var(--navy); font: inherit; font-size: 14px; font-weight: 700; text-decoration: underline; cursor: pointer; }
   .foot { margin: 24px 0 0; text-align: center; font-size: 14px; }
   .foot a { color: var(--navy); font-weight: 700; text-decoration: none; }
   .foot .small { display: block; margin-top: 8px; color: var(--sub); font-size: 12.5px; font-weight: 400; }
@@ -71,9 +72,10 @@
 
     <!-- 카카오톡 같은 앱 안의 간이 브라우저일 때만 -->
     <div class="alert" id="inApp" hidden>
-      <strong id="inAppTitle">다른 브라우저에서 열어 주세요</strong>
+      <strong id="inAppTitle">브라우저에서 열어 주세요</strong>
       <span id="inAppText"></span>
-      <button class="btn" id="copyBtn" type="button">주소 복사하기</button>
+      <button class="btn" id="openExtBtn" type="button">브라우저에서 열기</button>
+      <button class="textbtn" id="copyBtn" type="button">주소 복사하기</button>
       <p class="msg" id="copyMsg"></p>
     </div>
 
@@ -116,7 +118,7 @@
             <li><span>메뉴에서 <strong>홈 화면에 추가</strong>를 고르세요. 안 보이면 메뉴를 위로 밀어 올려 보세요.</span></li>
             <li><span>이름이 <strong>홀로</strong>로 나오면 오른쪽 위 <strong>추가</strong>를 누르세요.</span></li>
           </ol>
-          <p class="note">꼭 사파리에서 해야 해요. 크롬이나 다른 앱에는 이 메뉴가 없어요. iPhone도 같은 방법이에요.</p>
+          <p class="note">사파리가 가장 확실해요. 크롬 같은 다른 브라우저는 공유 메뉴에 <strong>홈 화면에 추가</strong>가 있을 때만 돼요. iPhone도 같은 방법이에요. (애플 정책상 iPad·iPhone은 버튼 한 번으로 설치할 수 없어요.)</p>
         </div>
       </div>
 
@@ -129,7 +131,7 @@
         <div class="panel" id="p-android" hidden>
           <button class="btn" type="button" data-install hidden>HOLO 설치하기</button>
           <ol class="steps">
-            <li><span><strong>크롬</strong>에서 이 페이지를 열고, 오른쪽 위 메뉴(점 세 개)를 누르세요.</span></li>
+            <li><span><strong>크롬</strong>(또는 삼성 인터넷)에서 이 페이지를 열고, 메뉴(점 세 개 또는 줄 세 개)를 누르세요.</span></li>
             <li><span><strong>홈 화면에 추가</strong> 또는 <strong>앱 설치</strong>를 누르세요.</span></li>
             <li><span>나타나는 창에서 <strong>설치</strong>(또는 추가)를 누르세요.</span></li>
           </ol>
@@ -184,15 +186,16 @@
       var inItem = b.closest(".item").getAttribute("data-k");
       b.hidden = !(deferred && inItem === mine);
     });
-    // 앱 안 간이 브라우저 안내
-    var showInApp = (plat.inApp || plat.iosNotSafari) && !standalone;
+    // 카카오톡 같은 앱 안의 간이 브라우저에서는 설치할 수 없으므로, 실제 브라우저로 열도록 안내한다
+    var showInApp = plat.inApp && !standalone;
     $("inApp").hidden = !showInApp;
     if (showInApp) {
-      var target = plat.isIOS ? "사파리" : "크롬";
-      $("inAppTitle").textContent = target + "에서 열어 주세요";
-      $("inAppText").textContent = plat.inApp
-        ? "지금은 카카오톡 같은 앱 안의 간이 브라우저라서 설치할 수 없어요. 주소를 복사해서 " + target + "에 붙여 넣어 열어 주세요."
-        : "iPad·iPhone은 사파리에서만 홈 화면에 추가할 수 있어요. 주소를 복사해서 사파리에 붙여 넣어 열어 주세요.";
+      var canOpen = canOpenExternal();
+      var target = plat.isIOS ? "사파리" : "브라우저";
+      $("inAppText").textContent = canOpen
+        ? "지금은 카카오톡 같은 앱 안에서 열려 있어서 설치할 수 없어요. 아래 버튼을 누르면 " + target + "로 열려요."
+        : "지금은 앱 안에서 열려 있어서 설치할 수 없어요. 주소를 복사해서 " + target + "에 붙여 넣어 열어 주세요.";
+      $("openExtBtn").hidden = !canOpen;
     }
     // 이미 설치된 상태
     $("installed").hidden = !standalone;
@@ -212,6 +215,16 @@
       deferred.prompt();
       deferred.userChoice.then(function () { deferred = null; render(); });
     });
+  });
+  // 앱 안 간이 브라우저에서 실제 브라우저로 열기
+  //  · 카카오톡: kakaotalk://web/openExternal 로 기본 브라우저(사파리·크롬 등)가 열린다
+  //  · 안드로이드의 다른 앱(네이버 등): 크롬을 직접 부르는 intent 주소(크롬이 없으면 열리지 않으므로 복사 버튼을 함께 둔다)
+  function canOpenExternal() { return /KAKAOTALK/i.test(navigator.userAgent) || plat.isAndroid; }
+  $("openExtBtn").addEventListener("click", function () {
+    var url = location.origin + "/install";
+    if (/KAKAOTALK/i.test(navigator.userAgent)) location.href = "kakaotalk://web/openExternal?url=" + encodeURIComponent(url);
+    else if (plat.isAndroid) location.href = "intent://" + location.host + "/install#Intent;scheme=https;package=com.android.chrome;end";
+    $("copyMsg").textContent = "브라우저가 열리지 않으면 아래 '주소 복사하기'를 눌러 직접 붙여 넣어 주세요.";
   });
   $("copyBtn").addEventListener("click", function () {
     var url = location.origin + "/install";
