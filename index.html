@@ -3271,6 +3271,25 @@
   .ppg-input { width: 100%; box-sizing: border-box; font-family: inherit; font-size: 0.76rem; line-height: 1.45; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 6px 9px; resize: none; }
   .ppg-input:focus { outline: none; border-color: var(--line-dark); }
   .ppg-input::placeholder { color: var(--ink-soft); font-size: 0.7rem; }
+
+  /* 내 공부 목표와 계획: 한 화면에 다 들어오고, 각 입력 박스 안에서만 스크롤된다. 구역마다 은은한 색을 입힌다. */
+  .pp-guide-col.pg-fit { display: flex; flex-direction: column; overflow-y: auto; }
+  .pg-fit .pp-guide-head { flex: none; }
+  .pg-secs { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+  .pg-sec { border-radius: 12px; padding: 8px 12px 10px; display: flex; flex-direction: column; gap: 5px; border-left: 4px solid var(--pgc); background: var(--pgb); }
+  .pg-sec-goal { --pgc: #17294F; --pgb: #EEF2FA; flex: 0 0 auto; }
+  .pg-sec-habit { --pgc: #B58A2E; --pgb: #FBF4E3; flex: 2 1 auto; }
+  .pg-sec-plan { --pgc: #3E8E63; --pgb: #EAF5EE; flex: 3 1 auto; }
+  .pg-sec-title { flex: none; font-size: 0.82rem; font-weight: 800; color: var(--pgc); }
+  .pg-row3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .pg-stack { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+  .pg-fit .pg-cell { min-height: 52px; }
+  .pg-fit .pg-label { flex: none; }
+  .pg-stack .pg-cell { flex: 1 1 0; }
+  .pg-fit .ppg-input { flex: 1; min-height: 30px; overflow-y: auto; border-color: transparent; box-shadow: 0 0 0 1px rgba(0,0,0,0.06); }
+  .pg-row3 .ppg-input { height: 40px; flex: none; }
+  .pg-fit .ppg-input:focus { box-shadow: 0 0 0 1.5px var(--pgc); }
+  @media (max-width: 640px) { .pg-row3 { grid-template-columns: 1fr; } }
   .pp-guide-hint { margin: 0; font-size: 0.72rem; color: var(--ink-soft); line-height: 1.55; }
   .pp-guide-link { font-family: inherit; font-size: inherit; font-weight: 700; color: var(--green-deep); background: none; border: none; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
   /* AI로 작성하기: 공부중독 AI 박스와 같은 모양(연한 회색 바탕 · 사이드바 · 새 채팅 · 입력창).
@@ -9128,32 +9147,44 @@
           </aside>
         </div>
 
-        <div class="pp-guide-col">
+        <div class="pp-guide-col pg-fit">
           <div class="pp-guide-head">
             <h3 class="pp-guide-title">내 공부 목표와 계획</h3>
             <span class="pp-guide-sub">작성하면 자동 저장됩니다</span>
             <span class="pp-guide-status" id="ppGuideStatus"></span>
           </div>
-          <div class="pp-guide-grid">
-            <div class="pg-group pg-6">목표</div>
-            <label class="pg-cell pg-2"><span class="pg-label"><b>최종 목표 대학</b></span>
-              <textarea class="ppg-input" data-k="univ" rows="2" placeholder="예: 서울대 의예과"></textarea></label>
-            <label class="pg-cell pg-2"><span class="pg-label"><b>최종 목표 성적</b></span>
-              <textarea class="ppg-input" data-k="grade" rows="2" placeholder="예: 전 과목 1등급"></textarea></label>
-            <label class="pg-cell pg-2"><span class="pg-label"><b>지금 현재 목표</b></span>
-              <textarea class="ppg-input" data-k="goal" rows="2" placeholder="이번 시험 · 이번 달 목표"></textarea></label>
-            <div class="pg-group pg-6 pg-gap">내 공부 습관</div>
-            <label class="pg-cell pg-6"><span class="pg-label"><b>장점</b><em>잘하고 있는 것</em></span>
-              <textarea class="ppg-input" data-k="pros" rows="3" placeholder="예: 아침에 집중이 잘 돼요"></textarea></label>
-            <label class="pg-cell pg-6"><span class="pg-label"><b>단점</b><em>고치고 싶은 것</em></span>
-              <textarea class="ppg-input" data-k="cons" rows="3" placeholder="예: 저녁에 폰을 자주 봐요"></textarea></label>
-            <div class="pg-group pg-6 pg-gap">공부 계획</div>
-            <label class="pg-cell pg-6"><span class="pg-label"><b>루틴</b><em>매일 하는 공부</em></span>
-              <textarea class="ppg-input" data-k="routine" rows="3" placeholder="예: 영단어 30개"></textarea></label>
-            <label class="pg-cell pg-6"><span class="pg-label"><b>메인</b><em>가장 핵심적인 공부</em></span>
-              <textarea class="ppg-input" data-k="main" rows="3" placeholder="예: 수학 문제집"></textarea></label>
-            <label class="pg-cell pg-6"><span class="pg-label"><b>서브</b><em>일주일에 한두 번 하는 공부</em></span>
-              <textarea class="ppg-input" data-k="sub" rows="3" placeholder="예: 과학 개념 정리"></textarea></label>
+          <div class="pg-secs">
+            <section class="pg-sec pg-sec-goal">
+              <div class="pg-sec-title">목표</div>
+              <div class="pg-row3">
+              <label class="pg-cell "><span class="pg-label"><b>최종 목표 대학</b></span>
+                <textarea class="ppg-input" data-k="univ" placeholder="예: 서울대 의예과"></textarea></label>
+              <label class="pg-cell "><span class="pg-label"><b>최종 목표 성적</b></span>
+                <textarea class="ppg-input" data-k="grade" placeholder="예: 전 과목 1등급"></textarea></label>
+              <label class="pg-cell "><span class="pg-label"><b>지금 현재 목표</b></span>
+                <textarea class="ppg-input" data-k="goal" placeholder="이번 시험 · 이번 달 목표"></textarea></label>
+              </div>
+            </section>
+            <section class="pg-sec pg-sec-habit">
+              <div class="pg-sec-title">내 공부 습관</div>
+              <div class="pg-stack">
+              <label class="pg-cell "><span class="pg-label"><b>장점</b><em>잘하고 있는 것</em></span>
+                <textarea class="ppg-input" data-k="pros" placeholder="예: 아침에 집중이 잘 돼요"></textarea></label>
+              <label class="pg-cell "><span class="pg-label"><b>단점</b><em>고치고 싶은 것</em></span>
+                <textarea class="ppg-input" data-k="cons" placeholder="예: 저녁에 폰을 자주 봐요"></textarea></label>
+              </div>
+            </section>
+            <section class="pg-sec pg-sec-plan">
+              <div class="pg-sec-title">공부 계획</div>
+              <div class="pg-stack">
+              <label class="pg-cell "><span class="pg-label"><b>루틴</b><em>매일 하는 공부</em></span>
+                <textarea class="ppg-input" data-k="routine" placeholder="예: 영단어 30개"></textarea></label>
+              <label class="pg-cell "><span class="pg-label"><b>메인</b><em>가장 핵심적인 공부</em></span>
+                <textarea class="ppg-input" data-k="main" placeholder="예: 수학 문제집"></textarea></label>
+              <label class="pg-cell "><span class="pg-label"><b>서브</b><em>일주일에 한두 번 하는 공부</em></span>
+                <textarea class="ppg-input" data-k="sub" placeholder="예: 과학 개념 정리"></textarea></label>
+              </div>
+            </section>
           </div>
         </div>
       </div>
