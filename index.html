@@ -6412,6 +6412,12 @@
   .admin-status-pill.status-취소 { background: #EEEFF2; color: #5B5E66; }
   .admin-status-pill.status-완료 { background: var(--green-soft); color: var(--green-deep); }
   .admin-status-btn { border: none; background: none; color: var(--green); font-weight: 700; font-size: 0.78rem; cursor: pointer; text-decoration: underline; }
+  /* 신청서 "자세히" 펼침 줄: 선과 글씨 위계만 쓴다 */
+  .admin-detail-row td { white-space: normal; padding: 6px 14px 14px; background: var(--paper); }
+  .admin-detail-box { display: grid; gap: 2px; max-width: 760px; }
+  .adk-d-row { display: flex; gap: 14px; padding: 4px 0; font-size: 0.82rem; line-height: 1.5; }
+  .adk-d-k { flex: 0 0 92px; color: var(--ink-soft); font-weight: 700; }
+  .adk-d-v { white-space: pre-wrap; word-break: break-word; }
   .admin-delete-btn { border: none; background: none; color: #B3261E; font-weight: 700; font-size: 0.78rem; cursor: pointer; text-decoration: underline; }
   .admin-empty { padding: 40px 20px; text-align: center; color: var(--ink-soft); font-size: 0.88rem; }
   
@@ -11109,11 +11115,14 @@
                   <th>신청일시</th>
                   <th>이름</th>
                   <th>학교 및 학년</th>
+                  <th>생년월일</th>
                   <th>상담 종류</th>
                   <th>학생 전화번호</th>
                   <th>학부모님 전화번호</th>
+                  <th>동의</th>
                   <th>예약 상태</th>
                   <th>상담 일정</th>
+                  <th></th>
                   <th></th>
                   <th></th>
                 </tr>
@@ -11349,30 +11358,12 @@
 
 </div>
 
-<!-- Firebase (신청 폼 저장 + 관리자 페이지용) -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<!-- 서버 연결: 신청서 · 학생 · 관리자 데이터는 Cloudflare 서버(api.studyholo.com)에 저장된다(2026-11 Firebase에서 이전) -->
 <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyDrzz2Qe65JRcb9DyUStIO3TqUNxXcIrbg",
-    authDomain: "study-addict-holo.firebaseapp.com",
-    projectId: "study-addict-holo",
-    storageBucket: "study-addict-holo.firebasestorage.app",
-    messagingSenderId: "274782162901",
-    appId: "1:274782162901:web:4f553f7acff8c5946df75c"
-  };
-  // ★ 서버 전환 스위치: false = 예전(Firebase + Val Town), true = 새 서버(Cloudflare, studyholo.com).
-  //   true로 바꾸는 것이 "전환"이다. 새 서버가 준비되고 데이터를 옮긴 뒤에만 바꾼다(chatbot/이전-설계.md 참고).
-  const HOLO_NEW_BACKEND = true;
-  const HOLO_NEW_API_URL = "https://api.studyholo.com";
+  const HOLO_API_URL = "https://api.studyholo.com";
   let db, auth;
-  if (!HOLO_NEW_BACKEND) {
-    firebase.initializeApp(firebaseConfig);
-    db = firebase.firestore();
-    auth = firebase.auth();
-  } else {
-    // ── 새 서버용 호환 코드 ──
+  {
+    // ── 서버 연결용 호환 코드 ──
     // 이 사이트는 데이터를 db.collection(...).doc(...).get()/set()/update() 같은 Firestore 방식으로 읽고 써 왔다.
     // 아래는 같은 사용법 그대로 새 서버(CHAT_API_URL)에 요청을 보내는 작은 대용품이다.
     //  · 누가 무엇을 할 수 있는지는 서버가 정한다(학생 = 자기 것만, 관리자 = 전체, 방문자 = 신청서 제출 등)
@@ -15923,7 +15914,7 @@
 
   // Cloudflare Worker 배포 후 이 주소를 실제 Worker 주소로 바꿔주세요.
   // (예: https://studyaddict-chat.내계정이름.workers.dev)
-  const CHAT_API_URL = HOLO_NEW_BACKEND ? HOLO_NEW_API_URL : "https://studyaddict26afk--be1575be9f7e11f190ff1607ee4eb77e.web.val.run";
+  const CHAT_API_URL = HOLO_API_URL;
   // ── 로그인 보안: 서버가 발급한 토큰을 챗봇 서버로 가는 모든 요청에 자동으로 붙인다 ──
   // (비밀번호는 더 이상 이 브라우저에 저장하지 않는다. 서버가 "이 토큰의 주인"만 그 학생의 기록을 열어 준다.)
   function authPost(body) {
@@ -19938,20 +19929,13 @@
     const msg = document.getElementById("adminLoginMsg");
     msg.textContent = "";
     msg.className = "apply-status-msg";
-    if (HOLO_NEW_BACKEND) {
-      // 새 서버: 이메일 + 비밀번호 + 인증 앱 6자리 숫자
-      const code = (document.getElementById("admin-otp").value || "").trim();
-      auth.signInAdmin(email, pw, code).then(() => {
-        document.getElementById("admin-pw").value = "";
-        document.getElementById("admin-otp").value = "";
-      }).catch(err => {
-        msg.textContent = (err && err.message) || "로그인 정보가 올바르지 않아요.";
-        msg.className = "apply-status-msg error";
-      });
-      return;
-    }
-    auth.signInWithEmailAndPassword(email, pw).catch(err => {
-      msg.textContent = "로그인 정보가 올바르지 않아요.";
+    // 이메일 + 비밀번호 + 인증 앱 6자리 숫자(서버가 확인한다)
+    const code = (document.getElementById("admin-otp").value || "").trim();
+    auth.signInAdmin(email, pw, code).then(() => {
+      document.getElementById("admin-pw").value = "";
+      document.getElementById("admin-otp").value = "";
+    }).catch(err => {
+      msg.textContent = (err && err.message) || "로그인 정보가 올바르지 않아요.";
       msg.className = "apply-status-msg error";
     });
   }
@@ -20564,20 +20548,51 @@
       const st = statusLabel(r.status);
       const types = r.types || (r.type ? [r.type] : []);
       const schedule = (st === "확정" && r.scheduleDate) ? (r.scheduleDate + " " + r.scheduleStart + "~" + r.scheduleEnd) : "-";
+      const detail = adminDetailHtml(r);
+      const open = !!adminOpenDetail[r.id];
       return "<tr>"
         + "<td>" + fmtDate(r.createdAt) + "</td>"
         + "<td>" + escapeHtml(r.name) + "</td>"
         + "<td>" + escapeHtml(r.school || "-") + "</td>"
+        + "<td>" + escapeHtml(r.birth || "-") + "</td>"
         + "<td style=\"white-space:normal; max-width:200px;\">" + formatTypes(types) + "</td>"
         + "<td>" + escapeHtml(r.studentPhone || r.phone || "-") + "</td>"
         + "<td>" + escapeHtml(r.parentPhone || "-") + "</td>"
+        + "<td>" + (r.noticeAgreed === true ? "동의" : "-") + "</td>"
         + "<td><span class=\"admin-status-pill status-" + st + "\">" + st + "</span></td>"
         + "<td>" + escapeHtml(schedule) + "</td>"
+        + "<td>" + (detail ? "<button type=\"button\" class=\"admin-status-btn\" onclick=\"toggleAdminDetail('" + r.id + "')\">" + (open ? "접기" : "자세히") + "</button>" : "") + "</td>"
         + "<td><button type=\"button\" class=\"admin-status-btn\" onclick=\"toggleReservationStatus('" + r.id + "','" + st + "')\">"
         + (st === "확정" ? "대기로 변경" : "확정으로 변경") + "</button></td>"
         + "<td><button type=\"button\" class=\"admin-delete-btn\" onclick=\"deleteReservation('" + r.id + "')\">삭제</button></td>"
-        + "</tr>";
+        + "</tr>"
+        + (detail && open ? "<tr class=\"admin-detail-row\"><td colspan=\"13\"><div class=\"admin-detail-box\">" + detail + "</div></td></tr>" : "");
     }).join("");
+  }
+  // 신청서 "자세히": 문의 신청서에만 있는 항목(연락받을 곳 · 입시 방향 · 내신 · 모의고사 · 문의 내용 · MBTI · 알게 된 경로)
+  // 값이 없는 항목은 줄을 만들지 않고, 하나도 없으면 "자세히" 버튼도 없다. 모든 값은 escapeHtml로 걸러서 찍는다.
+  let adminOpenDetail = {};
+  function toggleAdminDetail(id) { adminOpenDetail[id] = !adminOpenDetail[id]; renderAdminTable(); }
+  function adminDetailHtml(r) {
+    const out = [];
+    const add = (label, value) => {
+      if (value === undefined || value === null) return;
+      const v = String(value).trim();
+      if (!v) return;
+      out.push("<div class=\"adk-d-row\"><span class=\"adk-d-k\">" + escapeHtml(label) + "</span><span class=\"adk-d-v\">" + escapeHtml(v) + "</span></div>");
+    };
+    add("연락받을 곳", r.contactTo);
+    add("입시 방향", Array.isArray(r.direction) ? r.direction.join(", ") : r.direction);
+    if (r.naesinScale) add("내신", r.naesinScale + (r.naesinGrade && r.naesinGrade !== "모름" ? " · 평균 " + r.naesinGrade : ""));
+    if (r.mockGrades && typeof r.mockGrades === "object") {
+      const names = { korean: "국어", math: "수학", english: "영어", tongsa: "통합사회", tonggwa: "통합과학" };
+      const parts = Object.keys(names).filter(k => r.mockGrades[k] !== undefined && String(r.mockGrades[k]).trim() !== "").map(k => names[k] + " " + r.mockGrades[k]);
+      if (parts.length) add("모의고사", parts.join(" · "));
+    }
+    add("문의 내용", r.topic);
+    add("MBTI", r.mbti);
+    add("알게 된 경로", r.source);
+    return out.join("");
   }
   function renderAdminSchedule() {
     const body = document.getElementById("adminScheduleBody");
