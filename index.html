@@ -7778,6 +7778,10 @@
   .ss-card { width: 100%; max-width: 380px; background: #fff; border-radius: 14px; border: 1px solid var(--line-dark); padding: 22px 22px 18px; box-sizing: border-box; text-align: center; }
   .ss-title { font-size: 1rem; font-weight: 800; color: var(--ink); }
   .ss-sub { margin-top: 6px; font-size: 0.76rem; line-height: 1.6; color: var(--ink-soft); }
+  .ss-reason { width: 100%; box-sizing: border-box; margin-top: 14px; padding: 10px 12px; border: 1px solid var(--line-dark); border-radius: 8px; font: inherit; font-size: 0.86rem; color: var(--ink); background: #fff; text-align: left; }
+  .ss-reason:focus { outline: none; border-color: var(--green-deep); }
+  .ss-reason-hint { margin-top: 6px; font-size: 0.72rem; color: var(--ink-soft); text-align: left; }
+  .ss-reason-hint.warn { color: #C0392B; }
   .ss-num { margin: 18px 0 8px; display: flex; align-items: baseline; justify-content: center; gap: 4px; }
   .ss-num b { font-size: 2.6rem; font-weight: 800; color: var(--green-deep); font-variant-numeric: tabular-nums; line-height: 1; }
   .ss-num span { font-size: 0.9rem; font-weight: 700; color: var(--ink-soft); }
@@ -9216,10 +9220,12 @@
   <div class="ss-pop" id="selfScorePop">
     <div class="ss-card">
       <div class="ss-title">오늘 하루, 나에게 몇 점을 줄까요?</div>
-      <div class="ss-sub">공부한 양과 집중한 정도를 떠올려서 0~98점 사이로 정해 보세요. 계획 제출 1점 · 일기 제출 1점과 합쳐 오늘의 점수(100점 만점)가 돼요.</div>
+      <div class="ss-sub">공부한 양과 집중한 정도를 떠올려서 0~98점 사이로 정해 보세요. 제출할 때마다 다시 고칠 수 있어요.</div>
       <div class="ss-num"><b id="ssNum">70</b><span>점</span></div>
       <input type="range" id="ssRange" min="0" max="98" step="1" value="70" oninput="ssInput(this.value)" aria-label="자기평가 점수">
       <div class="ss-scale"><span>0</span><span>49</span><span>98</span></div>
+      <input type="text" id="ssReason" class="ss-reason" maxlength="100" autocomplete="off" placeholder="이 점수를 준 이유를 한 줄로 (예: 숙제를 다 끝냈다)" oninput="ssReasonInput()" aria-label="점수를 준 이유">
+      <div class="ss-reason-hint" id="ssReasonHint">예) 숙제를 다 끝냈다 · 오늘 공부에 집중을 못했다</div>
       <div class="ss-actions">
         <button type="button" class="ghost" onclick="selfScoreCancel()">취소</button>
         <button type="button" id="ssConfirmBtn" onclick="selfScoreConfirm()">점수 남기고 제출하기</button>
@@ -10917,6 +10923,9 @@
               <button class="admin-nav-item" type="button" onclick="showAdminPanel('mex', this)">
                 <span class="admin-nav-ico">📊</span> 모의고사 제출 현황
               </button>
+              <button class="admin-nav-item" type="button" onclick="showAdminPanel('tscore', this)">
+                <span class="admin-nav-ico">✏️</span> 선생님 점수 (6일)
+              </button>
             </div>
           </div>
 
@@ -11184,6 +11193,28 @@
           </div>
           <div id="adminMexList" class="admin-mex-list"></div>
           <div class="admin-empty" id="adminMexEmptyMsg" style="display:none;">아직 제출된 내용이 없습니다.</div>
+        </div>
+
+        <div class="admin-panel" id="adminPanelTscore" style="display:none;">
+          <div class="admin-page-head">
+            <span class="admin-page-ico">✏️</span>
+            <div>
+              <h2>선생님 점수 (6일에 한 번)</h2>
+              <div class="split"></div>
+              <p class="admin-page-sub">월~토 6일마다 학생별로 0~100점을 매깁니다. 이 점수는 6일 분석지에만 보이고, 학생 페이지의 점수 그래프와 평균에는 들어가지 않습니다. 분석지가 이미 만들어진 기간이면 저장하는 즉시 분석지에도 반영됩니다. 참고로 같은 기간 학생이 직접 매긴 자기평가 평균을 옆에 보여줍니다.</p>
+            </div>
+          </div>
+          <div class="admin-toolbar">
+            <select id="tscorePeriod" onchange="tscoreLoad()" style="padding:8px 10px; border:1px solid var(--line); border-radius:8px; font-family:inherit;"></select>
+            <button type="button" class="admin-status-btn" onclick="tscoreLoad()">새로고침</button>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>학생</th><th>자기평가 평균 (참고)</th><th>선생님 점수 (0~100)</th></tr></thead>
+              <tbody id="tscoreBody"></tbody>
+            </table>
+          </div>
+          <div class="admin-empty" id="tscoreEmpty" style="display:none;">이용 중인 학생이 없습니다.</div>
         </div>
 
         <div class="admin-panel" id="adminPanelStudents" style="display:none;">
@@ -12284,7 +12315,7 @@
       if (d.getDay() === 0) continue; // 일요일 제외
       const k = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
       days++;
-      sum += byDate[k] ? (Number(byDate[k].score) || 0) : 0;
+      sum += byDate[k] ? (Number(byDate[k].score) || 0) : 0; // 하루 점수 = 계획 1 + 일기 1 + 자기평가 (선생님 점수는 넣지 않는다)
     }
     return days ? sum / days : 0;
   }
@@ -12308,7 +12339,7 @@
         const points = weekDates.map((dateStr, i) => {
           const isFuture = dateStr > todayKey;
           const rec = byDate[dateStr];
-          const score = rec ? (Number(rec.score) || 0) : 0;
+          const score = rec ? (Number(rec.score) || 0) : 0; // 하루 점수(자기평가 합산), 선생님 점수는 반영하지 않는다
           if (!isFuture) { total += score; countedDays++; }
           const y = HWO_CHART_BASE_Y - (Math.min(score, 100) / 100) * (HWO_CHART_BASE_Y - HWO_CHART_TOP_Y); // 하루 점수 100점 만점
           return { x: HWO_CHART_X[i], y: y, score: score, isFuture: isFuture, isToday: dateStr === todayKey };
@@ -13135,17 +13166,34 @@
     selfScoreAfter = after; ssTouched = false;
     const range = document.getElementById("ssRange");
     range.value = 70; ssSync(70); // 처음 남기는 날의 기본값
+    const reasonEl = document.getElementById("ssReason"); reasonEl.value = ""; ssReasonInput();
     document.getElementById("selfScorePop").classList.add("on");
-    // 다시 제출할 때는 이미 남긴 점수를 미리 채워 보여주고, 그 자리에서 자유롭게 수정할 수 있다
+    // 다시 제출할 때는 이미 남긴 점수 · 근거를 미리 채워 보여주고, 그 자리에서 자유롭게 수정할 수 있다
     planApi({ action: "self_score_get", date: getLocalDateKey() })
-      .then(d => { if (!ssTouched && d && typeof d.score === "number") { const v = Math.min(98, d.score); range.value = v; ssSync(v); } }) // 예전에 99~100점을 남긴 날은 98로
+      .then(d => {
+        if (!d) return;
+        if (!ssTouched && typeof d.score === "number") { const v = Math.min(98, d.score); range.value = v; ssSync(v); } // 예전에 99~100점을 남긴 날은 98로
+        if (!reasonEl.value && typeof d.reason === "string") { reasonEl.value = d.reason; ssReasonInput(); }
+      })
       .catch(() => {});
+  }
+  function ssReasonInput() {
+    const h = document.getElementById("ssReasonHint");
+    h.classList.remove("warn");
+    h.textContent = "예) 숙제를 다 끝냈다 · 오늘 공부에 집중을 못했다";
   }
   function selfScoreCancel() { document.getElementById("selfScorePop").classList.remove("on"); selfScoreAfter = null; }
   function selfScoreConfirm() {
     const score = Number(document.getElementById("ssRange").value);
+    const reason = document.getElementById("ssReason").value.replace(/\s+/g, " ").trim();
+    if (!reason) { // 점수의 근거를 한 줄 적게 한다
+      const h = document.getElementById("ssReasonHint");
+      h.classList.add("warn"); h.textContent = "점수를 준 이유를 한 줄만 적어 주세요.";
+      document.getElementById("ssReason").focus();
+      return;
+    }
     const btn = document.getElementById("ssConfirmBtn"); btn.disabled = true;
-    planApi({ action: "self_score_save", date: getLocalDateKey(), score: score })
+    planApi({ action: "self_score_save", date: getLocalDateKey(), score: score, reason: reason })
       .then(d => { if (!d || !d.ok) throw new Error("save failed"); })
       .catch(() => { showToast("점수는 저장하지 못했어요. 일기는 그대로 제출할게요."); }) // 점수 저장이 잘못돼도 일기 제출은 막지 않는다
       .then(() => {
@@ -13165,11 +13213,11 @@
           return;
         }
       }
-      // 일기를 제출할 때마다, 오늘 하루를 스스로 0~100점으로 평가해서 남긴다(점수를 남기면 이어서 제출된다).
-      if (!selfScoreConfirmed) {
-        selfScoreOpen(() => { selfScoreConfirmed = true; try { quickSubmit(btn, statusId); } finally { selfScoreConfirmed = false; } });
-        return;
-      }
+    }
+    // 플래너든 일기든 제출할 때마다, 오늘 하루를 스스로 평가한 점수와 그 이유를 남기거나 고친다(남기면 이어서 제출된다).
+    if ((statusId === "diarySubmitStatus" || statusId === "planSubmitStatus") && !selfScoreConfirmed) {
+      selfScoreOpen(() => { selfScoreConfirmed = true; try { quickSubmit(btn, statusId); } finally { selfScoreConfirmed = false; } });
+      return;
     }
     if (statusId === "planSubmitStatus") {
       // "실제로 이행한 계획"의 제출완료는 계획을 쓴 것과는 별개로, 이 버튼을 직접 눌러야
@@ -16736,10 +16784,12 @@
       ["하루 평균 머리 식히기", fmtRest(s.restAvgSec) + " · " + s.restAvgCount + "번", ""],
       ["모의고사 분석지 작성", s.mockCount + "회", (s.mockNames || []).join(", ")],
     ];
+    // 선생님이 6일에 한 번 매기는 점수 — 분석지에만 보인다(학생 페이지 점수 그래프에는 반영되지 않는다)
+    if (typeof s.teacherScore === "number") cells.splice(1, 0, ["선생님 평가 점수", s.teacherScore + "점", "6일에 한 번 · 100점 만점"]);
     const mark = on => on ? '<span class="rpt-ok">✓</span>' : '<span class="rpt-no">–</span>';
     const rows = d.days.map(x => '<tr><td>' + escapeHtml(x.date.slice(5).replace("-", "/")) + ' (' + escapeHtml(x.weekday) + ')</td>' +
       '<td>' + mark(x.plannerSubmitted) + '</td><td>' + mark(x.diarySubmitted) + '</td>' +
-      '<td>' + (hasDay ? x.dayScore + '점' + (x.selfScore === null ? '' : ' <span class="rpt-sub">(자기평가 ' + x.selfScore + ')</span>') : (x.selfScore === null ? '<span class="rpt-no">–</span>' : x.selfScore + '점')) + '</td>' +
+      '<td>' + (hasDay ? x.dayScore + '점' + (x.selfScore === null ? '' : ' <span class="rpt-sub">(자기평가 ' + x.selfScore + (x.selfReason ? ' · ' + escapeHtml(x.selfReason) : '') + ')</span>') : (x.selfScore === null ? '<span class="rpt-no">–</span>' : x.selfScore + '점')) + '</td>' +
       '<td>' + (x.vocabWord || x.vocabGrammar ? (x.vocabWord ? "단어" : "") + (x.vocabWord && x.vocabGrammar ? " · " : "") + (x.vocabGrammar ? "문법" : "") : '<span class="rpt-no">–</span>') + '</td>' +
       '<td>' + (x.restCount ? fmtRest(x.restSec) + " · " + x.restCount + "번" : '<span class="rpt-no">–</span>') + '</td></tr>').join("");
     return '<div class="rpt-stats">' + cells.map(c => '<div class="rpt-stat"><span class="rpt-label">' + c[0] + '</span><b>' + escapeHtml(c[1]) + '</b>' + (c[2] ? '<span class="rpt-sub">' + escapeHtml(c[2]) + '</span>' : '') + '</div>').join("") + '</div>' +
@@ -20141,6 +20191,7 @@
       .onSnapshot(snap => {
         adminAllStudents = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         renderStudents();
+        if (document.getElementById("tscorePeriod") && document.getElementById("tscorePeriod").options.length) tscoreRender();
         syncPublicStudentCount();
       }, err => console.error(err));
   }
@@ -20427,6 +20478,7 @@
     document.getElementById("adminPanelSchedule").style.display = name === "schedule" ? "block" : "none";
     document.getElementById("adminPanelStudents").style.display = name === "students" ? "block" : "none";
     document.getElementById("adminPanelMex").style.display = name === "mex" ? "block" : "none";
+    document.getElementById("adminPanelTscore").style.display = name === "tscore" ? "block" : "none";
     document.getElementById("adminPanelDeskReq").style.display = name === "deskReq" ? "block" : "none";
     document.getElementById("adminPanelDeskSched").style.display = name === "deskSched" ? "block" : "none";
     document.getElementById("adminPanelDeskVac").style.display = name === "deskVac" ? "block" : "none";
@@ -20436,9 +20488,65 @@
     if (name === "deskSched") adkLoadSched();
     if (name === "deskVac") adkLoadVac();
     if (name === "mex") loadAdminMex();
+    if (name === "tscore") { loadStudents(); tscoreInit(); }
     if (name === "schedule") renderAdminSchedule();
     if (name === "availability") renderAvailability();
     if (name === "students") renderStudents();
+  }
+  // ── 관리자: 선생님 점수 (6일=월~토에 한 번, 학생별 0~100점 — 6일 분석지에만 반영) ──
+  let tscoreData = { scores: {}, self: {} };
+  function tscoreSaturdays() { // 지난 8주의 토요일(기간의 마지막 날) + 이번 주 토요일
+    const t = new Date(); t.setHours(0, 0, 0, 0);
+    const dow = t.getDay(); // 0=일 ... 6=토
+    const sat = new Date(t); sat.setDate(t.getDate() + (dow === 0 ? -1 : 6 - dow)); // 일요일이면 어제(방금 끝난 주)
+    const fmt = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    const out = [];
+    for (let i = 0; i < 9; i++) { const d = new Date(sat); d.setDate(sat.getDate() - 7 * i); out.push(fmt(d)); }
+    return out;
+  }
+  function tscoreInit() {
+    const sel = document.getElementById("tscorePeriod");
+    if (!sel.options.length) {
+      tscoreSaturdays().forEach((end, i) => {
+        const s = new Date(end + "T00:00:00"); s.setDate(s.getDate() - 5);
+        const lab = (s.getMonth() + 1) + "/" + s.getDate() + " (월) ~ " + (Number(end.slice(5, 7))) + "/" + Number(end.slice(8)) + " (토)";
+        sel.add(new Option(lab + (i === 0 ? " · 가장 최근" : ""), end));
+      });
+    }
+    tscoreLoad();
+  }
+  function tscoreLoad() {
+    const end = document.getElementById("tscorePeriod").value;
+    adminAuthPost({ action: "teacher_score_list", periodEnd: end }).then(r => {
+      if (!r || !r.ok) { showToast((r && r.error) || "불러오지 못했어요"); return; }
+      tscoreData = { scores: r.scores || {}, self: r.self || {} };
+      tscoreRender();
+    }).catch(() => showToast("불러오지 못했어요"));
+  }
+  function tscoreRender() {
+    const body = document.getElementById("tscoreBody"), empty = document.getElementById("tscoreEmpty");
+    const list = (adminAllStudents || []).filter(s => s.status !== "pending" && s.status !== "disabled")
+      .sort((a, b) => String(a.name || a.id).localeCompare(String(b.name || b.id), "ko"));
+    empty.style.display = list.length ? "none" : "block";
+    body.innerHTML = list.map(s => {
+      const sid = escapeHtml(s.id).replace(/'/g, "&#39;");
+      const sf = tscoreData.self[s.id];
+      const v = typeof tscoreData.scores[s.id] === "number" ? tscoreData.scores[s.id] : "";
+      return "<tr><td>" + escapeHtml(s.name || "-") + " <span style=\"color:var(--ink-soft)\">" + escapeHtml(s.id) + "</span></td>" +
+        "<td>" + (sf ? sf.avg + "점 <span style=\"color:var(--ink-soft)\">(" + sf.days + "일)</span>" : "<span style=\"color:var(--ink-soft)\">기록 없음</span>") + "</td>" +
+        "<td><input type=\"number\" min=\"0\" max=\"100\" step=\"1\" value=\"" + v + "\" placeholder=\"-\" style=\"width:80px; padding:6px 8px; border:1px solid var(--line); border-radius:6px; font-family:inherit;\" " +
+        "onchange=\"tscoreSave('" + sid + "', this)\" aria-label=\"선생님 점수\"></td></tr>";
+    }).join("");
+  }
+  function tscoreSave(studentId, input) {
+    const raw = input.value.trim();
+    const end = document.getElementById("tscorePeriod").value;
+    if (raw !== "" && !(Number(raw) >= 0 && Number(raw) <= 100)) { showToast("0~100 사이로 입력해 주세요"); tscoreRender(); return; }
+    adminAuthPost({ action: "teacher_score_set", periodEnd: end, studentId: studentId, score: raw === "" ? null : Number(raw) }).then(r => {
+      if (!r || !r.ok) throw new Error((r && r.error) || "fail");
+      if (raw === "") delete tscoreData.scores[studentId]; else tscoreData.scores[studentId] = Math.round(Number(raw));
+      showToast(raw === "" ? "점수를 지웠어요" : "저장했어요");
+    }).catch(e => { showToast("저장하지 못했어요: " + (e.message || "")); tscoreLoad(); });
   }
   function previewRoomSchedule() {
     document.documentElement.removeAttribute("data-boot");
