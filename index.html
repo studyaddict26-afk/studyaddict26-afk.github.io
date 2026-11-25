@@ -3280,6 +3280,11 @@
   .pg-sec-goal { --pgc: #3B5BA5; --pgb: #EEF2FA; flex: 0 0 auto; }
   .pg-sec-habit { --pgc: #B58A2E; --pgb: #FBF4E3; flex: 2 1 0; }
   .pg-sec-plan { --pgc: #3E8E63; --pgb: #EAF5EE; flex: 3 1 0; }
+  /* 목표는 따로 박스를 두지 않고 남색 배경 위에 바로 올린다 */
+  .pg-sec-goal { background: transparent; border-left: none; padding: 2px 2px 4px; }
+  .pg-sec-goal .pg-sec-title, .pg-sec-goal .pg-label, .pg-sec-goal .pg-label b { color: #fff; }
+  .pg-sec-goal .pg-label em { color: rgba(255,255,255,0.7); }
+  .pg-sec-goal .ppg-input:focus { box-shadow: 0 0 0 1.5px #E2B13C; }
   .pg-sec-title { flex: none; font-size: 0.82rem; font-weight: 800; color: var(--pgc); }
   .pg-row3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
   .pg-stack { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 5px; }
