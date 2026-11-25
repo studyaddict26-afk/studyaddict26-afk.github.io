@@ -3338,7 +3338,7 @@
   .ov-memo textarea { flex: 1; min-height: 110px; width: 100%; box-sizing: border-box; resize: none; border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; font-family: inherit; font-size: 0.64rem; line-height: 1.5; color: var(--ink); background: #FBFBF8; }
   .ov-memo textarea:focus { outline: none; border-color: #3B5BA5; }
   .ov-wday.today { box-shadow: 0 0 0 2px #17294F; }
-  .ov-wday > b { font-size: 0.72rem; color: var(--ink); }
+  .ov-wday > b { font-size: 0.72rem; color: var(--ink); text-align: center; padding-bottom: 2px; }
   .ov-blk { font-size: 0.58rem; font-weight: 800; color: var(--ink-soft); margin-top: 2px; }
   .ov-line { font-size: 0.6rem; line-height: 1.4; color: var(--ink); word-break: keep-all; }
   .ov-line.done { color: var(--ink-soft); text-decoration: line-through; }
@@ -16525,7 +16525,7 @@
         const d = ovAdd(s, i), k = ovFmt(d), items = by[k] || [];
         h += '<div class="ov-wday' + (ovAllDone(items) ? " alldone" : "") + (k === today ? " today" : "") + '"><b>' + (d.getMonth() + 1) + "/" + d.getDate() + " (" + OV_DOW[i] + ")</b>" + (items.length ? ovLines(items) : '<div class="ov-empty">-</div>') + "</div>";
       }
-      h += '<div class="ov-wday ov-memo"><b>메모</b><textarea id="ovMemo" placeholder="이번 주 메모" spellcheck="false" oninput="ovMemoSave()"></textarea></div>';
+      h += '<div class="ov-wday ov-memo"><b>이번 주 메모</b><textarea id="ovMemo" spellcheck="false" oninput="ovMemoSave()"></textarea></div>';
       body.innerHTML = h + "</div>";
       const memo = document.getElementById("ovMemo");
       try { memo.value = localStorage.getItem(ovMemoKey()) || ""; } catch (err) {}
