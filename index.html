@@ -9539,7 +9539,6 @@
         <div class="mex-detail-box mex-detail-box-clickable" onclick="mexOpenLapPopup()">
           <div class="mex-detail-box-label">랩타임</div>
           <div class="mex-detail-box-value" id="mexDetailBoxLap">풀이 시간 확인하기 →</div>
-          <div class="mex-lap-note">랩타임을 기록하려면 모의고사 관리하기의 타이머로 시험을 보세요.</div>
         </div>
       </div>
       <div class="record-plan-diary-card">
@@ -19624,7 +19623,7 @@
     if (!exam) return;
     if (exam.manualEntry) {
       document.getElementById("mexLapPopupBody").innerHTML =
-        '<div style="text-align:center;color:var(--ink-soft);font-size:0.78rem;padding:10px;">직접 입력한 시험은 랩타임 기능을 제공하지 않습니다.</div>';
+        '<div style="text-align:center;color:var(--ink-soft);font-size:0.78rem;line-height:1.6;padding:10px;">기록된 랩타임이 없어요<br><span style="font-size:0.72rem;">랩타임을 기록하려면 모의고사 관리하기의 타이머로 시험을 보세요.</span></div>';
       document.getElementById("mexLapPopupTotal").textContent = "";
       document.getElementById("mexLapPopupOverlay").classList.add("on");
       return;
