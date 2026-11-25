@@ -9219,12 +9219,12 @@
   <!-- ─── 자기평가 점수: 공부일기 제출 직전 팝업 ─── -->
   <div class="ss-pop" id="selfScorePop">
     <div class="ss-card">
-      <div class="ss-title">오늘 하루, 나에게 몇 점을 줄까요?</div>
-      <div class="ss-sub">공부한 양과 집중한 정도를 떠올려서 0~98점 사이로 정해 보세요. 제출할 때마다 다시 고칠 수 있어요.</div>
+      <div class="ss-title">오늘 나의 공부 점수를 정해주세요.</div>
+      <div class="ss-sub">수정 가능합니다.</div>
       <div class="ss-num"><b id="ssNum">70</b><span>점</span></div>
       <input type="range" id="ssRange" min="0" max="98" step="1" value="70" oninput="ssInput(this.value)" aria-label="자기평가 점수">
       <div class="ss-scale"><span>0</span><span>49</span><span>98</span></div>
-      <input type="text" id="ssReason" class="ss-reason" maxlength="100" autocomplete="off" placeholder="이 점수를 준 이유를 한 줄로 (예: 숙제를 다 끝냈다)" oninput="ssReasonInput()" aria-label="점수를 준 이유">
+      <input type="text" id="ssReason" class="ss-reason" maxlength="100" autocomplete="off" placeholder="이 점수를 준 이유를 한 줄로" oninput="ssReasonInput()" aria-label="점수를 준 이유">
       <div class="ss-reason-hint" id="ssReasonHint">예) 숙제를 다 끝냈다 · 오늘 공부에 집중을 못했다</div>
       <div class="ss-actions">
         <button type="button" class="ghost" onclick="selfScoreCancel()">취소</button>
