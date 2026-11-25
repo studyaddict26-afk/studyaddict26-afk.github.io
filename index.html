@@ -7819,7 +7819,9 @@
   .vhead-tabs button { font-family: inherit; font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); background: #fff; border: 1px solid var(--line-dark); border-radius: 999px; padding: 6px 16px; cursor: pointer; }
   .vhead-tabs button:hover { color: var(--ink); }
   .vhead-tabs button.on { background: #17294F; border-color: #17294F; color: #fff; }
-  .vhead-tabs button[data-t="test"].on { background: #D93025; border-color: #D93025; }
+  .vhead-tabs button[data-t="test"] { background: #D93025; border-color: #D93025; color: #fff; }
+  .vhead-tabs button[data-t="test"]:hover { color: #fff; background: #C22B21; }
+  .vhead-tabs button[data-t="test"].on { background: #B3261E; border-color: #B3261E; box-shadow: 0 0 0 3px rgba(217,48,37,0.2); }
   .vocab-tabs { display: flex; gap: 6px; background: #ECEAE4; border-radius: 10px; padding: 4px; }
   .vocab-tabs button { flex: 1; font-family: inherit; font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); background: none; border: none; border-radius: 8px; padding: 9px 0; cursor: pointer; }
   .vocab-tabs button.on { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(23,24,26,0.08); }
