@@ -3305,7 +3305,7 @@
   .pp-ov-btn:hover { background: var(--cream); }
   .ov-pop { display: none; position: fixed; inset: 0; z-index: 95; align-items: center; justify-content: center; background: rgba(23,24,26,0.4); padding: 16px; }
   .ov-pop.on { display: flex; }
-  .ov-card { position: relative; width: 100%; max-width: 1040px; max-height: 92vh; overflow-y: auto; background: var(--paper); border-radius: 16px; padding: 14px 20px 16px; box-shadow: 0 16px 48px rgba(0,0,0,0.25); box-sizing: border-box; }
+  .ov-card { position: relative; width: 100%; max-width: 1040px; max-height: 96vh; overflow-y: auto; background: var(--paper); border-radius: 16px; padding: 14px 20px 16px; box-shadow: 0 16px 48px rgba(0,0,0,0.25); box-sizing: border-box; }
   .ov-head { display: flex; align-items: center; gap: 10px; padding-right: 34px; margin-bottom: 8px; flex-wrap: wrap; }
   .ov-nav { display: flex; align-items: center; gap: 12px; }
   .ov-nav b { font-size: 0.8rem; font-weight: 800; color: var(--ink); min-width: 120px; text-align: center; }
@@ -3334,8 +3334,10 @@
   .ov-pill { font-size: 0.62rem; font-weight: 700; color: #17294F; background: rgba(255,255,255,0.8); border-radius: 999px; padding: 1px 7px; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
   .ov-pill.more { background: transparent; color: var(--ink-soft); padding: 1px 2px; }
   .ov-week { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
-  .ov-wday { border: 1px solid var(--line); border-radius: 12px; padding: 8px 10px 10px; min-height: 150px; display: flex; flex-direction: column; gap: 3px; min-width: 0; background: #fff; }
-  .ov-memo textarea { flex: 1; min-height: 110px; width: 100%; box-sizing: border-box; resize: none; border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; font-family: inherit; font-size: 0.64rem; line-height: 1.5; color: var(--ink); background: #FBFBF8; }
+  .ov-wday { border: 1px solid var(--line); border-radius: 12px; padding: 8px 10px 10px; height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 3px; min-width: 0; background: #fff; }
+  .ov-note-h { margin-top: auto; padding-top: 6px; border-top: 1px dashed var(--line); }
+  .ov-note { font-size: 0.6rem; line-height: 1.45; color: var(--ink); min-height: 34px; word-break: keep-all; }
+  .ov-memo textarea { flex: 1; min-height: 0; width: 100%; box-sizing: border-box; resize: none; border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; font-family: inherit; font-size: 0.64rem; line-height: 1.5; color: var(--ink); background: #FBFBF8; }
   .ov-memo textarea:focus { outline: none; border-color: #3B5BA5; }
   .ov-wday.today { box-shadow: 0 0 0 2px #17294F; }
   .ov-wday > b { font-size: 0.72rem; color: var(--ink); text-align: center; padding-bottom: 2px; }
@@ -16496,8 +16498,8 @@
       if (my !== ovToken) return;
       const by = {};
       (d.items || []).forEach(it => { (by[it.plan_date] || (by[it.plan_date] = [])).push(it); });
-      ovCache[key] = by;
-      ovRender(by);
+      ovCache[key] = { by: by, notes: d.notes || {} };
+      ovRender(ovCache[key]);
     }).catch(() => { if (my === ovToken) document.getElementById("ovBody").innerHTML = '<div class="ov-empty">불러오지 못했어요.</div>'; });
   }
   function ovState(items) {
@@ -16516,14 +16518,15 @@
     return '<div class="ov-blk">' + b + "</div>" + (rows.length ? rows.map(ovLine).join("") : '<div class="ov-empty">-</div>');
   }
   function ovLines(items) { return ["오전", "오후", "저녁"].map(b => ovBlockHtml(b, items.filter(i => i.block === b))).join(""); }
-  function ovRender(by) {
+  function ovRender(c) {
+    const by = c.by, notes = c.notes || {};
     const [s, e] = ovRange(), today = getLocalDateKey(), body = document.getElementById("ovBody");
     document.getElementById("ovDetail").innerHTML = "";
     if (ovMode === "week") {
       let h = '<div class="ov-week">';
       for (let i = 0; i < 7; i++) {
         const d = ovAdd(s, i), k = ovFmt(d), items = by[k] || [];
-        h += '<div class="ov-wday' + (ovAllDone(items) ? " alldone" : "") + (k === today ? " today" : "") + '"><b>' + (d.getMonth() + 1) + "/" + d.getDate() + " (" + OV_DOW[i] + ")</b>" + (items.length ? ovLines(items) : '<div class="ov-empty">-</div>') + "</div>";
+        h += '<div class="ov-wday' + (ovAllDone(items) ? " alldone" : "") + (k === today ? " today" : "") + '"><b>' + (d.getMonth() + 1) + "/" + d.getDate() + " (" + OV_DOW[i] + ")</b>" + (items.length ? ovLines(items) : '<div class="ov-empty">-</div>') + '<div class="ov-blk ov-note-h">특이사항</div><div class="ov-note">' + (notes[k] ? escapeHtml(notes[k]).replace(/\n/g, "<br>") : "-") + "</div></div>";
       }
       h += '<div class="ov-wday ov-memo"><b>이번 주 메모</b><textarea id="ovMemo" spellcheck="false" oninput="ovMemoSave()"></textarea></div>';
       body.innerHTML = h + "</div>";
