@@ -12611,7 +12611,7 @@
   }
   function vocabTabsHtml() { return ""; } // 탭은 없앴다(위 흐름으로 대체)
   function vocabCalloutHtml() {
-    return '<div class="vocab-callout"><span class="vc-ico">i</span><ul><li>매일 밤 12시 전까지, 아직 응시한 적 없는 Test를 응시해야 합니다.</li><li>모든 Test를 이미 응시했다면, 아무 Test나 골라서 다시 응시하세요.</li><li>\'공부하기\'는 Test를 위한 연습 과정입니다. 반드시 Test를 응시해야 합니다.</li><li>' + Math.round(VOCAB_PASS_RATE * 100) + '% 이상 정답을 맞혀야 Test를 통과할 수 있습니다.</li><li class="vc-em">점수는 중요하지 않습니다. 통과할 때까지 반복해서 응시하세요.</li></ul></div>';
+    return '<div class="vocab-callout"><span class="vc-ico">i</span><ul><li>매일 밤 12시 전까지, 아직 응시한 적 없는 Test를 응시해야 합니다.</li><li>모든 Test를 이미 응시했다면, 아무 Test나 골라서 다시 응시하세요.</li><li>' + Math.round(VOCAB_PASS_RATE * 100) + '% 이상 정답을 맞혀야 Test를 통과할 수 있습니다.</li><li class="vc-em">점수는 중요하지 않습니다. 통과할 때까지 반복해서 응시하세요.</li></ul></div>';
   }
   function vocabRenderHub() {
     const vt = document.getElementById("vocabTitle");
@@ -12630,7 +12630,7 @@
       const b = st.best[s.id], isTest = vocabTab !== "study";
       const done = isTest ? !!b : !!st.studied[s.id]; // TEST는 응시만 해도 색이 바뀐다(✓는 통과했을 때만)
       const passed = !!(b && b.pass);
-      return '<button type="button" class="vocab-day' + (done ? " done" : "") + '" onclick="' + (vocabTab === "study" ? "vocabStartStudy" : "vocabStartTest") + "('" + s.id + "')" + '"><span class="vd-name">' + s.label.replace(/^(초급|중급|상급|숙어) /, "") + '</span><span class="vd-sub">' + (isTest && b ? "최고 " + Math.round(b.score / b.total * 100) + "점" : s.items.length + "개") + '</span>' + (isTest ? (passed ? '<span class="vd-check">✓</span>' : "") : (done ? '<span class="vd-check">✓</span>' : "")) + '</button>';
+      return '<button type="button" class="vocab-day' + (done ? " done" : "") + '" onclick="' + (vocabTab === "study" ? "vocabStartStudy" : "vocabStartTest") + "('" + s.id + "')" + '"><span class="vd-name">' + s.label.replace(/^(초급|중급|상급|숙어) /, "") + '</span><span class="vd-sub">' + (isTest && b ? b.score + "점" : s.items.length + "개") + '</span>' + (isTest ? (passed ? '<span class="vd-check">✓</span>' : "") : (done ? '<span class="vd-check">✓</span>' : "")) + '</button>';
     };
     const levelRow = '<div class="vocab-levels">' + VOCAB_LEVELS.map(lv => '<button type="button" class="' + (vocabLevel === lv.key ? "on" : "") + '" onclick="vocabSetLevel(\'' + lv.key + '\')">' + lv.name + '</button>').join("") +
       (vocabTab === "study" ? '<button type="button" class="vstar-open" onclick="vocabStartStudy(\'star\')">★ 별표 카드 모아 공부 (' + vocabStarList().length + ')</button>' : "") +
@@ -12645,7 +12645,7 @@
   function grammarTestGridHtml(st) {
     return '<div class="vocab-days gr-days">' + HOLO_GRAMMAR.map(g => {
       const b = st.best["g:" + g.id];
-      return '<button type="button" class="vocab-day' + (b ? " done" : "") + '" onclick="grammarStart(\'' + g.id + '\', true)"><span class="vd-name">' + escapeHtml(g.label) + '</span><span class="vd-sub">' + (b ? "최고 " + Math.round(b.score / b.total * 100) + "점" : g.qs.length + "문제") + '</span>' + (b && b.pass ? '<span class="vd-check">✓</span>' : "") + '</button>';
+      return '<button type="button" class="vocab-day' + (b ? " done" : "") + '" onclick="grammarStart(\'' + g.id + '\', true)"><span class="vd-name">' + escapeHtml(g.label) + '</span><span class="vd-sub">' + (b ? b.score + "점" : g.qs.length + "문제") + '</span>' + (b && b.pass ? '<span class="vd-check">✓</span>' : "") + '</button>';
     }).join("") + '<button type="button" class="vocab-day vocab-day-rand" onclick="grammarStart(\'all\', true)"><span class="vd-name">전체 무작위</span><span class="vd-sub">20문제</span></button></div>';
   }
 
