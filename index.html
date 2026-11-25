@@ -7876,9 +7876,9 @@
   .memo-pop { display: none; position: fixed; inset: 0; z-index: 400; background: rgba(23,24,26,0.35); align-items: center; justify-content: center; padding: 20px; }
   .memo-pop.on { display: flex; }
   .memo-card { width: 100%; max-width: 460px; background: #fff; border-radius: 14px; border: 1px solid var(--line-dark); padding: 16px 18px 12px; box-sizing: border-box; }
-  .memo-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .memo-head { position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
   .memo-head b { font-size: 0.95rem; font-weight: 800; color: var(--ink); }
-  .memo-head button { font-family: inherit; background: none; border: none; font-size: 1.5rem; line-height: 1; color: var(--ink-soft); cursor: pointer; }
+  .memo-head button { position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-family: inherit; background: none; border: none; font-size: 1.5rem; line-height: 1; color: var(--ink-soft); cursor: pointer; }
   #memoText { width: 100%; height: 280px; resize: vertical; box-sizing: border-box; font-family: inherit; font-size: 0.88rem; line-height: 1.7; color: var(--ink); background: var(--cream); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; outline: none; }
   #memoText:focus { border-color: var(--green-deep); }
   .memo-foot { margin-top: 8px; font-size: 0.68rem; color: var(--ink-soft); text-align: right; }
