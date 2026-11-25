@@ -3315,28 +3315,23 @@
   .ov-mode button { border: none; background: #fff; padding: 5px 14px; font-family: inherit; font-size: 0.74rem; font-weight: 700; color: var(--ink-soft); cursor: pointer; }
   .ov-mode button.on { background: #17294F; color: #fff; }
   .ov-today { border: 1px solid var(--line-dark); background: #fff; border-radius: 8px; padding: 5px 12px; font-family: inherit; font-size: 0.74rem; font-weight: 700; color: var(--ink); cursor: pointer; }
-  .ov-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.68rem; color: var(--ink-soft); margin-bottom: 10px; }
-  .ov-legend span { display: inline-flex; align-items: center; gap: 5px; }
-  .ov-lg { width: 12px; height: 12px; border-radius: 3px; display: inline-block; border: 1px solid rgba(0,0,0,0.08); }
-  .ov-lg.all, .ov-cell.all { background: #DDF1E5; } .ov-lg.some, .ov-cell.some { background: #FBF0D4; } .ov-lg.none, .ov-cell.none { background: #E9EDF6; } .ov-lg.empty, .ov-cell.empty { background: #fff; }
   .ov-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
   .ov-dow { text-align: center; font-size: 0.7rem; font-weight: 800; color: var(--ink-soft); padding: 2px 0 4px; }
-  .ov-cell { border: 1px solid var(--line); border-radius: 10px; padding: 6px 7px 7px; min-height: 86px; display: flex; flex-direction: column; gap: 4px; cursor: pointer; text-align: left; font-family: inherit; min-width: 0; }
+  .ov-cell { border: 1px solid var(--line); border-radius: 10px; padding: 6px 7px 8px; min-height: 86px; display: flex; flex-direction: column; gap: 3px; background: #fff; font-family: inherit; min-width: 0; text-align: left; }
   .ov-cell.out { opacity: 0.45; }
   .ov-cell.today { box-shadow: 0 0 0 2px #17294F; }
   .ov-cell.sel { box-shadow: 0 0 0 2px #3B5BA5; }
-  .ov-cell .ov-d { font-size: 0.74rem; font-weight: 800; color: var(--ink); display: flex; justify-content: space-between; }
+  .ov-cell .ov-d { font-size: 0.74rem; font-weight: 800; color: var(--ink); margin-bottom: 2px; }
   .ov-cell .ov-d em { font-style: normal; font-size: 0.6rem; font-weight: 700; color: var(--ink-soft); }
   .ov-pills { display: flex; flex-wrap: wrap; gap: 3px; }
   .ov-pill { font-size: 0.62rem; font-weight: 700; color: #17294F; background: rgba(255,255,255,0.8); border-radius: 999px; padding: 1px 7px; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
   .ov-pill.more { background: transparent; color: var(--ink-soft); padding: 1px 2px; }
   .ov-week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
-  .ov-wday { border: 1px solid var(--line); border-radius: 12px; padding: 8px 9px 10px; min-height: 260px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .ov-wday { border: 1px solid var(--line); border-radius: 12px; padding: 8px 9px 10px; min-height: 260px; display: flex; flex-direction: column; gap: 4px; min-width: 0; background: #fff; }
   .ov-wday.today { box-shadow: 0 0 0 2px #17294F; }
   .ov-wday > b { font-size: 0.78rem; color: var(--ink); }
   .ov-blk { font-size: 0.62rem; font-weight: 800; color: var(--ink-soft); margin-top: 2px; }
-  .ov-line { font-size: 0.68rem; line-height: 1.4; color: var(--ink); display: flex; gap: 4px; word-break: break-all; }
-  .ov-line .ck { flex: none; font-weight: 800; color: #3E8E63; } .ov-line.todo .ck { color: #A3AAB9; }
+  .ov-line { font-size: 0.66rem; line-height: 1.4; color: var(--ink); word-break: break-all; }
   .ov-line.done { color: var(--ink-soft); text-decoration: line-through; }
   .ov-detail { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
   .ov-detail:empty { display: none; }
@@ -9243,7 +9238,6 @@
             <div class="ov-nav"><button type="button" onclick="ovStep(-1)" aria-label="이전">◀</button><b id="ovTitle"></b><button type="button" onclick="ovStep(1)" aria-label="다음">▶</button></div>
             <button type="button" class="ov-today" onclick="ovToday()">오늘</button>
           </div>
-          <div class="ov-legend"><span><i class="ov-lg all"></i>모두 완료</span><span><i class="ov-lg some"></i>일부 완료</span><span><i class="ov-lg none"></i>아직 안 함</span><span><i class="ov-lg empty"></i>계획 없음</span></div>
           <div class="ov-body" id="ovBody"></div>
           <div class="ov-detail" id="ovDetail"></div>
         </div>
@@ -16503,52 +16497,34 @@
     return done === items.length ? "all" : done ? "some" : "none";
   }
   function ovLabel(it) { return it.subject ? String(it.subject) : String(it.text || "").slice(0, 4); }
+  function ovLine(i) {
+    return '<div class="ov-line' + (Number(i.done) ? " done" : "") + '">' + (i.subject ? "[" + escapeHtml(i.subject) + "] " : "") + escapeHtml(i.text) + "</div>";
+  }
   function ovBlockHtml(b, rows) {
-    return '<div class="ov-blk">' + b + '</div>' + (rows.length ? rows.map(i => {
-      const dn = !!Number(i.done);
-      return '<div class="ov-line ' + (dn ? "done" : "todo") + '"><span class="ck">' + (dn ? "✓" : "○") + '</span><span>' + (i.subject ? "[" + escapeHtml(i.subject) + "] " : "") + escapeHtml(i.text) + '</span></div>';
-    }).join("") : '<div class="ov-empty">-</div>');
+    return '<div class="ov-blk">' + b + "</div>" + (rows.length ? rows.map(ovLine).join("") : '<div class="ov-empty">-</div>');
   }
   function ovLines(items) { return ["오전", "오후", "저녁"].map(b => ovBlockHtml(b, items.filter(i => i.block === b))).join(""); }
   function ovRender(by) {
     const [s, e] = ovRange(), today = getLocalDateKey(), body = document.getElementById("ovBody");
+    document.getElementById("ovDetail").innerHTML = "";
     if (ovMode === "week") {
       let h = '<div class="ov-week">';
       for (let i = 0; i < 7; i++) {
         const d = ovAdd(s, i), k = ovFmt(d), items = by[k] || [];
-        h += '<div class="ov-wday ' + ovState(items) + (k === today ? " today" : "") + '" style="background:' + ({ all: "#DDF1E5", some: "#FBF0D4", none: "#E9EDF6", empty: "#fff" })[ovState(items)] + '"><b>' + (d.getMonth() + 1) + "/" + d.getDate() + " (" + OV_DOW[i] + ")</b>" + (items.length ? ovLines(items) : '<div class="ov-empty">계획 없음</div>') + "</div>";
+        h += '<div class="ov-wday' + (k === today ? " today" : "") + '"><b>' + (d.getMonth() + 1) + "/" + d.getDate() + " (" + OV_DOW[i] + ")</b>" + (items.length ? ovLines(items) : '<div class="ov-empty">-</div>') + "</div>";
       }
       body.innerHTML = h + "</div>";
-      document.getElementById("ovDetail").innerHTML = "";
       return;
     }
     let h = '<div class="ov-grid">' + OV_DOW.map(n => '<div class="ov-dow">' + n + "</div>").join("");
     for (let d = new Date(s); d <= e; d = ovAdd(d, 1)) {
-      const k = ovFmt(d), items = by[k] || [], st = ovState(items), out = d.getMonth() !== ovAnchor.getMonth();
-      const seen = [], pills = [];
-      items.forEach(i => { const l = ovLabel(i); if (seen.indexOf(l) < 0) { seen.push(l); pills.push(l); } });
-      const show = pills.slice(0, 3).map(l => '<span class="ov-pill">' + escapeHtml(l) + "</span>").join("") + (pills.length > 3 ? '<span class="ov-pill more">+' + (pills.length - 3) + "</span>" : "");
-      const done = items.filter(i => Number(i.done)).length;
-      h += '<button type="button" class="ov-cell ' + st + (out ? " out" : "") + (k === today ? " today" : "") + (k === ovSel ? " sel" : "") + '" onclick="ovPick(\'' + k + '\')"><span class="ov-d">' + d.getDate() + (items.length ? "<em>" + done + "/" + items.length + "</em>" : "") + '</span><span class="ov-pills">' + show + "</span></button>";
+      const k = ovFmt(d), items = by[k] || [], out = d.getMonth() !== ovAnchor.getMonth();
+      h += '<div class="ov-cell' + (out ? " out" : "") + (k === today ? " today" : "") + '"><span class="ov-d">' + d.getDate() + "</span>" + items.map(ovLine).join("") + "</div>";
     }
     body.innerHTML = h + "</div>";
-    ovDetailRender(by);
-  }
-  function ovPick(k) {
-    ovSel = k;
-    const [s, e] = ovRange(), by = ovCache[ovFmt(s) + "|" + ovFmt(e)] || {};
-    ovRender(by);
-  }
-  function ovDetailRender(by) {
-    const box = document.getElementById("ovDetail");
-    if (!ovSel) { box.innerHTML = ""; return; }
-    const d = ovParse(ovSel), items = (by[ovSel] || []);
-    const title = (d.getMonth() + 1) + "월 " + d.getDate() + "일 (" + OV_DOW[(d.getDay() + 6) % 7] + ")";
-    if (!items.length) { box.innerHTML = "<h4>" + title + '</h4><div class="ov-empty">이 날은 세운 계획이 없어요.</div>'; return; }
-    box.innerHTML = "<h4>" + title + '</h4><div class="ov-dcols">' + ["오전", "오후", "저녁"].map(b => "<div>" + ovBlockHtml(b, items.filter(i => i.block === b)) + "</div>").join("") + "</div>";
   }
 
-    // 적는 대로 이 기기에 자동 저장(학생별). 서버에 저장하는 기능은 아직 없다.
+  // 적는 대로 이 기기에 자동 저장(학생별). 서버에 저장하는 기능은 아직 없다.
   function ppGuideKey() { return "holoPlanGuide:" + (localStorage.getItem("holoStudentId") || "anon"); }
   let ppGuideTimer = null;
   function ppGuideLoad() {
