@@ -19362,9 +19362,8 @@
     const exams = mexLoadExams().filter(e => (e.category || "mock") === "mock");
     // 보여줄 과목: 기본 5과목 + 모의고사 기록이 있는 다른 과목(추가 · 숨기기 버튼 없이 기록에 따라 자동으로)
     const shown = MEX_ANALYSIS_SUBJECTS.filter(s => MEX_ANALYSIS_DEFAULT.indexOf(s.name) >= 0 || exams.some(e => e.subject === s.name)).map(s => s.name);
-    exams.forEach(e => { if (e.subject && shown.indexOf(e.subject) < 0) shown.push(e.subject); }); // 목록에 없는 과목도 기록이 생기면 자동으로 추가(만점은 100점으로 환산)
     const addCell = "";
-    el.innerHTML = '<div class="mex-an5">' + shown.map(n => MEX_ANALYSIS_SUBJECTS.find(s => s.name === n) || { name: n, full: 100 }).map(sub => {
+    el.innerHTML = '<div class="mex-an5">' + shown.map(n => MEX_ANALYSIS_SUBJECTS.find(s => s.name === n)).map(sub => {
       const list = exams.filter(e => e.subject === sub.name).slice().sort((a, b) => a.date.localeCompare(b.date));
       const pts = list.filter(e => e.scoreMine !== "" && e.scoreMine != null && Number(e.scoreMax) > 0)
         .map(e => ({ id: e.id, value: Math.round(Number(e.scoreMine) / Number(e.scoreMax) * sub.full * 10) / 10 }));
