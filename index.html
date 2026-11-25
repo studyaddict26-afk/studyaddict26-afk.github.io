@@ -7830,6 +7830,8 @@
   .vstar-btn:hover { color: #E0A100; }
   .vstar-btn.fc-star { position: absolute; top: 4px; right: 6px; z-index: 3; font-size: 1rem; }
   .vocab-q { position: relative; }
+  .fc-speak.vq-speak { top: 12px; left: 14px; width: 30px; height: 30px; }
+  .fc-speak.vq-speak svg { width: 20px; height: 20px; }
   .vstar-btn.vq-star { position: absolute; top: 12px; right: 14px; font-size: 1.35rem; }
   .vocab-day { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; font-family: inherit; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 11px 6px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
   .vocab-day:hover { background: var(--cream); border-color: var(--line-dark); }
@@ -12698,7 +12700,8 @@
     const head = q.type === "w2m"
       ? '<div class="vq-label">이 단어의 뜻은?</div><div class="vq-main">' + escapeHtml(e[0]) + '</div><div class="vq-pos">' + vocabPosLabel(e[1]) + '</div>'
       : '<div class="vq-label">이 뜻에 알맞은 단어는?</div><div class="vq-main vq-meaning">' + escapeHtml(e[2]) + '</div><div class="vq-pos">' + vocabPosLabel(e[1]) + '</div>';
-    return '<div class="vocab-q">' + (withFeedback ? vocabStarBtn(q.idx, "vq-star") : "") + head + '<div class="vq-opts">' + q.opts.map((o, k) => '<button type="button" class="vq-opt" data-k="' + k + '" onclick="vocabAnswer(' + k + ')">' + escapeHtml(o.text) + '</button>').join("") + '</div></div>';
+    const speak = (withFeedback && q.type === "w2m") ? '<button type="button" class="fc-speak vq-speak" onclick="vocabSpeak(' + q.idx + ')" aria-label="발음 듣기" title="발음 듣기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></button>' : "";
+    return '<div class="vocab-q">' + (withFeedback ? vocabStarBtn(q.idx, "vq-star") : "") + speak + head + '<div class="vq-opts">' + q.opts.map((o, k) => '<button type="button" class="vq-opt" data-k="' + k + '" onclick="vocabAnswer(' + k + ')">' + escapeHtml(o.text) + '</button>').join("") + '</div></div>';
   }
   let vocabLocked = false;
   function vocabAnswer(k) {
