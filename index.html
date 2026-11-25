@@ -3273,21 +3273,21 @@
   .ppg-input::placeholder { color: var(--ink-soft); font-size: 0.7rem; }
 
   /* 내 공부 목표와 계획: 한 화면에 다 들어오고, 각 입력 박스 안에서만 스크롤된다. 구역마다 은은한 색을 입힌다. */
-  .pp-guide-col.pg-fit { display: flex; flex-direction: column; overflow-y: auto; }
+  .pp-guide-col.pg-fit { display: flex; flex-direction: column; overflow: hidden; }
   .pg-fit .pp-guide-head { flex: none; }
-  .pg-secs { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-  .pg-sec { border-radius: 12px; padding: 8px 12px 10px; display: flex; flex-direction: column; gap: 5px; border-left: 4px solid var(--pgc); background: var(--pgb); }
+  .pg-secs { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; }
+  .pg-sec { border-radius: 12px; padding: 8px 12px 10px; display: flex; flex-direction: column; gap: 5px; min-height: 0; border-left: 4px solid var(--pgc); background: var(--pgb); }
   .pg-sec-goal { --pgc: #17294F; --pgb: #EEF2FA; flex: 0 0 auto; }
-  .pg-sec-habit { --pgc: #B58A2E; --pgb: #FBF4E3; flex: 2 1 auto; }
-  .pg-sec-plan { --pgc: #3E8E63; --pgb: #EAF5EE; flex: 3 1 auto; }
+  .pg-sec-habit { --pgc: #B58A2E; --pgb: #FBF4E3; flex: 2 1 0; }
+  .pg-sec-plan { --pgc: #3E8E63; --pgb: #EAF5EE; flex: 3 1 0; }
   .pg-sec-title { flex: none; font-size: 0.82rem; font-weight: 800; color: var(--pgc); }
   .pg-row3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-  .pg-stack { flex: 1; display: flex; flex-direction: column; gap: 5px; }
-  .pg-fit .pg-cell { min-height: 52px; }
+  .pg-stack { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 5px; }
+  .pg-fit .pg-cell { min-height: 44px; }
   .pg-fit .pg-label { flex: none; }
   .pg-stack .pg-cell { flex: 1 1 0; }
-  .pg-fit .ppg-input { flex: 1; min-height: 30px; overflow-y: auto; border-color: transparent; box-shadow: 0 0 0 1px rgba(0,0,0,0.06); }
-  .pg-row3 .ppg-input { height: 40px; flex: none; }
+  .pg-fit .ppg-input { flex: 1; min-height: 24px; overflow-y: auto; border-color: transparent; box-shadow: 0 0 0 1px rgba(0,0,0,0.06); }
+  .pg-row3 .ppg-input { height: 36px; flex: none; }
   .pg-fit .ppg-input:focus { box-shadow: 0 0 0 1.5px var(--pgc); }
   @media (max-width: 640px) { .pg-row3 { grid-template-columns: 1fr; } }
   .pp-guide-hint { margin: 0; font-size: 0.72rem; color: var(--ink-soft); line-height: 1.55; }
