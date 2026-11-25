@@ -18921,7 +18921,7 @@
     let sid = "";
     try { sid = localStorage.getItem("holoStudentId") || ""; } catch (e) { return; }
     if (sid !== "holo-test") return;
-    const flag = "mexDemoSeeded_v1_" + sid;
+    const flag = "mexDemoSeeded_v2_" + sid;
     try { if (localStorage.getItem(flag)) return; } catch (e) { return; }
     const at = d => new Date(d + "T21:30:00+09:00").getTime();
     const mkAnswers = (n, wrong) => Array.from({ length: n }, (_, i) => wrong.indexOf(i + 1) >= 0 ? "wrong" : "correct");
@@ -18934,7 +18934,7 @@
     const mathTimes = mathGroups[0].items.map(it => ({ label: "수학 " + it.label, sec: it.sec }));
 
     const exMath = {
-      id: "mex_demo_math_sep", title: "9월 모의평가", periodLabel: "9월 모평", subject: "수학", count: 30, date: "2026-09-02", category: "mock",
+      id: "mex_demo_math_sep", title: "9월 모평 수학 (집에서 풀기)", periodLabel: "9월 모평", subject: "수학", count: 30, date: "2026-09-02", category: "mock",
       scoreMax: "100", scoreMine: "84", answers: mkAnswers(30, [15, 21, 22, 29]),
       passageTimes: mathTimes, passageTimeGroups: mathGroups,
       wrongNotes: {
@@ -18957,7 +18957,7 @@
     exMath.reflectionSubmitted = { at: at("2026-09-04"), wrongNotes: JSON.parse(JSON.stringify(exMath.wrongNotes)), extraNums: [18] };
 
     const exKorSep = {
-      id: "mex_demo_kor_sep", title: "9월 모의평가", periodLabel: "9월 모평", subject: "국어", count: 45, date: "2026-09-02", category: "mock",
+      id: "mex_demo_kor_sep", title: "9월 모평 국어 (학원 모의)", periodLabel: "9월 모평", subject: "국어", count: 45, date: "2026-09-02", category: "mock",
       scoreMax: "100", scoreMine: "86", answers: mkAnswers(45, [14, 19, 27, 33, 41]),
       passageTimes: korTimes, passageTimeGroups: korGroups,
       wrongNotes: {
@@ -18980,7 +18980,7 @@
     exKorSep.reflectionSubmitted = { at: at("2026-09-03"), wrongNotes: JSON.parse(JSON.stringify(exKorSep.wrongNotes)), extraNums: [22] };
 
     const exKorJun = {
-      id: "mex_demo_kor_jun", title: "6월 모의평가", periodLabel: "6월 모평", subject: "국어", count: 45, date: "2026-06-04", category: "mock",
+      id: "mex_demo_kor_jun", title: "6월 모평 국어", periodLabel: "6월 모평", subject: "국어", count: 45, date: "2026-06-04", category: "mock",
       scoreMax: "100", scoreMine: "78", answers: new Array(45).fill("unrated"), passageTimes: null, passageTimeGroups: null, manualEntry: true,
       wrongNotes: {
         31: { kind: "wrong", reason: "time", reasonCustom: "", q1: "", q2: "독서에서 시간을 너무 써서 문학을 급하게 풀었다.", q3: "", q4: "독서는 지문당 10분을 넘기지 않는다." },
@@ -19496,7 +19496,7 @@
         '<div class="mexp-cover-word"><svg class="mexp-cover-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,4 92,27 92,73 50,96 8,73 8,27" fill="none" stroke="#17294F" stroke-width="4.5" stroke-linejoin="round"/><polygon points="50,15 82,32.5 82,67.5 50,85 18,67.5 18,32.5" fill="none" stroke="#17294F" stroke-width="1.2" stroke-linejoin="round" opacity="0.32"/><path d="M27 66C38 66 40 50 51 51C61 52 64 42 71 35" fill="none" stroke="#17294F" stroke-width="4.5" stroke-linecap="round"/><circle cx="27" cy="66" r="3.6" fill="#17294F"/><circle cx="72" cy="34" r="6.6" fill="#17294F"/><circle cx="72" cy="34" r="2.4" fill="#FFFFFF"/></svg>홀로</div>' +
         '<div class="mexp-cover-kicker">EXAM REPORT</div>' +
         '<h1 class="mexp-cover-title">' + esc(exam.title) + '</h1>' +
-        '<div class="mexp-cover-sub">' + esc((exam.periodLabel ? exam.periodLabel + " " : "") + exam.subject) + ' · ' + esc(exam.date) + '</div>' +
+        '<div class="mexp-cover-sub">' + esc(exam.date) + '</div>' +
         '<div class="mexp-cover-stats">' +
           '<div><span>점수</span><b>' + score + '</b></div>' +
           '<div><span>랩타임</span><b>' + (hasLap ? "총 " + formatDur(totalSec) : "기록 없음") + '</b></div>' +
