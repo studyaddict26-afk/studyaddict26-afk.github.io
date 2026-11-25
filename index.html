@@ -3273,8 +3273,7 @@
   .ppg-input::placeholder { color: var(--ink-soft); font-size: 0.7rem; }
 
   /* 내 공부 목표와 계획: 남색 그라데이션 패널 + 유리 느낌 카드. 한 화면에 다 들어오고, 입력 박스 안에서만 스크롤된다. */
-  .pp-guide-col.pgx { display: flex; flex-direction: column; gap: 12px; overflow: hidden; padding: 22px 24px 24px; border: none; border-radius: 24px; color: #fff;
-    background: radial-gradient(90% 70% at 100% 100%, rgba(122,150,222,0.55) 0%, rgba(122,150,222,0) 60%), radial-gradient(70% 50% at 15% 0%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 60%), linear-gradient(145deg, #1B2D57 0%, #142349 55%, #1D3060 100%); }
+  .pp-guide-col.pgx { display: flex; flex-direction: column; gap: 12px; overflow: hidden; padding: 22px 24px 24px; border: 1px solid #E3E7F1; border-radius: 24px; color: var(--ink); background: #F0F2F8; }
   .pgx-head { flex: none; display: flex; align-items: center; gap: 12px; }
   .pgx-head-ico { width: 38px; height: 38px; color: #fff; flex: none; } .pgx-head-ico svg { width: 100%; height: 100%; }
   .pgx-head-txt h3 { margin: 0; font-size: 1rem; font-weight: 800; color: #fff; line-height: 1.2; }
@@ -3282,13 +3281,13 @@
   .pgx-head-side { margin-left: auto; font-size: 0.74rem; color: rgba(255,255,255,0.8); display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; }
   .pgx-head-side::before { content: ""; width: 36px; height: 1px; background: rgba(255,255,255,0.55); }
   .pgx-goals { flex: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-  .pgx-gcard { display: flex; flex-direction: column; gap: 3px; padding: 8px 16px 8px; border-radius: 16px; background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(222,230,247,0.9)); box-shadow: 0 6px 18px rgba(8,16,40,0.25); min-width: 0; }
+  .pgx-gcard { display: flex; flex-direction: column; gap: 3px; padding: 8px 16px 8px; border-radius: 16px; background: #E6EBF6; border: 1px solid #DAE1F0; box-shadow: 0 2px 8px rgba(23,41,79,0.06); min-width: 0; }
   .pgx-glabel { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.8rem; font-weight: 800; color: #17294F; white-space: nowrap; }
   .pgx-glabel i, .pgx-card-head i { display: inline-flex; width: 20px; height: 20px; color: #3B5BA5; } .pgx-glabel i svg, .pgx-card-head i svg { width: 100%; height: 100%; }
   .pgx-gcard .ppg-input { height: 28px; min-height: 28px; padding: 6px 10px 0; border: 1px solid #E3E8F3; background: #fff; font-size: 0.66rem; color: #2C3A5C; border-radius: 10px; box-shadow: 0 1px 2px rgba(23,41,79,0.05); resize: none; overflow-y: auto; }
   .pgx-gcard .ppg-input::placeholder { color: #7B87A6; }
   .pgx .ppg-input::placeholder { font-size: 0.66rem; }
-  .pgx-card { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; gap: 8px; padding: 12px 16px 14px; border-radius: 20px; background: rgba(247,249,254,0.97); box-shadow: 0 8px 22px rgba(8,16,40,0.28); }
+  .pgx-card { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; gap: 8px; padding: 12px 16px 14px; border-radius: 20px; background: #E6EBF6; border: 1px solid #DAE1F0; box-shadow: 0 2px 8px rgba(23,41,79,0.06); }
   .pgx-card-head { flex: none; display: flex; align-items: center; gap: 8px; font-size: 0.88rem; font-weight: 800; color: #17294F; }
   .pgx section.pgx-card:first-of-type { flex: 0.6 1 0; } .pgx section.pgx-card:first-of-type .pgx-field { min-height: 30px; }
   .pgx section.pgx-card:last-of-type { flex: 1.4 1 0; }
