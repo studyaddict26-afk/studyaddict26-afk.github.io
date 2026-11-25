@@ -13321,6 +13321,8 @@
       statusEl.classList.add("done");
       statusEl.classList.remove("edited");
     }
+    // 제출하면 홈의 "이번 주 학습 현황"(점수 그래프)과 오늘의 공부 카드도 바로 새로 불러온다 (계획 1점 + 일기 1점 + 자기평가가 반영되도록)
+    setTimeout(() => { try { loadHomeWeeklyOverview(); loadTodayTileStatus(); } catch (e) {} }, 1800);
     btn.textContent = "제출완료 ✓";
     btn.disabled = true;
     setTimeout(() => {
