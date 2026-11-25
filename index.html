@@ -3337,6 +3337,8 @@
   .ov-wday { border: 1px solid var(--line); border-radius: 12px; padding: 8px 10px 10px; height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 3px; min-width: 0; background: #fff; }
   .ov-note-h { margin-top: auto; padding-top: 6px; border-top: 1px dashed var(--line); }
   .ov-note { font-size: 0.6rem; line-height: 1.45; color: var(--ink); min-height: 34px; word-break: keep-all; }
+  .ov-nline { font-size: 0.6rem; line-height: 1.5; color: var(--ink); padding: 3px 0; border-bottom: 1px dashed var(--line); word-break: keep-all; }
+  .ov-nline b { font-weight: 800; margin-right: 4px; }
   .ov-memo textarea { flex: 1; min-height: 0; width: 100%; box-sizing: border-box; resize: none; border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; font-family: inherit; font-size: 0.64rem; line-height: 1.5; color: var(--ink); background: #FBFBF8; }
   .ov-memo textarea:focus { outline: none; border-color: #3B5BA5; }
   .ov-wday.today { box-shadow: 0 0 0 2px #17294F; }
@@ -16509,8 +16511,6 @@
   }
   function ovLabel(it) { return it.subject ? String(it.subject) : String(it.text || "").slice(0, 4); }
   const ovAllDone = items => items.length > 0 && items.every(i => Number(i.done)); // 계획을 모두 완료한 날만 연두색
-  function ovMemoKey() { return "holoOvMemo:" + (localStorage.getItem("holoStudentId") || "anon") + ":" + ovFmt(ovMonday(ovAnchor)); }
-  function ovMemoSave() { try { localStorage.setItem(ovMemoKey(), document.getElementById("ovMemo").value); } catch (err) {} }
   function ovLine(i) {
     return '<div class="ov-line' + (Number(i.done) ? " done" : "") + '">' + (i.subject ? "[" + escapeHtml(i.subject) + "] " : "") + escapeHtml(i.text) + "</div>";
   }
@@ -16526,12 +16526,12 @@
       let h = '<div class="ov-week">';
       for (let i = 0; i < 7; i++) {
         const d = ovAdd(s, i), k = ovFmt(d), items = by[k] || [];
-        h += '<div class="ov-wday' + (ovAllDone(items) ? " alldone" : "") + (k === today ? " today" : "") + '"><b>' + (d.getMonth() + 1) + "/" + d.getDate() + " (" + OV_DOW[i] + ")</b>" + (items.length ? ovLines(items) : '<div class="ov-empty">-</div>') + '<div class="ov-blk ov-note-h">특이사항</div><div class="ov-note">' + (notes[k] ? escapeHtml(notes[k]).replace(/\n/g, "<br>") : "-") + "</div></div>";
+        h += '<div class="ov-wday' + (ovAllDone(items) ? " alldone" : "") + (k === today ? " today" : "") + '"><b>' + (d.getMonth() + 1) + "/" + d.getDate() + " (" + OV_DOW[i] + ")</b>" + (items.length ? ovLines(items) : '<div class="ov-empty">-</div>') + "</div>";
       }
-      h += '<div class="ov-wday ov-memo"><b>이번 주 메모</b><textarea id="ovMemo" spellcheck="false" oninput="ovMemoSave()"></textarea></div>';
+      const lines = [];
+      for (let i = 0; i < 7; i++) { const d = ovAdd(s, i), k = ovFmt(d); if (notes[k]) lines.push('<div class="ov-nline"><b>' + (d.getMonth() + 1) + "/" + d.getDate() + " (" + OV_DOW[i] + ")</b> " + escapeHtml(notes[k]).replace(/\n/g, "<br>") + "</div>"); }
+      h += '<div class="ov-wday ov-memo"><b>이번 주 특이 사항</b>' + (lines.length ? lines.join("") : '<div class="ov-empty">-</div>') + "</div>";
       body.innerHTML = h + "</div>";
-      const memo = document.getElementById("ovMemo");
-      try { memo.value = localStorage.getItem(ovMemoKey()) || ""; } catch (err) {}
       return;
     }
     let h = '<div class="ov-grid">' + OV_DOW.map(n => '<div class="ov-dow">' + n + "</div>").join("");
