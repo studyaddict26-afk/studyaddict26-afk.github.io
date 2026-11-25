@@ -12517,14 +12517,19 @@
   let vocabSetsCache = null, vocabTab = "study", vocabRun = null, vocabLevel = "1";
   // 단어는 쉬운 순서(앞쪽)부터 초급·중급·상급 3등분하고, 숙어도 같은 비율로 나눠 각 단계에 섞어 넣는다. 하루 20개씩.
   // "숙어만" 보기는 숙어 전체를 20개씩 따로 묶는다.
+  const VOCAB_DAYS_PER_LEVEL = 30;
+  // 전체 무작위 시험에 쓸 단어: 실제로 DAY에 들어 있는 단어(빠진 단어 제외) + 숙어
+  function vocabAllPool() { const s = new Set(); vocabSets().forEach(x => x.items.forEach(i => s.add(i))); return Array.from(s); }
   function vocabSets() {
     if (vocabSetsCache) return vocabSetsCache;
     const words = [], idioms = [];
     (typeof HOLO_VOCAB !== "undefined" ? HOLO_VOCAB : []).forEach((e, i) => (e[1] === "idm" ? idioms : words).push(i));
     const out = [];
     VOCAB_LEVELS.forEach((lv, n) => {
-      const w = words.slice(Math.round(words.length * n / 3), Math.round(words.length * (n + 1) / 3));
+      let w = words.slice(Math.round(words.length * n / 3), Math.round(words.length * (n + 1) / 3));
       const d = idioms.slice(Math.round(idioms.length * n / 3), Math.round(idioms.length * (n + 1) / 3));
+      const over = w.length + d.length - VOCAB_DAYS_PER_LEVEL * VOCAB_DAY_SIZE; // 레벨마다 DAY 수를 30으로 맞추기 위해 빼야 하는 개수
+      if (over > 0) w = w.slice(over); // 단어 목록은 쉬운 순서라서 앞쪽(가장 쉬운 것)부터 뺀다
       const mixed = w.map((x, i) => ({ x: x, k: (i + 0.5) / w.length })).concat(d.map((x, i) => ({ x: x, k: (i + 0.5) / d.length }))).sort((a, b) => a.k - b.k).map(o => o.x);
       for (let i = 0; i < mixed.length; i += VOCAB_DAY_SIZE) out.push({ id: "l" + lv.key + "-" + (i / VOCAB_DAY_SIZE + 1), level: lv.key, label: lv.name + " DAY " + (i / VOCAB_DAY_SIZE + 1), items: mixed.slice(i, i + VOCAB_DAY_SIZE) });
     });
@@ -12649,7 +12654,7 @@
   function vocabStartStudy(id) {
     if (id === "star" && !vocabStarList().length) { showToast("별표한 카드가 아직 없어요. 카드나 문제에서 ☆를 눌러 보세요."); return; }
     const set = id === "star" ? { id: "star", label: "별표한 카드", items: vocabStarList().slice().sort((a, b) => a - b) }
-      : id === "all" ? { id: "all", label: "전체 무작위", items: vocabShuffle(HOLO_VOCAB.map((_, i) => i)).slice(0, VOCAB_RANDOM_N) } : vocabSets().find(s => s.id === id); if (!set) return;
+      : id === "all" ? { id: "all", label: "전체 무작위", items: vocabShuffle(vocabAllPool()).slice(0, VOCAB_RANDOM_N) } : vocabSets().find(s => s.id === id); if (!set) return;
     vocabRun = { mode: "study", set: set, step: "menu", queue: set.items.slice(), i: 0, flipped: false, retry: [], q: null, wrong: 0, correct: 0 };
     vocabSplash("vstudy", function () { vocabLiveOpen(); vocabRenderStudy(); });
   }
@@ -12715,7 +12720,7 @@
   function vocabStartTest(id) {
     const sets = vocabSets();
     let pool, label, n;
-    if (id === "all") { pool = HOLO_VOCAB.map((_, i) => i); label = "전체 무작위"; n = VOCAB_RANDOM_N; }
+    if (id === "all") { pool = vocabAllPool(); label = "전체 무작위"; n = VOCAB_RANDOM_N; }
     else { const s = sets.find(x => x.id === id); if (!s) return; pool = s.items; label = s.label; n = Math.min(VOCAB_TEST_N, s.items.length); }
     const picked = vocabShuffle(pool).slice(0, n);
     vocabRun = { mode: "test", label: label, scope: id, qs: picked.map(i => vocabQuestion(i, Math.random() < 0.5 ? "w2m" : "m2w")), i: 0, answers: [] };
