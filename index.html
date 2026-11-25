@@ -11706,6 +11706,14 @@
       name: 'English',
       tagline: "카드로 외우고, 3지선다로 확인해요",
     },
+    knf: {
+      name: '국어',
+      tagline: "비문학 어휘로, 글을 정확히 읽는 힘을 길러요",
+    },
+    klit: {
+      name: '국어',
+      tagline: "문학 어휘로, 작품 속 말의 결을 느껴 봐요",
+    },
     vtest: {
       name: 'TEST',
       tagline: "얼마나 외웠는지 확인해 볼까요?",
@@ -11723,7 +11731,7 @@
     if (lv.classList.contains("on")) { fn(); return; }
     if (vocabSplashBusy) return;
     vocabSplashBusy = true;
-    const el = document.getElementById("consultSplash"), content = SPLASH_CONTENT[kind];
+    const el = document.getElementById("consultSplash"), content = SPLASH_CONTENT[kind === "vstudy" && vocabIsKo() ? (vocabSubject === "nf" ? "knf" : "klit") : kind]; // 국어 공부는 "English" 대신 국어 문구
     setSplashIcon(kind);
     el.querySelector(".consult-splash-logo span").innerHTML = content.name;
     el.querySelector(".consult-splash-tagline").textContent = content.tagline;
