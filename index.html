@@ -19360,11 +19360,11 @@
     const el = document.getElementById("mexAnalysisCard");
     if (!el) return;
     const exams = mexLoadExams().filter(e => (e.category || "mock") === "mock");
-    const shown = mexAnShown(), hidden = MEX_ANALYSIS_SUBJECTS.filter(s => shown.indexOf(s.name) < 0);
-    const addCell = hidden.length ? '<div class="mex-an5-add">' + (mexAnAddOpen
-      ? '<div class="mex-an5-add-list">' + hidden.map(s => '<button type="button" onclick="mexAnAdd(\'' + s.name + '\')">' + s.name + '<span>' + s.full + '점</span></button>').join("") + '<button type="button" class="cancel" onclick="mexAnToggleAdd()">닫기</button></div>'
-      : '<button type="button" class="mex-an5-add-btn" onclick="mexAnToggleAdd()">+ 과목 추가하기</button>') + '</div>' : "";
-    el.innerHTML = '<div class="mex-an5">' + shown.map(n => MEX_ANALYSIS_SUBJECTS.find(s => s.name === n)).map(sub => {
+    // 보여줄 과목: 기본 5과목 + 모의고사 기록이 있는 다른 과목(추가 · 숨기기 버튼 없이 기록에 따라 자동으로)
+    const shown = MEX_ANALYSIS_SUBJECTS.filter(s => MEX_ANALYSIS_DEFAULT.indexOf(s.name) >= 0 || exams.some(e => e.subject === s.name)).map(s => s.name);
+    exams.forEach(e => { if (e.subject && shown.indexOf(e.subject) < 0) shown.push(e.subject); }); // 목록에 없는 과목도 기록이 생기면 자동으로 추가(만점은 100점으로 환산)
+    const addCell = "";
+    el.innerHTML = '<div class="mex-an5">' + shown.map(n => MEX_ANALYSIS_SUBJECTS.find(s => s.name === n) || { name: n, full: 100 }).map(sub => {
       const list = exams.filter(e => e.subject === sub.name).slice().sort((a, b) => a.date.localeCompare(b.date));
       const pts = list.filter(e => e.scoreMine !== "" && e.scoreMine != null && Number(e.scoreMax) > 0)
         .map(e => ({ id: e.id, value: Math.round(Number(e.scoreMine) / Number(e.scoreMax) * sub.full * 10) / 10 }));
@@ -19376,7 +19376,7 @@
       const top = Object.keys(cnt).map(l => ({ l: l, c: cnt[l] })).sort((a, b) => b.c - a.c).slice(0, 3);
       const avg = pts.length ? Math.round(pts.reduce((s, p) => s + p.value, 0) / pts.length * 10) / 10 : null;
       return '<div class="mex-an5-box">' +
-        '<div class="mex-an5-name"><b>' + sub.name + '</b><span>' + sub.full + '점 만점 환산</span><button type="button" class="mex-an5-x" aria-label="이 과목 숨기기" onclick="mexAnRemove(\'' + sub.name + '\')">×</button></div>' +
+        '<div class="mex-an5-name"><b>' + sub.name + '</b><span>' + sub.full + '점 만점 환산</span></div>' +
         '<div class="mex-an5-avg">' + (avg === null ? '<em>기록 없음</em>' : avg + '<small>점 · 평균 ' + pts.length + '회</small>') + '</div>' +
         '<div class="mex-an5-chart">' + (pts.length ? mexTrendSvg(pts) : '') + '</div>' +
         '<div class="mex-an5-lab">오답 원인 TOP 3</div>' +
