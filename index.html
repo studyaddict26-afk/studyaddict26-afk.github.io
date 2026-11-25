@@ -6804,7 +6804,7 @@
   }
   .planner-task-row:hover .planner-task-del { opacity: 1; }
   .planner-task-check-ghost {
-    flex: none; width: 14px; height: 14px; border-radius: 4px; border: 1.4px dashed var(--line-dark);
+    display: none; /* 점선 사각형은 보이지 않게 한다 */
   }
   .planner-new-subject-input, .planner-new-content-input {
     border: none; border-bottom: 1px solid var(--line-dark); background: none; outline: none;
@@ -13442,7 +13442,7 @@
             '<input type="text" class="planner-new-subject-input" id="ppNewSubject-' + block + '" placeholder="과목" ' +
               'onkeydown="if(event.key===\'Enter\'){submitPpNewRow(\'' + block + '\');event.preventDefault();}" ' +
               'onblur="handlePpNewRowBlur(\'' + block + '\')">' +
-            '<input type="text" class="planner-new-content-input" id="ppNewContent-' + block + '" placeholder="내용" ' +
+            '<input type="text" class="planner-new-content-input" id="ppNewContent-' + block + '" placeholder="내용 작성하면 자동 저장됩니다"' +
               'onkeydown="if(event.key===\'Enter\'){submitPpNewRow(\'' + block + '\');event.preventDefault();}" ' +
               'onblur="handlePpNewRowBlur(\'' + block + '\')">' +
           '</div>'
@@ -13580,7 +13580,7 @@
             '<input type="text" class="planner-new-subject-input" id="ppChatSubject-' + seq + '-' + block + '" placeholder="과목" ' +
               'onkeydown="if(event.key===\'Enter\'){submitPpChatRow(' + seq + ',\'' + block + '\');event.preventDefault();}" ' +
               'onblur="handlePpChatRowBlur(' + seq + ',\'' + block + '\')">' +
-            '<input type="text" class="planner-new-content-input" id="ppChatContent-' + seq + '-' + block + '" placeholder="내용" ' +
+            '<input type="text" class="planner-new-content-input" id="ppChatContent-' + seq + '-' + block + '" placeholder="내용 작성하면 자동 저장됩니다"' +
               'onkeydown="if(event.key===\'Enter\'){submitPpChatRow(' + seq + ',\'' + block + '\');event.preventDefault();}" ' +
               'onblur="handlePpChatRowBlur(' + seq + ',\'' + block + '\')">' +
           '</div>'
@@ -15605,7 +15605,7 @@
               '<input type="text" class="planner-new-subject-input" id="plannerNewSubject-' + block + '" placeholder="과목" ' +
                 'onkeydown="if(event.key===\'Enter\'){submitNewPlanRow(\'' + block + '\');event.preventDefault();}" ' +
                 'onblur="handleNewRowBlur(\'' + block + '\')">' +
-              '<input type="text" class="planner-new-content-input" id="plannerNewContent-' + block + '" placeholder="내용" ' +
+              '<input type="text" class="planner-new-content-input" id="plannerNewContent-' + block + '" placeholder="내용 작성하면 자동 저장됩니다"' +
                 'onkeydown="if(event.key===\'Enter\'){submitNewPlanRow(\'' + block + '\');event.preventDefault();}" ' +
                 'onblur="handleNewRowBlur(\'' + block + '\')">' +
             '</div>'
@@ -15731,7 +15731,7 @@
     const contInput = document.createElement("input");
     contInput.type = "text";
     contInput.className = "planner-new-content-input";
-    contInput.placeholder = "내용";
+    contInput.placeholder = "내용 작성하면 자동 저장됩니다";
     contInput.value = item.text;
     span.replaceWith(subjInput, contInput);
     contInput.focus();
