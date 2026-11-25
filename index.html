@@ -4120,6 +4120,28 @@
   .adk-btn-ok:hover { background: #1B2F6B; }
   .adk-btn-no { color: #B03A2E; border-color: #E8B9B2; }
   .adk-chk { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #555B66; cursor: pointer; }
+  .tscore-summary { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
+  .tscore-chip { font-size: 0.76rem; font-weight: 700; padding: 5px 12px; border-radius: 999px; background: #EEF1F8; color: #17294F; }
+  .tscore-chip.bad { background: #FBE9E7; color: #B3261E; } .tscore-chip.warn { background: #FBF1D6; color: #8A6200; } .tscore-chip.ok { background: #E3F2E8; color: #2E7D4F; }
+  .tsc-badge { display: inline-block; font-size: 0.72rem; font-weight: 800; padding: 2px 9px; border-radius: 999px; background: #EEF1F8; color: #17294F; white-space: nowrap; }
+  .tsc-badge.ok { background: #E3F2E8; color: #2E7D4F; } .tsc-badge.warn { background: #FBF1D6; color: #8A6200; } .tsc-badge.bad { background: #FBE9E7; color: #B3261E; }
+  .tsc-flag { display: inline-block; margin-left: 6px; font-size: 0.72rem; font-weight: 800; color: #B3261E; cursor: pointer; text-decoration: underline; }
+  .tsc-detail { display: block; margin-top: 3px; font-size: 0.66rem; color: var(--ink-soft); white-space: normal; max-width: 260px; }
+  .tsc-comment { width: 260px; min-height: 56px; box-sizing: border-box; font-family: inherit; font-size: 0.78rem; line-height: 1.5; border: 1px solid #D5D9E1; border-radius: 6px; padding: 6px 8px; resize: vertical; background: #fff; color: var(--ink); white-space: pre-wrap; }
+  .tsc-comment.empty { border-color: #E7A59E; background: #FFF8F7; }
+  .tsc-regen { font-family: inherit; font-size: 0.72rem; font-weight: 700; color: #17294F; background: #fff; border: 1px solid #C9D2E8; border-radius: 6px; padding: 4px 9px; cursor: pointer; white-space: nowrap; }
+  .tsc-regen:disabled { opacity: 0.5; cursor: default; }
+  .tsf-pop { display: none; position: fixed; inset: 0; z-index: 600; background: rgba(23,24,26,0.45); align-items: center; justify-content: center; padding: 16px; }
+  .tsf-pop.on { display: flex; }
+  .tsf-card { width: 100%; max-width: 640px; max-height: 88vh; overflow-y: auto; background: #fff; border-radius: 14px; padding: 18px 20px 20px; box-sizing: border-box; }
+  .tsf-head { display: flex; align-items: center; justify-content: space-between; } .tsf-head b { font-size: 1rem; color: #B3261E; } .tsf-head button { border: none; background: none; font-size: 1.4rem; cursor: pointer; color: var(--ink-soft); }
+  .tsf-sub { margin: 4px 0 12px; font-size: 0.74rem; color: var(--ink-soft); }
+  .tsf-note { border: 1px solid #F0C9C4; background: #FFF8F7; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
+  .tsf-note-h { font-size: 0.78rem; font-weight: 800; color: var(--ink); } .tsf-note-m { font-size: 0.68rem; color: var(--ink-soft); margin: 2px 0 6px; }
+  .tsf-note-s { font-size: 0.8rem; font-weight: 700; color: #B3261E; margin-bottom: 6px; }
+  .tsf-ex { font-size: 0.78rem; line-height: 1.6; color: var(--ink); margin: 0 0 4px; white-space: pre-wrap; }
+  .tsf-ex em { font-style: normal; font-weight: 700; color: var(--ink-soft); margin-right: 6px; }
+  .tsf-ack { margin-top: 8px; font-family: inherit; font-size: 0.74rem; font-weight: 800; color: #fff; background: #17294F; border: none; border-radius: 8px; padding: 7px 14px; cursor: pointer; }
   .adk-start { font-family: inherit; font-size: 0.78rem; border: 1px solid #D5D9E1; border-radius: 6px; padding: 3px 6px; color: var(--ink); background: #fff; }
   .adk-seat { width: 64px; font-family: inherit; font-size: 0.8rem; border: 1px solid #D5D9E1; border-radius: 6px; padding: 3px 6px; transition: border-color 0.3s; }
   /* ── 고정 · 돌발 스케줄 페이지 (sp-) ── */
@@ -5795,6 +5817,15 @@
   .rpt-days td { text-align: center; padding: 6px 4px; border-bottom: 1px solid var(--line); color: var(--ink); }
   .rpt-days td:first-child, .rpt-days th:first-child { text-align: left; font-weight: 700; }
   .rpt-ok { color: #2E9B4A; font-weight: 800; }
+  .rpt-req { display: inline-block; margin-left: 4px; padding: 0 6px; font-size: 0.56rem; font-weight: 800; color: #B3261E; background: #FBE9E7; border-radius: 999px; vertical-align: 1px; }
+  .rpt-delta { font-weight: 800; } .rpt-delta.up { color: #2E7D4F; } .rpt-delta.down { color: #B3261E; } .rpt-delta.same { color: var(--ink-soft); }
+  .rpt-rule { margin: -4px 0 12px; font-size: 0.62rem; color: var(--ink-soft); line-height: 1.5; }
+  .rpt-pre td { color: #B9B5A8; background: #FAF9F5; }
+  .rpt-notice { margin: 0 0 14px; padding: 12px 14px; border-radius: 10px; background: #FBF4E3; border: 1px solid #F0E2BC; font-size: 0.78rem; line-height: 1.7; color: #6B5A22; }
+  .rpt-teacher { margin: 0 0 22px; padding: 14px 18px; border-radius: 12px; background: #EEF1FA; border: 1px solid #D5DBEE; }
+  .rpt-teacher-h { font-size: 0.74rem; font-weight: 800; color: #17294F; margin-bottom: 6px; }
+  .rpt-teacher p { margin: 0; font-size: 0.86rem; line-height: 1.85; color: var(--ink); }
+  .rpt-teacher p.rpt-teacher-empty { color: var(--ink-soft); }
   .rpt-no { color: #B9B5A8; }
   @media (max-width: 700px) { .rpt-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .rpt-stat:nth-child(3n) { border-right: 1px solid var(--line); } .rpt-stat:nth-child(2n) { border-right: none; } }
   .rh2-empty { color: var(--ink-soft); font-size: 0.8rem; padding: 40px 16px; text-align: center; }
@@ -9327,8 +9358,8 @@
       <div class="ss-title">오늘 나의 공부 점수를 정해주세요.</div>
       <div class="ss-sub">수정 가능합니다.</div>
       <div class="ss-num"><b id="ssNum">70</b><span>점</span></div>
-      <input type="range" id="ssRange" min="0" max="98" step="1" value="70" oninput="ssInput(this.value)" aria-label="자기평가 점수">
-      <div class="ss-scale"><span>0</span><span>49</span><span>98</span></div>
+      <input type="range" id="ssRange" min="0" max="97" step="1" value="70" oninput="ssInput(this.value)" aria-label="자기평가 점수">
+      <div class="ss-scale"><span>0</span><span>48</span><span>97</span></div>
       <input type="text" id="ssReason" class="ss-reason" maxlength="100" autocomplete="off" placeholder="이 점수를 준 이유를 한 줄로" oninput="ssReasonInput()" aria-label="점수를 준 이유">
       <div class="ss-reason-hint" id="ssReasonHint">예) 숙제를 다 끝냈다 · 오늘 공부에 집중을 못했다</div>
       <div class="ss-actions">
@@ -11029,7 +11060,7 @@
                 <span class="admin-nav-ico">📊</span> 모의고사 제출 현황
               </button>
               <button class="admin-nav-item" type="button" onclick="showAdminPanel('tscore', this)">
-                <span class="admin-nav-ico">✏️</span> 선생님 점수 (6일)
+                <span class="admin-nav-ico">✏️</span> 6일 분석지 관리
               </button>
             </div>
           </div>
@@ -11304,22 +11335,32 @@
           <div class="admin-page-head">
             <span class="admin-page-ico">✏️</span>
             <div>
-              <h2>선생님 점수 (6일에 한 번)</h2>
+              <h2>6일 분석지 관리</h2>
               <div class="split"></div>
-              <p class="admin-page-sub">월~토 6일마다 학생별로 0~100점을 매깁니다. 이 점수는 6일 분석지에만 보이고, 학생 페이지의 점수 그래프와 평균에는 들어가지 않습니다. 분석지가 이미 만들어진 기간이면 저장하는 즉시 분석지에도 반영됩니다. 참고로 같은 기간 학생이 직접 매긴 자기평가 평균을 옆에 보여줍니다.</p>
+              <p class="admin-page-sub">월~토 6일마다 학생별로 <b>선생님 코멘트(필수)</b>와 선생님 점수(0~100)를 적습니다. 분석지에는 이 둘이 함께 들어가고, 학생 페이지의 점수 그래프와 평균에는 들어가지 않습니다. 분석지는 일요일 아침에 자동으로 만들어지며, 아래에서 <b>기록이 적어 간단 형식으로 나간 학생 · AI가 실패한 학생 · 위험 신호가 있는 학생</b>을 확인하고 AI 분석지를 다시 만들 수 있습니다. 학생 이름을 누르면 학생이 적은 목표 · 습관 · 계획이 펼쳐집니다.</p>
             </div>
           </div>
           <div class="admin-toolbar">
             <select id="tscorePeriod" onchange="tscoreLoad()" style="padding:8px 10px; border:1px solid var(--line); border-radius:8px; font-family:inherit;"></select>
             <button type="button" class="admin-status-btn" onclick="tscoreLoad()">새로고침</button>
+            <button type="button" class="admin-status-btn" onclick="tscoreOpenFlags('')">확인 안 한 위험 신호 모두 보기</button>
           </div>
+          <div class="tscore-summary" id="tscoreSummary"></div>
           <div class="admin-table-wrap">
             <table class="admin-table">
-              <thead><tr><th>학생</th><th>자기평가 평균 (참고)</th><th>선생님 점수 (0~100)</th></tr></thead>
+              <thead><tr><th>학생</th><th>분석지</th><th>자기평가 평균 (참고)</th><th>선생님 점수 (0~100)</th><th>선생님 코멘트 (필수)</th><th></th></tr></thead>
               <tbody id="tscoreBody"></tbody>
             </table>
           </div>
           <div class="admin-empty" id="tscoreEmpty" style="display:none;">이용 중인 학생이 없습니다.</div>
+        </div>
+
+        <div class="tsf-pop" id="tscoreFlagPop" onclick="if(event.target===this) tscoreCloseFlags()">
+          <div class="tsf-card">
+            <div class="tsf-head"><b>위험 신호</b><button type="button" onclick="tscoreCloseFlags()" aria-label="닫기">&times;</button></div>
+            <p class="tsf-sub">학생용 분석지에는 넣지 않고 선생님만 보는 내용입니다. 확인하고 필요한 조치를 한 뒤 "확인했어요"를 눌러 주세요.</p>
+            <div id="tscoreFlagList"></div>
+          </div>
         </div>
 
         <div class="admin-panel" id="adminPanelStudents" style="display:none;">
@@ -13324,8 +13365,8 @@
     { id: "diary-q3", num: "3" },
     { id: "diary-q4", num: "4" },
   ];
-  // ── 자기평가 점수: 공부일기 제출 직전에 뜨는 작은 팝업(0~98점, 서버 holo_self_scores에 저장) ──
-  // 하루 점수(100점) = 계획 제출 1 + 일기 완성 1 + 자기평가(0~98). 계산은 서버 records.ts(selfScoreMap)
+  // ── 자기평가 점수: 플래너 · 공부일기 제출 직전에 뜨는 작은 팝업(0~97점, 서버 holo_self_scores에 저장) ──
+  // 하루 점수(100점) = 계획 제출 1 + 일기 완성 1 + 영어 단어 Test 통과 1 + 자기평가(0~97). 계산은 서버 records.ts(selfScoreMap)
   let selfScoreConfirmed = false, selfScoreAfter = null, ssTouched = false;
   function ssSync(v) { document.getElementById("ssNum").textContent = v; }
   function ssInput(v) { ssTouched = true; ssSync(v); } // 학생이 직접 움직이면, 뒤늦게 도착한 이전 점수가 그 값을 덮어쓰지 않게 표시해 둔다
@@ -13339,7 +13380,7 @@
     planApi({ action: "self_score_get", date: getLocalDateKey() })
       .then(d => {
         if (!d) return;
-        if (!ssTouched && typeof d.score === "number") { const v = Math.min(98, d.score); range.value = v; ssSync(v); } // 예전에 99~100점을 남긴 날은 98로
+        if (!ssTouched && typeof d.score === "number") { const v = Math.min(97, d.score); range.value = v; ssSync(v); } // 예전에 98점 이상을 남긴 날은 97로
         if (!reasonEl.value && typeof d.reason === "string") { reasonEl.value = d.reason; ssReasonInput(); }
       })
       .catch(() => {});
@@ -17027,35 +17068,52 @@
     try { d = r.data_json ? JSON.parse(r.data_json) : null; } catch (e) { d = null; }
     if (!d || !d.summary || !Array.isArray(d.days)) return "";
     const s = d.summary, n = s.periodDays || d.days.length;
+    const cmp = s.compare || null;
     const fmtRest = sec => sec >= 60 ? Math.round(sec / 60) + "분" : sec + "초";
-    // 하루 점수(100점 만점 = 계획 1 + 일기 1 + 자기평가 0~98)가 있는 새 분석지는 그걸, 예전 분석지는 자기평가 평균을 보여 준다
-    const hasDay = typeof s.dayScoreAvg === "number";
+    // 지난 분석지와 비교한 변화(서버가 계산해 둔 값): ▲ 늘었어요 / ▼ 줄었어요
+    const dl = (pair, unit) => {
+      if (!pair || typeof pair.delta !== "number") return "";
+      const v = pair.delta;
+      return '<span class="rpt-delta ' + (v > 0 ? "up" : v < 0 ? "down" : "same") + '">' + (v > 0 ? "▲ +" : v < 0 ? "▼ " : "– ") + v + unit + '</span> 지난 분석지 대비';
+    };
+    const req = '<span class="rpt-req">필수</span>';
     const cells = [
-      hasDay ? ["하루 점수 평균", s.dayScoreAvg + "점", "100점 만점 · 6일 합계 " + s.dayScoreTotal + "점"]
-             : ["자기평가 평균 점수", s.selfScoreAvg === null ? "기록 없음" : s.selfScoreAvg + "점", s.selfScoreDays ? s.selfScoreDays + "일 기준" : ""],
-      ["플래너 제출률", s.plannerSubmitDays + " / " + n + "일", ""],
-      ["공부일기 제출률", s.diarySubmitDays + " / " + n + "일", ""],
-      ["어휘력 Test 응시", "단어 " + s.vocabWordDays + "일 · 문법 " + s.vocabGrammarDays + "일", ""],
-      ["하루 평균 머리 식히기", fmtRest(s.restAvgSec) + " · " + s.restAvgCount + "번", ""],
-      ["모의고사 분석지 작성", s.mockCount + "회", (s.mockNames || []).join(", ")],
+      ["하루 점수 평균", (typeof s.dayScoreAvg === "number" ? s.dayScoreAvg : 0) + "점", (dl(cmp && cmp.dayScoreAvg, "점") || "100점 만점") , true],
+      ["플래너 제출 " + req, s.plannerSubmitDays + " / " + n + "일", dl(cmp && cmp.plannerRate, "%p"), true],
+      ["공부일기 제출 " + req, s.diarySubmitDays + " / " + n + "일", dl(cmp && cmp.diaryRate, "%p"), true],
+      ["영어 단어 Test 통과 " + req, s.vocabWordDays + " / " + n + "일", dl(cmp && cmp.vocabWordRate, "%p"), true],
+      ["영어 문법 Test", s.vocabGrammarDays + "일 응시", "선택 항목", true],
+      ["자기평가 평균", s.selfScoreAvg === null || s.selfScoreAvg === undefined ? "기록 없음" : s.selfScoreAvg + "점", (s.selfScoreDays ? s.selfScoreDays + "일 기준 · " : "") + (dl(cmp && cmp.selfScoreAvg, "점") ? "" : ""), true],
+      ["독서실 쉬는 시간(머리 식히기)", fmtRest(s.restAvgSec || 0) + " · " + (s.restAvgCount || 0) + "번", "하루 평균", true],
+      ["모의고사 분석지 작성", (s.mockCount || 0) + "회", (s.mockNames || []).join(", "), true],
+      ["선생님 평가 점수", typeof s.teacherScore === "number" ? s.teacherScore + "점" : "준비 중", "6일에 한 번 · 100점 만점", true],
     ];
-    // 선생님이 6일에 한 번 매기는 점수 — 분석지에만 보인다(학생 페이지 점수 그래프에는 반영되지 않는다)
-    if (typeof s.teacherScore === "number") cells.splice(1, 0, ["선생님 평가 점수", s.teacherScore + "점", "6일에 한 번 · 100점 만점"]);
     const mark = on => on ? '<span class="rpt-ok">✓</span>' : '<span class="rpt-no">–</span>';
-    const rows = d.days.map(x => '<tr><td>' + escapeHtml(x.date.slice(5).replace("-", "/")) + ' (' + escapeHtml(x.weekday) + ')</td>' +
-      '<td>' + mark(x.plannerSubmitted) + '</td><td>' + mark(x.diarySubmitted) + '</td>' +
-      '<td>' + (hasDay ? x.dayScore + '점' + (x.selfScore === null ? '' : ' <span class="rpt-sub">(자기평가 ' + x.selfScore + (x.selfReason ? ' · ' + escapeHtml(x.selfReason) : '') + ')</span>') : (x.selfScore === null ? '<span class="rpt-no">–</span>' : x.selfScore + '점')) + '</td>' +
-      '<td>' + (x.vocabWord || x.vocabGrammar ? (x.vocabWord ? "단어" : "") + (x.vocabWord && x.vocabGrammar ? " · " : "") + (x.vocabGrammar ? "문법" : "") : '<span class="rpt-no">–</span>') + '</td>' +
-      '<td>' + (x.restCount ? fmtRest(x.restSec) + " · " + x.restCount + "번" : '<span class="rpt-no">–</span>') + '</td></tr>').join("");
-    return '<div class="rpt-stats">' + cells.map(c => '<div class="rpt-stat"><span class="rpt-label">' + c[0] + '</span><b>' + escapeHtml(c[1]) + '</b>' + (c[2] ? '<span class="rpt-sub">' + escapeHtml(c[2]) + '</span>' : '') + '</div>').join("") + '</div>' +
-      '<table class="rpt-days"><thead><tr><th>날짜</th><th>플래너</th><th>공부일기</th><th>' + (hasDay ? "하루 점수" : "자기평가") + '</th><th>어휘력 Test</th><th>머리 식히기</th></tr></thead><tbody>' + rows + '</tbody></table>';
+    const rows = d.days.map(x => {
+      const dt = escapeHtml(x.date.slice(5).replace("-", "/")) + ' (' + escapeHtml(x.weekday) + ')';
+      if (x.enrolled === false) return '<tr class="rpt-pre"><td>' + dt + '</td><td colspan="5">등원 전</td></tr>';
+      return '<tr><td>' + dt + '</td>' +
+        '<td>' + mark(x.plannerSubmitted) + '</td><td>' + mark(x.diarySubmitted) + '</td>' +
+        '<td>' + mark(x.vocabWord) + (x.vocabGrammar ? ' <span class="rpt-sub">문법</span>' : '') + '</td>' +
+        '<td>' + x.dayScore + '점' + (x.selfScore === null || x.selfScore === undefined ? '' : ' <span class="rpt-sub">(자기평가 ' + x.selfScore + (x.selfReason ? ' · ' + escapeHtml(x.selfReason) : '') + ')</span>') + '</td>' +
+        '<td>' + (x.restCount ? fmtRest(x.restSec) + " · " + x.restCount + "번" : '<span class="rpt-no">–</span>') + '</td></tr>';
+    }).join("");
+    const notice = s.simpleNotice ? '<div class="rpt-notice">' + escapeHtml(s.simpleNotice) + '</div>' : "";
+    const startNote = s.startDate ? '<p class="rpt-rule">등원 시작일(' + escapeHtml(s.startDate.slice(5).replace("-", "/")) + ') 이전 날은 점수와 평균에 넣지 않았어요.</p>' : "";
+    const teacher = '<div class="rpt-teacher"><div class="rpt-teacher-h">선생님 코멘트</div>' +
+      (s.teacherComment ? '<p>' + escapeHtml(s.teacherComment).replace(/\n/g, "<br>") + '</p>' : '<p class="rpt-teacher-empty">선생님 코멘트를 준비하고 있어요.</p>') + '</div>';
+    return notice +
+      '<div class="rpt-stats">' + cells.map(c => '<div class="rpt-stat"><span class="rpt-label">' + c[0] + '</span><b>' + escapeHtml(c[1]) + '</b>' + (c[2] ? '<span class="rpt-sub">' + c[2] + '</span>' : '') + '</div>').join("") + '</div>' +
+      '<p class="rpt-rule">하루 점수(100점 만점) = 플래너 제출 1점 + 공부일기 완성 1점 + 영어 단어 Test 통과 1점 + 자기평가 0~97점</p>' + startNote +
+      '<table class="rpt-days"><thead><tr><th>날짜</th><th>플래너</th><th>공부일기</th><th>영어 단어</th><th>하루 점수</th><th>쉬는 시간</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+      teacher;
   }
   // 분석지 글 부분: "## 제목" 단위로 구역을 나눠서, 구역마다 어울리는 모양(요약 · 목록 · 한마디 · 제안)으로 보여준다.
   // 예전 분석지(지난 한 주 요약 / 반복되는 패턴 …)와 새 분석지(한 줄 요약 / 이번 6일에 한 일 …) 둘 다 같은 규칙으로 처리한다.
   function rptSectionKind(title) {
     if (/한마디/.test(title)) return "note";
     if (/질문|물어보/.test(title)) return "ask";
-    if (/제안|상담을 받|추천/.test(title)) return "tip";
+    if (/제안|상담을 받|추천|이렇게 해 보면/.test(title)) return "tip";
     if (/요약/.test(title)) return "lead";
     if (/고민/.test(title)) return "worry";
     return "plain";
@@ -20905,8 +20963,9 @@
     if (name === "availability") renderAvailability();
     if (name === "students") renderStudents();
   }
-  // ── 관리자: 선생님 점수 (6일=월~토에 한 번, 학생별 0~100점 — 6일 분석지에만 반영) ──
-  let tscoreData = { scores: {}, self: {} };
+  // ── 관리자: 6일 분석지 관리 (6일=월~토에 한 번: 선생님 코멘트(필수) · 점수 · 분석지 현황 · 위험 신호 · 다시 만들기) ──
+  let tscoreData = { scores: {}, comments: {}, self: {}, status: {}, openFlags: {}, hasReport: {} };
+  const TS_STATUS = { ok: ["정상", "ok"], sparse: ["기록 부족 · 간단 형식", "warn"], ai_failed: ["AI 실패 · 간단 형식", "bad"] };
   function tscoreSaturdays() { // 지난 8주의 토요일(기간의 마지막 날) + 이번 주 토요일
     const t = new Date(); t.setHours(0, 0, 0, 0);
     const dow = t.getDay(); // 0=일 ... 6=토
@@ -20931,33 +20990,56 @@
     const end = document.getElementById("tscorePeriod").value;
     adminAuthPost({ action: "teacher_score_list", periodEnd: end }).then(r => {
       if (!r || !r.ok) { showToast((r && r.error) || "불러오지 못했어요"); return; }
-      tscoreData = { scores: r.scores || {}, self: r.self || {} };
+      tscoreData = { scores: r.scores || {}, comments: r.comments || {}, self: r.self || {}, status: r.status || {}, openFlags: r.openFlags || {}, hasReport: r.hasReport || {} };
       tscoreRender();
     }).catch(() => showToast("불러오지 못했어요"));
   }
+  function tscoreStudents() {
+    return (adminAllStudents || []).filter(s => s.status !== "pending" && s.status !== "disabled")
+      .sort((a, b) => String(a.name || a.id).localeCompare(String(b.name || b.id), "ko"));
+  }
   function tscoreRender() {
     const body = document.getElementById("tscoreBody"), empty = document.getElementById("tscoreEmpty");
-    const list = (adminAllStudents || []).filter(s => s.status !== "pending" && s.status !== "disabled")
-      .sort((a, b) => String(a.name || a.id).localeCompare(String(b.name || b.id), "ko"));
+    const list = tscoreStudents();
     empty.style.display = list.length ? "none" : "block";
+    const D = tscoreData, cnt = { bad: 0, warn: 0, flag: 0, noComment: 0 };
+    list.forEach(s => {
+      const st = D.status[s.id];
+      if (st && st.status === "ai_failed") cnt.bad++;
+      if (st && st.status === "sparse") cnt.warn++;
+      cnt.flag += D.openFlags[s.id] || 0;
+      if (!(D.comments[s.id] || "").trim() && (D.hasReport[s.id] || D.self[s.id])) cnt.noComment++;
+    });
+    document.getElementById("tscoreSummary").innerHTML =
+      '<span class="tscore-chip ' + (cnt.flag ? "bad" : "ok") + '">위험 신호(확인 전) ' + cnt.flag + '건</span>' +
+      '<span class="tscore-chip ' + (cnt.bad ? "bad" : "ok") + '">AI 실패 ' + cnt.bad + '명</span>' +
+      '<span class="tscore-chip ' + (cnt.warn ? "warn" : "ok") + '">기록 부족(간단 형식) ' + cnt.warn + '명</span>' +
+      '<span class="tscore-chip ' + (cnt.noComment ? "warn" : "ok") + '">선생님 코멘트 미작성 ' + cnt.noComment + '명</span>';
     body.innerHTML = list.map(s => {
       const sid = escapeHtml(s.id).replace(/'/g, "&#39;");
-      const sf = tscoreData.self[s.id];
-      const v = typeof tscoreData.scores[s.id] === "number" ? tscoreData.scores[s.id] : "";
+      const sf = D.self[s.id], st = D.status[s.id], flags = D.openFlags[s.id] || 0;
+      const v = typeof D.scores[s.id] === "number" ? D.scores[s.id] : "";
+      const cm = D.comments[s.id] || "";
+      const info = st ? TS_STATUS[st.status] || [st.status, ""] : (D.hasReport[s.id] ? ["만들어짐", ""] : null);
+      const reportCell = (info ? '<span class="tsc-badge ' + info[1] + '">' + escapeHtml(info[0]) + '</span>' : '<span style="color:var(--ink-soft)">아직 없음</span>') +
+        (flags ? '<span class="tsc-flag" onclick="tscoreOpenFlags(\'' + sid + '\')">위험 신호 ' + flags + '건</span>' : "") +
+        (st && st.status !== "ok" && st.detail ? '<span class="tsc-detail">' + escapeHtml(st.detail) + '</span>' : "");
       return "<tr><td><button type=\"button\" class=\"admin-status-btn\" style=\"text-decoration:none; color:inherit; font-size:inherit;\" onclick=\"tscoreToggleGuide('" + sid + "', this)\" title=\"목표 · 습관 · 계획 보기\">" + escapeHtml(s.name || "-") + " ▾</button> <span style=\"color:var(--ink-soft)\">" + escapeHtml(s.id) + "</span></td>" +
+        "<td style=\"white-space:normal\">" + reportCell + "</td>" +
         "<td>" + (sf ? sf.avg + "점 <span style=\"color:var(--ink-soft)\">(" + sf.days + "일)</span>" : "<span style=\"color:var(--ink-soft)\">기록 없음</span>") + "</td>" +
-        "<td><input type=\"number\" min=\"0\" max=\"100\" step=\"1\" value=\"" + v + "\" placeholder=\"-\" style=\"width:80px; padding:6px 8px; border:1px solid var(--line); border-radius:6px; font-family:inherit;\" " +
-        "onchange=\"tscoreSave('" + sid + "', this)\" aria-label=\"선생님 점수\"></td></tr>";
+        "<td><input type=\"number\" min=\"0\" max=\"100\" step=\"1\" value=\"" + v + "\" placeholder=\"-\" style=\"width:80px; padding:6px 8px; border:1px solid var(--line); border-radius:6px; font-family:inherit;\" onchange=\"tscoreSave('" + sid + "', this)\" aria-label=\"선생님 점수\"></td>" +
+        "<td><textarea class=\"tsc-comment" + (cm.trim() ? "" : " empty") + "\" maxlength=\"600\" placeholder=\"이번 6일 코멘트를 적어 주세요(필수)\" onchange=\"tscoreSaveComment('" + sid + "', this)\" aria-label=\"선생님 코멘트\">" + escapeHtml(cm) + "</textarea></td>" +
+        "<td style=\"white-space:normal\"><button type=\"button\" class=\"tsc-regen\" onclick=\"tscoreRegen('" + sid + "', this)\">AI 분석지 다시 만들기</button></td></tr>";
     }).join("");
   }
-  // 학생 이름을 누르면 그 학생이 적어 둔 목표 · 습관 · 계획이 아래에 펼쳐진다
+  // 학생 이름을 누르면 학생이 적어 둔 목표 · 습관 · 계획이 아래에 펼쳐진다
   function tscoreToggleGuide(studentId, btn) {
     const tr = btn.closest("tr");
     const next = tr.nextElementSibling;
     if (next && next.classList.contains("tscore-guide-row")) { next.remove(); return; }
     const row = document.createElement("tr");
     row.className = "tscore-guide-row";
-    row.innerHTML = '<td colspan="3" style="white-space:normal; color:var(--ink-soft);">불러오는 중...</td>';
+    row.innerHTML = '<td colspan="6" style="white-space:normal; color:var(--ink-soft);">불러오는 중...</td>';
     tr.after(row);
     adminAuthPost({ action: "plan_guide_admin_get", targetId: studentId }).then(r => {
       const d = r && r.ok ? r.data : null;
@@ -20975,9 +21057,56 @@
     adminAuthPost({ action: "teacher_score_set", periodEnd: end, studentId: studentId, score: raw === "" ? null : Number(raw) }).then(r => {
       if (!r || !r.ok) throw new Error((r && r.error) || "fail");
       if (raw === "") delete tscoreData.scores[studentId]; else tscoreData.scores[studentId] = Math.round(Number(raw));
-      showToast(raw === "" ? "점수를 지웠어요" : "저장했어요");
+      showToast(raw === "" ? "점수를 지웠어요" : "점수를 저장했어요");
     }).catch(e => { showToast("저장하지 못했어요: " + (e.message || "")); tscoreLoad(); });
   }
+  function tscoreSaveComment(studentId, el) {
+    const val = el.value.trim();
+    const end = document.getElementById("tscorePeriod").value;
+    adminAuthPost({ action: "teacher_score_set", periodEnd: end, studentId: studentId, comment: val }).then(r => {
+      if (!r || !r.ok) throw new Error((r && r.error) || "fail");
+      tscoreData.comments[studentId] = val;
+      el.classList.toggle("empty", !val);
+      showToast(val ? "코멘트를 저장했어요" : "코멘트를 지웠어요");
+      tscoreRender();
+    }).catch(e => { showToast("저장하지 못했어요: " + (e.message || "")); tscoreLoad(); });
+  }
+  function tscoreRegen(studentId, btn) {
+    const end = document.getElementById("tscorePeriod").value;
+    if (!confirm("이 학생의 이 기간 AI 분석지를 다시 만들까요?\n(AI 비용이 들고, 선생님 점수 · 코멘트는 그대로 유지돼요)")) return;
+    btn.disabled = true; const old = btn.textContent; btn.textContent = "만드는 중...";
+    adminAuthPost({ action: "report_regenerate", periodEnd: end, studentId: studentId }).then(r => {
+      if (!r || !r.ok) { showToast((r && r.error) || "다시 만들지 못했어요"); return; }
+      showToast(r.status === "ok" ? "분석지를 다시 만들었어요" : r.status === "sparse" ? "기록이 적어 간단 형식으로 만들었어요" : "AI가 실패해서 간단 형식으로 만들었어요: " + (r.detail || ""));
+      tscoreLoad();
+    }).catch(() => showToast("다시 만들지 못했어요")).then(() => { btn.disabled = false; btn.textContent = old; });
+  }
+  // 위험 신호: 학생용 분석지에는 넣지 않고 선생님만 본다
+  function tscoreOpenFlags(studentId) {
+    const pop = document.getElementById("tscoreFlagPop"), box = document.getElementById("tscoreFlagList");
+    pop.classList.add("on"); box.innerHTML = '<p class="tsf-sub">불러오는 중...</p>';
+    adminAuthPost({ action: "report_flagged_list", openOnly: true }).then(r => {
+      if (!r || !r.ok) { box.innerHTML = '<p class="tsf-sub">불러오지 못했어요.</p>'; return; }
+      const notes = (r.notes || []).filter(n => !studentId || n.student_id === studentId);
+      if (!notes.length) { box.innerHTML = '<p class="tsf-sub">확인할 위험 신호가 없어요.</p>'; return; }
+      box.innerHTML = notes.map(n => {
+        const st = (adminAllStudents || []).find(s => s.id === n.student_id);
+        return '<div class="tsf-note"><div class="tsf-note-h">' + escapeHtml((st && st.name) || "-") + ' <span style="font-weight:500;color:var(--ink-soft)">' + escapeHtml(n.student_id) + '</span></div>' +
+          '<div class="tsf-note-m">' + escapeHtml(n.period_start.slice(5)) + ' ~ ' + escapeHtml(n.period_end.slice(5)) + ' 분석지 · ' + escapeHtml((n.created_at || "").slice(0, 10)) + '</div>' +
+          (n.staff_note ? '<div class="tsf-note-s">' + escapeHtml(n.staff_note) + '</div>' : '') +
+          (n.excerpts || []).map(e => '<p class="tsf-ex"><em>' + escapeHtml((e.date || "").slice(5)) + ' · ' + escapeHtml(e.label || "") + '</em>' + escapeHtml(e.text || "") + '</p>').join("") +
+          '<button type="button" class="tsf-ack" onclick="tscoreAckFlag(' + n.id + ', \'' + escapeHtml(studentId || "").replace(/'/g, "&#39;") + '\')">확인했어요</button></div>';
+      }).join("");
+    }).catch(() => { box.innerHTML = '<p class="tsf-sub">불러오지 못했어요.</p>'; });
+  }
+  function tscoreAckFlag(id, studentId) {
+    adminAuthPost({ action: "report_flagged_ack", id: id }).then(r => {
+      if (!r || !r.ok) throw new Error("fail");
+      showToast("확인 처리했어요");
+      tscoreOpenFlags(studentId); tscoreLoad();
+    }).catch(() => showToast("처리하지 못했어요"));
+  }
+  function tscoreCloseFlags() { document.getElementById("tscoreFlagPop").classList.remove("on"); }
   function previewRoomSchedule() {
     document.documentElement.removeAttribute("data-boot");
     document.body.classList.remove("is-admin");
