@@ -3272,31 +3272,32 @@
   .ppg-input:focus { outline: none; border-color: var(--line-dark); }
   .ppg-input::placeholder { color: var(--ink-soft); font-size: 0.7rem; }
 
-  /* 내 공부 목표와 계획: 한 화면에 다 들어오고, 각 입력 박스 안에서만 스크롤된다. 구역마다 은은한 색을 입힌다. */
-  .pp-guide-col.pg-fit { display: flex; flex-direction: column; overflow: hidden; background: #17294F; border-color: #17294F; }
-  .pg-fit .pp-guide-head { flex: none; }
-  .pg-secs { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; }
-  .pg-sec { border-radius: 12px; padding: 8px 12px 10px; display: flex; flex-direction: column; gap: 5px; min-height: 0; border-left: 4px solid var(--pgc); background: var(--pgb); }
-  .pg-sec-goal { --pgc: #3B5BA5; --pgb: #EEF2FA; flex: 0 0 auto; }
-  .pg-sec-habit { --pgc: #B58A2E; --pgb: #FBF4E3; flex: 2 1 0; }
-  .pg-sec-plan { --pgc: #3E8E63; --pgb: #EAF5EE; flex: 3 1 0; }
-  /* 목표는 따로 박스를 두지 않고 남색 배경 위에 바로 올린다 */
-  .pg-sec-goal { background: transparent; border-left: none; padding: 2px 2px 4px; }
-  .pg-sec-goal .pg-sec-title, .pg-sec-goal .pg-label, .pg-sec-goal .pg-label b { color: #fff; }
-  .pg-sec-goal .pg-label em { color: rgba(255,255,255,0.7); }
-  .pg-sec-goal .ppg-input:focus { box-shadow: 0 0 0 1.5px #E2B13C; }
-  .pg-sec-title { flex: none; font-size: 0.82rem; font-weight: 800; color: var(--pgc); }
-  .pg-row3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-  .pg-stack { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 5px; }
-  .pg-row2 { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .pg-row2 .pg-cell { min-height: 0; }
-  .pg-fit .pg-cell { min-height: 44px; }
-  .pg-fit .pg-label { flex: none; }
-  .pg-stack .pg-cell { flex: 1 1 0; }
-  .pg-fit .ppg-input { flex: 1; min-height: 24px; overflow-y: auto; border-color: transparent; box-shadow: 0 0 0 1px rgba(0,0,0,0.06); }
-  .pg-row3 .ppg-input { height: 36px; flex: none; }
-  .pg-fit .ppg-input:focus { box-shadow: 0 0 0 1.5px var(--pgc); }
-  @media (max-width: 640px) { .pg-row3, .pg-row2 { grid-template-columns: 1fr; } }
+  /* 내 공부 목표와 계획: 남색 그라데이션 패널 + 유리 느낌 카드. 한 화면에 다 들어오고, 입력 박스 안에서만 스크롤된다. */
+  .pp-guide-col.pgx { display: flex; flex-direction: column; gap: 12px; overflow: hidden; padding: 22px 24px 24px; border: none; border-radius: 24px; color: #fff;
+    background: radial-gradient(90% 70% at 100% 100%, rgba(122,150,222,0.55) 0%, rgba(122,150,222,0) 60%), radial-gradient(70% 50% at 15% 0%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 60%), linear-gradient(145deg, #1B2D57 0%, #142349 55%, #1D3060 100%); }
+  .pgx-head { flex: none; display: flex; align-items: center; gap: 12px; }
+  .pgx-head-ico { width: 38px; height: 38px; color: #fff; flex: none; } .pgx-head-ico svg { width: 100%; height: 100%; }
+  .pgx-head-txt h3 { margin: 0; font-size: 1.35rem; font-weight: 800; color: #fff; line-height: 1.2; }
+  .pgx-head-txt p { margin: 2px 0 0; font-size: 0.76rem; color: rgba(255,255,255,0.78); }
+  .pgx-head-side { margin-left: auto; font-size: 0.74rem; color: rgba(255,255,255,0.8); display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; }
+  .pgx-head-side::before { content: ""; width: 36px; height: 1px; background: rgba(255,255,255,0.55); }
+  .pgx-goals { flex: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .pgx-gcard { display: flex; flex-direction: column; gap: 6px; padding: 12px 16px 12px; border-radius: 18px; background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(222,230,247,0.9)); box-shadow: 0 6px 18px rgba(8,16,40,0.25); min-width: 0; }
+  .pgx-glabel { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 800; color: #17294F; white-space: nowrap; }
+  .pgx-glabel i, .pgx-card-head i { display: inline-flex; width: 20px; height: 20px; color: #3B5BA5; } .pgx-glabel i svg, .pgx-card-head i svg { width: 100%; height: 100%; }
+  .pgx-gcard .ppg-input { height: 26px; min-height: 26px; padding: 2px 0 0 28px; border: none; background: transparent; font-size: 0.84rem; color: #2C3A5C; border-radius: 0; box-shadow: none; resize: none; overflow-y: auto; }
+  .pgx-gcard .ppg-input::placeholder { color: #7B87A6; }
+  .pgx-card { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; gap: 8px; padding: 12px 16px 14px; border-radius: 20px; background: rgba(247,249,254,0.97); box-shadow: 0 8px 22px rgba(8,16,40,0.28); }
+  .pgx-card-head { flex: none; display: flex; align-items: center; gap: 8px; font-size: 1rem; font-weight: 800; color: #17294F; }
+  .pgx-cols2 { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .pgx-stack { min-height: 0; display: flex; flex-direction: column; gap: 8px; }
+  .pgx-field { flex: 1 1 0; min-height: 52px; display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+  .pgx-flabel { flex: none; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .pgx-flabel b { font-size: 0.72rem; font-weight: 800; color: #17294F; background: #E3E9F6; padding: 3px 11px; border-radius: 999px; }
+  .pgx-flabel em { font-style: normal; font-size: 0.7rem; color: #7B87A6; overflow: hidden; text-overflow: ellipsis; }
+  .pgx-field .ppg-input { flex: 1; min-height: 26px; overflow-y: auto; background: #fff; border: 1px solid #E3E8F3; border-radius: 12px; padding: 9px 12px; font-size: 0.82rem; box-shadow: 0 1px 2px rgba(23,41,79,0.05); }
+  .pgx .ppg-input:focus { outline: none; border-color: #5B7BC8; box-shadow: 0 0 0 2px rgba(91,123,200,0.25); }
+  @media (max-width: 640px) { .pgx-goals, .pgx-cols2 { grid-template-columns: 1fr; } .pgx-head-side { display: none; } }
   .pp-guide-hint { margin: 0; font-size: 0.72rem; color: var(--ink-soft); line-height: 1.55; }
   .pp-guide-link { font-family: inherit; font-size: inherit; font-weight: 700; color: var(--green-deep); background: none; border: none; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
   /* AI로 작성하기: 공부중독 AI 박스와 같은 모양(연한 회색 바탕 · 사이드바 · 새 채팅 · 입력창).
@@ -9153,42 +9154,42 @@
           </aside>
         </div>
 
-        <div class="pp-guide-col pg-fit">
-          <div class="pg-secs">
-            <section class="pg-sec pg-sec-goal">
-              <div class="pg-sec-title">목표</div>
-              <div class="pg-row3">
-              <label class="pg-cell "><span class="pg-label"><b>최종 목표 대학</b></span>
-                <textarea class="ppg-input" data-k="univ" placeholder="예: 서울대 의예과"></textarea></label>
-              <label class="pg-cell "><span class="pg-label"><b>최종 목표 성적</b></span>
-                <textarea class="ppg-input" data-k="grade" placeholder="예: 전 과목 1등급"></textarea></label>
-              <label class="pg-cell "><span class="pg-label"><b>지금 현재 목표</b></span>
-                <textarea class="ppg-input" data-k="goal" placeholder="이번 시험 · 이번 달 목표"></textarea></label>
-              </div>
-            </section>
-            <section class="pg-sec pg-sec-habit">
-              <div class="pg-sec-title">내 공부 습관</div>
-              <div class="pg-row2">
-              <label class="pg-cell "><span class="pg-label"><b>장점</b><em>잘하고 있는 것</em></span>
-                <textarea class="ppg-input" data-k="pros" placeholder="예: 아침에 집중이 잘 돼요"></textarea></label>
-              <label class="pg-cell "><span class="pg-label"><b>단점</b><em>고치고 싶은 것</em></span>
-                <textarea class="ppg-input" data-k="cons" placeholder="예: 저녁에 폰을 자주 봐요"></textarea></label>
-              </div>
-            </section>
-            <section class="pg-sec pg-sec-plan">
-              <div class="pg-sec-title">공부 계획</div>
-              <div class="pg-row2">
-                <div class="pg-stack">
-                  <label class="pg-cell "><span class="pg-label"><b>루틴</b><em>매일 하는 공부</em></span>
-                    <textarea class="ppg-input" data-k="routine" placeholder="예: 영단어 30개"></textarea></label>
-                  <label class="pg-cell "><span class="pg-label"><b>서브</b><em>일주일에 한두 번 하는 공부</em></span>
-                    <textarea class="ppg-input" data-k="sub" placeholder="예: 과학 개념 정리"></textarea></label>
-                </div>
-                <label class="pg-cell pg-main"><span class="pg-label"><b>메인</b><em>가장 핵심적인 공부</em></span>
-                  <textarea class="ppg-input" data-k="main" placeholder="예: 수학 문제집"></textarea></label>
-              </div>
-            </section>
+        <div class="pp-guide-col pgx">
+          <div class="pgx-head">
+            <span class="pgx-head-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 12l7-7M16 4h4v4"/></svg></span>
+            <div class="pgx-head-txt"><h3>목표</h3><p>지금 목표 대학을 향해, 오늘도 한 걸음 더</p></div>
+            <span class="pgx-head-side">꾸준함이 만드는 변화</span>
           </div>
+          <div class="pgx-goals">
+            <label class="pgx-gcard"><span class="pgx-glabel"><i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5C3 4.7 3.7 4 4.5 4H11v16H4.5A1.5 1.5 0 0 1 3 18.5v-13zM13 4h6.5c.8 0 1.5.7 1.5 1.5v13c0 .8-.7 1.5-1.5 1.5H13V4z"/></svg></i>최종 목표 대학</span>
+              <textarea class="ppg-input" data-k="univ" placeholder="예: 서울대 의예과"></textarea></label>
+            <label class="pgx-gcard"><span class="pgx-glabel"><i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2 6.3 20.3l1.2-6.4L2.8 9.5l6.4-.8z"/></svg></i>최종 목표 성적</span>
+              <textarea class="ppg-input" data-k="grade" placeholder="예: 전 과목 1등급"></textarea></label>
+            <label class="pgx-gcard"><span class="pgx-glabel"><i><svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="12" width="4" height="8" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="16" y="3" width="4" height="17" rx="1"/></svg></i>지금 현재 목표</span>
+              <textarea class="ppg-input" data-k="goal" placeholder="이번 시험 · 이번 달 목표"></textarea></label>
+          </div>
+          <section class="pgx-card">
+            <div class="pgx-card-head"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-9"/><path d="M15 6h6v6"/></svg></i>내 공부 습관</div>
+            <div class="pgx-cols2">
+              <label class="pgx-field "><span class="pgx-flabel"><b>장점</b><em>잘하고 있는 것</em></span>
+                <textarea class="ppg-input" data-k="pros" placeholder="예: 아침에 집중이 잘 돼요"></textarea></label>
+              <label class="pgx-field "><span class="pgx-flabel"><b>단점</b><em>고치고 싶은 것</em></span>
+                <textarea class="ppg-input" data-k="cons" placeholder="예: 저녁에 폰을 자주 봐요"></textarea></label>
+            </div>
+          </section>
+          <section class="pgx-card">
+            <div class="pgx-card-head"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></i>공부 계획</div>
+            <div class="pgx-cols2">
+              <div class="pgx-stack">
+              <label class="pgx-field "><span class="pgx-flabel"><b>루틴</b><em>매일 하는 공부</em></span>
+                <textarea class="ppg-input" data-k="routine" placeholder="예: 영단어 30개"></textarea></label>
+              <label class="pgx-field "><span class="pgx-flabel"><b>서브</b><em>일주일에 한두 번 하는 공부</em></span>
+                <textarea class="ppg-input" data-k="sub" placeholder="예: 과학 개념 정리"></textarea></label>
+              </div>
+              <label class="pgx-field "><span class="pgx-flabel"><b>메인</b><em>가장 핵심적인 공부</em></span>
+                <textarea class="ppg-input" data-k="main" placeholder="예: 수학 문제집"></textarea></label>
+            </div>
+          </section>
         </div>
       </div>
 
@@ -11530,9 +11531,13 @@
       auth = {
         get currentUser() { return currentUser; },
         onAuthStateChanged(cb) { listeners.push(cb); if (ready) Promise.resolve().then(() => cb(currentUser)); },
+        hasDevice() { return !!lsGet("holoAdminDevice"); },
+        // 인증 숫자를 한 번 넘긴 기기는 서버가 준 열쇠를 저장해 두고, 다음부터는 비밀번호만으로 로그인한다
         signInAdmin(email, pw, code) {
-          return authPost({ action: "admin_login", email, pw, code }).then(r => {
-            if (!r || !r.ok) throw new Error((r && r.error) || "로그인 정보가 올바르지 않아요.");
+          const device = code ? "" : (lsGet("holoAdminDevice") || "");
+          return authPost({ action: "admin_login", email, pw, code, device }).then(r => {
+            if (!r || !r.ok) { const er = new Error((r && r.error) || "로그인 정보가 올바르지 않아요."); er.usedDevice = !!device; throw er; }
+            if (r.device) lsSet("holoAdminDevice", r.device);
             lsSet("holoAdminEmail", r.email);
             setUser(r.email, r.token);
             notify();
@@ -11541,7 +11546,7 @@
         signOut() { setUser("", ""); notify(); return Promise.resolve(); },
       };
       const otpWrap = document.getElementById("admin-otp-wrap");
-      if (otpWrap) otpWrap.style.display = "";
+      if (otpWrap) otpWrap.style.display = auth.hasDevice() ? "none" : "";
       // authPost · CHAT_API_URL은 아래쪽 스크립트에서 정의되므로, 페이지가 모두 읽힌 뒤에 확인한다
       document.addEventListener("DOMContentLoaded", checkAdmin);
     })();
@@ -20003,6 +20008,11 @@
     }).catch(err => {
       msg.textContent = (err && err.message) || "로그인 정보가 올바르지 않아요.";
       msg.className = "apply-status-msg error";
+      // 인증 숫자 없이 들어가려다 막히면(비밀번호 오류 · 기기 인증 만료) 인증 숫자 칸을 열어 준다
+      if (err && err.usedDevice) {
+        document.getElementById("admin-otp-wrap").style.display = "";
+        msg.textContent += " 이 기기의 인증이 끝났을 수도 있어요. 인증 앱의 6자리 숫자를 함께 입력해 보세요.";
+      }
     });
   }
   function adminLogout() {
