@@ -9527,7 +9527,7 @@
     <div class="mex-detail-wrap" id="mexDetailWrap" style="display:none;">
       <div class="mex-detail-box-row">
         <div class="mex-detail-box"><div class="mex-detail-box-label">날짜</div><div class="mex-detail-box-value" id="mexDetailBoxDate">-</div></div>
-        <div class="mex-detail-box"><div class="mex-detail-box-label">시험</div><div class="mex-detail-box-value" id="mexDetailBoxSubject">-</div></div>
+        <div class="mex-detail-box"><div class="mex-detail-box-label">과목</div><div class="mex-detail-box-value" id="mexDetailBoxSubject">-</div></div>
         <div class="mex-detail-box"><div class="mex-detail-box-label">모의고사 이름</div><div class="mex-detail-box-value" id="mexDetailBoxName">-</div></div>
         <div class="mex-detail-box">
           <div class="mex-detail-box-label">점수</div>
@@ -19441,7 +19441,7 @@
       mexPrintAnalysisHtml(exam) +
       '<div class="mexp-meta">' +
         '<div><span>날짜</span><b>' + esc(exam.date) + '</b></div>' +
-        '<div><span>시험</span><b>' + esc((exam.periodLabel ? exam.periodLabel + " " : "") + exam.subject) + '</b></div>' +
+        '<div><span>과목</span><b>' + esc(exam.subject) + '</b></div>' +
         '<div><span>점수</span><b>' + score + '</b></div>' +
         '<div><span>랩타임</span><b>' + (hasLap ? "총 " + formatDur(totalSec) : "기록 없음") + '</b></div>' +
       '</div>';
@@ -19535,7 +19535,7 @@
     const exam = mexCurrentExam;
     if (!exam) return;
     document.getElementById("mexDetailBoxDate").textContent = exam.date;
-    document.getElementById("mexDetailBoxSubject").textContent = (exam.periodLabel ? exam.periodLabel + " " : "") + exam.subject;
+    document.getElementById("mexDetailBoxSubject").textContent = exam.subject; // 과목명만(교시 · 시험 이름은 따로 보여준다)
     document.getElementById("mexDetailBoxName").textContent = exam.title;
     document.getElementById("mexDetailBoxScore").textContent = exam.scoreMine ? exam.scoreMine + "/" + exam.scoreMax + "점" : "미채점";
     const gradeBtn = document.getElementById("mexScoreGradeBtn");
