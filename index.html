@@ -16530,7 +16530,7 @@
       const k = ovFmt(d), items = by[k] || [], out = d.getMonth() !== ovAnchor.getMonth();
       // 월 보기는 내용 대신 이행 상태만: 모두 이행 / 일부 이행 / 미이행 (아직 지나지 않은 날의 계획은 "예정")
       const doneN = items.filter(i => Number(i.done)).length;
-      const st = !items.length ? "" : doneN === items.length ? "all" : doneN ? "some" : (k > today ? "plan" : "none");
+      const st = !items.length ? "" : doneN === items.length ? "all" : doneN ? "some" : (k >= today ? "plan" : "none");
       const label = { all: "모두 이행", some: "일부 이행", none: "미이행", plan: "예정" }[st] || "";
       h += '<div class="ov-cell' + (st ? " st-" + st : "") + (out ? " out" : "") + (k === today ? " today" : "") + '"><span class="ov-d">' + d.getDate() + "</span>" + (label ? '<span class="ov-st">' + label + "</span>" : "") + "</div>";
     }
