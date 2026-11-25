@@ -7907,13 +7907,22 @@
   .vhome b { font-size: 1.35rem; font-weight: 800; color: var(--ink); }
   .vhome span { font-size: 0.8rem; line-height: 1.5; color: var(--ink-soft); }
   @media (max-width: 560px) { .vhome { grid-template-columns: 1fr; } }
-  .vstudy-menu { display: flex; flex-direction: column; gap: 12px; margin-top: clamp(30px, 10vh, 120px); }
+  .vstudy-menu { display: flex; flex-direction: row; gap: 12px; margin-top: clamp(30px, 10vh, 120px); }
   .vstudy-menu button { font-family: inherit; text-align: left; background: #fff; border: 1px solid var(--line-dark); border-radius: 12px; padding: 22px 22px; cursor: pointer; display: flex; flex-direction: column; gap: 6px; transition: background 0.15s, border-color 0.15s; }
   .vstudy-menu button:hover { background: var(--cream); border-color: var(--green-deep); }
   .vstudy-menu b { font-size: 1.02rem; font-weight: 800; color: var(--ink); }
   .vstudy-menu span { font-size: 0.78rem; color: var(--ink-soft); }
   .fc-wrap { padding-top: 0; }
   .fc-wrap .vocab-top { margin-bottom: clamp(28px, 5vh, 56px); }
+  .vstudy-menu button { flex: 1 1 0; min-width: 0; }
+  @media (max-width: 560px) { .vstudy-menu { flex-direction: column; } }
+  .vstudy-menu button.vs-test { background: #D93025; border-color: #D93025; }
+  .vstudy-menu button.vs-test b, .vstudy-menu button.vs-test span { color: #fff; }
+  .vstudy-menu button.vs-test:hover { background: #C22B21; }
+  .fc-speak { position: absolute; top: 5px; left: 7px; z-index: 3; width: 24px; height: 24px; padding: 0; display: inline-flex; align-items: center; justify-content: center; background: none; border: none; color: var(--ink-soft); cursor: pointer; border-radius: 6px; }
+  .fc-speak:hover { color: var(--ink); background: rgba(0,0,0,0.05); }
+  .fc-speak svg { width: 16px; height: 16px; }
+  .fc-speak.on { color: #3B5BA5; }
   .fc-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 6px; }
   .fc { perspective: 700px; height: 92px; cursor: pointer; }
   .fc-in { position: relative; width: 100%; height: 100%; transition: transform 0.45s; transform-style: preserve-3d; }
@@ -12649,12 +12658,13 @@
   function vocabStudyMenuHtml(r) {
     return '<div class="vocab-top"><button type="button" class="vocab-back" onclick="initVocab()">← 목록</button><span class="vocab-step">' + escapeHtml(r.set.label) + '</span><span class="vocab-count">' + r.set.items.length + '개</span></div>' +
       '<div class="vstudy-menu"><button type="button" onclick="vocabShowCards()"><b>카드 보기</b><span>카드를 눌러 뜻을 확인해요</span></button>' +
-      '<button type="button" onclick="vocabStartQuiz()"><b>객관식 문제 풀어보기</b><span>3지선다로 공부해요</span></button></div>';
+      '<button type="button" onclick="vocabStartQuiz()"><b>객관식 문제 풀어보기</b><span>3지선다로 공부해요</span></button>' +
+      '<button type="button" class="vs-test" onclick="vocabStartTest(\'' + r.set.id + '\')"><b>TEST 응시하기</b><span>이 DAY의 Test를 바로 응시해요</span></button></div>';
   }
   function vocabShowCards() {
     const r = vocabRun; if (!r) return; r.step = "grid";
     vocabWrap().innerHTML = '<div class="fc-wrap"><div class="vocab-top"><button type="button" class="vocab-back" onclick="vocabBackToMenu()">← 뒤로</button><span class="vocab-step">' + escapeHtml(r.set.label) + ' · 카드 보기</span><span class="vocab-count">' + r.set.items.length + '개</span></div>' +
-      '<div class="fc-grid">' + r.set.items.map(i => { const e = vocabE(i); return '<div class="fc" onclick="this.classList.toggle(\'flip\')">' + vocabStarBtn(i, "fc-star") + '<div class="fc-in"><div class="fc-face">' + escapeHtml(e[0]) + '</div><div class="fc-face fc-back">' + escapeHtml(e[2]) + '</div></div></div>'; }).join("") + '</div></div>';
+      '<div class="fc-grid">' + r.set.items.map(i => { const e = vocabE(i); return '<div class="fc" onclick="this.classList.toggle(\'flip\')">' + vocabStarBtn(i, "fc-star") + '<button type="button" class="fc-speak" onclick="event.stopPropagation();vocabSpeak(' + i + ')" aria-label="발음 듣기" title="발음 듣기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></button><div class="fc-in"><div class="fc-face">' + escapeHtml(e[0]) + '</div><div class="fc-face fc-back">' + escapeHtml(e[2]) + '</div></div></div>'; }).join("") + '</div></div>';
     document.getElementById("vocabLiveBody").scrollTop = 0;
   }
   function vocabBackToMenu() { const r = vocabRun; if (!r) return; r.step = "menu"; vocabWrap().innerHTML = vocabStudyMenuHtml(r); }
@@ -18617,6 +18627,40 @@
     document.getElementById("earphoneWarn").classList.remove("on");
     const next = earphoneAfter; earphoneAfter = null;
     if (next) next();
+  }
+  // 이어폰 안내를 30분에 한 번만 띄운다(소리 듣기 버튼을 누를 때마다 뜨면 번거로우니까). 마지막으로 "확인했습니다"를 누른 시각을 이 기기에 저장해 둔다.
+  const EARPHONE_GAP_MS = 30 * 60 * 1000;
+  function earphoneGuardTimed(next) {
+    let last = 0;
+    try { last = Number(localStorage.getItem("holoEarphoneAt")) || 0; } catch (e) {}
+    if (Date.now() - last < EARPHONE_GAP_MS) { next(); return; }
+    earphoneGuard(function () {
+      try { localStorage.setItem("holoEarphoneAt", String(Date.now())); } catch (e) {}
+      next();
+    });
+  }
+  // 영어 단어 발음: 기기에 들어 있는 미국 영어 음성으로 읽어 준다(가능하면 자연스러운 음성을 먼저 고른다).
+  function ttsPickVoice() {
+    if (!window.speechSynthesis) return null;
+    const all = speechSynthesis.getVoices() || [];
+    const us = all.filter(v => /^en[-_]US/i.test(v.lang));
+    const pref = /Natural|Aria|Jenny|Guy|Google US English|Samantha|Ava|Allison|Zira|Nicky|Evan/i;
+    return us.find(v => pref.test(v.name)) || us[0] || all.find(v => /^en/i.test(v.lang)) || null;
+  }
+  if (window.speechSynthesis) { try { speechSynthesis.addEventListener("voiceschanged", () => {}); } catch (e) {} }
+  function vocabSpeak(idx) {
+    if (!window.speechSynthesis) { showToast("이 기기에서는 소리 듣기를 지원하지 않아요"); return; }
+    const e = vocabE(idx); if (!e) return;
+    const word = String(e[0]).replace(/\([^)]*\)/g, " ").replace(/[~]/g, " ").replace(/\s+/g, " ").trim();
+    earphoneGuardTimed(function () {
+      try {
+        speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(word);
+        u.lang = "en-US"; u.rate = 0.9;
+        const v = ttsPickVoice(); if (v) u.voice = v;
+        speechSynthesis.speak(u);
+      } catch (err) { showToast("소리를 재생하지 못했어요"); }
+    });
   }
   function genTimerOpen(mode) { earphoneGuard(function () { genTimerOpenReal(mode); }); }
   function genTimerOpenReal(mode) {
