@@ -7816,13 +7816,13 @@
   .vocab-wrap { width: 100%; max-width: 680px; margin: 0 auto auto; padding: 0 20px 40px; box-sizing: border-box; }
   .vtitle-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
   .vtitle-row h2 { margin: 0; }
-  .vhead-tabs { display: inline-flex; gap: 6px; }
-  .vhead-tabs button { font-family: inherit; font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); background: #fff; border: 1px solid var(--line-dark); border-radius: 999px; padding: 6px 16px; cursor: pointer; }
+  /* 공부하기 / TEST 응시하기: 회색 바 안에서 선택한 쪽만 흰 칸 + 진한 테두리로 올라오는 모양 */
+  .vhead-tabs { display: inline-flex; gap: 4px; padding: 5px; background: #ECEAE4; border-radius: 14px; }
+  .vhead-tabs button { min-width: 150px; font-family: inherit; font-size: 0.84rem; font-weight: 700; color: #6B6A64; background: none; border: 2px solid transparent; border-radius: 10px; padding: 9px 20px; cursor: pointer; }
   .vhead-tabs button:hover { color: var(--ink); }
-  .vhead-tabs button.on { background: #17294F; border-color: #17294F; color: #fff; }
-  .vhead-tabs button[data-t="test"] { background: #D93025; border-color: #D93025; color: #fff; }
-  .vhead-tabs button[data-t="test"]:hover { color: #fff; background: #C22B21; }
-  .vhead-tabs button[data-t="test"].on { background: #B3261E; border-color: #B3261E; box-shadow: 0 0 0 3px rgba(217,48,37,0.2); }
+  .vhead-tabs button.on { background: #fff; color: var(--ink); border-color: #17181A; }
+  .vhead-tabs button[data-t="test"] { color: #D93025; }
+  .vhead-tabs button[data-t="test"].on { color: #D93025; border-color: #D93025; }
   .vocab-tabs { display: flex; gap: 6px; background: #ECEAE4; border-radius: 10px; padding: 4px; }
   .vocab-tabs button { flex: 1; font-family: inherit; font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); background: none; border: none; border-radius: 8px; padding: 9px 0; cursor: pointer; }
   .vocab-tabs button.on { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(23,24,26,0.08); }
