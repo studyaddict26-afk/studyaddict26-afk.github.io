@@ -4676,20 +4676,6 @@
   .exsim-noise-hint { font-size: 0.7rem; color: var(--ink-soft); text-align: center; line-height: 1.5; margin: 0; }
   .exsim-noise-type-row { display: flex; align-items: center; gap: 10px; padding: 9px 2px; font-size: 0.86rem; font-weight: 600; color: var(--ink); cursor: pointer; }
   .exsim-noise-type-row input[type="checkbox"] { accent-color: var(--green-deep); width: 17px; height: 17px; }
-  .exsim-hub-buttons { display: flex; gap: 12px; }
-  .exsim-hub-btn {
-    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
-    font-family: inherit; background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
-    padding: 22px 10px; cursor: pointer; text-align: center; transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
-  }
-  .exsim-hub-btn:hover { transform: translateY(-2px); border-color: var(--green); box-shadow: 0 6px 16px rgba(23,24,26,0.08); }
-  .exsim-hub-ico { display: flex; width: 28px; height: 28px; color: #0D2155; } /* 이모지 대신 로고 남색 선 아이콘 */
-  .exsim-hub-ico svg { width: 100%; height: 100%; display: block; }
-  .exsim-hub-title { font-size: 0.84rem; font-weight: 800; color: var(--ink); line-height: 1.35; }
-  @media (max-width: 480px) {
-    .exsim-hub-title { font-size: 0.74rem; }
-    .exsim-hub-btn { padding: 16px 6px; }
-  }
   .exsim-listening-select {
     font-family: inherit; font-size: 0.78rem; font-weight: 700; color: var(--green-deep); background: var(--green-soft);
     border: none; border-radius: 999px; padding: 5px 10px; cursor: pointer; max-width: 170px;
@@ -9463,30 +9449,6 @@
   <div class="vlive" id="vocabLive"><div class="vlive-body" id="vocabLiveBody"></div></div>
 
   <!-- ─── 우리 동네 내신 기출 공부하기 (허브) ─── -->
-  <section class="view" id="view-examhub">
-    <div class="chat-head">
-      <span class="eyebrow">EXAM</span>
-      <h2>시험 시뮬레이션</h2>
-      <div class="split"></div>
-    </div>
-    <div class="exsim-wrap">
-      <div class="exsim-hub-buttons">
-        <button type="button" class="exsim-hub-btn" onclick="go('examSuneung')">
-          <span class="exsim-hub-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5-10-5z"/><path d="M6 11.5V16c0 1.2 2.7 3 6 3s6-1.8 6-3v-4.5"/><path d="M22 9v6"/></svg></span>
-          <span class="exsim-hub-title">수능 시뮬레이션</span>
-        </button>
-        <button type="button" class="exsim-hub-btn" onclick="go('examNaeshin')">
-          <span class="exsim-hub-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.5 5.2 8 4.5 4 4.5v13c4 0 6.5.7 8 2 1.5-1.3 4-2 8-2v-13c-4 0-6.5.7-8 2z"/><path d="M12 6.5v13"/></svg></span>
-          <span class="exsim-hub-title">내신 시뮬레이션</span>
-        </button>
-      </div>
-      <div class="vocab-callout" style="margin-top:16px"><span class="vc-ico">i</span><ul>
-        <li>내신 시뮬레이션은 기록하지 않아요.</li>
-        <li>수능 시뮬레이션은 응시가 끝난 뒤 기록창에 내용을 입력하면, 모의고사 관리하기 페이지에서 확인할 수 있어요.</li>
-      </ul></div>
-    </div>
-  </section>
-
   <!-- ─── 공부 음악 (준비중) ─── -->
 
 
@@ -9497,10 +9459,14 @@
   <section class="view" id="view-examSuneung">
     <div class="chat-head">
       <span class="eyebrow">EXAM</span>
-      <h2>수능 시뮬레이션</h2>
+      <h2>시험 시뮬레이션</h2>
       <div class="split"></div>
     </div>
     <div class="exsim-wrap">
+      <div class="mex-subtabs">
+        <button type="button" class="reports-subtab-btn on" aria-current="page">수능 시뮬레이션</button>
+        <button type="button" class="reports-subtab-btn" onclick="exsimTab('examNaeshin')">내신 시뮬레이션</button>
+      </div>
       <div class="exsim-top-btns">
         <button type="button" class="exsim-top-btn" onclick="exsimOpenSubjectPicker()">
           <span class="exsim-top-btn-ico">📚</span>
@@ -9515,6 +9481,10 @@
       </div>
 
       <div class="exsim-selected-card" id="exsimSelectedCard"></div>
+      <div class="vocab-callout exsim-guide"><span class="vc-ico">i</span><ul>
+        <li>내신 시뮬레이션은 기록하지 않아요.</li>
+        <li>수능 시뮬레이션은 응시가 끝난 뒤 기록창에 내용을 입력하면, 모의고사 관리하기 페이지에서 확인할 수 있어요.</li>
+      </ul></div>
     </div>
   </section>
 
@@ -9522,10 +9492,14 @@
   <section class="view" id="view-examNaeshin">
     <div class="chat-head">
       <span class="eyebrow">EXAM</span>
-      <h2>내신 시뮬레이션</h2>
+      <h2>시험 시뮬레이션</h2>
       <div class="split"></div>
     </div>
     <div class="exsim-wrap">
+      <div class="mex-subtabs">
+        <button type="button" class="reports-subtab-btn" onclick="exsimTab('examSuneung')">수능 시뮬레이션</button>
+        <button type="button" class="reports-subtab-btn on" aria-current="page">내신 시뮬레이션</button>
+      </div>
       <div class="exsim-top-btns">
         <button type="button" class="exsim-top-btn" onclick="exsimOpenNaeshinSubjectPicker()">
           <span class="exsim-top-btn-ico">📚</span>
@@ -9540,6 +9514,10 @@
       </div>
 
       <div class="exsim-selected-card" id="exsimNaeshinSelectedCard"></div>
+      <div class="vocab-callout exsim-guide"><span class="vc-ico">i</span><ul>
+        <li>내신 시뮬레이션은 기록하지 않아요.</li>
+        <li>수능 시뮬레이션은 응시가 끝난 뒤 기록창에 내용을 입력하면, 모의고사 관리하기 페이지에서 확인할 수 있어요.</li>
+      </ul></div>
     </div>
   </section>
 
@@ -11780,7 +11758,7 @@
     "consult-materials": "consult-home", "consult-community": "consult-home", "consult-myclass": "consult-home",
     "consult-programs": "consult-home", "consult-4": "consult-programs", "consult-inquiry": "consult-home", "consult-mbti": "consult-home", "consult-purpose": "consult-home", "consult-column": "consult-home",
     vocabpick: "home", vocab: "vocabpick", todayrecord: "home", cumulative: "recordhub", reports: "recordhub", dayDetail: "cumulative",
-    examSuneung: "examhub", examNaeshin: "examhub", mexlist: "examhub",
+    examSuneung: "home", examNaeshin: "home", mexlist: "examhub",
     mathexam: "examhub", engexam: "examhub",
     recordhub: "home", plannerPage: "home", scheduleManage: "home", schedFixed: "home", schedAdhoc: "home", mockexam: "home",
     examhub: "home", privacy: "mypage", terms: "mypage", howto: "home", mypage: "home", studymusic: "home", community: "home",
@@ -11988,7 +11966,12 @@
     homeRenderExtraDday();
   }
   let currentView = "home";
+  // 시험 시뮬레이션은 한 화면의 두 탭(수능 · 내신)이다. 탭 전환은 "이전으로" 기록에 남기지 않는다.
+  let exsimLastTab = "examSuneung";
+  function exsimTab(view) { navGoingBack = true; try { go(view); } finally { navGoingBack = false; } }
   function go(view) {
+    if (view === "examhub") view = exsimLastTab;
+    if (view === "examSuneung" || view === "examNaeshin") exsimLastTab = view;
     const dm = /^consult-([123])$/.exec(view); // 학습 상담 · 수학 · 국어 클리닉은 독립 페이지가 아니라 "수업 비용 및 신청" 목차의 오른쪽에 열린다
     if (dm) { go("consult-programs"); progShowDetail(+dm[1]); return; }
     if (view === "consult-fee" && typeof feeTab === "function") feeTab(0); // 들어오면 공부 컨설팅부터
@@ -12048,7 +12031,6 @@
     if (view === "schedAdhoc") saEnter();
     if (view === "home") { hdkLoad(); hrpLoad(); }
     if (view !== "home") hdkStopPoll();
-    if (view === "examhub") initExamHub();
     if (view === "vocab") { vocabStage = "home"; initVocab(); }
     if (view === "vocabpick") engVocabRender();
     if (view === "examSuneung") initExamSuneung();
@@ -17780,8 +17762,6 @@
     return m + "분 " + String(s).padStart(2, "0") + "초";
   }
 
-  // 시험 시뮬레이션 허브 — 수능/내신/누적된 기록 세 페이지로 들어가는 선택 화면, 별도 초기화 없음.
-  function initExamHub() { mexRenderDday(); }
   function initExamSuneung() {
     if (!exsimCheckedIds.length) exsimCheckedIds = ["kor"];
     exsimRenderSelectedCard();
