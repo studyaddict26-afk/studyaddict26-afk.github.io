@@ -9120,7 +9120,7 @@
   <section class="view" id="view-recordhub">
     <div class="consult-page">
       <span class="eyebrow">MY RECORDS</span>
-      <h2>내 학습 기록 살펴보기</h2>
+      <h2>6일 분석지 확인하기</h2>
       <div class="split"></div>
 
       <!-- 위쪽 긴 박스: 이번 주 평균 점수 · 이번 주 분석지 상태 · 누적 학습 일수 · 누적 분석지 개수 -->
@@ -11759,7 +11759,7 @@
 
 <script>
   // ── 뷰 전환 ──
-  const titles = { home: "홀로", vocabpick: "어휘력 Test", vocab: "영어", consult: "학습 상담 안내", "consult-1": "공부 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-column": "선배들의 공부법 칼럼", "consult-home": "Holo Study", privacy: "개인정보 처리방침", terms: "이용약관", "consult-myclass": "나의 수업", "consult-programs": "수업 안내", "consult-fee": "수업 비용 및 신청", "consult-inquiry": "상담 문의", "consult-mbti": "학습 성향 MBTI", "consult-purpose": "운영 목적", "consult-2": "문제 풀이 전략 클리닉", "consult-3": "국어 독해력 클리닉", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "공부 계획 세우기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "내 학습 기록 살펴보기", scheduleManage: "독서실 스케줄", schedFixed: "고정 스케줄", schedAdhoc: "돌발 스케줄", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", mypage: "마이페이지", studymusic: "공부 음악", community: "공부중독 커뮤니티", academyHome: "Academy", academyTeacher: "선생님 수업 현황", teacherHome: "내 학생 관리", admin: "관리자", form: "학습 상담 신청서" };
+  const titles = { home: "홀로", vocabpick: "어휘력 Test", vocab: "영어", consult: "학습 상담 안내", "consult-1": "공부 컨설팅", "consult-teacher": "학습 컨설팅 송의준 선생님", "consult-korean": "국어 선생님 소개", "consult-math": "수학 선생님 소개", "consult-english": "영어 선생님 소개", "consult-materials": "공부자료", "consult-community": "커뮤니티", "consult-column": "선배들의 공부법 칼럼", "consult-home": "Holo Study", privacy: "개인정보 처리방침", terms: "이용약관", "consult-myclass": "나의 수업", "consult-programs": "수업 안내", "consult-fee": "수업 비용 및 신청", "consult-inquiry": "상담 문의", "consult-mbti": "학습 성향 MBTI", "consult-purpose": "운영 목적", "consult-2": "문제 풀이 전략 클리닉", "consult-3": "국어 독해력 클리닉", "consult-5": "'고1 · 예비 고1'을 위한 학습 상담 프로그램 및 비용", "consult-6": "'고2 · 예비 고2'을 위한 학습 상담 프로그램 및 비용", "consult-7": "'고3 · 예비 고3'을 위한 학습 상담 프로그램 및 비용", "consult-8": "'N수생'을 위한 학습 상담 프로그램 및 비용", todayrecord: "오늘의 학습 기록", plannerPage: "공부 계획 세우기", cumulative: "누적된 학습 기록", dayDetail: "그날의 학습 기록", reports: "내 분석지", mathexam: "수학 기출", engexam: "영어 기출", howto: "학습 관리 시스템 사용 방법", recordhub: "6일 분석지 확인하기", scheduleManage: "독서실 스케줄", schedFixed: "고정 스케줄", schedAdhoc: "돌발 스케줄", examhub: "시험 시뮬레이션", examSuneung: "수능 시뮬레이션", examNaeshin: "내신 시뮬레이션", mockexam: "모의고사·내신 관리하기", mexlist: "모의고사 관리하기", mypage: "마이페이지", studymusic: "공부 음악", community: "공부중독 커뮤니티", academyHome: "Academy", academyTeacher: "선생님 수업 현황", teacherHome: "내 학생 관리", admin: "관리자", form: "학습 상담 신청서" };
   const GROUP_OF = { mathexam: "exam", engexam: "exam" };
   // 학습 상담 AI(홈 대화)를 잠시 꺼 둔다(2026-11-11). 다시 켜려면 true로 바꾸고, 서버 main.ts의 PAUSED_SUBJECTS에서 "chat"을 빼면 된다.
   const HOLO_CHAT_ENABLED = false;
