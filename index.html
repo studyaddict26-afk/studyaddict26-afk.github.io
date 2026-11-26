@@ -4002,11 +4002,10 @@
   .hrp-day.now { color: #17294F; font-weight: 800; }
   .hrp-day.now i { border: 1.5px solid #17294F; }
   .hrp-day.pre { opacity: 0.4; }
-  .hrp-next { font-size: 0.6rem; font-weight: 700; line-height: 1.35; }
   .hrp-latest { font-size: 0.54rem; line-height: 1.4; color: var(--ink-soft); background: #fff; border-radius: 999px; padding: 2px 10px; }
   /* 화면이 낮아 안쪽 상자가 작으면 덜 중요한 것부터 숨긴다 */
   @container (max-height: 108px) { .hrp-latest { display: none; } }
-  @container (max-height: 84px) { .hrp-next { display: none; } .hrp-dday { font-size: 0.8rem; } }
+  @container (max-height: 84px) { .hrp-dday { font-size: 0.8rem; } }
   /* ── 관리자: 독서실 관리 (adk-) ── */
   .adk-badge { display: inline-block; min-width: 18px; padding: 1px 6px; margin-left: 6px; border-radius: 999px; background: #E05A47; color: #fff; font-size: 0.66rem; font-weight: 800; text-align: center; line-height: 1.5; }
   .adk-badge[hidden] { display: none; }
@@ -8883,9 +8882,8 @@
           <a class="home-schedule-title" href="#">6일 분석지 확인하기 <span class="arrow">›</span></a>
         </div>
         <div class="home-schedule-inner hrp-inner">
-          <div class="hrp-dday" id="hrpDday">D-</div>
+          <div class="hrp-dday" id="hrpDday">새 분석지</div>
           <div class="hrp-week" id="hrpWeek" title="플래너나 공부일기를 제출한 날에 체크돼요"></div>
-          <div class="hrp-next" id="hrpNext"></div>
           <div class="hrp-latest" id="hrpLatest">확인 중…</div>
         </div>
       </div>
@@ -15117,12 +15115,11 @@
   }
   function hrpLoad() {
     const el = document.getElementById("hrpLatest"); if (!el) return;
-    const dday = document.getElementById("hrpDday"), week = document.getElementById("hrpWeek"), next = document.getElementById("hrpNext");
+    const dday = document.getElementById("hrpDday"), week = document.getElementById("hrpWeek");
     const sun = hrpNextSunday();
     const todayKey = getLocalDateKey();
     const weekDates = getMonToSatDates(todayKey);
-    dday.textContent = sun.left ? "D-" + sun.left : "D-DAY";
-    next.textContent = sun.md + "(일) 새 분석지 도착";
+    dday.textContent = "새 분석지 " + (sun.left ? "D-" + sun.left : "D-DAY");
     week.innerHTML = hrpWeekHtml(weekDates, todayKey, {});
     if (!localStorage.getItem("holoStudentId")) return;
     planApi({ action: "day_list" }).then(data => {
@@ -15137,8 +15134,7 @@
       el.textContent = "최근 분석지 " + schedMd(s) + " ~ " + schedMd(e);
       // 일요일에 이번 6일 분석지가 이미 도착했으면 남은 날짜 대신 도착을 알린다
       if (new Date().getDay() === 0 && e === weekDates[5]) {
-        dday.textContent = "도착!";
-        next.textContent = "새 분석지가 도착했어요";
+        dday.textContent = "새 분석지 도착!";
       }
     }).catch(() => { el.textContent = "분석지 보러 가기"; });
   }
