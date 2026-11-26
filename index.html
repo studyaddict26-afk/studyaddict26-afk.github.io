@@ -260,7 +260,7 @@
   .mpx-me .mypage-avatar-wrap { margin-bottom: 14px; }
   .mpx-me .mypage-avatar { width: 60px; height: 60px; font-size: 1.35rem; }
   .mpx-me .mypage-avatar-edit-btn { width: 22px; height: 22px; right: 0; bottom: 0; }
-  .mpx-me .mypage-avatar-edit-btn svg { width: 11px; height: 11px; }
+  .mpx-me .mypage-avatar-edit-btn svg { width: 16px; height: 16px; }
   .mpx-name { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); margin: 0 0 2px; white-space: normal; }
   .mpx-sub { display: none; }
   .mpx-dl { width: 100%; margin: 12px 0 0; padding-top: 12px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 7px; text-align: left; }
@@ -3995,16 +3995,17 @@
   .home-schedule-inner.hrp-inner { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 13px; padding-top: 5px; padding-bottom: 5px; background: var(--cream); color: var(--ink); overflow: hidden; min-height: 76px; container-type: size; }
   @media (max-width: 1100px) { .home-schedule-inner.hrp-inner { min-height: 128px; } }
   .hrp-dday { color: #17294F; font-size: 0.9rem; font-weight: 800; line-height: 1.1; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
-  .hrp-week { display: flex; justify-content: center; gap: 7px; }
-  .hrp-day { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 0.5rem; line-height: 1.15; color: var(--ink-soft); }
-  .hrp-day i { box-sizing: border-box; width: 11px; height: 11px; border-radius: 50%; background: #fff; border: 1px solid #CFCBBF; display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 0.42rem; font-weight: 800; color: #fff; }
+  .hrp-week { display: flex; justify-content: center; gap: 10px; }
+  .hrp-day { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.66rem; line-height: 1.15; color: var(--ink-soft); }
+  .hrp-day i { box-sizing: border-box; width: 11px; height: 11px; border-radius: 50%; background: #fff; border: 1px solid #CFCBBF; display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 0.6rem; font-weight: 800; color: #fff; }
   .hrp-day.on i { background: #17294F; border-color: #17294F; }
   .hrp-day.now { color: #17294F; font-weight: 800; }
   .hrp-day.now i { border: 1.5px solid #17294F; }
   .hrp-day.pre { opacity: 0.4; }
-  .hrp-latest { font-size: 0.54rem; line-height: 1.4; color: var(--ink-soft); background: #fff; border-radius: 999px; padding: 2px 10px; }
+  .hrp-latest { font-size: 0.68rem; line-height: 1.4; color: var(--ink-soft); background: #fff; border-radius: 999px; padding: 3px 13px; }
   /* 화면이 낮아 안쪽 상자가 작으면 덜 중요한 것부터 숨긴다 */
-  @container (max-height: 108px) { .hrp-latest { display: none; } }
+  @container (max-height: 114px) { .hrp-dday, .hrp-week { margin-block: -2.5px; } }
+  @container (max-height: 100px) { .hrp-latest { display: none; } }
   @container (max-height: 84px) { .hrp-dday { font-size: 0.8rem; } }
   /* ── 관리자: 독서실 관리 (adk-) ── */
   .adk-badge { display: inline-block; min-width: 18px; padding: 1px 6px; margin-left: 6px; border-radius: 999px; background: #E05A47; color: #fff; font-size: 0.66rem; font-weight: 800; text-align: center; line-height: 1.5; }
