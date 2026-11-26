@@ -3073,18 +3073,30 @@
   .hp-bullets { display: flex; flex-direction: column; gap: 3px; font-size: 0.78rem; line-height: 1.4; color: rgba(255,255,255,0.92); }
   .hp-bullets > span::before { content: "•"; margin-right: 6px; color: #FFD44D; }
   @media (prefers-reduced-motion: reduce) { .hp-dot { transition: none; } }
-  /* 홈 빈 자리의 "머리 식히기" 스톱워치 — 식히는 시간 재기 · 공부로 돌아가기 버튼 하나, 아래에 오늘 식힌 시간 */
-  /* 머리 식히기: 다른 박스처럼 흰 카드 · 테두리 없이, 홈 바탕 위에 그냥 놓이는 가벼운 위젯 */
-  .home-rest { background: transparent; border: none; padding: 6px 16px 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 160px; box-sizing: border-box; position: relative; }
-  .home-rest-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; color: var(--ink-soft); }
-  .home-rest-time { font-size: 2.6rem; font-weight: 300; color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: 0.01em; margin: 0; line-height: 1.1; }
-  .home-rest.running .home-rest-time { color: var(--green-deep); }
-  .home-rest-btn { margin: 0; min-width: 132px; font-family: inherit; font-size: 0.76rem; font-weight: 700; color: #fff; background: var(--green-deep); border: none; border-radius: 999px; padding: 8px 22px; cursor: pointer; }
-  .home-rest-btn:hover { opacity: 0.88; }
-  .home-rest.running .home-rest-btn { color: var(--green-deep); background: transparent; box-shadow: inset 0 0 0 1px var(--green-deep); }
-  .home-rest-total { margin: 0; font-size: 0.72rem; color: var(--ink-soft); padding: 0; border: none; text-align: center; }
-  /* 머리 식히기 박스 오른쪽 위: 일반 스톱워치 · 타이머(전체 화면으로 열림) — 시험 시뮬레이션에서 옮겨 왔다 */
-  .home-rest { position: relative; }
+  /* 홈 모의고사 관리 · 시험 시뮬레이션: 왼쪽 아이콘 + 제목 · 설명 두 줄 + › */
+  .home-exam-links { display: flex; flex-direction: column; gap: 10px; min-width: 0; min-height: 0; }
+  .hxl-card { flex: 1 1 0; min-height: 62px; min-width: 0; container-type: inline-size; display: flex; align-items: center; padding: 0; font-family: inherit; text-align: left; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 12px; cursor: pointer; transition: background 0.18s, border-color 0.18s, box-shadow 0.18s; }
+  .hxl-card:hover, .hxl-card:active { background: var(--cream); border-color: var(--line-dark); box-shadow: 0 2px 12px rgba(23,24,26,0.05); }
+  .hxl-ico { flex: none; width: 40px; height: 40px; margin-left: 14px; border-radius: 11px; background: var(--cream); color: #17294F; display: flex; align-items: center; justify-content: center; }
+  .hxl-card:hover .hxl-ico { background: #fff; }
+  .hxl-ico svg { width: 21px; height: 21px; }
+  .hxl-text { flex: 1; min-width: 0; margin-left: 12px; display: flex; flex-direction: column; gap: 2px; }
+  .hxl-text b { font-size: 0.86rem; font-weight: 700; line-height: 1.35; white-space: nowrap; }
+  .hxl-text small { font-size: 0.66rem; font-weight: 600; line-height: 1.4; color: var(--ink-soft); white-space: nowrap; }
+  .hxl-arrow { flex: none; margin: 0 13px 0 8px; font-size: 0.95rem; font-weight: 800; color: var(--green); line-height: 1; }
+  /* 칸이 좁아지면 아이콘 · 여백을 줄이고, 아주 좁으면 아이콘을 숨긴다 */
+  @container (max-width: 205px) {
+    .hxl-ico { width: 30px; height: 30px; margin-left: 9px; border-radius: 9px; }
+    .hxl-ico svg { width: 17px; height: 17px; }
+    .hxl-text { margin-left: 8px; }
+    .hxl-text b { font-size: 0.76rem; }
+    .hxl-text small { font-size: 0.6rem; }
+    .hxl-arrow { margin: 0 9px 0 4px; }
+  }
+  @container (max-width: 165px) {
+    .hxl-ico { display: none; }
+    .hxl-text { margin-left: 11px; }
+  }
   .home-rest-tools { position: absolute; top: 16px; right: 14px; display: flex; flex-direction: column; align-items: stretch; gap: 6px; }
   .home-rest-tools button { display: flex; align-items: center; gap: 6px; width: 98px; box-sizing: border-box; font-family: inherit; font-size: 0.68rem; font-weight: 700; color: var(--ink); background: #fff; border: 1px solid var(--line-dark); border-radius: 999px; padding: 5px 11px 5px 9px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
   .home-rest-tools button:hover, .home-rest-tools button:active { background: var(--cream); border-color: var(--ink-soft); }
@@ -3094,14 +3106,12 @@
   .home-rest-tools.home-tools-box { position: static; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 8px 0; }
   .home-rest-tools.home-tools-box button { width: auto; }
   @media (min-width: 901px) {
-    /* 머리 식히기: 오늘의 공부 바로 아래, 한 칸 폭만 차지한다(스톱워치 · 타이머 버튼은 제목 아래 한 줄로) */
-    .home-dash .home-promo-slot .home-rest { grid-column: 1; grid-row: 2; min-height: 0; gap: 5px; padding: 4px 10px 0; }
+    /* 모의고사 관리 · 시험 시뮬레이션: 오늘의 공부 바로 아래 칸 */
+    .home-dash .home-promo-slot .home-exam-links { grid-column: 1; grid-row: 2; }
     /* 스톱워치 · 타이머 · 메모장: 공부 계획 세우기 아래 칸에 세로로 */
     .home-dash .home-promo-slot .home-tools-box { grid-column: 2; grid-row: 2; position: static; align-self: center; justify-self: center; width: 170px; flex-direction: column; gap: 8px; }
     .home-dash .home-promo-slot .home-tools-box button { width: 100%; padding: 8px 14px 8px 12px; font-size: 0.74rem; }
-    .home-dash .home-promo-slot .home-rest-time { font-size: 2.1rem; }
   }
-  @media (max-width: 1100px) { #view-home .home-rest-title { font-size: 0.74rem; } }
   /* 홈 영어 단어 Test 박스: 오늘의 공부 박스처럼 제목 아래에 상태 두 줄(라벨 + 상태 글씨) */
   .home-eng-status { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 7px; padding: 0 2px; }
   .vring { position: relative; flex: none; width: min(92px, 100%); aspect-ratio: 1; }
@@ -3857,7 +3867,7 @@
     .hd-right-top { align-self: start; height: calc(var(--ln-top-h) - 10px); }
   }
   .hd-right-top .home-academy-compact, .hd-right-top .home-notice-box { border-radius: 12px; }
-  .home-dash .home-promo-slot { grid-column: 1; grid-row: 2; align-self: end; height: calc(var(--ln-cal-h) - var(--ln-nav-h) - var(--ln-gap)); display: flex; gap: var(--ln-gap); align-items: stretch; min-height: 0; }
+  .home-dash .home-promo-slot { grid-column: 1; grid-row: 2; align-self: end; height: var(--ln-cal-h); display: flex; gap: var(--ln-gap); align-items: stretch; min-height: 0; }
   .home-dash .home-promo-slot .rh-tile { flex: 1 1 0; min-width: 0; padding: 14px 16px; border-radius: 12px; }
   .home-dash .home-week-overview { border-radius: 12px; }
   .hd-today-col { flex: 0 0 calc((100% - 2 * var(--ln-gap)) / 3); min-width: 0; display: flex; flex-direction: column; gap: var(--ln-gap); } /* 오늘의 공부 박스는 공부 계획 박스(.hd-stack)와 같은 폭 · 같은 높이 */
@@ -4006,6 +4016,8 @@
   /* 화면이 낮아 안쪽 상자가 작으면 덜 중요한 것부터 숨긴다 */
   @container (max-height: 114px) { .hrp-dday, .hrp-week { margin-block: -2.5px; } }
   @container (max-height: 100px) { .hrp-latest { display: none; } }
+  @container (max-width: 160px) { .hrp-week { gap: 5px; } .hrp-day { font-size: 0.58rem; } .hrp-day i { width: 13px; height: 13px; font-size: 0.5rem; } }
+  @container (max-width: 112px) { .hrp-week { gap: 3px; } .hrp-day i { width: 11px; height: 11px; font-size: 0.42rem; } .hrp-latest { padding: 3px 8px; font-size: 0.6rem; } }
   @container (max-height: 84px) { .hrp-dday { font-size: 0.8rem; } }
   /* ── 관리자: 독서실 관리 (adk-) ── */
   .adk-badge { display: inline-block; min-width: 18px; padding: 1px 6px; margin-left: 6px; border-radius: 999px; background: #E05A47; color: #fff; font-size: 0.66rem; font-weight: 800; text-align: center; line-height: 1.5; }
@@ -4479,7 +4491,7 @@
      위 버튼 줄은 모의고사 관리 · 시험 시뮬레이션 두 개가 같은 폭으로 줄 전체를 채운다.
      (내신 - 생기부 관리 버튼은 지금 없앤 상태) */
   @media (min-width: 901px) {
-    .home-dash .home-promo-slot { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: calc((100% - var(--ln-gap)) / 2); align-content: start; align-items: stretch; }
+    .home-dash .home-promo-slot { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr) calc((100% - var(--ln-nav-h) - 2 * var(--ln-gap)) / 2); align-content: start; align-items: stretch; }
     .home-dash .hd-today-col, .home-dash .hd-stack { display: contents; }
     .home-dash .home-promo-slot .rh-tile, .home-dash .hd-stack .home-schedule-box { min-height: 0; min-width: 0; }
     /* 첫 줄: 오늘의 공부 · 공부 계획 · 영어 단어 Test, 둘째 줄: 내 스케줄(영어 단어 Test 바로 아래, 오른쪽 칸) */
@@ -5807,10 +5819,10 @@
   .rh2-detail { padding: 22px 28px 28px; }
   .rh2-detail .report-body { max-width: 720px; }
   /* 분석지 위쪽: 숫자 칸 6개 + 날짜별 표 */
-  .rpt-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 10px; margin: 0 0 12px; overflow: hidden; }
+  .rpt-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 10px; margin: 0 0 12px; overflow: hidden; }
   .rpt-stat { display: flex; flex-direction: column; gap: 3px; padding: 10px 12px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); min-width: 0; }
-  .rpt-stat:nth-child(3n) { border-right: none; }
-  .rpt-stat:nth-last-child(-n+3) { border-bottom: none; }
+  .rpt-stat:nth-child(4n) { border-right: none; }
+  .rpt-stat:nth-last-child(-n+4) { border-bottom: none; }
   .rpt-label { font-size: 0.64rem; font-weight: 600; color: var(--ink-soft); }
   .rpt-stat b { font-size: 0.86rem; font-weight: 800; color: var(--ink); line-height: 1.35; }
   .rpt-sub { font-size: 0.62rem; color: var(--ink-soft); line-height: 1.4; word-break: keep-all; }
@@ -5829,7 +5841,7 @@
   .rpt-teacher p { margin: 0; font-size: 0.86rem; line-height: 1.85; color: var(--ink); }
   .rpt-teacher p.rpt-teacher-empty { color: var(--ink-soft); }
   .rpt-no { color: #B9B5A8; }
-  @media (max-width: 700px) { .rpt-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .rpt-stat:nth-child(3n) { border-right: 1px solid var(--line); } .rpt-stat:nth-child(2n) { border-right: none; } }
+  @media (max-width: 700px) { .rpt-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .rpt-stat:nth-last-child(-n+4) { border-bottom: 1px solid var(--line); } .rpt-stat:nth-child(2n) { border-right: none; } .rpt-stat:nth-last-child(-n+2) { border-bottom: none; } }
   .rh2-empty { color: var(--ink-soft); font-size: 0.8rem; padding: 40px 16px; text-align: center; }
   @media (max-width: 700px) {
     .rh2-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -8813,14 +8825,6 @@
       </div>
     </div>
 
-    <div class="home-nav-grid">
-      <button type="button" class="home-nav-btn" onclick="mexGoList('mock')">
-        <span class="hn-title">모의고사 관리</span> <span class="hn-arrow">›</span>
-      </button>
-      <button type="button" class="home-nav-btn" onclick="go('examhub')">
-        <span class="hn-title">시험 시뮬레이션</span> <span class="hn-arrow">›</span>
-      </button>
-    </div>
       </div>
 
     <div class="home-promo-slot">
@@ -8891,11 +8895,9 @@
           <button type="button" onclick="genTimerOpen('timer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2h12M6 22h12M7 2c0 6 5 6 5 10s-5 4-5 10M17 2c0 6-5 6-5 10s5 4 5 10"/></svg><span class="hrt-label">타이머</span><span class="hrt-arrow">›</span></button>
           <button type="button" onclick="memoOpen()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg><span class="hrt-label">메모장</span><span class="hrt-arrow">›</span></button>
         </div>
-      <div class="home-rest" id="homeRestBox">
-        <div class="home-rest-title">머리 식히기</div>
-        <div class="home-rest-time" id="homeRestTime">00:00</div>
-        <button type="button" class="home-rest-btn" id="homeRestBtn" onclick="restToggle()">식히는 시간 재기</button>
-        <div class="home-rest-total" id="homeRestTotal">오늘 식힌 시간 0초 · 0번</div>
+      <div class="home-exam-links">
+        <button type="button" class="hxl-card" onclick="mexGoList('mock')"><span class="hxl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/><path d="m9 14.5 2.2 2.2 4-4.4"/></svg></span><span class="hxl-text"><b>모의고사 관리</b><small>점수 · 랩타임 · 성찰</small></span><span class="hxl-arrow" aria-hidden="true">›</span></button>
+        <button type="button" class="hxl-card" onclick="go('examhub')"><span class="hxl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.8 1.8M9 2.5h6"/></svg></span><span class="hxl-text"><b>시험 시뮬레이션</b><small>수능 · 내신</small></span><span class="hxl-arrow" aria-hidden="true">›</span></button>
       </div>
     </div>
       </div>
@@ -12024,7 +12026,7 @@
     if (view === "cumulative") loadDayList();
     // "오늘의 학습 기록" 카드(계획/일기/AI 홀로 현황 + 점수)가 이제 홈 화면에 있어서, 홈에
     // 들어올 때도 recordhub와 똑같이 loadTodayTileStatus()로 채운다.
-    if (view === "home") { syncHomeCardHeights(); loadTodayTileStatus(); engVocabRender(); restRender(); loadHomeScheduleToday(); loadHomePlannerToday(); loadHomeWeeklyOverview(); }
+    if (view === "home") { syncHomeCardHeights(); loadTodayTileStatus(); engVocabRender(); loadHomeScheduleToday(); loadHomePlannerToday(); loadHomeWeeklyOverview(); }
     if (view === "recordhub") { loadRecordHubStatus(); setRhWeekLabels(); loadRhWeekScore(); }
     if (view === "scheduleManage") loadScheduleManage();
     if (view === "schedFixed") sfEnter();
@@ -13051,8 +13053,7 @@
     engVocabRender();
   }
   document.addEventListener("keydown", e => { if (e.key === "Escape") engVocabClose(); });
-  // ── 홈 "머리 식히기" 스톱워치: 쉬는 시간 전에 머리가 과부하일 때 식히는 시간 재기 → 공부로 돌아가기를 눌러 실제로 쉰 시간을 잰다.
-  // 오늘(새벽 6시 기준) 누적 쉬는 시간과 횟수를 아래에 보여준다. 새로고침해도 이어서 재고, 이 기기에만 저장된다.
+  // 예전 홈 "머리 식히기" 스톱워치의 기록(이 기기에만 저장). 화면에서는 없앴고, 아래 하루 요약을 보낼 때만 읽는다.
   function restKey() { return "holoRest:" + (localStorage.getItem("holoStudentId") || "anon"); }
   function restLoad() {
     let s = {};
@@ -13061,19 +13062,6 @@
     // 하루가 바뀌었고 쉬는 중이 아니면 처음 상태로 돌아간다(쉬는 중이면 그 쉬기가 끝날 때까지 그대로 둔다).
     if (s.day !== today && !s.runningSince) s = { day: today, total: 0, count: 0, runningSince: null };
     return { day: s.day || today, total: Number(s.total) || 0, count: Number(s.count) || 0, runningSince: s.runningSince ? Number(s.runningSince) : null };
-  }
-  function restSave(s) { try { localStorage.setItem(restKey(), JSON.stringify(s)); } catch (e) {} }
-  function restToggle() {
-    const s = restLoad();
-    if (s.runningSince) {
-      const sec = Math.floor((Date.now() - s.runningSince) / 1000);
-      if (sec >= 3) { s.total += sec; s.count += 1; } // 3초 미만은 잘못 누른 것으로 보고 기록하지 않는다
-      s.runningSince = null;
-    } else {
-      s.runningSince = Date.now();
-    }
-    restSave(s); restRender();
-    syncDailyStats(); // 쉬기를 마칠 때마다 오늘 누적 시간 · 횟수를 서버(분석지용)에도 남긴다
   }
   // 어휘력 Test 응시 · 머리 식힌 시간은 이 기기에만 저장되는 기록이라, 6일 분석지에 쓸 수 있도록 하루치 요약을 서버에도 남긴다.
   let dailyStatsSig = "";
@@ -13086,26 +13074,6 @@
     if (sig === dailyStatsSig) return;
     planApi(payload).then(x => { if (x && x.ok) dailyStatsSig = sig; }).catch(() => {});
   }
-  function restFmtClock(sec) {
-    const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), x = sec % 60, p = n => String(n).padStart(2, "0");
-    return (h ? p(h) + ":" : "") + p(m) + ":" + p(x);
-  }
-  function restFmtTotal(sec) {
-    if (sec < 60) return sec + "초";
-    const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60);
-    return h ? h + "시간 " + m + "분" : m + "분";
-  }
-  function restRender() {
-    const box = document.getElementById("homeRestBox");
-    if (!box) return;
-    const s = restLoad();
-    const cur = s.runningSince ? Math.max(0, Math.floor((Date.now() - s.runningSince) / 1000)) : 0;
-    box.classList.toggle("running", !!s.runningSince);
-    document.getElementById("homeRestTime").textContent = restFmtClock(cur);
-    document.getElementById("homeRestBtn").textContent = s.runningSince ? "공부로 돌아가기" : "식히는 시간 재기";
-    document.getElementById("homeRestTotal").textContent = "오늘 식힌 시간 " + restFmtTotal(s.total + cur) + " · " + s.count + "번";
-  }
-  setInterval(restRender, 1000);
   function loadTodayTileStatus() {
     const studentId = localStorage.getItem("holoStudentId");
     if (!studentId) return;
@@ -17168,7 +17136,6 @@
     if (!d || !d.summary || !Array.isArray(d.days)) return "";
     const s = d.summary, n = s.periodDays || d.days.length;
     const cmp = s.compare || null;
-    const fmtRest = sec => sec >= 60 ? Math.round(sec / 60) + "분" : sec + "초";
     // 지난 분석지와 비교한 변화(서버가 계산해 둔 값): ▲ 늘었어요 / ▼ 줄었어요
     const dl = (pair, unit) => {
       if (!pair || typeof pair.delta !== "number") return "";
@@ -17183,19 +17150,17 @@
       ["영어 단어 Test 통과 " + req, s.vocabWordDays + " / " + n + "일", dl(cmp && cmp.vocabWordRate, "%p"), true],
       ["영어 문법 Test", s.vocabGrammarDays + "일 응시", "선택 항목", true],
       ["자기평가 평균", s.selfScoreAvg === null || s.selfScoreAvg === undefined ? "기록 없음" : s.selfScoreAvg + "점", (s.selfScoreDays ? s.selfScoreDays + "일 기준 · " : "") + (dl(cmp && cmp.selfScoreAvg, "점") ? "" : ""), true],
-      ["독서실 쉬는 시간(머리 식히기)", fmtRest(s.restAvgSec || 0) + " · " + (s.restAvgCount || 0) + "번", "하루 평균", true],
       ["모의고사 분석지 작성", (s.mockCount || 0) + "회", (s.mockNames || []).join(", "), true],
       ["선생님 평가 점수", typeof s.teacherScore === "number" ? s.teacherScore + "점" : "준비 중", "6일에 한 번 · 100점 만점", true],
     ];
     const mark = on => on ? '<span class="rpt-ok">✓</span>' : '<span class="rpt-no">–</span>';
     const rows = d.days.map(x => {
       const dt = escapeHtml(x.date.slice(5).replace("-", "/")) + ' (' + escapeHtml(x.weekday) + ')';
-      if (x.enrolled === false) return '<tr class="rpt-pre"><td>' + dt + '</td><td colspan="5">등원 전</td></tr>';
+      if (x.enrolled === false) return '<tr class="rpt-pre"><td>' + dt + '</td><td colspan="4">등원 전</td></tr>';
       return '<tr><td>' + dt + '</td>' +
         '<td>' + mark(x.plannerSubmitted) + '</td><td>' + mark(x.diarySubmitted) + '</td>' +
         '<td>' + mark(x.vocabWord) + (x.vocabGrammar ? ' <span class="rpt-sub">문법</span>' : '') + '</td>' +
-        '<td>' + x.dayScore + '점' + (x.selfScore === null || x.selfScore === undefined ? '' : ' <span class="rpt-sub">(자기평가 ' + x.selfScore + (x.selfReason ? ' · ' + escapeHtml(x.selfReason) : '') + ')</span>') + '</td>' +
-        '<td>' + (x.restCount ? fmtRest(x.restSec) + " · " + x.restCount + "번" : '<span class="rpt-no">–</span>') + '</td></tr>';
+        '<td>' + x.dayScore + '점' + (x.selfScore === null || x.selfScore === undefined ? '' : ' <span class="rpt-sub">(자기평가 ' + x.selfScore + (x.selfReason ? ' · ' + escapeHtml(x.selfReason) : '') + ')</span>') + '</td></tr>';
     }).join("");
     const notice = s.simpleNotice ? '<div class="rpt-notice">' + escapeHtml(s.simpleNotice) + '</div>' : "";
     const startNote = s.startDate ? '<p class="rpt-rule">등원 시작일(' + escapeHtml(s.startDate.slice(5).replace("-", "/")) + ') 이전 날은 점수와 평균에 넣지 않았어요.</p>' : "";
@@ -17204,7 +17169,7 @@
     return notice +
       '<div class="rpt-stats">' + cells.map(c => '<div class="rpt-stat"><span class="rpt-label">' + c[0] + '</span><b>' + escapeHtml(c[1]) + '</b>' + (c[2] ? '<span class="rpt-sub">' + c[2] + '</span>' : '') + '</div>').join("") + '</div>' +
       '<p class="rpt-rule">하루 점수(100점 만점) = 플래너 제출 1점 + 공부일기 완성 1점 + 영어 단어 Test 통과 1점 + 자기평가 0~97점</p>' + startNote +
-      '<table class="rpt-days"><thead><tr><th>날짜</th><th>플래너</th><th>공부일기</th><th>영어 단어</th><th>하루 점수</th><th>쉬는 시간</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+      '<table class="rpt-days"><thead><tr><th>날짜</th><th>플래너</th><th>공부일기</th><th>영어 단어</th><th>하루 점수</th></tr></thead><tbody>' + rows + '</tbody></table>' +
       teacher;
   }
   // 분석지 글 부분: "## 제목" 단위로 구역을 나눠서, 구역마다 어울리는 모양(요약 · 목록 · 한마디 · 제안)으로 보여준다.
