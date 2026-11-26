@@ -3109,9 +3109,14 @@
   @media (min-width: 901px) {
     /* 모의고사 관리 · 시험 시뮬레이션: 오늘의 공부 바로 아래 칸 */
     .home-dash .home-promo-slot .home-exam-links { grid-column: 1; grid-row: 2; }
-    /* 스톱워치 · 타이머 · 메모장: 공부 계획 세우기 아래 칸에 세로로 */
-    .home-dash .home-promo-slot .home-tools-box { grid-column: 2; grid-row: 2; position: static; align-self: center; justify-self: center; width: 170px; flex-direction: column; gap: 8px; }
-    .home-dash .home-promo-slot .home-tools-box button { width: 100%; padding: 8px 14px 8px 12px; font-size: 0.74rem; }
+    /* 스톱워치 · 타이머 · 메모장: 가운데 아래 칸을 꽉 채우는 작은 카드 3개(모의고사 관리 카드와 같은 모서리 · 테두리 · 아이콘 상자) */
+    .home-dash .home-promo-slot .home-tools-box { grid-column: 2; grid-row: 2; position: static; align-self: stretch; justify-self: stretch; width: auto; min-width: 0; min-height: 0; margin: 0; flex-direction: column; flex-wrap: nowrap; gap: 10px; }
+    .home-dash .home-promo-slot .home-tools-box button { flex: 1 1 0; min-height: 0; width: 100%; gap: 10px; padding: 0 13px 0 12px; font-size: 0.82rem; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; transition: background 0.18s, border-color 0.18s, box-shadow 0.18s; }
+    .home-dash .home-promo-slot .home-tools-box button:hover, .home-dash .home-promo-slot .home-tools-box button:active { background: var(--cream); border-color: var(--line-dark); box-shadow: 0 2px 12px rgba(23,24,26,0.05); }
+    .home-dash .home-promo-slot .home-tools-box svg { box-sizing: border-box; width: 32px; height: 32px; padding: 7.5px; border-radius: 9px; background: var(--cream); color: #17294F; }
+    .home-dash .home-promo-slot .home-tools-box button:hover svg { background: #fff; }
+    .home-dash .home-promo-slot .home-tools-box .hrt-label { white-space: nowrap; }
+    .home-dash .home-promo-slot .home-tools-box .hrt-arrow { font-size: 0.95rem; }
   }
   /* 홈 영어 단어 Test 박스: 오늘의 공부 박스처럼 제목 아래에 상태 두 줄(라벨 + 상태 글씨) */
   .home-eng-status { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 7px; padding: 0 2px; }
