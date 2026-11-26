@@ -3994,6 +3994,8 @@
   /* 홈 "6일 분석지 확인하기" 박스 */
   .hrp-inner { justify-content: center; align-items: center; text-align: center; gap: 6px; }
   .hrp-latest { font-size: 0.78rem; font-weight: 700; color: var(--ink); line-height: 1.5; }
+  .hrp-next { font-size: 0.72rem; font-weight: 700; color: #17294F; }
+  .hrp-next:empty { display: none; }
   .hrp-note { font-size: 0.66rem; color: var(--ink-soft); }
   /* ── 관리자: 독서실 관리 (adk-) ── */
   .adk-badge { display: inline-block; min-width: 18px; padding: 1px 6px; margin-left: 6px; border-radius: 999px; background: #E05A47; color: #fff; font-size: 0.66rem; font-weight: 800; text-align: center; line-height: 1.5; }
@@ -4946,7 +4948,11 @@
   .mex-an5-avg { font-size: 1.35rem; font-weight: 800; color: var(--green-deep); margin: 8px 0 6px; line-height: 1.1; }
   .mex-an5-avg small { font-size: 0.62rem; font-weight: 600; color: var(--ink-soft); margin-left: 4px; }
   .mex-an5-avg em { font-style: normal; font-size: 0.78rem; font-weight: 600; color: var(--ink-soft); }
-  .mex-an5-chart { height: 44px; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+  .mex-lc { position: relative; width: 100%; height: 100%; }
+  .mex-lc-dot { position: absolute; width: 0; height: 0; border: 3.5px solid var(--green-deep); border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; }
+  .mex-lc-val { position: absolute; transform: translate(-50%, -100%); margin-top: -5px; font-size: 0.66rem; font-weight: 800; line-height: 1; color: var(--ink); white-space: nowrap; }
+  .mex-lc.many .mex-lc-val { font-size: 0.56rem; }
+  .mex-an5-chart { height: 62px; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
   .mex-an5-chart svg { width: 100%; height: 100%; display: block; overflow: visible; }
   .mex-an5-chart polyline { fill: none; stroke: var(--green); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .mex-an5-chart circle { fill: var(--green-deep); cursor: pointer; }
@@ -7801,7 +7807,7 @@
     /* body가 화면에서는 display:flex(사이드바+본문 가로 배치)라서, 다른 형제는 다 숨겨도
        이 영역이 flex 아이템으로 남아 내용 폭만큼만 좁게 잡히고 오른쪽이 비어 보였다 — 너비를
        페이지 전체로 명시해서 고친다. */
-    body.mex-printing #mexPrintArea { display: block !important; width: 100% !important; color: #111; font-size: 11pt; line-height: 1.55; }
+    body.mex-printing #mexPrintArea { display: block !important; width: 100% !important; color: #111; font-size: 9pt; line-height: 1.6; }
     /* "내 분석지" 인쇄용 body * { visibility: hidden } 규칙(위 #print-area 블록)이 이 영역
        안의 모든 요소에도 걸려서, display는 block인데 visibility만 hidden이라 빈 페이지처럼
        보이는 문제가 있었다 — 이 영역 전체를 명시적으로 다시 보이게 한다. */
@@ -7811,41 +7817,108 @@
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       height: 95vh; text-align: center; page-break-after: always;
     }
-    .mexp-cover-word {
-      display: flex; align-items: center; justify-content: center; gap: 6pt;
-      font-size: 13pt; font-weight: 900; color: #111; letter-spacing: -0.02em; margin-bottom: 44px;
-    }
-    .mexp-cover-icon { width: 16pt; height: 16pt; flex: none; }
-    .mexp-cover-kicker { font-size: 9pt; font-weight: 700; letter-spacing: 0.3em; color: #999; margin-bottom: 16px; }
-    .mexp-cover-title { font-size: 26pt; font-weight: 800; color: #111; margin: 0 0 14px 0; line-height: 1.35; }
-    .mexp-cover-sub { font-size: 12pt; color: #555; margin-bottom: 40px; }
+    .mexp-cover-word { display: flex; align-items: center; justify-content: center; gap: 8pt; color: #17294F; margin-bottom: 44px; }
+    .mexp-cover-icon { width: 34pt; height: 34pt; flex: none; }
+    .mexp-cover-brand { display: flex; flex-direction: column; align-items: flex-start; text-align: left; line-height: 1; gap: 2pt; }
+    .mexp-cover-brand-top { font-size: 8.5pt; font-weight: 500; word-spacing: -0.12em; white-space: nowrap; }
+    .mexp-cover-brand-main { font-size: 18pt; font-weight: 900; letter-spacing: -0.02em; white-space: nowrap; }
+    .mexp-cover-kicker { font-size: 8pt; font-weight: 700; letter-spacing: 0.3em; color: #999; margin-bottom: 16px; }
+    .mexp-cover-subject { margin-bottom: 6px; }
+    .mexp-cover-title { font-size: 21pt; font-weight: 800; color: #111; margin: 0 0 14px 0; line-height: 1.35; }
+    .mexp-cover-sub { font-size: 10pt; color: #555; margin-bottom: 40px; }
     .mexp-cover-stats { display: flex; gap: 48px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; padding: 18px 0; margin-bottom: 44px; }
     .mexp-cover-stats div { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-    .mexp-cover-stats span { font-size: 8.5pt; color: #888; }
-    .mexp-cover-stats b { font-size: 15pt; color: #111; }
-    .mexp-cover-footer { font-size: 9pt; color: #999; }
+    .mexp-cover-stats span { font-size: 7.5pt; color: #888; }
+    .mexp-cover-stats b { font-size: 12pt; color: #111; }
+    .mexp-cover-footer { font-size: 7.5pt; color: #999; }
     .mexp-page { page-break-after: always; break-after: page; }
   }
   /* 아래 .mexp-* 규칙은 인쇄 영역과 "한 페이지에 들어가는지" 재보는 숨은 영역(#mexMeasure) 둘 다에서 같은 모양이어야 해서 @media print 밖에 둔다
      (.mexp-* 요소는 인쇄 영역 안에만 있으므로 화면의 다른 곳에는 영향이 없다). */
-  #mexMeasure { position: absolute; left: -99999px; top: 0; width: 182mm; visibility: hidden; color: #111; font-size: 11pt; line-height: 1.55; }
-  .mexp-title { font-size: 18pt; margin: 0 0 12px 0; }
-  .mexp-an { margin: 0 0 14px 0; break-inside: avoid; page-break-inside: avoid; }
-  .mexp-an .mex-an5-box { background: #fff; border: 1px solid #bbb; border-radius: 6px; padding: 10px 14px 8px; }
-  .mexp-an .mex-an5-chart { height: 56px; }
-  .mexp-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; border: 1px solid #bbb; border-radius: 6px; padding: 10px 12px; margin-bottom: 14px; }
-  .mexp-meta span { display: block; font-size: 8.5pt; color: #666; }
-  .mexp-meta b { font-size: 11pt; }
-  .mexp-h2 { font-size: 13pt; margin: 18px 0 8px 0; padding-bottom: 4px; border-bottom: 2px solid #111; break-after: avoid; page-break-after: avoid; }
-  .mexp-qa { margin-bottom: 9px; page-break-inside: avoid; }
-  .mexp-q { font-size: 9.5pt; font-weight: 700; color: #444; }
-  .mexp-a { white-space: pre-wrap; padding-left: 8px; border-left: 3px solid #ddd; }
-  .mexp-none { color: #999; }
-  .mexp-note { border: 1px solid #ccc; border-radius: 6px; padding: 10px 12px; margin-bottom: 10px; page-break-inside: avoid; }
-  .mexp-note-head { font-weight: 800; margin-bottom: 6px; }
-  .mexp-lap .exend-lap-rows { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px 10px; }
-  .mexp-lap .exend-lap-row { display: flex; justify-content: space-between; font-size: 9pt; background: none; padding: 2px 0; border-bottom: 1px dotted #ccc; }
-  .mexp-lap .exend-lap-group-head { display: flex; justify-content: space-between; font-weight: 700; margin-top: 8px; }
+  #mexMeasure { position: absolute; left: -99999px; top: 0; width: 182mm; visibility: hidden; color: #111; font-size: 9pt; line-height: 1.6; }
+  /* 번호 배지 제목: 1 점수 추이 / 2 이번 시험 요약 */
+  .mexp-sec { display: flex; align-items: center; gap: 8px; font-size: 12pt; font-weight: 800; letter-spacing: -0.01em; color: #14294d; margin: 0 0 10px 0; break-after: avoid; page-break-after: avoid; }
+  .mexp-sec i { flex: none; display: flex; align-items: center; justify-content: center; width: 16pt; height: 16pt; border-radius: 4px; background: #14294d; color: #fff; font-style: normal; font-size: 9pt; font-weight: 800; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  /* 채운 색이 PDF에도 그대로 나오게 */
+  .mexp-an *, .mexp-meta, .mexp-meta *, .mexp-lapbox, .mexp-lapbox * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  /* 상자 세 개는 같은 폭(내용에 맞는 크기)으로 왼쪽에 붙인다. 내용이 더 길면 그 상자만 넓어진다. */
+  .mexp-tr, .mexp-meta, .mexp-lapbox { box-sizing: border-box; width: max-content; min-width: 520px; max-width: 100%; border: 1px solid #d5d9e4; border-radius: 8px; overflow: hidden; }
+  .mexp-an { margin: 0; break-inside: avoid; page-break-inside: avoid; }
+  .mexp-tr { display: flex; align-items: stretch; background: #fff; }
+  .mexp-tr-side { flex: none; box-sizing: border-box; width: 96px; background: #14294d; color: #fff; padding: 12px 14px; display: flex; flex-direction: column; justify-content: center; gap: 10px; line-height: 1.25; }
+  .mexp-tr-side div { display: flex; flex-direction: column; gap: 1px; }
+  .mexp-tr-side span { font-size: 6.8pt; color: #b9c3da; }
+  .mexp-tr-side b { font-size: 21pt; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .mexp-tr-side b em { font-style: normal; font-size: 8pt; font-weight: 700; margin-left: 2px; }
+  .mexp-tr-side b.none { font-size: 9pt; }
+  .mexp-tr-side small { font-size: 6.5pt; color: #b9c3da; }
+  .mexp-tr-side .now { border-top: 1px solid #3a4d74; padding-top: 8px; }
+  .mexp-tr-side .now b { font-size: 13pt; }
+  .mexp-tr-main { flex: 1 1 auto; min-width: 0; padding: 7px 14px 8px 10px; display: flex; flex-direction: column; }
+  .mexp-tr-note { font-size: 6.3pt; color: #8a8f9c; text-align: right; line-height: 1.6; }
+  .mexp-ch { position: relative; height: 104px; margin: 5px 0 6px; }
+  .mexp-ch-y { position: absolute; left: 0; width: 20px; top: 8px; bottom: 16px; }
+  .mexp-ch-y span { position: absolute; right: 0; transform: translateY(-50%); font-size: 6.2pt; line-height: 1; color: #8a8f9c; font-variant-numeric: tabular-nums; }
+  .mexp-ch-plot { position: absolute; left: 27px; right: 0; top: 8px; bottom: 16px; }
+  .mexp-ch-plot .grid { position: absolute; left: 0; right: 0; height: 0; border-top: 1px solid #eceef3; }
+  .mexp-ch-plot svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .mexp-ch-plot polyline { fill: none; stroke: #14294d; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .mexp-ch-plot .dot { position: absolute; width: 0; height: 0; border: 3px solid #14294d; border-radius: 50%; transform: translate(-50%, -50%); }
+  .mexp-ch-plot .val { position: absolute; transform: translate(-50%, -100%); margin-top: -5px; font-size: 7.2pt; font-weight: 800; line-height: 1; color: #14294d; white-space: nowrap; }
+  .mexp-ch-x { position: absolute; left: 27px; right: 0; bottom: 0; height: 10px; }
+  .mexp-ch-x span { position: absolute; transform: translateX(-50%); font-size: 6.2pt; line-height: 10px; color: #8a8f9c; white-space: nowrap; }
+  .mexp-an .mexp-top3 { display: flex; flex-wrap: wrap; align-items: center; gap: 3px 6px; padding-left: 27px; line-height: 1.5; }
+  .mexp-an .mex-an5-lab { font-size: 6.5pt; font-weight: 700; color: #8a8f9c; margin: 0 4px 0 0; }
+  .mexp-an .mex-an5-reasons { display: flex; flex-direction: row; flex-wrap: wrap; gap: 3px 6px; margin: 0; padding: 0; list-style: none; }
+  .mexp-an .mex-an5-reasons li { display: flex; justify-content: flex-start; gap: 4px; font-size: 6.8pt; white-space: nowrap; background: #f1f3f8; border-radius: 999px; padding: 1px 8px; color: #333; }
+  .mexp-an .mex-an5-reasons li b { font-weight: 800; color: #14294d; }
+  .mexp-meta { display: flex; align-items: stretch; background: #f6f7fa; text-align: center; padding: 6px 0; margin: 0 0 12px; line-height: 1.5; }
+  .mexp-meta > div { flex: 1 0 auto; padding: 0 13px; }
+  .mexp-meta > div + div { border-left: 1px solid #d5d9e4; }
+  .mexp-meta > div:nth-child(3) { flex: 1 1 auto; min-width: 0; } /* 시험 이름이 길면 이 칸만 두 줄로 */
+  .mexp-meta span { display: block; font-size: 5.8pt; color: #7d8393; }
+  .mexp-meta b { font-size: 6.8pt; font-weight: 800; color: #14294d; overflow-wrap: anywhere; word-break: keep-all; }
+  /* 구역 사이 간격 · 쪽 나누기 */
+  .mexp-block { display: flow-root; break-inside: avoid; page-break-inside: avoid; }
+  .mexp-block + .mexp-block { margin-top: 40px; }
+  .mexp-block + .mexp-block.cont { margin-top: 12px; }
+  /* 3 전체 피드백 · 4 성찰 노트: 1·2번과 같은 상자 + 왼쪽 질문 칸(옅은 배경) / 오른쪽 답 */
+  .mexp-fbbox, .mexp-notebox { box-sizing: border-box; width: 520px; max-width: 100%; border: 1px solid #d5d9e4; border-radius: 8px; overflow: hidden; background: #fff; }
+  .mexp-fbbox, .mexp-fbbox *, .mexp-notebox, .mexp-notebox * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .mexp-notebox { break-inside: avoid; page-break-inside: avoid; }
+  .mexp-notebox + .mexp-notebox { margin-top: 12px; }
+  .mexp-notebox.empty { padding: 12px 15px; font-size: 7.5pt; color: #999; }
+  .mexp-row { display: flex; align-items: stretch; }
+  .mexp-row + .mexp-row { border-top: 1px solid #e6e9f0; }
+  .mexp-row .k { flex: none; box-sizing: border-box; width: 138px; background: #f6f7fa; border-right: 1px solid #e6e9f0; padding: 7px 10px 7px 13px; font-size: 6.6pt; font-weight: 700; line-height: 1.55; color: #5b6275; word-break: keep-all; display: flex; align-items: center; }
+  .mexp-row .v { flex: 1 1 auto; min-width: 0; padding: 7px 14px; font-size: 7.6pt; line-height: 1.65; color: #111; white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; align-self: center; }
+  /* 3 전체 피드백: 질문은 가로로 한 줄(옅은 배경 + 회남색 글씨), 그 아래 줄에 답(흰 배경 + 검은 글씨) */
+  .mexp-fbbox { width: max-content; min-width: 520px; max-width: 100%; } /* 답이 길면 쪽 폭까지 넓어지고, 그보다 길면 줄바꿈 */
+  .mexp-fbbox .mexp-row { display: block; padding: 0; }
+  .mexp-fbbox .mexp-row .k { display: block; width: auto; background: #f6f7fa; border-right: none; border-bottom: 1px solid #e6e9f0; padding: 5px 14px; font-size: 6.8pt; color: #5b6275; }
+  .mexp-fbbox .mexp-row .v { display: block; padding: 7px 14px 9px; }
+  .mexp-s, .mexp-c { display: inline-block; max-width: 100%; vertical-align: top; }
+  .mexp-none { color: #b0b4bf; }
+  .mexp-notebox .mexp-lap-tab { align-items: stretch; }
+  .mexp-tags { margin-left: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 4px; padding: 2px 8px; min-width: 0; }
+  .mexp-tags span { font-size: 6.4pt; line-height: 1.5; color: #4a5166; background: #fff; border: 1px solid #d5d9e4; border-radius: 999px; padding: 0 7px; }
+  .mexp-tags b { font-weight: 800; color: #14294d; }
+  /* 랩타임: 남색 탭 머리 + 영역을 이어 붙인 표 하나 */
+  .mexp-lapbox { background: #fff; }
+  .mexp-lap-tab { background: #f6f7fa; border-bottom: 1.5px solid #14294d; line-height: 1; display: flex; }
+  .mexp-lap-tab h3 { margin: 0; background: #14294d; color: #fff; font-size: 7.8pt; font-weight: 800; padding: 6px 34px 5px 16px; clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 100%, 0 100%); }
+  .mexp-laptable table { width: 100%; border-collapse: separate; border-spacing: 0; }
+  .mexp-laptable th { background: #eef0f5; padding: 5px 10px; }
+  .mexp-laptable th div { display: flex; justify-content: center; align-items: center; font-size: 6.6pt; font-weight: 800; color: #14294d; white-space: nowrap; line-height: 1.4; }
+  .mexp-laptable th b { margin-left: 8px; padding-left: 8px; border-left: 1px solid #b9c0d0; }
+  .mexp-laptable td { font-size: 6.4pt; line-height: 1.5; padding: 2.5px 0; white-space: nowrap; vertical-align: baseline; }
+  /* 지문 이름과 시간은 영역 가운데에서 가깝게 마주 보게 */
+  .mexp-laptable td.n { padding-left: 4px; padding-right: 6px; text-align: right; color: #555; }
+  .mexp-laptable td.v { padding: 2.5px 4px 2.5px 6px; text-align: left; font-weight: 600; color: #111; font-variant-numeric: tabular-nums; }
+  .mexp-laptable td.v span { display: inline-block; min-width: 38px; text-align: right; }
+  .mexp-laptable th.g + th.g, .mexp-laptable td.g:not(:first-child) { border-left: 1px solid #d5d9e4; }
+  .mexp-laptable tbody tr + tr td { border-top: 1px solid #eef0f4; }
+  .mexp-laptable tbody tr:last-child td { padding-bottom: 5px; }
   /* ── 영어 단어 페이지(클래스카드 공부 + 테스트) ── */
   #view-vocab { scrollbar-gutter: stable; } /* 문법처럼 내용이 짧아 스크롤바가 사라질 때 화면이 옆으로 밀리지 않게 */
   #view-vocab .chat-head, #view-vocabpick .chat-head { max-width: 680px; margin-bottom: 18px; }
@@ -8801,6 +8874,7 @@
         </div>
         <div class="home-schedule-inner hrp-inner">
           <div class="hrp-latest" id="hrpLatest">확인 중…</div>
+          <div class="hrp-next" id="hrpNext"></div>
           <div class="hrp-note" id="hrpNote">매주 일요일에 도착해요</div>
         </div>
       </div>
@@ -15012,8 +15086,18 @@
   function hdkStopPoll() { if (hdkPollTimer) { clearInterval(hdkPollTimer); hdkPollTimer = null; } }
 
   // ── 홈: 6일 분석지 바로가기 ──
+  // 다음 분석지가 도착하는 일요일(오전 9시 생성). 일요일 9시가 지나면 그다음 주 일요일을 보여준다.
+  function hrpNextSunday() {
+    const now = new Date(), d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    let add = (7 - d.getDay()) % 7;
+    if (add === 0 && now.getHours() >= 9) add = 7;
+    d.setDate(d.getDate() + add);
+    return (d.getMonth() + 1) + "/" + d.getDate();
+  }
   function hrpLoad() {
     const el = document.getElementById("hrpLatest"); if (!el) return;
+    const next = document.getElementById("hrpNext");
+    if (next) next.textContent = hrpNextSunday() + " 새로운 분석지 도착 예정!";
     if (!localStorage.getItem("holoStudentId")) return;
     planApi({ action: "reports" }).then(d => {
       const list = ((d && d.reports) || []).filter(r => r.report_type !== "daily");
@@ -17200,7 +17284,7 @@
     const todayStr = getLocalDateKey();
     const cover =
       '<div class="mexp-cover">' +
-        '<div class="mexp-cover-word"><svg class="mexp-cover-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,4 92,27 92,73 50,96 8,73 8,27" fill="none" stroke="#17294F" stroke-width="4.5" stroke-linejoin="round"/><polygon points="50,15 82,32.5 82,67.5 50,85 18,67.5 18,32.5" fill="none" stroke="#17294F" stroke-width="1.2" stroke-linejoin="round" opacity="0.32"/><path d="M27 66C38 66 40 50 51 51C61 52 64 42 71 35" fill="none" stroke="#17294F" stroke-width="4.5" stroke-linecap="round"/><circle cx="27" cy="66" r="3.6" fill="#17294F"/><circle cx="72" cy="34" r="6.6" fill="#17294F"/><circle cx="72" cy="34" r="2.4" fill="#FFFFFF"/></svg>홀로</div>' +
+        '<div class="mexp-cover-word"><svg class="mexp-cover-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,4 92,27 92,73 50,96 8,73 8,27" fill="none" stroke="#17294F" stroke-width="4.5" stroke-linejoin="round"/><polygon points="50,15 82,32.5 82,67.5 50,85 18,67.5 18,32.5" fill="none" stroke="#17294F" stroke-width="1.2" stroke-linejoin="round" opacity="0.32"/><path d="M27 66C38 66 40 50 51 51C61 52 64 42 71 35" fill="none" stroke="#17294F" stroke-width="4.5" stroke-linecap="round"/><circle cx="27" cy="66" r="3.6" fill="#17294F"/><circle cx="72" cy="34" r="6.6" fill="#17294F"/><circle cx="72" cy="34" r="2.4" fill="#FFFFFF"/></svg><span class="mexp-cover-brand"><span class="mexp-cover-brand-top">학습 관리 특화 독서실</span><span class="mexp-cover-brand-main">Road MAP</span></span></div>' +
         '<div class="mexp-cover-kicker">STUDY ANALYSIS REPORT</div>' +
         '<h1 class="mexp-cover-title">내 분석지</h1>' +
         '<div class="mexp-cover-sub">' + escapeHtml(periodText) + '</div>' +
@@ -19374,6 +19458,25 @@
       '<polyline points="' + poly + '"></polyline>' + dots +
     '</svg>';
   }
+  function mexScoreChartHtml(points) {
+    const values = points.map(p => p.value);
+    const min = Math.min.apply(null, values), max = Math.max.apply(null, values);
+    const range = max - min;
+    const coords = points.map((p, i) => ({
+      x: points.length > 1 ? 4 + (92 / (points.length - 1)) * i : 50,   // 가로 %
+      y: range ? 86 - ((p.value - min) / range) * 52 : 60,             // 세로 % (위쪽은 숫자 자리)
+      id: p.id, value: p.value,
+    }));
+    const poly = coords.map(c => c.x.toFixed(2) + "," + c.y.toFixed(2)).join(" ");
+    return '<div class="mex-lc' + (points.length > 8 ? " many" : "") + '">' +
+      '<svg viewBox="0 0 100 100" preserveAspectRatio="none"><polyline points="' + poly + '" vector-effect="non-scaling-stroke"></polyline></svg>' +
+      coords.map(c => {
+        const pos = 'left:' + c.x.toFixed(2) + '%;top:' + c.y.toFixed(2) + '%';
+        return '<span class="mex-lc-val" style="' + pos + '">' + c.value + '</span>' +
+          '<i class="mex-lc-dot" style="' + pos + '" onclick="mexOpenDetail(\'' + c.id + '\')"></i>';
+      }).join("") +
+    '</div>';
+  }
   // points: [{ id, value }] — 점수든 풀이 시간이든, 값 하나하나가 그 값을 만든 시험지의 id와
   // 짝지어져 있어서 그래프 점/아래 숫자/맨 위 현재 값을 모두 눌러 그 시험지로 이동할 수 있다.
   function mexTrendSubjectHtml(subject, points, formatLabel, avgText) {
@@ -19434,7 +19537,7 @@
       return '<div class="mex-an5-box">' +
         '<div class="mex-an5-name"><b>' + sub.name + '</b><span>' + sub.full + '점 만점 환산</span></div>' +
         '<div class="mex-an5-avg">' + (avg === null ? '<em>기록 없음</em>' : avg + '<small>점 · 평균 ' + pts.length + '회</small>') + '</div>' +
-        '<div class="mex-an5-chart">' + (pts.length ? mexTrendSvg(pts) : '') + '</div>' +
+        '<div class="mex-an5-chart">' + (pts.length ? mexScoreChartHtml(pts) : '') + '</div>' +
         '<div class="mex-an5-lab">오답 원인 TOP 3</div>' +
         '<ol class="mex-an5-reasons">' + (top.length ? top.map(t => '<li><span>' + escapeHtml(t.l) + '</span><b>' + t.c + '회</b></li>').join("") : '<li class="none">기록 없음</li>') + '</ol>' +
       '</div>';
@@ -19531,9 +19634,21 @@
   }
   // 프린트하기 — 화면 전체를 인쇄하지 않고, 이 시험 기록(상단 정보 + 피드백 + 성찰 노트)만 깔끔한
   // 문서로 만들어 브라우저 인쇄 창에 연결한다. 인쇄 창에서 "PDF로 저장"을 고르면 PDF로도 받을 수 있다.
+  // 인쇄용 답변: 길어서 줄이 바뀔 때는 의미 단위로 바뀌게 한다.
+  // 문장 하나(길면 쉼표 앞까지의 마디)를 한 덩어리로 묶어, 남은 자리에 안 들어가면 덩어리째 다음 줄로 간다.
+  function mexPrintAnswerHtml(text) {
+    const CUT = String.fromCharCode(1);
+    const wrap = (cls, inner) => '<span class="' + cls + '">' + inner + '</span>';
+    return String(text).split(/\r?\n/).map(line =>
+      line.replace(/([.!?…]+[)\]"'”’〉》」』]*)[ \t]+/g, (m, end, at, whole) =>
+        // "1. " 처럼 번호 뒤의 점은 문장 끝이 아니다
+        /(^|\s)\d{1,2}$/.test(whole.slice(0, at)) ? m : end + CUT)
+        .split(CUT).map(s => wrap("mexp-s", s.replace(/,[ \t]+/g, "," + CUT).split(CUT).map(c => wrap("mexp-c", escapeHtml(c))).join(" "))).join(" ")
+    ).join("\n");
+  }
   function mexBuildPrintHtml(exam) {
     const esc = escapeHtml;
-    const qa = (label, text) => '<div class="mexp-qa"><div class="mexp-q">' + esc(label) + '</div><div class="mexp-a">' + (text ? esc(text) : '<span class="mexp-none">(작성 안 함)</span>') + '</div></div>';
+    const qa = (label, text) => '<div class="mexp-row"><div class="k">' + esc(label) + '</div><div class="v">' + (text ? mexPrintAnswerHtml(text) : '<span class="mexp-none">작성 안 함</span>') + '</div></div>';
     const score = exam.scoreMine ? esc(exam.scoreMine) + (exam.scoreMax ? " / " + esc(exam.scoreMax) : "") + "점" : "미채점";
     const groups = (exam.passageTimeGroups && exam.passageTimeGroups.length)
       ? exam.passageTimeGroups : mexInferPassageGroups(exam.passageTimes || []);
@@ -19552,58 +19667,114 @@
     const todayStr = getLocalDateKey();
     let html =
       '<div class="mexp-cover">' +
-        '<div class="mexp-cover-word"><svg class="mexp-cover-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,4 92,27 92,73 50,96 8,73 8,27" fill="none" stroke="#17294F" stroke-width="4.5" stroke-linejoin="round"/><polygon points="50,15 82,32.5 82,67.5 50,85 18,67.5 18,32.5" fill="none" stroke="#17294F" stroke-width="1.2" stroke-linejoin="round" opacity="0.32"/><path d="M27 66C38 66 40 50 51 51C61 52 64 42 71 35" fill="none" stroke="#17294F" stroke-width="4.5" stroke-linecap="round"/><circle cx="27" cy="66" r="3.6" fill="#17294F"/><circle cx="72" cy="34" r="6.6" fill="#17294F"/><circle cx="72" cy="34" r="2.4" fill="#FFFFFF"/></svg>홀로</div>' +
+        '<div class="mexp-cover-word"><svg class="mexp-cover-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,4 92,27 92,73 50,96 8,73 8,27" fill="none" stroke="#17294F" stroke-width="4.5" stroke-linejoin="round"/><polygon points="50,15 82,32.5 82,67.5 50,85 18,67.5 18,32.5" fill="none" stroke="#17294F" stroke-width="1.2" stroke-linejoin="round" opacity="0.32"/><path d="M27 66C38 66 40 50 51 51C61 52 64 42 71 35" fill="none" stroke="#17294F" stroke-width="4.5" stroke-linecap="round"/><circle cx="27" cy="66" r="3.6" fill="#17294F"/><circle cx="72" cy="34" r="6.6" fill="#17294F"/><circle cx="72" cy="34" r="2.4" fill="#FFFFFF"/></svg><span class="mexp-cover-brand"><span class="mexp-cover-brand-top">학습 관리 특화 독서실</span><span class="mexp-cover-brand-main">Road MAP</span></span></div>' +
+        (exam.subject ? '<div class="mexp-cover-kicker mexp-cover-subject">' + esc(exam.subject) + '</div>' : '') +
         '<div class="mexp-cover-kicker">EXAM REPORT</div>' +
         '<h1 class="mexp-cover-title">' + esc(exam.title) + '</h1>' +
         '<div class="mexp-cover-sub">' + esc(exam.date) + '</div>' +
         '<div class="mexp-cover-stats">' +
           '<div><span>점수</span><b>' + score + '</b></div>' +
-          '<div><span>랩타임</span><b>' + (hasLap ? "총 " + formatDur(totalSec) : "기록 없음") + '</b></div>' +
+          '<div><span>응시 시간</span><b>' + (hasLap ? "총 " + formatDur(totalSec) : "기록 없음") + '</b></div>' +
         '</div>' +
         '<div class="mexp-cover-footer">발급일 ' + esc(todayStr) + '</div>' +
       '</div>';
-    // 인쇄 구성: 1페이지 표지 → 2페이지 제목·요약·랩타임 → 3페이지 피드백(+ 성찰 노트가 같이 들어가면 함께) → 4페이지 성찰 노트.
-    // 랩타임이 없는 기록(직접 입력)은 2페이지를 만들지 않고 제목·요약을 3페이지 맨 위에 둔다.
-    const metaHtml =
-      '<h1 class="mexp-title">' + esc(exam.title) + '</h1>' +
-      mexPrintAnalysisHtml(exam) +
+    // 인쇄 구성: 표지 → 번호 구역(점수 추이 · 이번 시험 요약 · 전체 피드백 · 개별 문제 성찰 노트).
+    // 구역은 중간에서 잘리지 않는다. 남은 자리에 안 들어가면 그 번호는 통째로 다음 쪽에서 시작한다.
+    // 이전 기록이 없으면 점수 추이가 빠지고 번호는 1부터 이어진다.
+    const sec = (no, text) => '<h2 class="mexp-sec"><i>' + no + '</i><span>' + esc(text) + '</span></h2>';
+    const sections = []; // 각 구역 = 더 나눌 수 없는 조각들의 목록(첫 조각에 제목 포함)
+    let no = 0;
+    const trendHtml = mexPrintAnalysisHtml(exam);
+    if (trendHtml) sections.push([sec(++no, exam.subject + " 점수 추이") + trendHtml]);
+    sections.push([sec(++no, "이번 시험 요약") +
       '<div class="mexp-meta">' +
         '<div><span>날짜</span><b>' + esc(exam.date) + '</b></div>' +
         '<div><span>과목</span><b>' + esc(exam.subject) + '</b></div>' +
+        '<div><span>시험 이름</span><b>' + esc(exam.title) + '</b></div>' +
         '<div><span>점수</span><b>' + score + '</b></div>' +
-        '<div><span>랩타임</span><b>' + (hasLap ? "총 " + formatDur(totalSec) : "기록 없음") + '</b></div>' +
-      '</div>';
-    const lapHtml = hasLap ? '<h2 class="mexp-h2">랩타임</h2><div class="mexp-lap">' + exsimBuildLapTableHtml(groups) + '</div>' : "";
-    const fbHtml = '<h2 class="mexp-h2">피드백</h2>' +
-      qa("1. 오늘 시험 전체적으로 어땠나요? (시간 배분, 컨디션도 편하게 적어주세요)", fb.q1) +
-      qa("2. 시간이 가장 부족했거나 힘들었던 부분은 어디였고, 왜 그랬나요?", fb.q2) +
-      qa("3. 이번 시험에서 잘 풀렸던 부분이나 전략은 무엇인가요?", fb.q3) +
-      qa("4. 다음 시험까지 개선하고 싶은 부분은 무엇인가요?", fb.q4) +
-      qa("자유 기록", fb.free);
-    let notesHtml = '<h2 class="mexp-h2">성찰 노트</h2>';
-    notesHtml += nums.length ? nums.map(n => {
+        '<div><span>응시 시간</span><b>' + (hasLap ? "총 " + formatDur(totalSec) : "기록 없음") + '</b></div>' +
+      '</div>' +
+      (hasLap ? '<div class="mexp-lapbox"><div class="mexp-lap-tab"><h3>랩타임</h3></div>' + mexPrintLapTableHtml(groups) + '</div>' : "")]);
+    sections.push([sec(++no, "이번 시험 전체 피드백") +
+      '<div class="mexp-fbbox">' +
+        qa("(1) 오늘 시험 전체적으로 어땠나요?", fb.q1) +
+        qa("(2) 시간이 가장 부족했거나 힘들었던 부분은 어디였고, 왜 그랬나요?", fb.q2) +
+        qa("(3) 이번 시험에서 잘 풀렸던 부분이나 전략은 무엇인가요?", fb.q3) +
+        qa("(4) 다음 시험까지 개선하고 싶은 부분은 무엇인가요?", fb.q4) +
+        qa("(5) 자유 기록", fb.free) +
+      '</div>']);
+    const noteBoxes = nums.map(n => {
       const note = notes[n] || {};
       const kind = note.kind === "wrong" ? "틀린 문제" : note.kind === "extra" ? "맞았지만 성찰 할 문제" : "";
       const reason = reasonOf(note);
-      return '<div class="mexp-note"><div class="mexp-note-head">' + n + '번' + (kind ? " · " + kind : "") + (reason ? " · 오답 원인: " + esc(reason) : "") + '</div>' +
+      return '<div class="mexp-notebox"><div class="mexp-lap-tab"><h3>' + n + '번</h3><div class="mexp-tags">' +
+        (kind ? '<span>' + kind + '</span>' : '') + (reason ? '<span>오답 원인 <b>' + esc(reason) + '</b></span>' : '') + '</div></div>' +
         qa("어떤 개념이나 포인트를 놓쳤나요?", note.q1) + qa("나의 잘못된 사고 과정", note.q2) +
         qa("올바른 사고 과정", note.q3) + qa("다음엔 어떻게 접근할 건가요?", note.q4) + '</div>';
-    }).join("") : '<div class="mexp-none">작성된 성찰 노트가 없습니다.</div>';
-    const head3 = hasLap ? "" : metaHtml;
-    if (hasLap) html += '<div class="mexp-page">' + metaHtml + lapHtml + '</div>';
-    // 피드백 + 성찰 노트가 한 페이지(A4, 여백 14mm 제외 약 269mm)에 다 들어가는지 숨은 영역에서 재 본다.
-    let fits = false;
-    try {
-      let m = document.getElementById("mexMeasure");
-      if (!m) { m = document.createElement("div"); m.id = "mexMeasure"; document.body.appendChild(m); }
-      m.innerHTML = head3 + fbHtml + notesHtml;
-      const pagePx = 269 * 96 / 25.4;
-      fits = m.offsetHeight <= pagePx * 0.94; // 약간의 여유를 둔다
-      m.innerHTML = "";
-    } catch (e) { fits = false; }
-    if (fits) html += '<div>' + head3 + fbHtml + notesHtml + '</div>';
-    else html += '<div class="mexp-page">' + head3 + fbHtml + '</div><div>' + notesHtml + '</div>';
+    });
+    if (!noteBoxes.length) noteBoxes.push('<div class="mexp-notebox empty">작성된 성찰 노트가 없습니다.</div>');
+    noteBoxes[0] = sec(++no, "개별 문제 성찰 노트") + noteBoxes[0];
+    sections.push(noteBoxes);
+    const pages = mexPaginate(sections);
+    html += pages.map((page, i) => '<div class="' + (i < pages.length - 1 ? "mexp-page" : "mexp-last") + '">' + page + '</div>').join("");
     return html;
+  }
+  // 숨은 영역에서 높이를 재서 쪽을 나눈다(A4, 위아래 여백 14mm를 뺀 약 269mm).
+  // 구역이 남은 자리에 들어가면 이어 붙이고, 아니면 새 쪽에서 시작한다. 한 쪽보다 긴 구역만 조각(문제 상자) 사이에서 나눈다.
+  function mexPaginate(sections) {
+    let m = document.getElementById("mexMeasure");
+    if (!m) { m = document.createElement("div"); m.id = "mexMeasure"; document.body.appendChild(m); }
+    const pageH = 269 * 96 / 25.4 * 0.96; // 약간의 여유
+    const heightOf = h => { m.innerHTML = '<div style="display:flow-root">' + h + '</div>'; return m.firstChild.offsetHeight; };
+    const block = (inner, cls) => '<div class="mexp-block' + (cls || "") + '">' + inner + '</div>';
+    const GAP = 40, UNIT_GAP = 12; // .mexp-block + .mexp-block 간격과 같아야 한다
+    const pages = [];
+    let cur = "", used = 0;
+    const flush = () => { if (cur) { pages.push(cur); cur = ""; used = 0; } };
+    const put = (htmlText, h, gap) => { used += (cur ? gap : 0) + h; cur += htmlText; };
+    sections.forEach(units => {
+      const whole = block(units.join(""));
+      const h = heightOf(whole);
+      if (h <= pageH) {
+        if (cur && used + GAP + h > pageH) flush();
+        put(whole, h, GAP);
+        return;
+      }
+      flush();
+      units.forEach((u, i) => {
+        const piece = block(u, i ? " cont" : "");
+        const ph = heightOf(piece);
+        if (cur && used + UNIT_GAP + ph > pageH) flush();
+        put(piece, ph, UNIT_GAP);
+      });
+    });
+    flush();
+    m.innerHTML = "";
+    return pages;
+  }
+  // 인쇄용 랩타임: 영역(화법과 언어 · 독서와 작문 …)을 옆으로 붙인 표 하나. 문항이 12개를 넘는 영역만 여러 열로 나눈다.
+  function mexPrintLapTableHtml(groups) {
+    const list = (groups || []).filter(g => g.items && g.items.length).map(g => {
+      const cols = g.items.length <= 12 ? 1 : (g.cols || 2);
+      return { title: g.title || "", items: g.items, cols: cols, rows: Math.ceil(g.items.length / cols), total: g.items.reduce((s, it) => s + (it.sec > 0 ? it.sec : 0), 0) };
+    });
+    if (!list.length) return "";
+    const rows = Math.max.apply(null, list.map(g => g.rows));
+    const head = list.some(g => g.title) ? '<thead><tr>' + list.map(g =>
+      '<th class="g" colspan="' + (g.cols * 2) + '"><div><span>' + escapeHtml(g.title) + '</span><b>' + (g.total > 0 ? formatDur(g.total) : "-") + '</b></div></th>').join("") + '</tr></thead>' : "";
+    const colW = (100 / (2 * list.reduce((s, g) => s + g.cols, 0))).toFixed(2) + "%";
+    let body = "";
+    for (let r = 0; r < rows; r++) {
+      body += '<tr>' + list.map(g => {
+        let cells = "";
+        for (let c = 0; c < g.cols; c++) {
+          const it = g.items[r * g.cols + c];
+          cells += '<td class="n' + (c === 0 ? " g" : "") + '" style="width:' + colW + '">' + (it ? escapeHtml(it.label) : "") + '</td><td class="v" style="width:' + colW + '"><span>' + (it ? (it.sec > 0 ? formatDur(it.sec) : "-") : "") + '</span></td>';
+        }
+        return cells;
+      }).join("") + '</tr>';
+    }
+    return '<div class="mexp-laptable"><table>' + head + '<tbody>' + body + '</tbody></table></div>';
   }
   // 인쇄용: 이 시험까지의 같은 과목 기록으로 '내 모의고사 분석하기'의 과목 박스(평균 · 점수 변화 · 오답 원인 TOP 3)를 만든다.
   // 이 시험 말고 같은 과목의 이전(같은 날 포함) 기록이 하나도 없으면 빈 문자열(생략).
@@ -19620,13 +19791,45 @@
     list.forEach(e => Object.values(e.wrongNotes || {}).forEach(n => { if (!n || !n.reason) return; const l = mexReasonLabel(n); cnt[l] = (cnt[l] || 0) + 1; }));
     const top = Object.keys(cnt).map(l => ({ l: l, c: cnt[l] })).sort((a, b) => b.c - a.c).slice(0, 3);
     const avg = pts.length ? Math.round(pts.reduce((s, p) => s + p.value, 0) / pts.length * 10) / 10 : null;
-    return '<div class="mexp-an"><div class="mex-an5-box">' +
-      '<div class="mex-an5-name"><b>' + escapeHtml(sub.name) + '</b><span>' + sub.full + '점 만점 환산 · 이 시험까지의 기록</span></div>' +
-      '<div class="mex-an5-avg">' + (avg === null ? '<em>기록 없음</em>' : avg + '<small>점 · 평균 ' + pts.length + '회</small>') + '</div>' +
-      '<div class="mex-an5-chart">' + (pts.length ? mexTrendSvg(pts) : '') + '</div>' +
-      '<div class="mex-an5-lab">오답 원인 TOP 3</div>' +
-      '<ol class="mex-an5-reasons">' + (top.length ? top.map(t => '<li><span>' + escapeHtml(t.l) + '</span><b>' + t.c + '회</b></li>').join("") : '<li class="none">기록 없음</li>') + '</ol>' +
-      '</div></div>';
+    const mine = pts.find(p => p.id === exam.id);
+    const num = (v, none) => v === null ? '<b class="none">' + none + '</b>' : '<b>' + v + '<em>점</em></b>';
+    const dates = {};
+    list.forEach(e => { dates[e.id] = Number(e.date.slice(5, 7)) + "/" + Number(e.date.slice(8, 10)); });
+    return '<div class="mexp-an"><div class="mexp-tr">' +
+      '<div class="mexp-tr-side">' +
+        '<div><span>평균</span>' + num(avg, "기록 없음") + '<small>' + pts.length + '회 기록</small></div>' +
+        '<div class="now"><span>이번 시험</span>' + num(mine ? mine.value : null, "미채점") + '</div>' +
+      '</div>' +
+      '<div class="mexp-tr-main">' +
+        '<div class="mexp-tr-note">' + sub.full + '점 만점 환산 · 이 시험까지의 기록</div>' +
+        (pts.length ? mexPrintChartHtml(pts, sub.full, dates) : '') +
+        '<div class="mexp-top3"><div class="mex-an5-lab">오답 원인 TOP 3</div>' +
+        '<ol class="mex-an5-reasons">' + (top.length ? top.map(t => '<li><span>' + escapeHtml(t.l) + '</span><b>' + t.c + '회</b></li>').join("") : '<li class="none">기록 없음</li>') + '</ol></div>' +
+      '</div></div></div>';
+  }
+  // 인쇄용 그래프: 가로 눈금선 + 점수 눈금 + 점 위 점수 + 아래 날짜. 눈금 범위는 기록의 최저·최고 점수에 맞춘다.
+  function mexPrintChartHtml(pts, full, dates) {
+    const values = pts.map(p => p.value);
+    const top = Math.min(full, Math.ceil((Math.max.apply(null, values) + 3) / 10) * 10);
+    let bottom = Math.max(0, Math.floor((Math.min.apply(null, values) - 6) / 10) * 10);
+    if (top - bottom < 20) bottom = Math.max(0, top - 20);
+    const step = top - bottom <= 20 ? 5 : top - bottom <= 50 ? 10 : 20;
+    const ticks = [];
+    for (let v = top; v > bottom; v -= step) ticks.push(v);
+    ticks.push(bottom);
+    const yOf = v => (1 - (v - bottom) / ((top - bottom) || 1)) * 100;
+    const xOf = i => pts.length > 1 ? 6 + (88 / (pts.length - 1)) * i : 50;
+    const pos = (x, y) => 'left:' + x.toFixed(2) + '%;top:' + y.toFixed(2) + '%';
+    const poly = pts.map((p, i) => xOf(i).toFixed(2) + "," + yOf(p.value).toFixed(2)).join(" ");
+    return '<div class="mexp-ch" style="min-width:' + Math.min(540, Math.max(300, pts.length * 44)) + 'px">' +
+      '<div class="mexp-ch-y">' + ticks.map(v => '<span style="top:' + yOf(v).toFixed(2) + '%">' + v + '</span>').join("") + '</div>' +
+      '<div class="mexp-ch-plot">' +
+        ticks.map(v => '<i class="grid" style="top:' + yOf(v).toFixed(2) + '%"></i>').join("") +
+        '<svg viewBox="0 0 100 100" preserveAspectRatio="none"><polyline points="' + poly + '" vector-effect="non-scaling-stroke"></polyline></svg>' +
+        pts.map((p, i) => '<span class="val" style="' + pos(xOf(i), yOf(p.value)) + '">' + p.value + '</span><i class="dot" style="' + pos(xOf(i), yOf(p.value)) + '"></i>').join("") +
+      '</div>' +
+      '<div class="mexp-ch-x">' + pts.map((p, i) => '<span style="left:' + xOf(i).toFixed(2) + '%">' + escapeHtml(dates[p.id] || "") + '</span>').join("") + '</div>' +
+    '</div>';
   }
   function mexPrintExam(examId) {
     mexOpenDetail(examId);
