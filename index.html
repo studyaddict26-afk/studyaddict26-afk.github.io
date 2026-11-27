@@ -4357,8 +4357,7 @@
   .sfw-final { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 12px; align-items: stretch; }
   .sfw-final .sfw-sumbox { display: grid; grid-template-columns: repeat(auto-fit, minmax(112px, 1fr)); gap: 8px; padding: 10px; align-content: stretch; }
   .sfc { display: flex; flex-direction: column; min-width: 0; background: #fff; border-radius: 10px; padding: 10px 7px; }
-  .sfc h5 { margin: 0; text-align: center; font-size: 0.78rem; font-weight: 800; color: var(--ink); }
-  .sfc > em { display: block; margin-top: 2px; padding-bottom: 8px; border-bottom: 1px solid #ECEAE2; text-align: center; font-style: normal; font-size: 0.6rem; line-height: 1.4; color: #8A8D94; word-break: keep-all; }
+  .sfc h5 { margin: 0; padding-bottom: 8px; border-bottom: 1px solid #ECEAE2; text-align: center; font-size: 0.78rem; font-weight: 800; color: var(--ink); }
   .sfc ul { list-style: none; margin: 0; padding: 6px 0 0; }
   .sfc li { padding: 3px 0; }
   .sfc li > div { display: grid; grid-template-columns: 34px auto; justify-content: center; align-items: baseline; column-gap: 6px; }
@@ -4369,9 +4368,9 @@
   .sfc-msg { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 4px; min-height: 96px; padding-top: 14px; }
   .sfc-msg b { font-size: 0.78rem; font-weight: 800; color: #45484F; }
   .sfw-final .sfw-ev { margin: 0; display: flex; flex-direction: column; justify-content: flex-start; padding: 12px 13px; }
-  .sfw-final .sfw-ev-t { font-size: 0.72rem; }
+  .sfw-final .sfw-ev-t { font-size: 0.72rem; text-align: center; }
   .sfw-final .sfw-ev p { font-size: 0.66rem; word-break: keep-all; }
-  .sfw-final .sfw-ck { font-size: 0.7rem; }
+  .sfw-final .sfw-ck { font-size: 0.7rem; justify-content: center; }
   .sfw-final .sfw-ck input { flex: none; width: 14px; height: 14px; margin: 0; }
   @media (max-width: 700px) { .sfw-final { grid-template-columns: 1fr; } }
   .sf-pend-note em { font-style: normal; color: #C0392B; }
@@ -15294,6 +15293,13 @@
     if (se) { se.innerHTML = SCHED_SIDEBAR_BLANK_TEMPLATE; planApi({ action: "schedule_today", date: getCalendarDateKey(), weekday: getTodayWeekday() }).then(data => renderSchedSidebarEvents(se, data.events)).catch(() => { se.innerHTML = SCHED_SIDEBAR_BLANK_TEMPLATE; }); }
     schedFetch().then(sfInit).catch(() => { document.getElementById("sfEditor").innerHTML = '<div class="sp-empty">불러오지 못했어요. 잠시 후 다시 들어와 주세요.</div>'; });
   }
+  // 승인되어 지금 적용 중인 그 요일 스케줄
+  function sfApprovedDay(wd) {
+    const f = ((schedData && schedData.fixed) || {})[String(wd)];
+    if (!f) return { mode: "duty", entry: "", exit: "", outs: [] };
+    if (f.off) return { mode: "off", entry: "", exit: "", outs: [] };
+    return Object.assign({ mode: "custom" }, schedFromBlocks(f.blocks, f.reason));
+  }
   function sfInit() {
     const d = schedData || {};
     sfEditAll = false; sfW = null;
@@ -15320,10 +15326,7 @@
         else days[wd] = Object.assign({ mode: "custom" }, schedFromBlocks(p.blocks, p.reason));
         return;
       }
-      const f = (d.fixed || {})[String(wd)];
-      if (!f) days[wd] = { mode: "duty", entry: "", exit: "", outs: [] };
-      else if (f.off) days[wd] = { mode: "off", entry: "", exit: "", outs: [] };
-      else days[wd] = Object.assign({ mode: "custom" }, schedFromBlocks(f.blocks, f.reason));
+      days[wd] = sfApprovedDay(wd);
     });
     sfS = { isFirst: isFirst, days: days };
     sfRenderEditor();
@@ -15505,12 +15508,6 @@
   // 지금 화면의 입력칸이 고치고 있는 대상
   const sfWTarget = () => (sfW && sfW.step === 1 && SF_HOWS[sfW.how] === "copy" && sfW.draft) ? sfW.draft : sfS.days[sfW.wd];
   // 확인 단계의 요일 카드: 위에서부터 입실 → 외출 → 재입실 → 퇴실. 사유는 해당 시각 바로 아래에 작게 붙인다
-  function sfSumBefore(d) {
-    if (!d || d.mode === "duty") return "정상 학습";
-    if (d.mode === "off") return "등원 안 함";
-    const n = (d.outs || []).length;
-    return sfClock(d.entry) + " ~ " + sfClock(d.exit) + (n ? " · 외출 " + n + "회" : "");
-  }
   function sfSumCard(w, wd) {
     const d = sfS.days[wd], reason = String(w.reasons[wd] || "").trim();
     const late = sfLatePart(reason), early = sfEarlyPart(reason);
@@ -15524,7 +15521,7 @@
     } else {
       body = '<div class="sfc-msg"><b>' + (d.mode === "off" ? "등원 안 함" : "정상 학습") + '</b>' + why(rest) + '</div>';
     }
-    return '<div class="sfc"><h5>' + SCHED_WD[wd] + '요일</h5><em>이전: ' + escapeHtml(sfSumBefore(w.snap[wd] || d)) + '</em>' + body + '</div>';
+    return '<div class="sfc"><h5>' + SCHED_WD[wd] + '요일</h5>' + body + '</div>';
   }
   function sfWHtml() {
     const w = sfW, d = w.wd ? sfS.days[w.wd] : null;
@@ -15558,7 +15555,7 @@
     const sortedEdited = Object.keys(w.edited).map(Number).sort((x, y) => x - y);
     const sum = sortedEdited.map(wd => sfSumCard(w, wd)).join("");
     return sfWHeader() + '<div class="sfw-h">이렇게 보낼까요?</div><div class="sfw-final"><div class="sfw-box sfw-sumbox">' + sum + '</div>' +
-      '<div class="sfw-ev"><div class="sfw-ev-t">증빙자료 안내</div><p>증빙자료는 AI로 위조할 수 있어서 따로 받지 않아요.<br>필요한 경우 <b>로드맵 관리 선생님이 직접 학생을 불러 확인</b>할 예정이에요.</p>' +
+      '<div class="sfw-ev"><div class="sfw-ev-t">증빙자료 안내</div><p>증빙자료는 AI로 위조할 수 있어서 따로 받지 않아요. 필요한 경우 <b>로드맵 관리 선생님이 직접 학생을 불러 확인</b>할 예정이에요.</p>' +
       '<label class="sfw-ck"><input type="checkbox" id="sfwEvAck" onchange="sfEvToggle(this)"' + (w.evAck ? " checked" : "") + '><span>안내를 확인했어요.</span></label></div></div>' +
       '<div class="sfw-actions"><button type="button" class="sf-edit" onclick="sfWBack()">이전</button><button type="button" class="sf-edit" onclick="sfWMore()">다른 요일도 변경하기</button><button type="button" class="sp-btn" id="sfSubmitBtn" onclick="sfWFinish()"' + (w.evAck ? "" : " disabled") + '>수정 완료</button></div>';
   }
@@ -15664,7 +15661,7 @@
       return d.mode === "custom" ? { weekday: wd, mode: "custom", blocks: schedToBlocks(d), reason: d.outs.map(o => o.reason).filter(Boolean).join(" / ") } : { weekday: wd, mode: d.mode, blocks: [] };
     });
     const btn = document.getElementById("sfSubmitBtn"); btn.disabled = true; btn.textContent = "보내는 중…";
-    planApi({ action: "sched_fixed_submit", days: days, reason: reason, evidence: null, evidenceAck: true }).then(r => {
+    planApi({ action: "sched_fixed_submit", days: days, reason: reason, evidence: null, evidenceAck: true, replaceId: sfPend ? sfPend.id : null }).then(r => {
       if (!r || !r.ok) { say((r && r.error) || "제출하지 못했어요."); btn.disabled = false; btn.textContent = "수정 완료"; return; }
       schedEvidence.sf = null; sfW = null;
       document.getElementById("sfMsg").innerHTML = ""; // 제출 결과는 위의 "승인 대기 중" 안내가 대신 보여 준다
@@ -15683,9 +15680,9 @@
     // 수정 순서는 작은 팝업 창에서 진행한다
     const modal = document.getElementById("sfModal"), card = document.getElementById("sfModalCard");
     if (modal && card) {
-      card.classList.toggle("sfw-wide", !!(sfW && !sfPend && sfW.step === 3));
+      card.classList.toggle("sfw-wide", !!(sfW && sfW.step === 3));
       card.style.setProperty("--sfw-w", ((n) => [600, 600, 700, 820, 940, 1040, 1120][Math.min(6, Math.max(1, n))])(sfW ? Object.keys(sfW.edited).length : 1) + "px");
-      if (sfW && !sfPend) { card.innerHTML = '<button type="button" class="sfw-close" onclick="sfWCancel()" aria-label="닫기">×</button>' + sfWHtml() + '<div class="sp-msg" id="sfwMsg"></div>'; modal.hidden = false; }
+      if (sfW) { card.innerHTML = '<button type="button" class="sfw-close" onclick="sfWCancel()" aria-label="닫기">×</button>' + sfWHtml() + '<div class="sp-msg" id="sfwMsg"></div>'; modal.hidden = false; }
       else { modal.hidden = true; card.innerHTML = ""; }
     }
     document.getElementById("sfReview").hidden = true;
@@ -15751,19 +15748,18 @@
     sfReview(true);
     const ta2 = document.getElementById("sfReason"); if (ta2) ta2.value = keep;
   }
-  // 재수정하기: 승인 대기 요청을 취소하고, 제출했던 내용이 그대로 채워진 상태로 수정 창을 연다
-  function sfReedit(id) {
-    if (!confirm("승인 대기 중인 요청을 취소하고 다시 수정할까요?")) return;
-    const keep = JSON.parse(JSON.stringify(sfS.days)), reasonStr = String((sfPend && sfPend.reason) || "");
-    planApi({ action: "sched_req_cancel", id: id }).then(() => schedFetch()).then(() => {
-      sfInit();
-      const approved = JSON.parse(JSON.stringify(sfS.days)); // "이전"은 승인된 원래 스케줄
-      sfS.days = keep;
-      sfStartEdit(approved);
-      // 제출했던 사유("월: ... / 화: ...")를 요일별로 다시 채운다
-      const pr = sfParseReason(reasonStr); Object.keys(pr).forEach(i => { sfW.reasons[i] = pr[i] === SF_AUTO.duty || pr[i] === SF_AUTO.custom ? "" : pr[i]; sfW.edited[i] = true; });
-      sfRenderEditor();
-    }).catch(() => { sfEnter(); });
+  // 재수정하기: 대기 중인 요청은 취소하지 않는다. 제출해 둔 내용에서 "고정 스케줄 수정하기"와 똑같이 시작하고,
+  // 새로 제출하면 서버가 그 대기 요청을 새 요청으로 바꾼다. 창을 닫으면 원래 요청이 그대로 남는다.
+  function sfReedit() {
+    if (!sfPend) return;
+    const approved = {}; [1, 2, 3, 4, 5, 6].forEach(wd => { approved[wd] = sfApprovedDay(wd); });
+    const reasonStr = String(sfPend.reason || "");
+    sfStartEdit(approved);
+    const shape = d => JSON.stringify([d.mode, d.entry || "", d.exit || "", (d.outs || []).map(o => [o.out, o.back])]);
+    [1, 2, 3, 4, 5, 6].forEach(wd => { if (shape(sfS.days[wd]) !== shape(approved[wd])) sfW.edited[wd] = true; });
+    // 제출했던 사유("월: ... / 화: ...")를 요일별로 다시 채운다. 앞서 고친 요일은 새 요청에도 함께 보낸다
+    const pr = sfParseReason(reasonStr); Object.keys(pr).forEach(i => { sfW.reasons[i] = pr[i] === SF_AUTO.duty || pr[i] === SF_AUTO.custom ? "" : pr[i]; sfW.edited[i] = true; });
+    sfRenderEditor();
   }
   function sfCancelPending(id) {
     if (!confirm("승인 대기 중인 고정 스케줄 요청을 취소할까요?")) return;
