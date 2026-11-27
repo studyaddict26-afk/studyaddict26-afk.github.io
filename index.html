@@ -4351,14 +4351,29 @@
   .sfw-ck { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 700; color: var(--ink); cursor: pointer; padding-top: 10px; border-top: 1px solid var(--line); }
   .sfw-ck input { width: 17px; height: 17px; margin: 0; accent-color: #0D2155; cursor: pointer; }
   #sfwNextBtn:disabled { opacity: 0.35; cursor: not-allowed; }
-  .sfw-sum { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto minmax(0, 1fr); gap: 4px 8px; align-items: baseline; font-size: 0.76rem; padding: 8px 0; border-bottom: 1px solid #E6E2D6; }
-  .sfw-sum:last-child { border-bottom: none; }
-  .sfw-sum b { font-weight: 800; }
-  .sfw-sum .b { color: var(--ink-soft); }
-  .sfw-sum .a { font-weight: 700; color: #0D2155; }
-  .sfw-sum i { font-style: normal; color: var(--ink-soft); }
-  .sfw-sum .r { grid-column: 2 / -1; font-size: 0.72rem; color: var(--ink-soft); }
   .sfw-actions { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
+  /* 4단계 확인: 시간표(왼쪽)와 증빙자료 안내(오른쪽)를 나란히. 6개 요일을 다 고쳐도 스크롤 없이 보이게 글씨를 작게 */
+  .sfw-modalcard.sfw-wide { width: min(var(--sfw-w, 600px), 100%); }
+  .sfw-final { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 12px; align-items: stretch; }
+  .sfw-final .sfw-sumbox { display: grid; grid-template-columns: repeat(auto-fit, minmax(112px, 1fr)); gap: 8px; padding: 10px; align-content: stretch; }
+  .sfc { display: flex; flex-direction: column; min-width: 0; background: #fff; border-radius: 10px; padding: 10px 7px; }
+  .sfc h5 { margin: 0; text-align: center; font-size: 0.78rem; font-weight: 800; color: var(--ink); }
+  .sfc > em { display: block; margin-top: 2px; padding-bottom: 8px; border-bottom: 1px solid #ECEAE2; text-align: center; font-style: normal; font-size: 0.6rem; line-height: 1.4; color: #8A8D94; word-break: keep-all; }
+  .sfc ul { list-style: none; margin: 0; padding: 6px 0 0; }
+  .sfc li { padding: 3px 0; }
+  .sfc li > div { display: grid; grid-template-columns: 34px auto; justify-content: center; align-items: baseline; column-gap: 6px; }
+  .sfc li span { font-size: 0.64rem; color: var(--ink-soft); text-align: right; white-space: nowrap; }
+  .sfc li b { font-size: 0.72rem; font-weight: 800; color: #0D2155; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .sfc p, .sfc-note { margin: 1px 0 0; text-align: center; font-size: 0.6rem; line-height: 1.4; color: #8A8D94; word-break: keep-all; overflow-wrap: anywhere; }
+  .sfc-note { margin-top: 6px; }
+  .sfc-msg { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 4px; min-height: 96px; padding-top: 14px; }
+  .sfc-msg b { font-size: 0.78rem; font-weight: 800; color: #45484F; }
+  .sfw-final .sfw-ev { margin: 0; display: flex; flex-direction: column; justify-content: flex-start; padding: 12px 13px; }
+  .sfw-final .sfw-ev-t { font-size: 0.72rem; }
+  .sfw-final .sfw-ev p { font-size: 0.66rem; word-break: keep-all; }
+  .sfw-final .sfw-ck { font-size: 0.7rem; }
+  .sfw-final .sfw-ck input { flex: none; width: 14px; height: 14px; margin: 0; }
+  @media (max-width: 700px) { .sfw-final { grid-template-columns: 1fr; } }
   .sf-pend-note em { font-style: normal; color: #C0392B; }
   .sf-pend-btns { display: flex; gap: 8px; flex: none; }
   .sf-weekhead .sf-pend-btns { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
@@ -15489,6 +15504,28 @@
   }
   // 지금 화면의 입력칸이 고치고 있는 대상
   const sfWTarget = () => (sfW && sfW.step === 1 && SF_HOWS[sfW.how] === "copy" && sfW.draft) ? sfW.draft : sfS.days[sfW.wd];
+  // 확인 단계의 요일 카드: 위에서부터 입실 → 외출 → 재입실 → 퇴실. 사유는 해당 시각 바로 아래에 작게 붙인다
+  function sfSumBefore(d) {
+    if (!d || d.mode === "duty") return "정상 학습";
+    if (d.mode === "off") return "등원 안 함";
+    const n = (d.outs || []).length;
+    return sfClock(d.entry) + " ~ " + sfClock(d.exit) + (n ? " · 외출 " + n + "회" : "");
+  }
+  function sfSumCard(w, wd) {
+    const d = sfS.days[wd], reason = String(w.reasons[wd] || "").trim();
+    const late = sfLatePart(reason), early = sfEarlyPart(reason);
+    const rest = late || early ? "" : reason; // 입퇴실 사유 형식이 아닌 글(등원 안 함 사유 등)
+    const why = t => t ? '<p>' + escapeHtml(t) + '</p>' : "";
+    const row = (label, time, note) => '<li><div><span>' + label + '</span><b>' + (time ? sfClock(time) : "-") + '</b></div>' + why(note) + '</li>';
+    let body;
+    if (d.mode === "custom") {
+      body = '<ul>' + row("입실", d.entry, late) + (d.outs || []).map(o => row("외출", o.out, o.reason) + row("재입실", o.back, "")).join("") + row("퇴실", d.exit, early) + '</ul>' +
+        (rest ? '<div class="sfc-note">' + escapeHtml(rest) + '</div>' : "");
+    } else {
+      body = '<div class="sfc-msg"><b>' + (d.mode === "off" ? "등원 안 함" : "정상 학습") + '</b>' + why(rest) + '</div>';
+    }
+    return '<div class="sfc"><h5>' + SCHED_WD[wd] + '요일</h5><em>이전: ' + escapeHtml(sfSumBefore(w.snap[wd] || d)) + '</em>' + body + '</div>';
+  }
   function sfWHtml() {
     const w = sfW, d = w.wd ? sfS.days[w.wd] : null;
     const back = '<button type="button" class="sf-edit" onclick="sfWBack()">' + (w.step === 0 ? "취소" : "이전") + '</button>';
@@ -15519,14 +15556,11 @@
     }
     // 4단계: 보내기 전에 바뀐 요일을 이전 → 이후로 한 번에 확인 + 증빙 안내(한 번만)
     const sortedEdited = Object.keys(w.edited).map(Number).sort((x, y) => x - y);
-    const prevReason = wd => { const i = sortedEdited.indexOf(wd); return i > 0 ? w.reasons[sortedEdited[i - 1]] : null; };
-    const sum = sortedEdited.map(wd =>
-      '<div class="sfw-sum"><b>' + SCHED_WD[wd] + '</b><span class="b">' + escapeHtml(sfDayTxt(w.snap[wd] || sfS.days[wd])) + '</span><i>→</i><span class="a">' + escapeHtml(sfDayTxt(sfS.days[wd])) + '</span>' +
-      (w.reasons[wd] && w.reasons[wd] !== prevReason(wd) ? '<div class="r">사유: ' + escapeHtml(w.reasons[wd]) + '</div>' : "") + '</div>').join("");
-    return sfWHeader() + '<div class="sfw-h">이렇게 보낼까요?</div><div class="sfw-box">' + sum + '</div>' +
+    const sum = sortedEdited.map(wd => sfSumCard(w, wd)).join("");
+    return sfWHeader() + '<div class="sfw-h">이렇게 보낼까요?</div><div class="sfw-final"><div class="sfw-box sfw-sumbox">' + sum + '</div>' +
       '<div class="sfw-ev"><div class="sfw-ev-t">증빙자료 안내</div><p>증빙자료는 AI로 위조할 수 있어서 따로 받지 않아요.<br>필요한 경우 <b>로드맵 관리 선생님이 직접 학생을 불러 확인</b>할 예정이에요.</p>' +
-      '<label class="sfw-ck"><input type="checkbox" id="sfwEvAck" onchange="sfEvToggle(this)"' + (w.evAck ? " checked" : "") + '><span>안내를 확인했어요.</span></label></div>' +
-      '<div class="sfw-actions"><button type="button" class="sf-edit" onclick="sfWMore()">다른 요일도 변경하기</button><button type="button" class="sp-btn" id="sfSubmitBtn" onclick="sfWFinish()"' + (w.evAck ? "" : " disabled") + '>수정 완료</button></div>';
+      '<label class="sfw-ck"><input type="checkbox" id="sfwEvAck" onchange="sfEvToggle(this)"' + (w.evAck ? " checked" : "") + '><span>안내를 확인했어요.</span></label></div></div>' +
+      '<div class="sfw-actions"><button type="button" class="sf-edit" onclick="sfWBack()">이전</button><button type="button" class="sf-edit" onclick="sfWMore()">다른 요일도 변경하기</button><button type="button" class="sp-btn" id="sfSubmitBtn" onclick="sfWFinish()"' + (w.evAck ? "" : " disabled") + '>수정 완료</button></div>';
   }
   // 마지막 확인 단계: 증빙자료 안내에 체크해야 '수정 완료'를 누를 수 있다
   function sfEvToggle(el) { sfW.evAck = el.checked; const b = document.getElementById("sfSubmitBtn"); if (b) b.disabled = !el.checked; }
@@ -15649,6 +15683,8 @@
     // 수정 순서는 작은 팝업 창에서 진행한다
     const modal = document.getElementById("sfModal"), card = document.getElementById("sfModalCard");
     if (modal && card) {
+      card.classList.toggle("sfw-wide", !!(sfW && !sfPend && sfW.step === 3));
+      card.style.setProperty("--sfw-w", ((n) => [600, 600, 700, 820, 940, 1040, 1120][Math.min(6, Math.max(1, n))])(sfW ? Object.keys(sfW.edited).length : 1) + "px");
       if (sfW && !sfPend) { card.innerHTML = '<button type="button" class="sfw-close" onclick="sfWCancel()" aria-label="닫기">×</button>' + sfWHtml() + '<div class="sp-msg" id="sfwMsg"></div>'; modal.hidden = false; }
       else { modal.hidden = true; card.innerHTML = ""; }
     }
