@@ -4244,8 +4244,8 @@
   .sf-right-main { flex: none; min-height: 0; display: flex; flex-direction: column; }
   #sfEditor { flex: none; display: flex; flex-direction: column; }
   #sfEditor[hidden] { display: none; }
-  .sf-days { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: 220px; gap: 10px; flex: none; }
-  /* 내용이 박스 높이(220px)를 넘으면 박스는 그대로, 박스 안에서 스크롤된다 */
+  .sf-days { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: 280px; gap: 10px; flex: none; }
+  /* 내용이 박스 높이(280px)를 넘으면 박스는 그대로, 박스 안에서 스크롤된다 */
   .sf-days .sf-day { min-height: 0; overflow: hidden; }
   .sf-days .sf-day-rows { min-height: 0; overflow-y: auto; align-content: safe center; scrollbar-width: thin; }
   .sf-day { background: var(--cream); border-radius: 8px; padding: 12px 6px 14px; min-width: 0; display: flex; flex-direction: column; }
@@ -4387,6 +4387,19 @@
   .sfpk-wait { margin-left: 6px; font-size: 0.7rem; font-weight: 800; color: #C0392B; }
   .sfpk .sfc.sfpk-new { box-shadow: inset 0 0 0 1.5px #0D2155; }
   .sfpk .sfc.sfpk-new h5 { color: #0D2155; }
+  /* 주간 카드 안의 스케줄 */
+  .sf-day .sfc.sfc-week { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: thin; justify-content: safe center; background: transparent; border-radius: 0; padding: 0; }
+  .sf-day .sfc-week ul { flex: none; padding: 0; gap: 4px; }
+  .sf-day .sfc-week li { padding: 0 1px; border-radius: 7px; }
+  .sf-day .sfc-week li.sfc-box { padding: 4px 1px; background: #fff; border-color: #DEDACE; }
+  .sf-day .sfc-week li > div { column-gap: 4px; padding: 0; line-height: 1.55; }
+  .sf-day .sfc-week li span { font-size: 0.5rem; }
+  .sf-day .sfc-week li b { font-size: 0.56rem; }
+  .sf-day .sfc-week li p { font-size: 0.47rem; line-height: 1.35; margin: 0 2px 2px; }
+  .sf-day .sfc-week .sfc-note { flex: none; font-size: 0.47rem; margin: 5px 2px 0; }
+  .sf-day .sfc-week .sfc-msg { flex: none; min-height: 0; padding: 0; gap: 5px; }
+  .sf-day .sfc-week .sfc-msg b { font-size: 0.74rem; font-weight: 600; color: var(--ink-soft); }
+  .sf-day .sfc-week .sfc-msg p { font-size: 0.47rem; }
   .sf-pend-note em { font-style: normal; color: #C0392B; }
   .sf-pend-btns { display: flex; gap: 8px; flex: none; }
   .sf-weekhead .sf-pend-btns { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
@@ -15326,14 +15339,19 @@
   function sfWaiting(wd) {
     return !!sfPend && (sfShape(sfPendDay(sfPend, wd)) !== sfShape(sfApprovedDay(wd)) || sfParseReason(sfPend.reason)[wd] !== undefined);
   }
+  const sfShownWhy = t => t === SF_AUTO.duty || t === SF_AUTO.custom ? "" : String(t || "");
+  function sfApprovedWhy(wd) {
+    const now = sfShape(sfApprovedDay(wd));
+    const hit = ((schedData && schedData.requests) || []).find(r => r.kind === "fixed" && r.status === "approved" && sfParseReason(r.reason)[wd] !== undefined && sfShape(sfPendDay(r, wd)) === now);
+    return hit ? sfShownWhy(sfParseReason(hit.reason)[wd]) : "";
+  }
   let sfPeek = null; // 비교 창에 띄운 요일
   function sfPeekOpen(wd) { sfPeek = wd; sfRenderEditor(); }
   function sfPeekClose() { sfPeek = null; sfRenderEditor(); }
   function sfPeekHtml(wd) {
-    const why = sfParseReason(sfPend.reason)[wd] || "";
-    const reason = why === SF_AUTO.duty || why === SF_AUTO.custom ? "" : why;
+    const reason = sfShownWhy(sfParseReason(sfPend.reason)[wd]);
     return '<div class="sfw-h">' + SCHED_WD[wd] + '요일 스케줄 <span class="sfpk-wait">승인 대기 중</span></div><div class="sfw-box sfpk">' +
-      sfDayCard("원래 스케줄", sfApprovedDay(wd), "", "") + sfDayCard("수정 요청한 스케줄", sfPendDay(sfPend, wd), reason, "sfpk-new") + '</div>';
+      sfDayCard("원래 스케줄", sfApprovedDay(wd), sfApprovedWhy(wd), "") + sfDayCard("수정 요청한 스케줄", sfPendDay(sfPend, wd), reason, "sfpk-new") + '</div>';
   }
   function sfInit() {
     const d = schedData || {};
@@ -15406,18 +15424,17 @@
           '<input type="text" class="sp-reason" maxlength="40" data-wd="' + wd + '" data-f="reason" data-i="' + i + '" placeholder="외출 사유" value="' + escapeHtml(o.reason || "") + '">';
       }
       rows += ((d.outs || []).length >= nOut ? '<button type="button" class="sf-addout" onclick="schedOutAdd(' + "'" + wd + "'" + ')">+ 외출 추가</button>' : "") + inRow("퇴실", "exit", d.exit);
-    } else if (custom) {
-      rows += row("입실", T(d.entry));
-      (d.outs || []).forEach(o => { rows += row("외출", T(o.out)) + row("재입실", T(o.back)); }); // 실제 외출 횟수만큼만 보여 준다
-      rows += row("퇴실", T(d.exit));
-    } else {
-      rows = '<div class="sf-day-msg">' + (d.mode === "off" ? "등원 안 함" : "의무 시간표대로 학습") + '</div>';
     }
     const waiting = sfWaiting(wd);
+    let view = "";
+    if (!ed) {
+      const why = waiting ? sfShownWhy(sfParseReason(sfPend.reason)[wd]) : sfApprovedWhy(wd);
+      view = '<div class="sfc sfc-week">' + (d.mode === "duty" && !why ? '<div class="sfc-msg"><b>의무 시간표대로 학습</b></div>' : sfDayBody(d, why)) + '</div>';
+    }
     return '<div class="sf-day' + (waiting ? " sf-waiting" : "") + '"><div class="sf-day-h">' + SCHED_WD[wd] + '요일</div>' +
       (waiting ? '<button type="button" class="sf-veil" onclick="sfPeekOpen(' + wd + ')" aria-label="' + SCHED_WD[wd] + '요일 승인 대기 중, 스케줄 확인하기"><b>승인 대기 중</b><span>스케줄 확인하기 →</span></button>' : "") +
       (ed ? '<div class="sf-modes mini">' + seg("duty", "정상 학습") + seg("custom", "시간 입력") + seg("off", "등원 안 함") + '</div>' : "") +
-      '<div class="sf-day-rows">' + rows + '</div>' +
+      (ed ? '<div class="sf-day-rows">' + rows + '</div>' : view) +
       (ed && wd > 1 ? '<button type="button" class="sp-copy" onclick="sfCopyPrev(' + wd + ')">앞 요일과 같게</button>' : "") + '</div>';
   }
   // ── 고정 스케줄 수정 순서: 요일 선택 → 스케줄 작성 → 사유 · 증빙 → 다른 요일도 변경하기 / 수정 완료 ──
@@ -15540,6 +15557,9 @@
   // 확인 단계의 요일 카드: 위에서부터 입실 → 외출 → 재입실 → 퇴실. 사유는 해당 시각 바로 아래에 작게 붙인다
   function sfSumCard(w, wd) { return sfDayCard(SCHED_WD[wd] + "요일", sfS.days[wd], w.reasons[wd], ""); }
   function sfDayCard(title, d, why0, cls) {
+    return '<div class="sfc' + (cls ? " " + cls : "") + '"><h5>' + title + '</h5>' + sfDayBody(d, why0) + '</div>';
+  }
+  function sfDayBody(d, why0) {
     const reason = String(why0 || "").trim();
     const late = sfLatePart(reason), early = sfEarlyPart(reason);
     const rest = late || early ? "" : reason; // 입퇴실 사유 형식이 아닌 글(등원 안 함 사유 등)
@@ -15554,7 +15574,7 @@
     } else {
       body = '<div class="sfc-msg"><b>' + (d.mode === "off" ? "등원 안 함" : "정상 학습") + '</b>' + why(rest) + '</div>';
     }
-    return '<div class="sfc' + (cls ? " " + cls : "") + '"><h5>' + title + '</h5>' + body + '</div>';
+    return body;
   }
   function sfWHtml() {
     const w = sfW, d = w.wd ? sfS.days[w.wd] : null;
