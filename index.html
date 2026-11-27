@@ -4289,35 +4289,37 @@
   /* 상자 높이는 고정. 외출이 많아지면 상자 안에서 위아래로 스크롤한다(낮은 화면에서는 팝업에 맞게 조금 줄어든다) */
   .sft { box-sizing: border-box; height: clamp(190px, calc(88vh - 346px), 300px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #CFCBBF transparent; background: #fff; border-radius: 12px; padding: 10px 14px; }
   .sft-n { flex: none; }
-  .sft-n { position: relative; display: grid; grid-template-columns: 14px 62px minmax(0, 1fr) 24px; column-gap: 10px; align-items: center; min-height: 42px; }
+  .sft-n { position: relative; display: grid; grid-template-columns: 14px 62px minmax(0, 1fr) 24px; column-gap: 10px; align-items: center; min-height: 38px; }
   .sft-n::before { content: ""; position: absolute; left: 6px; top: 0; bottom: 0; width: 2px; background: #E3E0D6; }
   .sft-n:first-child::before { top: 50%; }
   .sft-n:last-child::before { bottom: 50%; }
   .sft-n > s { position: relative; justify-self: center; box-sizing: border-box; width: 11px; height: 11px; border-radius: 50%; background: #17294F; text-decoration: none; }
   .sft-n.sft-sub > s { background: #fff; border: 2px solid #8C96AD; }
-  .sft-k { font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); white-space: nowrap; }
+  .sft-k { font-size: 0.7rem; font-weight: 700; color: var(--ink-soft); white-space: nowrap; }
   .sft-main .sft-k { color: var(--ink); font-weight: 800; }
   .sft-v { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
   .sfw-box .sft .sp-time { width: 78px; min-width: 0; height: 36px; padding: 0 10px; font-size: 0.82rem; font-weight: 700; background: #F8F7F3; border: 1px solid #D9D6CC; border-radius: 9px; }
   .time-box { display: inline-flex; align-items: center; gap: 6px; flex: none; }
   .time-ap { display: inline-flex; flex: none; border: 1px solid #D9D6CC; border-radius: 8px; overflow: hidden; background: #fff; }
-  .time-ap button { height: 26px; padding: 0 9px; border: 0; background: #fff; font-family: inherit; font-size: 0.74rem; font-weight: 700; color: var(--ink-soft); cursor: pointer; }
+  .time-ap button { height: 24px; padding: 0 8px; border: 0; background: #fff; font-family: inherit; font-size: 0.64rem; font-weight: 700; color: var(--ink-soft); cursor: pointer; }
   .time-ap button + button { border-left: 1px solid #E6E3DA; }
   .time-ap button.on { background: #0D2155; color: #fff; }
   .time-box.need-ap .time-ap { border-color: #C0392B; box-shadow: 0 0 0 1px #C0392B; }
   .time-hm { display: inline-flex; align-items: center; gap: 4px; flex: none; }
-  .time-hm i { font-style: normal; font-weight: 800; color: var(--ink-soft); }
-  .sfw-box .sft .time-hm .sp-time, .sfw-box .sa-outs .time-hm .sp-time { flex: none; width: 40px; min-width: 0; height: 28px; padding: 0; text-align: center; font-size: 0.84rem; font-weight: 700; font-variant-numeric: tabular-nums; background: #F8F7F3; border: 1px solid #D9D6CC; border-radius: 9px; box-sizing: border-box; }
+  .time-hm i { font-style: normal; font-size: 0.72rem; font-weight: 800; color: var(--ink-soft); }
+  .sfw-box .sft .time-hm .sp-time, .sfw-box .sa-outs .time-hm .sp-time { flex: none; width: 36px; min-width: 0; height: 26px; padding: 0; text-align: center; font-size: 0.72rem; font-weight: 700; font-variant-numeric: tabular-nums; background: #F8F7F3; border: 1px solid #D9D6CC; border-radius: 9px; box-sizing: border-box; }
   .sfw-box .time-hm .sp-time::placeholder { font-weight: 500; color: #B4B7BE; }
   .sfw-box .sft .time-hm .sp-time:focus, .sfw-box .sa-outs .time-hm .sp-time:focus { border-color: #17294F; outline: none; background: #fff; }
   .sfw-box .sft .time-hm .sp-time.bad, .sfw-box .sa-outs .time-hm .sp-time.bad { border-color: #C0392B; background: #FDF3F2; }
-  .sft-reason { flex: 1 1 150px; min-width: 0; box-sizing: border-box; height: 30px; padding: 0 11px; font-family: inherit; font-size: 0.78rem; color: var(--ink); background: #fff; border: 1px solid #D9D6CC; border-radius: 9px; }
+  .sft-reason { flex: 1 1 150px; min-width: 0; box-sizing: border-box; height: 26px; padding: 0 10px; font-family: inherit; font-size: 0.68rem; color: var(--ink); background: #fff; border: 1px solid #D9D6CC; border-radius: 9px; }
   .sft-reason:focus { border-color: #17294F; outline: none; }
   .sft-n.sft-add { grid-template-columns: 14px minmax(0, 1fr); min-height: 34px; }
   .sft-n.sft-add > s { width: 6px; height: 6px; background: #C9C5B8; }
-  .sft-addbtn { justify-self: start; border: 0; background: none; padding: 4px 0; font-family: inherit; font-size: 0.76rem; font-weight: 800; color: #17294F; cursor: pointer; }
+  .sft-addbtn { justify-self: start; border: 0; background: none; padding: 4px 0; font-family: inherit; font-size: 0.68rem; font-weight: 800; color: #17294F; cursor: pointer; }
+  .sfw-from-h { margin-top: 4px; font-size: 0.8rem; font-weight: 800; color: #17294F; }
+  .sfw-box.sfw-fromcopy .sft { height: auto; max-height: clamp(150px, calc(88vh - 440px), 250px); }
   .sft-checks { padding: 0 4px; }
-  .sft-checks .sp-chk { margin: 4px 0; }
+  .sft-checks .sp-chk { margin: 4px 0; font-size: 0.7rem; }
   .sft-checks input { width: 16px; height: 16px; accent-color: #17294F; }
   @media (max-width: 480px) { .sft { padding: 8px 10px; } .sft-n { grid-template-columns: 12px 48px minmax(0, 1fr) 20px; column-gap: 7px; } .sft-n.sft-add { grid-template-columns: 12px minmax(0, 1fr); } .sft-v { padding: 5px 0; } }
   .sfw-x { border: none; background: none; color: #8A8F99; font-size: 1.1rem; cursor: pointer; padding: 0 4px; }
@@ -15386,12 +15388,21 @@
   function sfWCancel() { sfW = null; schedEvidence.sf = null; document.getElementById("sfMsg").textContent = ""; sfInit(); }
   function sfPick(wd) { sfW.wd = wd; sfRenderEditor(); }
   function sfHow(i) { sfWRead(); sfW.how = i; sfRenderEditor(); }
-  function sfFrom(k) { sfWRead(); sfW.from = k; sfRenderEditor(); }
+  function sfFrom(k) {
+    sfWRead();
+    if (sfW.from !== k || !sfW.draft) {
+      sfW.from = k;
+      sfW.draft = JSON.parse(JSON.stringify(sfS.days[k]));
+      sfW.draft.outs = sfW.draft.outs || []; sfW.draft.ack = false; sfW.draft.ack2 = false;
+      if (sfW.draft.mode === "off") sfW.reasons[sfW.wd] = sfW.reasons[k] || "";
+    }
+    sfRenderEditor();
+  }
   function sfWSay(t) { const m = document.getElementById("sfwMsg"); if (m) m.innerHTML = t ? '<div class="sp-err">' + escapeHtml(t) + '</div>' : ""; }
   // 입력칸 값을 읽는다. 사유 단계에서는 사유 칸만 읽는다(시간 칸이 없으므로 시간이 지워지지 않게)
   function sfWRead() {
     if (!sfW || !sfW.wd) return;
-    const d = sfS.days[sfW.wd], root = document.getElementById("sfModalCard");
+    const d = sfWTarget(), root = document.getElementById("sfModalCard");
     if (sfW.step === 2) {
       root.querySelectorAll('input[data-f="reason"]').forEach(el => { const o = d.outs[Number(el.dataset.i)]; if (o) o.reason = el.value; });
       const r = document.getElementById("sfwReason"); if (r) sfW.reasons[sfW.wd] = r.value;
@@ -15405,6 +15416,30 @@
   function sfWHeader() {
     return '<div class="sfw-steps">' + SF_STEPS.map((t, i) => (i === sfW.step ? '<b>' : '<span>') + (i + 1) + ' ' + t + (i === sfW.step ? '</b>' : '</span>')).join('<i>›</i>') + '</div>';
   }
+  // 하루 흐름 편집기(입실 → 외출 · 재입실 → 퇴실). d: 고치는 대상(그 요일의 스케줄, 또는 다른 요일에서 가져온 복사본)
+  function sfFlowHtml(wd, d) {
+    const inp = (f, v, i) => timeTyped('data-wd="' + wd + '" data-f="' + f + '"' + (i != null ? ' data-i="' + i + '"' : "") + ' aria-label="' + ({ entry: "최초 입실", out: "외출", back: "재입실", exit: "최후 퇴실" })[f] + ' 시각"', v);
+    const node = (cls, label, inner, tail) => '<div class="sft-n ' + cls + '"><s></s><span class="sft-k">' + label + '</span><div class="sft-v">' + inner + '</div>' + (tail || "") + '</div>';
+    let flow = node("sft-main", "최초 입실", inp("entry", d.entry));
+    (d.outs || []).forEach((o, i) => {
+      const reason = '<input type="text" class="sft-reason" maxlength="40" data-wd="' + wd + '" data-f="reason" data-i="' + i + '" aria-label="외출 사유" placeholder="외출 사유 (예: 수학 학원)" value="' + escapeHtml(o.reason || "") + '">';
+      flow += node("sft-sub", "외출", inp("out", o.out, i) + reason, '<button type="button" class="sfw-x" onclick="sfWDelOut(' + i + ')" aria-label="이 외출 빼기">×</button>') +
+        node("sft-sub", "재입실", inp("back", o.back, i));
+    });
+    flow += '<div class="sft-n sft-add"><s></s><button type="button" class="sft-addbtn" onclick="sfWAddOut()">+ 외출 · 재입실 추가</button></div>' + node("sft-main", "최후 퇴실", inp("exit", d.exit));
+    return '<div class="sft">' + flow + '</div>' +
+      ((d.outs || []).length ? '<div class="sft-checks"><label class="sp-chk"><input type="checkbox" id="sfwAck"' + (d.ack ? " checked" : "") + '> <span>외출 · 재입실 시각에 <b>이동 시간과 식사 시간</b>을 고려했어요.</span></label><label class="sp-chk"><input type="checkbox" id="sfwAck2"' + (d.ack2 ? " checked" : "") + '> <span>나가고 들어오는 시각은 최대한 <b>쉬는 시간</b>을 활용했어요.</span></label></div>' : "");
+  }
+  // 다른 요일을 고르면 아래에 그 요일 스케줄의 복사본을 보여 주고 바로 고칠 수 있게 한다(원래 요일은 바뀌지 않는다)
+  function sfCopyHtml(w) {
+    const s = w.draft; if (!w.from || !s) return "";
+    const head = '<div class="sfw-from-h">' + SCHED_WD[w.from] + '요일 스케줄</div>';
+    if (s.mode === "off") return head + '<div class="sfw-h2">등원하지 않는 사유</div><textarea id="sfwOffReason" class="sp-ta" rows="2" maxlength="300" placeholder="예: 화요일은 하루 종일 수학 · 영어 학원 수업이 있어요">' + escapeHtml(w.reasons[w.wd] || "") + '</textarea>';
+    if (s.mode !== "custom") return head + '<div class="sfw-plain">정상 학습(의무 시간표대로)이에요.</div>';
+    return head + sfFlowHtml(w.wd, s);
+  }
+  // 지금 화면의 입력칸이 고치고 있는 대상
+  const sfWTarget = () => (sfW && sfW.step === 1 && SF_HOWS[sfW.how] === "copy" && sfW.draft) ? sfW.draft : sfS.days[sfW.wd];
   function sfWHtml() {
     const w = sfW, d = w.wd ? sfS.days[w.wd] : null;
     const back = '<button type="button" class="sf-edit" onclick="sfWBack()">' + (w.step === 0 ? "취소" : "이전") + '</button>';
@@ -15417,27 +15452,17 @@
       const how = SF_HOWS[w.how];
       let body = "";
       if (how === "input") {
-        const inp = (f, v, i) => timeTyped('data-wd="' + w.wd + '" data-f="' + f + '"' + (i != null ? ' data-i="' + i + '"' : "") + ' aria-label="' + ({ entry: "최초 입실", out: "외출", back: "재입실", exit: "최후 퇴실" })[f] + ' 시각"', v);
-        const node = (cls, label, inner, tail) => '<div class="sft-n ' + cls + '"><s></s><span class="sft-k">' + label + '</span><div class="sft-v">' + inner + '</div>' + (tail || "") + '</div>';
-        let flow = node("sft-main", "최초 입실", inp("entry", d.entry));
-        (d.outs || []).forEach((o, i) => {
-          const reason = '<input type="text" class="sft-reason" maxlength="40" data-wd="' + w.wd + '" data-f="reason" data-i="' + i + '" aria-label="외출 사유" placeholder="외출 사유 (예: 수학 학원)" value="' + escapeHtml(o.reason || "") + '">';
-          flow += node("sft-sub", "외출", inp("out", o.out, i) + reason, '<button type="button" class="sfw-x" onclick="sfWDelOut(' + i + ')" aria-label="이 외출 빼기">×</button>') +
-            node("sft-sub", "재입실", inp("back", o.back, i));
-        });
-        flow += '<div class="sft-n sft-add"><s></s><button type="button" class="sft-addbtn" onclick="sfWAddOut()">+ 외출 · 재입실 추가</button></div>' + node("sft-main", "최후 퇴실", inp("exit", d.exit));
-        body = '<div class="sft">' + flow + '</div>' +
-          ((d.outs || []).length ? '<div class="sft-checks"><label class="sp-chk"><input type="checkbox" id="sfwAck"' + (d.ack ? " checked" : "") + '> <span>외출 · 재입실 시각에 <b>이동 시간과 식사 시간</b>을 고려했어요.</span></label><label class="sp-chk"><input type="checkbox" id="sfwAck2"' + (d.ack2 ? " checked" : "") + '> <span>나가고 들어오는 시각은 최대한 <b>쉬는 시간</b>을 활용했어요.</span></label></div>' : "");
+        body = sfFlowHtml(w.wd, d);
       } else if (how === "copy") {
-        body = '<div class="sfw-h2">어느 요일과 똑같이 할까요?</div><div class="sfw-copy sfw-dayrow">' + [1, 2, 3, 4, 5, 6].filter(k => k !== w.wd).map(k =>
-          '<button type="button" class="sfw-pickday' + (w.from === k ? " on" : "") + '" onclick="sfFrom(' + k + ')"><b>' + SCHED_WD[k] + '요일</b></button>').join("") + '</div>';
+        body = '<div class="sfw-h2">어느 요일과 똑같이 할까요? (수정 가능합니다)</div><div class="sfw-copy sfw-dayrow">' + [1, 2, 3, 4, 5, 6].filter(k => k !== w.wd).map(k =>
+          '<button type="button" class="sfw-pickday' + (w.from === k ? " on" : "") + '" onclick="sfFrom(' + k + ')"><b>' + SCHED_WD[k] + '요일</b></button>').join("") + '</div>' + sfCopyHtml(w);
       } else {
-        body = '<div class="sfw-plain">' + (how === "off" ? "이 요일은 독서실에 오지 않아요." : "이 요일은 의무 시간표대로 학습해요.") + '</div>' +
+        body = (how === "off" ? "" : '<div class="sfw-plain">이 요일은 의무 시간표대로 학습해요.</div>') +
           (how === "off" ? '<div class="sfw-h2">등원하지 않는 사유</div><textarea id="sfwOffReason" class="sp-ta" rows="2" maxlength="300" placeholder="예: 화요일은 하루 종일 수학 · 영어 학원 수업이 있어요">' + escapeHtml(w.reasons[w.wd] || "") + '</textarea>' : "");
       }
       return sfWHeader() + '<div class="sfw-h">' + SCHED_WD[w.wd] + '요일 스케줄 작성</div><div class="sfw-chips">' +
         SF_HOW_LABEL.map((t, i) => '<button type="button" class="' + (w.how === i ? "on" : "") + '" onclick="sfHow(' + i + ')">' + t + '</button>').join("") + '</div>' +
-        '<div class="sfw-box">' + body + '</div>' +
+        '<div class="sfw-box' + (how === "copy" ? " sfw-fromcopy" : "") + '">' + body + '</div>' +
         '<div class="sfw-actions">' + back + '<button type="button" class="sp-btn" onclick="sfWNext()">다음</button></div>';
     }
     if (w.step === 2) {
@@ -15476,13 +15501,13 @@
   }
   function sfWAddOut() {
     const typed = sfWTyped();
-    sfWRead(); sfS.days[sfW.wd].outs.push({ out: "", back: "", reason: "" }); sfRenderEditor(); sfWTypedBack(typed, null);
+    sfWRead(); sfWTarget().outs.push({ out: "", back: "", reason: "" }); sfRenderEditor(); sfWTypedBack(typed, null);
     const box = sfWFlow(); if (box) box.scrollTop = box.scrollHeight;
   }
   function sfWDelOut(i) {
     const before = sfWFlow(), top = before ? before.scrollTop : 0;
     const typed = sfWTyped();
-    sfWRead(); sfS.days[sfW.wd].outs.splice(i, 1); sfRenderEditor(); sfWTypedBack(typed, i);
+    sfWRead(); sfWTarget().outs.splice(i, 1); sfRenderEditor(); sfWTypedBack(typed, i);
     const box = sfWFlow(); if (box) box.scrollTop = top;
   }
   function sfWBack() {
@@ -15492,24 +15517,30 @@
     sfW.step = sfW.step === 3 && sfW.wd && sfS.days[sfW.wd].mode === "off" ? 1 : sfW.step - 1;
     sfRenderEditor();
   }
-  function sfWMore() { sfWSay(""); sfW.step = 0; sfW.wd = null; sfW.from = null; sfRenderEditor(); }
+  function sfWMore() { sfWSay(""); sfW.step = 0; sfW.wd = null; sfW.from = null; sfW.draft = null; sfRenderEditor(); }
   function sfWNext() {
     const w = sfW; sfWSay("");
     if (w.step === 0) {
       if (!w.wd) return;
-      const d0 = sfS.days[w.wd]; w.how = SF_HOWS.indexOf(d0.mode === "off" ? "off" : "input"); w.from = null; w.step = 1;
+      const d0 = sfS.days[w.wd]; w.how = SF_HOWS.indexOf(d0.mode === "off" ? "off" : "input"); w.from = null; w.draft = null; w.step = 1;
     } else if (w.step === 1) {
-      if (SF_HOWS[w.how] === "input") { const problem = timeProblem(document.getElementById("sfModalCard")); if (problem) { sfWSay(problem); return; } }
+      if (SF_HOWS[w.how] === "input" || SF_HOWS[w.how] === "copy") { const problem = timeProblem(document.getElementById("sfModalCard")); if (problem) { sfWSay(problem); return; } }
       sfWRead();
       const d = sfS.days[w.wd], how = SF_HOWS[w.how];
-      if (how === "off") {
+      if (how === "copy" && !(w.from && w.draft)) { sfWSay("똑같이 할 요일을 골라 주세요."); return; }
+      if (how === "off" || (how === "copy" && w.draft.mode === "off")) {
         const r = String(w.reasons[w.wd] || "").trim();
         if (!r) { sfWSay("등원하지 않는 사유를 적어 주세요."); return; }
         if (schedVague(r)) { sfWSay("사유를 조금 더 구체적으로 적어 주세요. (예: 화요일 수학 학원이 있어요)"); return; }
       }
       if (how === "copy") {
-        if (!w.from) { sfWSay("똑같이 할 요일을 골라 주세요."); return; }
-        sfS.days[w.wd] = JSON.parse(JSON.stringify(sfS.days[w.from]));
+        const s = w.draft;
+        if (s.mode === "custom") {
+          const errs = schedCheckDay(s, SCHED_WD[w.wd] + "요일");
+          if (errs.length) { sfWSay(errs.join(" ")); return; }
+          if ((s.outs || []).length && !(s.ack && s.ack2)) { sfWSay("외출 · 재입실 시각에 대한 체크 항목 2개를 모두 체크해 주세요."); return; }
+        }
+        sfS.days[w.wd] = JSON.parse(JSON.stringify(s));
       } else if (how === "duty" || how === "off") {
         d.mode = how === "off" ? "off" : "duty"; d.entry = ""; d.exit = ""; d.outs = [];
       } else {
@@ -15520,7 +15551,7 @@
       }
       w.edited[w.wd] = true;
       const nd = sfS.days[w.wd], hasOut = nd.mode === "custom" && (nd.outs || []).length > 0;
-      w.step = how === "off" ? 3 : 2; // 등원 안 함은 사유를 이미 받았으니 바로 확인 단계로. 나머지는 사유 단계를 거친다
+      w.step = how === "off" || (how === "copy" && w.draft.mode === "off") ? 3 : 2; // 등원 안 함은 사유를 이미 받았으니 바로 확인 단계로. 나머지는 사유 단계를 거친다
     } else if (w.step === 2) {
       sfWRead();
       const d = sfS.days[w.wd];
@@ -15585,7 +15616,7 @@
     const root = document.getElementById(sfW ? "sfModalCard" : "sfEditor");
     [1, 2, 3, 4, 5, 6].forEach(wd => {
       const ins = root.querySelectorAll('input[data-wd="' + wd + '"]'); if (!ins.length) return;
-      const d = sfS.days[wd], outs = [];
+      const d = sfW && wd === sfW.wd ? sfWTarget() : sfS.days[wd], outs = [];
       ins.forEach(el => {
         const f = el.dataset.f, i = Number(el.dataset.i);
         if (f === "entry") d.entry = timeValue(el); else if (f === "exit") d.exit = timeValue(el);
