@@ -4320,7 +4320,8 @@
   .sfw-box.sfw-fromcopy .sft { height: auto; max-height: clamp(150px, calc(88vh - 440px), 250px); }
   .sft-checks { padding: 0 4px; }
   .sft-checks .sp-chk { margin: 4px 0; font-size: 0.7rem; }
-  .sft-checks input { width: 16px; height: 16px; accent-color: #17294F; }
+  #sfModal .sft-checks .sp-chk { align-items: center; gap: 8px; line-height: 1.5; }
+  #sfModal .sft-checks .sp-chk input { flex: none; box-sizing: border-box; width: 14px; height: 14px; min-width: 14px; margin: 0; padding: 0; accent-color: #17294F; }
   @media (max-width: 480px) { .sft { padding: 8px 10px; } .sft-n { grid-template-columns: 12px 48px minmax(0, 1fr) 20px; column-gap: 7px; } .sft-n.sft-add { grid-template-columns: 12px minmax(0, 1fr); } .sft-v { padding: 5px 0; } }
   .sfw-x { border: none; background: none; color: #8A8F99; font-size: 1.1rem; cursor: pointer; padding: 0 4px; }
   .sfw-copy { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
