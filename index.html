@@ -4220,7 +4220,7 @@
   .sa-outs { display: flex; flex-direction: column; gap: 8px; justify-content: center; flex: 1; }
   .sa-outs label { display: flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); }
   .sa-outs label span { width: 44px; }
-  .sa-outs .sp-time { flex: 1; min-width: 0; box-sizing: border-box; }
+  .sa-outs .sp-time { flex: 1; min-width: 122px; box-sizing: border-box; }
   /* 팝업 안 안내 문구는 낱말 중간에서 끊기지 않고, 줄 길이가 고르게 줄바꿈 */
   #saModal, #sfModal { word-break: keep-all; }
   #saModal p, #saModal small, #saModal .sfw-h2, #saModal .sp-chk span, #saModal .sp-radio span, #sfModal p, #sfModal small, #sfModal .sfw-h2, #sfModal .sp-chk span { text-wrap: pretty; }
@@ -4251,7 +4251,7 @@
   .sf-day-h { font-size: 0.74rem; font-weight: 700; color: var(--ink-soft); text-align: center; margin-bottom: 14px; white-space: nowrap; }
   .sf-day-rows { display: grid; grid-template-columns: auto auto; column-gap: 5px; row-gap: 9px; justify-content: center; align-content: center; flex: 1; min-height: 100px; list-style: none; margin: 0; padding: 0; }
   .sf-day-msg { grid-column: 1 / -1; text-align: center; font-size: 0.74rem; color: var(--ink-soft); font-weight: 600; }
-  .sf-day .sp-time { width: 62px; min-width: 0; font-size: 0.7rem; padding: 2px 3px; box-sizing: border-box; }
+  .sf-day .sp-time { width: auto; min-width: 70px; max-width: 100%; font-size: 0.7rem; padding: 2px 3px; box-sizing: border-box; }
   .sf-day .sp-time::-webkit-calendar-picker-indicator { display: none; }
   .sf-day .sp-reason { grid-column: 1 / -1; min-width: 0; width: 100%; box-sizing: border-box; font-size: 0.68rem; }
   .sf-day .sf-addout { grid-column: 1 / -1; justify-self: center; }
@@ -4282,7 +4282,7 @@
   .sfw-row .l2 { width: 120px; font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
   .sfw-row .sp-reason { flex: 1; min-width: 160px; }
   .sfw-out { border-top: 1px dashed #D9D5C9; padding-top: 10px; }
-  .sfw-box .sp-time { width: 104px; font-size: 0.8rem; padding: 4px 6px; box-sizing: border-box; }
+  .sfw-box .sp-time { width: auto; min-width: 132px; font-size: 0.8rem; padding: 4px 8px; box-sizing: border-box; } /* "오전 09:00"이 시계 아이콘에 가리지 않게: 글씨에 맞춰 늘어난다 */
   .sfw-x { border: none; background: none; color: #8A8F99; font-size: 1.1rem; cursor: pointer; padding: 0 4px; }
   .sfw-copy { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
   .sfw-pickday { font-family: inherit; text-align: left; background: #fff; border: 1px solid var(--line-dark); border-radius: 8px; padding: 8px 10px; cursor: pointer; display: flex; flex-direction: column; gap: 2px; }
@@ -4385,7 +4385,7 @@
   .sf-col .sp-times { padding: 0; gap: 5px; }
   .sf-col .sp-tl { justify-content: space-between; font-size: 0.72rem; gap: 4px; }
   .sf-col .sp-tl span { min-width: 0; }
-  .sf-col .sp-time { width: 92px; min-width: 0; font-size: 0.74rem; padding: 3px 4px; box-sizing: border-box; }
+  .sf-col .sp-time { width: auto; min-width: 116px; max-width: 100%; font-size: 0.74rem; padding: 3px 6px; box-sizing: border-box; }
   .sf-col .sp-out { position: relative; flex-direction: column; align-items: stretch; gap: 4px; padding: 6px 22px 6px 8px; background: #fff; border: 1px solid #D6DFF3; border-left: 3px solid #2F6FE4; border-radius: 8px; margin: 0; }
   .sf-col .sp-reason { min-width: 0; width: 100%; box-sizing: border-box; font-size: 0.7rem; }
   .sf-col .sp-x { position: absolute; top: 3px; right: 3px; }
