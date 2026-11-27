@@ -4318,6 +4318,17 @@
   .sft-addbtn { justify-self: start; border: 0; background: none; padding: 4px 0; font-family: inherit; font-size: 0.68rem; font-weight: 800; color: #17294F; cursor: pointer; }
   .sfw-from-h { margin-top: 4px; font-size: 0.8rem; font-weight: 800; color: #17294F; }
   .sfw-box.sfw-fromcopy .sft { height: auto; max-height: clamp(150px, calc(88vh - 440px), 250px); }
+  /* 입퇴실 사유: 2단계 시간표와 같은 흰 상자 + 점 */
+  .sfr { background: #fff; border-radius: 12px; padding: 4px 14px; }
+  .sfr-item { padding: 11px 0 13px; }
+  .sfr-item + .sfr-item { border-top: 1px solid #ECEAE2; }
+  .sfr-h { display: grid; grid-template-columns: 14px auto minmax(0, 1fr); column-gap: 10px; align-items: center; margin-bottom: 8px; }
+  .sfr-h > s { justify-self: center; width: 11px; height: 11px; border-radius: 50%; background: #17294F; text-decoration: none; }
+  .sfr-h label { font-size: 0.72rem; font-weight: 800; color: var(--ink); white-space: nowrap; }
+  .sfr-h span { justify-self: end; font-size: 0.66rem; color: var(--ink-soft); text-align: right; font-variant-numeric: tabular-nums; }
+  .sfr-h span b { color: #17294F; font-weight: 800; }
+  .sfr .sfr-in { display: block; width: calc(100% - 24px); margin-left: 24px; height: 32px; }
+  @media (max-width: 480px) { .sfr-h { grid-template-columns: 14px minmax(0, 1fr); } .sfr-h span { grid-column: 2; justify-self: start; text-align: left; } }
   .sft-checks { padding: 0 4px; }
   .sft-checks .sp-chk { margin: 4px 0; font-size: 0.7rem; }
   #sfModal .sft-checks .sp-chk { align-items: center; gap: 8px; line-height: 1.5; }
@@ -15282,7 +15293,7 @@
       '<div class="vocab-callout sf-callout"><span class="vc-ico">i</span><div><div class="sf-info-t">사용 방법</div><ul>' +
         '<li>고정 스케줄은 학원, 과외 등 요일마다 <b>매주 반복되는 스케줄</b>입니다.</li>' +
         '<li>매번 달라지는 스케줄을 변경하는 것은 <b>돌발 스케줄</b> 페이지를 이용해주세요.</li>' +
-        (isFirst ? "" : '<li>고정 스케줄을 바꿀 때는 <b>변경 사유</b>를 적어 주세요. 증빙자료가 필요하면 관리 선생님이 직접 확인합니다.</li>') +
+        (isFirst ? "" : '<li>의무 시간보다 늦게 입실하거나 일찍 퇴실하면 <b>입퇴실 사유</b>를 적어 주세요. 증빙자료가 필요하면 관리 선생님이 직접 확인합니다.</li>') +
         '<li>가능하면 <b>쉬는시간에 맞춰</b> 나가고 들어오는 것을 권장합니다. 의무교시 중간에 최대한 움직이지 않고 공부에 집중하세요.</li>' +
         '</ul></div></div>';
     const days = {};
@@ -15365,10 +15376,47 @@
   let sfW = null; // { step: 0~3, wd, how, from, edited: {요일: true}, reasons: {요일: "사유"} }
   const SF_HOWS = ["duty", "off", "input", "copy"];
   const SF_HOW_LABEL = ["정상 학습", "등원 안 함", "시간 직접 입력", "다른 요일과 동일하게"];
-  const SF_STEPS = ["요일 선택", "스케줄 작성", "사유", "확인"];
+  const SF_STEPS = ["요일 선택", "스케줄 작성", "입퇴실 사유", "확인"];
+  // 의무 시간(시간표의 첫 의무교시 시작 ~ 마지막 의무교시 끝). 이보다 늦게 입실하거나 일찍 퇴실할 때만 입퇴실 사유를 받는다.
+  // 시간표 사진(시간표-*.png)이 바뀌면 여기도 함께 고친다. 하이엔드관 방학은 여름 · 겨울 캠프 시간표.
+  const SCHED_DUTY = {
+    "N수관": { wk: ["08:30", "21:50"], sat: ["08:30", "18:00"] },
+    "하이엔드관|학기": { wk: ["18:00", "23:50"], sat: ["10:00", "18:00"] },
+    "하이엔드관|방학": { wk: ["09:30", "21:50"], sat: ["09:30", "18:00"] },
+  };
+  function schedDutyFor(weekday) {
+    const br = schedBranch();
+    const key = br === "N수관" ? br : br === "하이엔드관" ? br + "|" + (schedVacationOn(getCalendarDateKey()) ? "방학" : "학기") : "";
+    const row = SCHED_DUTY[key];
+    return row ? row[weekday === 6 ? "sat" : "wk"] : null;
+  }
+  // 그 요일에 늦은 입실 · 이른 퇴실 사유가 필요한지. 관 정보를 알 수 없으면(비어 있는 예전 계정) 둘 다 받는다.
+  function sfNeed(wd) {
+    const d = sfS.days[wd];
+    if (!d || d.mode !== "custom") return { late: false, early: false, duty: null, any: false };
+    const duty = schedDutyFor(wd);
+    const late = !duty || smin(d.entry) > smin(duty[0]), early = !duty || smin(d.exit) < smin(duty[1]);
+    return { late: late, early: early, duty: duty, any: late || early };
+  }
+  const SF_LATE = "늦은 입실: ", SF_EARLY = "이른 퇴실: ", SF_AUTO = { duty: "정상 학습으로 변경", custom: "시간 변경" };
+  const sfClock = hhmm => { const h = Number(hhmm.slice(0, 2)); return (h >= 12 ? "오후 " : "오전 ") + (h % 12 || 12) + ":" + hhmm.slice(3); };
+  // 저장해 둔 "늦은 입실: … · 이른 퇴실: …" 글에서 칸별 내용을 꺼낸다(다시 수정할 때)
+  const sfLatePart = r => { const m = String(r || "").match(/늦은 입실: ([\s\S]*?)(?= · 이른 퇴실: |$)/); return m ? m[1] : ""; };
+  const sfEarlyPart = r => { const m = String(r || "").match(/이른 퇴실: ([\s\S]*)$/); return m ? m[1] : ""; };
+  // 3단계 화면: 필요한 칸만, 2단계와 같은 모양(흰 상자 + 점)
+  function sfReasonHtml(w) {
+    const need = sfNeed(w.wd), d = sfS.days[w.wd], saved = w.reasons[w.wd] || "";
+    const item = (id, title, meta, value, ph) => '<div class="sfr-item"><div class="sfr-h"><s></s><label for="' + id + '">' + title + '</label><span>' + meta + '</span></div>' +
+      '<input type="text" id="' + id + '" class="sft-reason sfr-in" maxlength="100" autocomplete="off" placeholder="' + ph + '" value="' + escapeHtml(value) + '"></div>';
+    const late = w.late[w.wd] != null ? w.late[w.wd] : sfLatePart(saved), early = w.early[w.wd] != null ? w.early[w.wd] : sfEarlyPart(saved);
+    return '<div class="sfr">' +
+      (need.late ? item("sfwLate", "늦게 입실하는 사유", "입실 <b>" + sfClock(d.entry) + "</b>" + (need.duty ? " · 의무 시작 " + sfClock(need.duty[0]) : ""), late, "예: 병원 정기 진료가 있어요") : "") +
+      (need.early ? item("sfwEarly", "일찍 퇴실하는 사유", "퇴실 <b>" + sfClock(d.exit) + "</b>" + (need.duty ? " · 의무 종료 " + sfClock(need.duty[1]) : ""), early, "예: 저녁에 수학 과외가 있어요") : "") +
+      '</div>';
+  }
   const sfDayTxt = d => d.mode === "duty" ? "정상 학습" : d.mode === "off" ? "등원 안 함" : schedBlocksText(schedToBlocks(d));
   // snap: "이전" 모습으로 보여 줄 기준(기본은 지금 스케줄).
-  function sfStartEdit(snap) { sfW = { step: 0, wd: null, how: SF_HOWS.indexOf("input"), from: null, edited: {}, reasons: {}, snap: JSON.parse(JSON.stringify(snap || sfS.days)), evAck: false }; sfRenderEditor(); }
+  function sfStartEdit(snap) { sfW = { step: 0, wd: null, how: SF_HOWS.indexOf("input"), from: null, edited: {}, reasons: {}, late: {}, early: {}, snap: JSON.parse(JSON.stringify(snap || sfS.days)), evAck: false }; sfRenderEditor(); }
   // 사유 문자열: 같은 사유는 묶어서 "월~금: ..." 처럼 한 번만 적는다 / 다시 읽을 때(재수정)는 요일별로 풀어 준다
   function sfReasonStr(w, days) {
     const groups = [];
@@ -15405,8 +15453,8 @@
     if (!sfW || !sfW.wd) return;
     const d = sfWTarget(), root = document.getElementById("sfModalCard");
     if (sfW.step === 2) {
-      root.querySelectorAll('input[data-f="reason"]').forEach(el => { const o = d.outs[Number(el.dataset.i)]; if (o) o.reason = el.value; });
-      const r = document.getElementById("sfwReason"); if (r) sfW.reasons[sfW.wd] = r.value;
+      const late = document.getElementById("sfwLate"); if (late) sfW.late[sfW.wd] = late.value;
+      const early = document.getElementById("sfwEarly"); if (early) sfW.early[sfW.wd] = early.value;
     } else if (sfW.step === 1) {
       sfRead();
       const off = document.getElementById("sfwOffReason"); if (off) sfW.reasons[sfW.wd] = off.value;
@@ -15467,14 +15515,7 @@
         '<div class="sfw-actions">' + back + '<button type="button" class="sp-btn" onclick="sfWNext()">다음</button></div>';
     }
     if (w.step === 2) {
-      let body = "";
-      if (d.mode === "custom" && (d.outs || []).some(o => !String(o.reason || "").trim())) {
-        body += '<div class="sfw-h2">외출 사유를 적어 주세요. (무슨 과목 학원 · 과외인지까지)</div>';
-        d.outs.forEach((o, i) => { if (String(o.reason || "").trim()) return; body += '<div class="sfw-row"><span class="l2">' + sfmt(o.out) + ' ~ ' + sfmt(o.back) + '</span><input type="text" class="sp-reason" maxlength="40" data-wd="' + w.wd + '" data-f="reason" data-i="' + i + '" placeholder="예: 수학 학원" value="' + escapeHtml(o.reason || "") + '"></div>'; });
-      }
-      // 사유는 처음 제출할 때도 적는다(증빙 안내는 마지막 확인 단계에서 한 번만)
-      body += '<div class="sfw-h2">최초 입실, 최후 퇴실 사유</div><textarea id="sfwReason" class="sp-ta" rows="2" maxlength="300" placeholder="' + (sfS.isFirst ? "예: 화요일은 학교 일정이 있어서 11시에 입실하고 21시에 퇴실해요" : "예: 화요일에 학원이 새로 생겨서 퇴실 시각이 20시로 바뀌었어요") + '">' + escapeHtml(w.reasons[w.wd] || "") + '</textarea>';
-      return sfWHeader() + '<div class="sfw-h">' + SCHED_WD[w.wd] + '요일 사유 작성</div><div class="sfw-box">' + body + '</div><div class="sfw-actions">' + back + '<button type="button" class="sp-btn" onclick="sfWNext()">다음</button></div>';
+      return sfWHeader() + '<div class="sfw-h">' + SCHED_WD[w.wd] + '요일 입퇴실 사유</div><div class="sfw-box">' + sfReasonHtml(w) + '</div><div class="sfw-actions">' + back + '<button type="button" class="sp-btn" onclick="sfWNext()">다음</button></div>';
     }
     // 4단계: 보내기 전에 바뀐 요일을 이전 → 이후로 한 번에 확인 + 증빙 안내(한 번만)
     const sortedEdited = Object.keys(w.edited).map(Number).sort((x, y) => x - y);
@@ -15515,7 +15556,7 @@
     sfWSay("");
     if (sfW.step === 0) { sfWCancel(); return; }
     sfWRead();
-    sfW.step = sfW.step === 3 && sfW.wd && sfS.days[sfW.wd].mode === "off" ? 1 : sfW.step - 1;
+    sfW.step = sfW.step === 3 && sfW.wd && !sfNeed(sfW.wd).any ? 1 : sfW.step - 1;
     sfRenderEditor();
   }
   function sfWMore() { sfWSay(""); sfW.step = 0; sfW.wd = null; sfW.from = null; sfW.draft = null; sfRenderEditor(); }
@@ -15552,22 +15593,23 @@
       }
       w.edited[w.wd] = true;
       const nd = sfS.days[w.wd], hasOut = nd.mode === "custom" && (nd.outs || []).length > 0;
-      w.step = how === "off" || (how === "copy" && w.draft.mode === "off") ? 3 : 2; // 등원 안 함은 사유를 이미 받았으니 바로 확인 단계로. 나머지는 사유 단계를 거친다
+      // 등원 안 함은 사유를 이미 받았다. 직접 입력은 의무 시간보다 늦게 입실 · 일찍 퇴실할 때만 입퇴실 사유 단계를 거친다
+      if (w.late[w.wd] == null && sfLatePart(w.reasons[w.wd])) w.late[w.wd] = sfLatePart(w.reasons[w.wd]);
+      if (w.early[w.wd] == null && sfEarlyPart(w.reasons[w.wd])) w.early[w.wd] = sfEarlyPart(w.reasons[w.wd]);
+      const need = sfNeed(w.wd);
+      if (sfS.days[w.wd].mode !== "off" && !need.any) w.reasons[w.wd] = "";
+      w.step = need.any ? 2 : 3;
     } else if (w.step === 2) {
       sfWRead();
-      const d = sfS.days[w.wd];
-      if (d.mode === "custom") {
-        for (const o of (d.outs || [])) {
-          const r = String(o.reason || "").trim();
-          if (!r) { sfWSay("외출 사유를 모두 적어 주세요."); return; }
-          if (schedVague(r)) { sfWSay("외출 사유를 조금 더 구체적으로 적어 주세요. (예: 수학 학원)"); return; }
-        }
+      const need = sfNeed(w.wd), parts = [];
+      for (const [on, store, label, prefix] of [[need.late, w.late, "늦게 입실하는", SF_LATE], [need.early, w.early, "일찍 퇴실하는", SF_EARLY]]) {
+        if (!on) continue;
+        const r = String(store[w.wd] != null ? store[w.wd] : "").trim();
+        if (!r) { sfWSay(label + " 사유를 적어 주세요."); return; }
+        if (schedVague(r)) { sfWSay(label + " 사유를 조금 더 구체적으로 적어 주세요. (예: 수학 과외가 있어요)"); return; }
+        parts.push(prefix + r);
       }
-      {
-        const r = String(w.reasons[w.wd] || "").trim();
-        if (!r) { sfWSay(sfS.isFirst ? "사유를 적어 주세요." : "변경 사유를 적어 주세요."); return; }
-        if (schedVague(r)) { sfWSay("사유를 조금 더 구체적으로 적어 주세요. (예: 화요일 수학 학원이 있어요)"); return; }
-      }
+      w.reasons[w.wd] = parts.join(" · ");
       w.step = 3;
     }
     sfRenderEditor();
@@ -15579,7 +15621,9 @@
     let warn = [];
     editedDays.forEach(wd => { const d = sfS.days[wd]; if (d.mode === "custom") warn = warn.concat(schedHourNotes(d, schedHoursFor(wd), SCHED_WD[wd] + "요일").warn); });
     if (warn.length && !confirm("운영 시간을 벗어난 시간이 있어요.\n" + warn.join("\n") + "\n\n그대로 제출할까요?")) return;
-    const reason = sfReasonStr(w, editedDays);
+    const reasons = {};
+    editedDays.forEach(wd => { reasons[wd] = String(w.reasons[wd] || "").trim() || SF_AUTO[sfS.days[wd].mode] || SF_AUTO.custom; });
+    const reason = sfReasonStr({ reasons: reasons }, editedDays);
     if (!w.evAck) { say("증빙자료가 필요하면 관리 선생님이 직접 확인한다는 안내에 체크해 주세요."); return; }
     const days = [1, 2, 3, 4, 5, 6].map(wd => {
       const d = sfS.days[wd];
@@ -15681,7 +15725,7 @@
       sfS.days = keep;
       sfStartEdit(approved);
       // 제출했던 사유("월: ... / 화: ...")를 요일별로 다시 채운다
-      const pr = sfParseReason(reasonStr); Object.keys(pr).forEach(i => { sfW.reasons[i] = pr[i]; sfW.edited[i] = true; });
+      const pr = sfParseReason(reasonStr); Object.keys(pr).forEach(i => { sfW.reasons[i] = pr[i] === SF_AUTO.duty || pr[i] === SF_AUTO.custom ? "" : pr[i]; sfW.edited[i] = true; });
       sfRenderEditor();
     }).catch(() => { sfEnter(); });
   }
