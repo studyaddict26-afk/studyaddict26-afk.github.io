@@ -8166,7 +8166,7 @@
 <div id="studentLoginGate">
   <div class="sl-gate-body">
     <div class="sl-hero-content">
-      <div class="sl-hero-eyebrow">온라인 학습 관리 시스템</div>
+      <div class="sl-hero-eyebrow">로드맵 독서실 학습 관리 시스템</div>
       <h1><span class="accent">홀로</span> <span class="en">HOLO</span></h1>
       <div class="sl-slide-card">
         <ul class="sl-slide-title-list" id="slHeroTitleList"></ul>
@@ -21907,12 +21907,12 @@
   // 보여주고, "구체적인 기능 알아보기" 버튼을 눌러야 라이트박스로 한 장씩 자세히 본다.
   const HOLO_HERO_SLIDES = [
     {
-      title: "<span class=\"sl-hero-em\">메타인지</span> 더 이상 혼자 고민하지 않아도 됩니다",
+      title: "<span class=\"sl-hero-em\">메타인지</span>를 강제로 시켜드립니다",
       chips: ["학습 플래너 이행 정도", "공부 일기", "홀로AI 질의 응답", "내신-모의고사 오답노트", "성적 통계", "시험장 시뮬레이션"],
       bullets: ["위의 모든 기록을 하나로 모아 <span class=\"sl-hero-em\">나만의 분석지</span> 매주 제공"]
     },
     {
-      title: "<span class=\"sl-hero-em\">나를 잘 모르는 선생님과 피상적인 상담</span>은 이제 그만하세요",
+      title: "<span class=\"sl-hero-em\">6일 분석지</span>를 바탕으로 <span class=\"sl-hero-em\">맞춤형 학습상담</span>을 받아보세요",
       lead: "<span class=\"sl-hero-em\">누적된 분석지 데이터</span>를 근거로",
       bullets: ["학습 패턴과 반복되는 문제 상황을 선생님이 구체적으로 파악", "최상위권 선생님과의 1:1 개인 맞춤형 학습 상담 제공"]
     },
@@ -22033,6 +22033,7 @@
   // 소셜 프루프 한 줄 — 실제 등록된 학생 수를 세서 보여준다. 로그인 전 화면에서 읽기 권한이
   // 없을 수도 있으니(관리자만 학생 목록을 읽을 수 있는 보안 규칙일 가능성), 실패하면 그냥
   // 조용히 숨긴다 — 숫자를 지어내서 보여주지 않는다.
+  const HERO_SOCIAL_MIN = 100;
   function initHeroSocialProof() {
     const el = document.getElementById("slHeroSocialProof");
     if (!el) return;
@@ -22042,7 +22043,7 @@
     // Firestore 규칙에서 stats/{docId}를 공개로 열어주지 않았으면 조용히 숨긴다.
     db.collection("stats").doc("public").get().then(doc => {
       const n = doc.exists ? doc.data().studentCount : 0;
-      if (n > 0) {
+      if (n > HERO_SOCIAL_MIN) { // 등록된 학생이 100명을 넘기 전에는 숨긴다
         el.textContent = n.toLocaleString() + "명의 학생이 홀로와 함께하고 있어요";
         el.style.display = "";
       }
