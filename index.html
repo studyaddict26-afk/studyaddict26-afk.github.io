@@ -4223,7 +4223,6 @@
   .sa-outs .sa-t { display: flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); }
   .sa-outs .sa-t > span:first-child { width: 44px; flex: none; }
   .sa-outs .time-box { flex: 1; min-width: 0; }
-  .sa-outs .sp-time { flex: 1; width: 0; min-width: 60px; height: 36px; box-sizing: border-box; }
   /* 팝업 안 안내 문구는 낱말 중간에서 끊기지 않고, 줄 길이가 고르게 줄바꿈 */
   #saModal, #sfModal { word-break: keep-all; }
   #saModal p, #saModal small, #saModal .sfw-h2, #saModal .sp-chk span, #saModal .sp-radio span, #sfModal p, #sfModal small, #sfModal .sfw-h2, #sfModal .sp-chk span { text-wrap: pretty; }
@@ -4288,9 +4287,9 @@
   .sfw-box .sp-time { width: auto; min-width: 132px; font-size: 0.8rem; padding: 4px 8px; box-sizing: border-box; } /* "오전 09:00"이 시계 아이콘에 가리지 않게: 글씨에 맞춰 늘어난다 */
   /* 시간 직접 입력: 하루 흐름을 세로 선으로 잇는다 */
   /* 상자 높이는 고정. 외출이 많아지면 상자 안에서 위아래로 스크롤한다(낮은 화면에서는 팝업에 맞게 조금 줄어든다) */
-  .sft { box-sizing: border-box; height: clamp(190px, calc(88vh - 374px), 320px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #CFCBBF transparent; background: #fff; border-radius: 12px; padding: 10px 14px; }
+  .sft { box-sizing: border-box; height: clamp(190px, calc(88vh - 346px), 300px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #CFCBBF transparent; background: #fff; border-radius: 12px; padding: 10px 14px; }
   .sft-n { flex: none; }
-  .sft-n { position: relative; display: grid; grid-template-columns: 14px 62px minmax(0, 1fr) 24px; column-gap: 10px; align-items: center; min-height: 48px; }
+  .sft-n { position: relative; display: grid; grid-template-columns: 14px 62px minmax(0, 1fr) 24px; column-gap: 10px; align-items: center; min-height: 42px; }
   .sft-n::before { content: ""; position: absolute; left: 6px; top: 0; bottom: 0; width: 2px; background: #E3E0D6; }
   .sft-n:first-child::before { top: 50%; }
   .sft-n:last-child::before { bottom: 50%; }
@@ -4301,18 +4300,18 @@
   .sft-v { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
   .sfw-box .sft .sp-time { width: 78px; min-width: 0; height: 36px; padding: 0 10px; font-size: 0.82rem; font-weight: 700; background: #F8F7F3; border: 1px solid #D9D6CC; border-radius: 9px; }
   .time-box { display: inline-flex; align-items: center; gap: 6px; flex: none; }
-  .time-ap { display: inline-flex; flex: none; border: 1px solid #D9D6CC; border-radius: 9px; overflow: hidden; background: #fff; }
-  .time-ap button { height: 34px; padding: 0 9px; border: 0; background: #fff; font-family: inherit; font-size: 0.74rem; font-weight: 700; color: var(--ink-soft); cursor: pointer; }
+  .time-ap { display: inline-flex; flex: none; border: 1px solid #D9D6CC; border-radius: 8px; overflow: hidden; background: #fff; }
+  .time-ap button { height: 26px; padding: 0 9px; border: 0; background: #fff; font-family: inherit; font-size: 0.74rem; font-weight: 700; color: var(--ink-soft); cursor: pointer; }
   .time-ap button + button { border-left: 1px solid #E6E3DA; }
   .time-ap button.on { background: #0D2155; color: #fff; }
   .time-box.need-ap .time-ap { border-color: #C0392B; box-shadow: 0 0 0 1px #C0392B; }
-  .sp-time.sp-typed { font-variant-numeric: tabular-nums; }
-  .sp-time.sp-typed::placeholder { font-weight: 500; color: #A9ACB4; }
-  .sp-time.sp-typed:focus { border-color: #17294F; outline: none; background: #fff; }
-  .sfw-box .sp-time.sp-typed.bad, .sp-time.sp-typed.bad { border-color: #C0392B; background: #FDF3F2; }
-  .time-hint { margin: 0; font-size: 0.7rem; line-height: 1.5; color: var(--ink-soft); }
-  .time-hint b { color: var(--ink); }
-  .sft-reason { flex: 1 1 150px; min-width: 0; box-sizing: border-box; height: 36px; padding: 0 11px; font-family: inherit; font-size: 0.78rem; color: var(--ink); background: #fff; border: 1px solid #D9D6CC; border-radius: 9px; }
+  .time-hm { display: inline-flex; align-items: center; gap: 4px; flex: none; }
+  .time-hm i { font-style: normal; font-weight: 800; color: var(--ink-soft); }
+  .sfw-box .sft .time-hm .sp-time, .sfw-box .sa-outs .time-hm .sp-time { flex: none; width: 40px; min-width: 0; height: 28px; padding: 0; text-align: center; font-size: 0.84rem; font-weight: 700; font-variant-numeric: tabular-nums; background: #F8F7F3; border: 1px solid #D9D6CC; border-radius: 9px; box-sizing: border-box; }
+  .sfw-box .time-hm .sp-time::placeholder { font-weight: 500; color: #B4B7BE; }
+  .sfw-box .sft .time-hm .sp-time:focus, .sfw-box .sa-outs .time-hm .sp-time:focus { border-color: #17294F; outline: none; background: #fff; }
+  .sfw-box .sft .time-hm .sp-time.bad, .sfw-box .sa-outs .time-hm .sp-time.bad { border-color: #C0392B; background: #FDF3F2; }
+  .sft-reason { flex: 1 1 150px; min-width: 0; box-sizing: border-box; height: 30px; padding: 0 11px; font-family: inherit; font-size: 0.78rem; color: var(--ink); background: #fff; border: 1px solid #D9D6CC; border-radius: 9px; }
   .sft-reason:focus { border-color: #17294F; outline: none; }
   .sft-n.sft-add { grid-template-columns: 14px minmax(0, 1fr); min-height: 34px; }
   .sft-n.sft-add > s { width: 6px; height: 6px; background: #C9C5B8; }
@@ -15149,71 +15148,73 @@
   }
 
   // ── 직접 입력하는 시각 칸 ──
-  // 숫자만 적어도, "9:30" · "오후 10시" · "10시 반"처럼 적어도 "HH:MM"(24시간)으로 알아듣는다. 알 수 없으면 "".
-  function parseTimeText(text) {
-    let s = String(text || "").replace(/\s+/g, "").toLowerCase().replace(/：/g, ":");
-    if (!s) return "";
-    const pm = /오후|밤|저녁|pm/.test(s), am = /오전|아침|새벽|am/.test(s);
-    s = s.replace(/오전|오후|아침|새벽|저녁|밤|am|pm/g, "").replace(/시반$/, ":30").replace(/분$/, "").replace(/시(?=\d)/, ":").replace(/시$/, "").replace(/\./g, ":");
-    let h, m;
-    let x = s.match(/^(\d{1,2}):(\d{0,2})$/);
-    if (x) { h = Number(x[1]); m = Number(x[2] || 0); }
-    else if (/^\d{1,4}$/.test(s)) { h = Number(s.length <= 2 ? s : s.slice(0, -2)); m = s.length <= 2 ? 0 : Number(s.slice(-2)); }
-    else return "";
-    if (pm && h < 12) h += 12;
-    if (am && h === 12) h = 0;
-    if (h > 23 || m > 59) return "";
-    return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
-  }
-  // 칸 하나 = 오전 · 오후 고르기 + 시각 적기. 미리 골라 두지 않는다(잘못 고른 채 지나가지 않게).
-  // 칸에는 12시간 모양("10:00")이 보이고, 고른 오전 · 오후는 input의 data-ap에 담는다. 저장하는 값은 24시간 "HH:MM".
-  const TIME_WORDS = /오전|오후|아침|새벽|저녁|밤|am|pm/i;
-  const time12 = h24 => (Number(h24.slice(0, 2)) % 12 || 12) + ":" + h24.slice(3);
-  const timeAp12 = h24 => Number(h24.slice(0, 2)) >= 12 ? "pm" : "am";
+  // 칸 하나 = 오전 · 오후 고르기 + 시 + 분(숫자로 직접 적는다). 오전 · 오후는 미리 골라 두지 않는다(잘못 고른 채 지나가지 않게).
+  // 이름표(data-f · data-wd · id)는 "시" 칸에 달고, 고른 오전 · 오후도 "시" 칸의 data-ap에 담는다. 저장하는 값은 24시간 "HH:MM".
+  const pad2 = n => String(n).padStart(2, "0");
+  const timeMin = el => el.closest(".time-box").querySelector(".tm-m");
   function timeTyped(attrs, value) {
-    const v = parseTimeText(value), ap = v ? timeAp12(v) : "";
+    const v = /^\d{1,2}:\d{2}$/.test(value || "") ? value : "";
+    const h24 = v ? Number(v.split(":")[0]) : null, ap = v ? (h24 >= 12 ? "pm" : "am") : "";
     const btn = (k, label) => '<button type="button" data-k="' + k + '" class="' + (ap === k ? "on" : "") + '" aria-pressed="' + (ap === k) + '" onclick="timeAp(this)">' + label + '</button>';
-    return '<span class="time-box"><span class="time-ap" role="group" aria-label="오전 오후">' + btn("am", "오전") + btn("pm", "오후") + '</span>' +
-      '<input type="text" inputmode="numeric" maxlength="9" autocomplete="off" placeholder="예: 930" ' + attrs + ' data-ap="' + ap + '" class="sp-time sp-typed" value="' + (v ? time12(v) : "") + '" onchange="timeTidy(this)"></span>';
+    const num = (extra, ph, val) => '<input type="text" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="' + ph + '" ' + extra + ' value="' + val + '" oninput="timeDigits(this)" onchange="timeTidy(this)" onkeydown="timeKey(event, this)">';
+    return '<span class="time-box"><span class="time-ap" role="group" aria-label="오전 오후">' + btn("am", "오전") + btn("pm", "오후") + '</span><span class="time-hm">' +
+      num(attrs + ' data-ap="' + ap + '" class="sp-time sp-typed tm-h"', "09", v ? pad2(h24 % 12 || 12) : "") + '<i aria-hidden="true">:</i>' +
+      num('aria-label="분" class="sp-time tm-m"', "30", v ? v.split(":")[1] : "") + '</span></span>';
   }
   function timeApPaint(el) {
-    el.parentElement.querySelectorAll(".time-ap button").forEach(b => { const on = b.dataset.k === el.dataset.ap; b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
-    el.parentElement.classList.remove("need-ap");
+    const box = el.closest(".time-box"), ap = box.querySelector(".tm-h").dataset.ap;
+    box.querySelectorAll(".time-ap button").forEach(b => { const on = b.dataset.k === ap; b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
+    box.classList.remove("need-ap");
   }
   function timeAp(btn) {
-    const el = btn.closest(".time-box").querySelector("input");
-    timeTidy(el); // 적어 둔 글자를 먼저 정리한 뒤, 누른 값이 우선한다
+    const el = btn.closest(".time-box").querySelector(".tm-h");
+    timeTidy(el); // 적어 둔 숫자를 먼저 정리한 뒤, 누른 값이 우선한다
     el.dataset.ap = btn.dataset.k; timeApPaint(el);
   }
-  // 칸에서 벗어나면 "9:00" 모양으로 정리한다. "오후 10시"나 "22"처럼 오전 · 오후가 분명하게 적혔으면 그쪽을 골라 준다.
-  function timeTidy(el) {
-    const raw = el.value.trim(), v = parseTimeText(raw);
-    el.classList.toggle("bad", !v && !!raw);
-    if (!v) return;
-    const h = Number(v.slice(0, 2));
-    if (TIME_WORDS.test(raw) || h > 12 || h === 0) el.dataset.ap = timeAp12(v);
-    el.value = time12(v);
-    timeApPaint(el);
+  // 숫자만 받는다. 시를 다 적으면(두 자리, 또는 3~9 한 자리) 분 칸으로 넘어간다.
+  function timeDigits(el) {
+    el.value = el.value.replace(/\D/g, "").slice(0, 2);
+    el.classList.remove("bad");
+    if (el.classList.contains("tm-h") && (el.value.length === 2 || /^[3-9]$/.test(el.value))) { const m = timeMin(el); m.focus(); m.select(); }
   }
-  // 저장할 값(24시간). 알 수 없는 글자이거나 오전 · 오후를 안 골랐으면 ""
+  // 빈 분 칸에서 지우기를 누르면 시 칸으로 돌아간다
+  function timeKey(e, el) {
+    if (e.key === "Backspace" && el.classList.contains("tm-m") && !el.value) { e.preventDefault(); el.closest(".time-box").querySelector(".tm-h").focus(); }
+  }
+  // 칸에서 벗어나면 두 자리로 정리한다. 시에 13~23(또는 0)을 적으면 12시간 모양으로 바꾸고 오전 · 오후를 골라 준다.
+  function timeTidy(el) {
+    if (!el.value) return;
+    const n = Number(el.value);
+    if (el.classList.contains("tm-m")) { el.classList.toggle("bad", n > 59); if (n <= 59) el.value = pad2(n); return; }
+    el.classList.toggle("bad", n > 23);
+    if (n > 23) return;
+    if (n > 12 || n === 0) { el.dataset.ap = n === 0 ? "am" : "pm"; timeApPaint(el); }
+    el.value = pad2(n % 12 || 12);
+  }
+  const timeTypedAny = el => !!(el.value.trim() || timeMin(el).value.trim());
+  const timeNumbersOk = el => /^\d{1,2}$/.test(el.value) && /^\d{1,2}$/.test(timeMin(el).value) && Number(el.value) <= 23 && Number(timeMin(el).value) <= 59;
+  // 저장할 값(24시간). 시 · 분이 다 맞지 않거나 오전 · 오후를 안 골랐으면 ""
   function timeValue(el) {
     if (!el.classList.contains("sp-typed")) return el.value;
-    const v = parseTimeText(el.value);
-    if (!v) return "";
-    const h = Number(v.slice(0, 2));
-    if (TIME_WORDS.test(el.value) || h > 12 || h === 0) return v;
+    if (!timeNumbersOk(el)) return "";
+    const h = Number(el.value), mm = pad2(Number(timeMin(el).value));
+    if (h > 12 || h === 0) return pad2(h) + ":" + mm;
     if (!el.dataset.ap) return "";
-    return String(h % 12 + (el.dataset.ap === "pm" ? 12 : 0)).padStart(2, "0") + v.slice(2);
+    return pad2(h % 12 + (el.dataset.ap === "pm" ? 12 : 0)) + ":" + mm;
   }
   // 넘어가기 전 검사: 문제가 있으면 안내 문구, 없으면 ""
   function timeProblem(root) {
-    const list = Array.from(root.querySelectorAll("input.sp-typed")).filter(el => el.value.trim());
-    if (list.some(el => !parseTimeText(el.value))) return "시각을 다시 확인해 주세요. (예: 9:30 또는 930)";
+    const list = Array.from(root.querySelectorAll("input.sp-typed")).filter(timeTypedAny);
+    const wrong = list.filter(el => !timeNumbersOk(el));
+    wrong.forEach(el => {
+      if (!(/^\d{1,2}$/.test(el.value) && Number(el.value) <= 23)) el.classList.add("bad");
+      const m = timeMin(el); if (!(/^\d{1,2}$/.test(m.value) && Number(m.value) <= 59)) m.classList.add("bad");
+    });
+    if (wrong.length) return "시와 분을 숫자로 모두 적어 주세요. (예: 09 : 30)";
     const missing = list.filter(el => !timeValue(el));
-    missing.forEach(el => el.parentElement.classList.add("need-ap"));
+    missing.forEach(el => el.closest(".time-box").classList.add("need-ap"));
     return missing.length ? "오전 · 오후를 골라 주세요." : "";
   }
-  const TIME_HINT = '<p class="time-hint"><b>오전 · 오후를 고르고</b> 시각을 적어 주세요. 숫자만 적어도 돼요. (예: 930 → 9:30)</p>';
 
   // ── 공통: 입실 · 외출/재입실 · 퇴실 입력칸 ──
   function schedTimesHtml(key, d, withReason) {
@@ -15425,7 +15426,7 @@
             node("sft-sub", "재입실", inp("back", o.back, i));
         });
         flow += '<div class="sft-n sft-add"><s></s><button type="button" class="sft-addbtn" onclick="sfWAddOut()">+ 외출 · 재입실 추가</button></div>' + node("sft-main", "최후 퇴실", inp("exit", d.exit));
-        body = TIME_HINT + '<div class="sft">' + flow + '</div>' +
+        body = '<div class="sft">' + flow + '</div>' +
           ((d.outs || []).length ? '<div class="sft-checks"><label class="sp-chk"><input type="checkbox" id="sfwAck"' + (d.ack ? " checked" : "") + '> <span>외출 · 재입실 시각에 <b>이동 시간과 식사 시간</b>을 고려했어요.</span></label><label class="sp-chk"><input type="checkbox" id="sfwAck2"' + (d.ack2 ? " checked" : "") + '> <span>나가고 들어오는 시각은 최대한 <b>쉬는 시간</b>을 활용했어요.</span></label></div>' : "");
       } else if (how === "copy") {
         body = '<div class="sfw-h2">어느 요일과 똑같이 할까요?</div><div class="sfw-copy sfw-dayrow">' + [1, 2, 3, 4, 5, 6].filter(k => k !== w.wd).map(k =>
@@ -15464,13 +15465,13 @@
   function sfEvToggle(el) { sfW.evAck = el.checked; const b = document.getElementById("sfSubmitBtn"); if (b) b.disabled = !el.checked; }
   // 외출을 추가 · 삭제해도 상자 안 스크롤 위치가 맨 위로 튀지 않게 한다. 추가하면 새 외출 칸이 보이도록 아래로 내린다.
   const sfWFlow = () => document.querySelector("#sfModalCard .sft");
-  const sfWTyped = () => Array.from(document.querySelectorAll("#sfModalCard input.sp-typed")).map(el => ({ f: el.dataset.f, i: el.dataset.i === undefined ? null : Number(el.dataset.i), v: el.value, ap: el.dataset.ap }));
+  const sfWTyped = () => Array.from(document.querySelectorAll("#sfModalCard input.sp-typed")).map(el => ({ f: el.dataset.f, i: el.dataset.i === undefined ? null : Number(el.dataset.i), v: el.value, m: timeMin(el).value, ap: el.dataset.ap }));
   function sfWTypedBack(list, removed) {
     list.forEach(s => {
       let i = s.i;
       if (removed != null && i != null) { if (i === removed) return; if (i > removed) i--; }
       const el = document.querySelector('#sfModalCard input.sp-typed[data-f="' + s.f + '"]' + (i != null ? '[data-i="' + i + '"]' : ""));
-      if (el) { el.value = s.v; el.dataset.ap = s.ap; el.classList.toggle("bad", !!s.v.trim() && !parseTimeText(s.v)); timeApPaint(el); }
+      if (el) { el.value = s.v; timeMin(el).value = s.m; el.dataset.ap = s.ap; timeApPaint(el); }
     });
   }
   function sfWAddOut() {
@@ -15845,7 +15846,7 @@
         : isOut
         ? '<div class="sa-req"><div class="sfw-h2">언제 나갔다 오나요?</div><div class="sa-outs"><div class="sa-t"><span>외출</span>' + timeTyped('id="saOutT"', f.outT) + '</div><div class="sa-t"><span>재입실</span>' + timeTyped('id="saBackT"', f.backT) + '</div></div></div>'
         : '<div class="sa-req"><div class="sfw-h2">어떻게 수정하길 원하나요?</div><textarea id="saReq" class="sp-ta" rows="4" maxlength="300" placeholder="' + escapeHtml(ph) + '">' + escapeHtml(f.request || "") + '</textarea></div>';
-      body = '<div class="sfw-box">' + (f.type === "기타" ? "" : TIME_HINT) + '<div class="sa-two">' +
+      body = '<div class="sfw-box"><div class="sa-two">' +
         '<div class="sa-base"><div class="sfw-h2">' + (isToday ? "금일 스케줄" : schedMd(f.date) + " 스케줄") + '</div><ul class="sched-sidebar-events" id="saBaseEvents"></ul></div>' + right + '</div>' +
         '<label class="sp-chk"><input type="checkbox" id="saAckTravel"' + (f.ackT ? " checked" : "") + '> <span>이동 시간과 식사 시간을 고려해서 적었어요.</span></label>' +
         '<label class="sp-chk"><input type="checkbox" id="saAckBreak"' + (f.ackB ? " checked" : "") + '> <span>최대한 <b>쉬는 시간</b>을 활용했어요.</span></label></div>';
