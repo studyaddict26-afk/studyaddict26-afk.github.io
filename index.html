@@ -3919,7 +3919,6 @@
   .hdk-link { font-family: inherit; font-size: 0.8rem; font-weight: 700; color: var(--ink); background: none; border: none; padding: 0; cursor: pointer; }
   .hdk-link { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 10px; }
   .hdk-lcol { display: flex; flex-direction: column; align-items: center; gap: 1px; }
-  .hdk-pend { display: inline-block; font-style: normal; font-size: 0.64rem; font-weight: 800; line-height: 1.3; color: #D92D20; background: #FEE4E2; border: 1px solid #F9B8B2; border-radius: 6px; padding: 1px 7px; margin: 0; flex: none; }
   .hdk-ls { font-size: 0.62rem; font-weight: 600; color: var(--ink-soft); }
   .hdk-link .hdk-lt span { display: inline-block; transition: transform .2s ease; }
   .hdk-link:hover .hdk-lt span { transform: translateX(5px); } /* 커서를 올리면 화살표가 오른쪽으로 움직인다(밑줄 없음) */
@@ -4339,6 +4338,7 @@
   .sfw-pickday { font-family: inherit; text-align: left; background: #fff; border: 1px solid var(--line-dark); border-radius: 8px; padding: 8px 10px; cursor: pointer; display: flex; flex-direction: column; gap: 2px; }
   .sfw-pickday b { font-size: 0.8rem; color: var(--ink); }
   .sfw-pickday span { font-size: 0.7rem; color: var(--ink-soft); }
+  .sfw-pickday span.sfw-wait { color: #C0392B; font-weight: 700; }
   .sfw-copy.sfw-dayrow { display: flex; flex-wrap: wrap; gap: 8px; }
   .sfw-dayrow .sfw-pickday { width: 78px; align-items: center; text-align: center; padding: 9px 0; }
   .sfw-pickday.on { border-color: #0D2155; box-shadow: inset 0 0 0 1px #0D2155; }
@@ -4358,21 +4358,35 @@
   .sfw-final .sfw-sumbox { display: grid; grid-template-columns: repeat(auto-fit, minmax(112px, 1fr)); gap: 8px; padding: 10px; align-content: stretch; }
   .sfc { display: flex; flex-direction: column; min-width: 0; background: #fff; border-radius: 10px; padding: 10px 7px; }
   .sfc h5 { margin: 0; padding-bottom: 8px; border-bottom: 1px solid #ECEAE2; text-align: center; font-size: 0.78rem; font-weight: 800; color: var(--ink); }
-  .sfc ul { list-style: none; margin: 0; padding: 6px 0 0; }
-  .sfc li { padding: 3px 0; }
-  .sfc li > div { display: grid; grid-template-columns: 34px auto; justify-content: center; align-items: baseline; column-gap: 6px; }
-  .sfc li span { font-size: 0.64rem; color: var(--ink-soft); text-align: right; white-space: nowrap; }
+  .sfc ul { list-style: none; margin: 0; padding: 8px 0 0; display: flex; flex-direction: column; gap: 5px; }
+  .sfc li { padding: 1px 3px; border: 1px solid transparent; border-radius: 8px; }
+  .sfc li.sfc-box { padding: 5px 3px; border-color: #D5D2C7; } /* 사유 때문에 생긴 시각을 사유와 한 묶음으로 */
+  .sfc li > div { display: flex; justify-content: center; align-items: baseline; column-gap: 5px; padding: 1px 0; }
+  .sfc li span { font-size: 0.64rem; color: var(--ink-soft); white-space: nowrap; }
+  .sfc li p { margin: 0 0 2px; font-size: 0.53rem; font-weight: 600; color: #7A7D84; }
   .sfc li b { font-size: 0.72rem; font-weight: 800; color: #0D2155; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .sfc p, .sfc-note { margin: 1px 0 0; text-align: center; font-size: 0.6rem; line-height: 1.4; color: #8A8D94; word-break: keep-all; overflow-wrap: anywhere; }
   .sfc-note { margin-top: 6px; }
   .sfc-msg { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 4px; min-height: 96px; padding-top: 14px; }
   .sfc-msg b { font-size: 0.78rem; font-weight: 800; color: #45484F; }
-  .sfw-final .sfw-ev { margin: 0; display: flex; flex-direction: column; justify-content: flex-start; padding: 12px 13px; }
+  .sfw-final .sfw-ev { align-self: center; margin: 0; display: flex; flex-direction: column; padding: 12px 13px; } /* 내용 높이만큼만, 시간표 상자의 세로 중앙에 */
   .sfw-final .sfw-ev-t { font-size: 0.72rem; text-align: center; }
   .sfw-final .sfw-ev p { font-size: 0.66rem; word-break: keep-all; }
   .sfw-final .sfw-ck { font-size: 0.7rem; justify-content: center; }
   .sfw-final .sfw-ck input { flex: none; width: 14px; height: 14px; margin: 0; }
   @media (max-width: 700px) { .sfw-final { grid-template-columns: 1fr; } }
+  /* 승인 대기 중인 요일: 얇은 막으로 덮고, 누르면 원래 스케줄과 요청한 스케줄을 비교한다(요일 이름은 막 위에 보인다) */
+  .sf-day.sf-waiting { position: relative; }
+  .sf-day.sf-waiting .sf-day-h { position: relative; z-index: 2; color: var(--ink); }
+  .sf-veil { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; padding: 0 4px; font-family: inherit; background: rgba(255,255,255,0.86); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); border: 1px solid #C5CBDA; border-radius: 8px; cursor: pointer; transition: background .15s, border-color .15s; }
+  .sf-veil:hover, .sf-veil:focus-visible { background: rgba(255,255,255,0.74); border-color: #0D2155; }
+  .sf-veil b { font-size: 0.76rem; font-weight: 800; color: #C0392B; word-break: keep-all; }
+  .sf-veil span { font-size: 0.68rem; font-weight: 700; color: #0D2155; word-break: keep-all; text-align: center; line-height: 1.4; }
+  .sfpk { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: stretch; }
+  .sfpk .sfc { padding: 12px 8px 14px; }
+  .sfpk-wait { margin-left: 6px; font-size: 0.7rem; font-weight: 800; color: #C0392B; }
+  .sfpk .sfc.sfpk-new { box-shadow: inset 0 0 0 1.5px #0D2155; }
+  .sfpk .sfc.sfpk-new h5 { color: #0D2155; }
   .sf-pend-note em { font-style: normal; color: #C0392B; }
   .sf-pend-btns { display: flex; gap: 8px; flex: none; }
   .sf-weekhead .sf-pend-btns { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
@@ -14919,7 +14933,7 @@
     const st = document.getElementById("hdkFixedState"), btn = document.getElementById("hdkFixedBtn");
     const pend = schedPendingFixed(), last = schedLatestReq("fixed");
     const hasFixed = Object.keys(d.fixed || {}).length > 0;
-    if (btn) { btn.innerHTML = '<span class="hdk-lcol"><span class="hdk-lt">고정 스케줄 ' + (d.firstDone ? "수정하기" : "제출하기") + ' <span aria-hidden="true">→</span></span><span class="hdk-ls">정기적인 일정</span></span>' + (pend ? '<em class="hdk-pend">승인 대기 중</em>' : ""); btn.disabled = false; btn.style.visibility = (!d.firstDone && !hasFixed && !pend) ? "hidden" : ""; }
+    if (btn) { btn.innerHTML = '<span class="hdk-lcol"><span class="hdk-lt">고정 스케줄 ' + (d.firstDone ? "수정하기" : "제출하기") + ' <span aria-hidden="true">→</span></span><span class="hdk-ls">정기적인 일정</span></span>'; btn.disabled = false; btn.style.visibility = (!d.firstDone && !hasFixed && !pend) ? "hidden" : ""; }
     const firstEl = document.getElementById("hdkFirst");
     if (firstEl) firstEl.hidden = !(!d.firstDone && !hasFixed && !pend); // 아직 한 번도 제출하지 않았다면 막을 씌운다
     if (st) {
@@ -14939,7 +14953,7 @@
     const adhoc = d.adhoc || [];
     const reqs = (d.requests || []).filter(r => r.kind === "adhoc" && (r.status === "pending" || r.status === "rejected"));
     const adBtn = document.getElementById("hdkAdhocBtn");
-    if (adBtn) adBtn.innerHTML = '<span class="hdk-lcol"><span class="hdk-lt">돌발 스케줄 수정하기 <span aria-hidden="true">→</span></span><span class="hdk-ls">비정기적인 일정</span></span>' + (reqs.some(r => r.status === "pending") ? '<em class="hdk-pend">승인 대기 중</em>' : "");
+    if (adBtn) adBtn.innerHTML = '<span class="hdk-lcol"><span class="hdk-lt">돌발 스케줄 수정하기 <span aria-hidden="true">→</span></span><span class="hdk-ls">비정기적인 일정</span></span>';
     const row = (date, desc, tag, cls, past) => '<div class="hdk-ad' + (past ? " past" : "") + '"><span class="hdk-ad-date">' + schedMd(date) + '</span><span class="hdk-ad-body">' + escapeHtml(desc) + '</span>' + (tag ? '<span class="hdk-ad-tag ' + (cls || "") + '">' + tag + '</span>' : "") + '</div>';
     const todayRows = adhoc.filter(a => a.date === today).map(a => row(a.date, schedAdhocDesc(a), "승인", "", false))
       .concat(reqs.filter(r => r.status === "pending" && r.payload.date === today).map(r => row(r.payload.date, r.payload.cancel ? "취소 요청" : schedAdhocDesc(r.payload), "승인 대기", "wait", false)));
@@ -15300,9 +15314,30 @@
     if (f.off) return { mode: "off", entry: "", exit: "", outs: [] };
     return Object.assign({ mode: "custom" }, schedFromBlocks(f.blocks, f.reason));
   }
+  // 승인 대기 중인 요청에 적힌 그 요일 스케줄
+  function sfPendDay(pend, wd) {
+    const p = ((pend.payload || {}).days || []).find(x => Number(x.weekday) === wd);
+    if (!p || p.mode === "duty") return { mode: "duty", entry: "", exit: "", outs: [] };
+    if (p.mode === "off") return { mode: "off", entry: "", exit: "", outs: [] };
+    return Object.assign({ mode: "custom" }, schedFromBlocks(p.blocks, p.reason));
+  }
+  const sfShape = d => JSON.stringify([d.mode, d.entry || "", d.exit || "", (d.outs || []).map(o => [o.out, o.back])]);
+  // 수정 요청에 들어간 요일인지: 시각이 달라졌거나, 제출한 사유에 그 요일이 적혀 있다
+  function sfWaiting(wd) {
+    return !!sfPend && (sfShape(sfPendDay(sfPend, wd)) !== sfShape(sfApprovedDay(wd)) || sfParseReason(sfPend.reason)[wd] !== undefined);
+  }
+  let sfPeek = null; // 비교 창에 띄운 요일
+  function sfPeekOpen(wd) { sfPeek = wd; sfRenderEditor(); }
+  function sfPeekClose() { sfPeek = null; sfRenderEditor(); }
+  function sfPeekHtml(wd) {
+    const why = sfParseReason(sfPend.reason)[wd] || "";
+    const reason = why === SF_AUTO.duty || why === SF_AUTO.custom ? "" : why;
+    return '<div class="sfw-h">' + SCHED_WD[wd] + '요일 스케줄 <span class="sfpk-wait">승인 대기 중</span></div><div class="sfw-box sfpk">' +
+      sfDayCard("원래 스케줄", sfApprovedDay(wd), "", "") + sfDayCard("수정 요청한 스케줄", sfPendDay(sfPend, wd), reason, "sfpk-new") + '</div>';
+  }
   function sfInit() {
     const d = schedData || {};
-    sfEditAll = false; sfW = null;
+    sfEditAll = false; sfW = null; sfPeek = null;
     document.getElementById("sfPhotoBox").innerHTML = sfPhotoHtml();
     const pend = schedPendingFixed(), last = schedLatestReq("fixed");
     const isFirst = !d.firstDone;
@@ -15319,14 +15354,7 @@
         '</ul></div></div>';
     const days = {};
     [1, 2, 3, 4, 5, 6].forEach(wd => {
-      if (pend) {
-        const p = (pend.payload.days || []).find(x => Number(x.weekday) === wd);
-        if (!p || p.mode === "duty") days[wd] = { mode: "duty", entry: "", exit: "", outs: [] };
-        else if (p.mode === "off") days[wd] = { mode: "off", entry: "", exit: "", outs: [] };
-        else days[wd] = Object.assign({ mode: "custom" }, schedFromBlocks(p.blocks, p.reason));
-        return;
-      }
-      days[wd] = sfApprovedDay(wd);
+      days[wd] = pend ? sfPendDay(pend, wd) : sfApprovedDay(wd);
     });
     sfS = { isFirst: isFirst, days: days };
     sfRenderEditor();
@@ -15380,12 +15408,14 @@
       rows += ((d.outs || []).length >= nOut ? '<button type="button" class="sf-addout" onclick="schedOutAdd(' + "'" + wd + "'" + ')">+ 외출 추가</button>' : "") + inRow("퇴실", "exit", d.exit);
     } else if (custom) {
       rows += row("입실", T(d.entry));
-      for (let i = 0; i < nOut; i++) { const o = (d.outs || [])[i] || {}; rows += row("외출", T(o.out)) + row("재입실", T(o.back)); }
+      (d.outs || []).forEach(o => { rows += row("외출", T(o.out)) + row("재입실", T(o.back)); }); // 실제 외출 횟수만큼만 보여 준다
       rows += row("퇴실", T(d.exit));
     } else {
       rows = '<div class="sf-day-msg">' + (d.mode === "off" ? "등원 안 함" : "의무 시간표대로 학습") + '</div>';
     }
-    return '<div class="sf-day"><div class="sf-day-h">' + SCHED_WD[wd] + '요일</div>' +
+    const waiting = sfWaiting(wd);
+    return '<div class="sf-day' + (waiting ? " sf-waiting" : "") + '"><div class="sf-day-h">' + SCHED_WD[wd] + '요일</div>' +
+      (waiting ? '<button type="button" class="sf-veil" onclick="sfPeekOpen(' + wd + ')" aria-label="' + SCHED_WD[wd] + '요일 승인 대기 중, 스케줄 확인하기"><b>승인 대기 중</b><span>스케줄 확인하기 →</span></button>' : "") +
       (ed ? '<div class="sf-modes mini">' + seg("duty", "정상 학습") + seg("custom", "시간 입력") + seg("off", "등원 안 함") + '</div>' : "") +
       '<div class="sf-day-rows">' + rows + '</div>' +
       (ed && wd > 1 ? '<button type="button" class="sp-copy" onclick="sfCopyPrev(' + wd + ')">앞 요일과 같게</button>' : "") + '</div>';
@@ -15434,7 +15464,7 @@
   }
   const sfDayTxt = d => d.mode === "duty" ? "정상 학습" : d.mode === "off" ? "등원 안 함" : schedBlocksText(schedToBlocks(d));
   // snap: "이전" 모습으로 보여 줄 기준(기본은 지금 스케줄).
-  function sfStartEdit(snap) { sfW = { step: 0, wd: null, how: SF_HOWS.indexOf("input"), from: null, edited: {}, reasons: {}, late: {}, early: {}, snap: JSON.parse(JSON.stringify(snap || sfS.days)), evAck: false }; sfRenderEditor(); }
+  function sfStartEdit(snap) { sfW = { step: 0, wd: null, how: SF_HOWS.indexOf("input"), from: null, edited: {}, touched: {}, reasons: {}, late: {}, early: {}, snap: JSON.parse(JSON.stringify(snap || sfS.days)), evAck: false }; sfRenderEditor(); }
   // 사유 문자열: 같은 사유는 묶어서 "월~금: ..." 처럼 한 번만 적는다 / 다시 읽을 때(재수정)는 요일별로 풀어 준다
   function sfReasonStr(w, days) {
     const groups = [];
@@ -15508,27 +15538,34 @@
   // 지금 화면의 입력칸이 고치고 있는 대상
   const sfWTarget = () => (sfW && sfW.step === 1 && SF_HOWS[sfW.how] === "copy" && sfW.draft) ? sfW.draft : sfS.days[sfW.wd];
   // 확인 단계의 요일 카드: 위에서부터 입실 → 외출 → 재입실 → 퇴실. 사유는 해당 시각 바로 아래에 작게 붙인다
-  function sfSumCard(w, wd) {
-    const d = sfS.days[wd], reason = String(w.reasons[wd] || "").trim();
+  function sfSumCard(w, wd) { return sfDayCard(SCHED_WD[wd] + "요일", sfS.days[wd], w.reasons[wd], ""); }
+  function sfDayCard(title, d, why0, cls) {
+    const reason = String(why0 || "").trim();
     const late = sfLatePart(reason), early = sfEarlyPart(reason);
     const rest = late || early ? "" : reason; // 입퇴실 사유 형식이 아닌 글(등원 안 함 사유 등)
     const why = t => t ? '<p>' + escapeHtml(t) + '</p>' : "";
-    const row = (label, time, note) => '<li><div><span>' + label + '</span><b>' + (time ? sfClock(time) : "-") + '</b></div>' + why(note) + '</li>';
+    const line = (label, time) => '<div><span>' + label + '</span><b>' + (time ? sfClock(time) : "-") + '</b></div>';
+    // 묶음: 사유를 맨 위에, 그 아래에 해당 시각들. 사유가 있거나 외출 · 재입실처럼 짝인 경우만 네모로 두른다
+    const group = (note, lines) => '<li' + (note || lines.length > 1 ? ' class="sfc-box"' : "") + '>' + why(note) + lines.join("") + '</li>';
     let body;
     if (d.mode === "custom") {
-      body = '<ul>' + row("입실", d.entry, late) + (d.outs || []).map(o => row("외출", o.out, o.reason) + row("재입실", o.back, "")).join("") + row("퇴실", d.exit, early) + '</ul>' +
+      body = '<ul>' + group(late, [line("입실", d.entry)]) + (d.outs || []).map(o => group(o.reason, [line("외출", o.out), line("재입실", o.back)])).join("") + group(early, [line("퇴실", d.exit)]) + '</ul>' +
         (rest ? '<div class="sfc-note">' + escapeHtml(rest) + '</div>' : "");
     } else {
       body = '<div class="sfc-msg"><b>' + (d.mode === "off" ? "등원 안 함" : "정상 학습") + '</b>' + why(rest) + '</div>';
     }
-    return '<div class="sfc"><h5>' + SCHED_WD[wd] + '요일</h5>' + body + '</div>';
+    return '<div class="sfc' + (cls ? " " + cls : "") + '"><h5>' + title + '</h5>' + body + '</div>';
   }
   function sfWHtml() {
     const w = sfW, d = w.wd ? sfS.days[w.wd] : null;
     const back = '<button type="button" class="sf-edit" onclick="sfWBack()">' + (w.step === 0 ? "취소" : "이전") + '</button>';
     if (w.step === 0) {
       return sfWHeader() + '<div class="sfw-h">수정할 요일을 하나 선택해 주세요.</div><div class="sfw-copy">' +
-        [1, 2, 3, 4, 5, 6].map(wd => '<button type="button" class="sfw-pickday' + (w.wd === wd ? " on" : "") + '" onclick="sfPick(' + wd + ')"><b>' + SCHED_WD[wd] + '요일' + (w.edited[wd] ? ' <em>수정함</em>' : '') + '</b><span>' + escapeHtml(sfDayTxt(sfS.days[wd])) + '</span></button>').join("") +
+        [1, 2, 3, 4, 5, 6].map(wd => {
+          const wait = sfWaiting(wd) && !w.touched[wd];
+          return '<button type="button" class="sfw-pickday' + (w.wd === wd ? " on" : "") + '" onclick="sfPick(' + wd + ')"><b>' + SCHED_WD[wd] + '요일' + (w.edited[wd] && !wait ? ' <em>수정함</em>' : '') + '</b>' +
+            (wait ? '<span class="sfw-wait">승인 대기 중</span>' : '<span>' + escapeHtml(sfDayTxt(sfS.days[wd])) + '</span>') + '</button>';
+        }).join("") +
         '</div><div class="sfw-actions">' + back + '<button type="button" class="sp-btn" onclick="sfWNext()"' + (w.wd ? "" : " disabled") + '>다음</button></div>';
     }
     if (w.step === 1) {
@@ -15622,7 +15659,7 @@
         if (errs.length) { sfWSay(errs.join(" ")); return; }
         if ((d.outs || []).length && !(d.ack && d.ack2)) { sfWSay("외출 · 재입실 시각에 대한 체크 항목 2개를 모두 체크해 주세요."); return; }
       }
-      w.edited[w.wd] = true;
+      w.edited[w.wd] = true; w.touched[w.wd] = true; // touched: 이번 창에서 직접 고친 요일
       const nd = sfS.days[w.wd], hasOut = nd.mode === "custom" && (nd.outs || []).length > 0;
       // 등원 안 함은 사유를 이미 받았다. 직접 입력은 의무 시간보다 늦게 입실 · 일찍 퇴실할 때만 입퇴실 사유 단계를 거친다
       if (w.late[w.wd] == null && sfLatePart(w.reasons[w.wd])) w.late[w.wd] = sfLatePart(w.reasons[w.wd]);
@@ -15680,9 +15717,11 @@
     // 수정 순서는 작은 팝업 창에서 진행한다
     const modal = document.getElementById("sfModal"), card = document.getElementById("sfModalCard");
     if (modal && card) {
-      card.classList.toggle("sfw-wide", !!(sfW && sfW.step === 3));
-      card.style.setProperty("--sfw-w", ((n) => [600, 600, 700, 820, 940, 1040, 1120][Math.min(6, Math.max(1, n))])(sfW ? Object.keys(sfW.edited).length : 1) + "px");
+      if (sfW || !sfPend) sfPeek = null;
+      card.classList.toggle("sfw-wide", !!(sfPeek || (sfW && sfW.step === 3)));
+      card.style.setProperty("--sfw-w", sfPeek ? "480px" : ((n) => [600, 600, 700, 820, 940, 1040, 1120][Math.min(6, Math.max(1, n))])(sfW ? Object.keys(sfW.edited).length : 1) + "px");
       if (sfW) { card.innerHTML = '<button type="button" class="sfw-close" onclick="sfWCancel()" aria-label="닫기">×</button>' + sfWHtml() + '<div class="sp-msg" id="sfwMsg"></div>'; modal.hidden = false; }
+      else if (sfPeek) { card.innerHTML = '<button type="button" class="sfw-close" onclick="sfPeekClose()" aria-label="닫기">×</button>' + sfPeekHtml(sfPeek); modal.hidden = false; }
       else { modal.hidden = true; card.innerHTML = ""; }
     }
     document.getElementById("sfReview").hidden = true;
@@ -15755,8 +15794,7 @@
     const approved = {}; [1, 2, 3, 4, 5, 6].forEach(wd => { approved[wd] = sfApprovedDay(wd); });
     const reasonStr = String(sfPend.reason || "");
     sfStartEdit(approved);
-    const shape = d => JSON.stringify([d.mode, d.entry || "", d.exit || "", (d.outs || []).map(o => [o.out, o.back])]);
-    [1, 2, 3, 4, 5, 6].forEach(wd => { if (shape(sfS.days[wd]) !== shape(approved[wd])) sfW.edited[wd] = true; });
+    [1, 2, 3, 4, 5, 6].forEach(wd => { if (sfShape(sfS.days[wd]) !== sfShape(approved[wd])) sfW.edited[wd] = true; });
     // 제출했던 사유("월: ... / 화: ...")를 요일별로 다시 채운다. 앞서 고친 요일은 새 요청에도 함께 보낸다
     const pr = sfParseReason(reasonStr); Object.keys(pr).forEach(i => { sfW.reasons[i] = pr[i] === SF_AUTO.duty || pr[i] === SF_AUTO.custom ? "" : pr[i]; sfW.edited[i] = true; });
     sfRenderEditor();
