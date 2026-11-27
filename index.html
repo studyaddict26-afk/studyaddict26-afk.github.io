@@ -2551,26 +2551,24 @@
     overflow-y: auto;
   }
   .sl-gate-body {
-    flex: 1; display: flex; align-items: center; justify-content: space-between;
-    gap: clamp(24px, 5vw, 64px); min-height: 0;
-    max-width: 1280px; width: 100%; margin: 0 auto;
-    padding: 10px clamp(20px, 5vw, 64px) 60px; box-sizing: border-box;
+    flex: none; display: flex; flex-direction: column; align-items: center; gap: 28px;
+    width: 100%; max-width: 640px; margin: auto;
+    padding: 28px 20px 48px; box-sizing: border-box;
   }
-  /* align-self:flex-start + 고정 margin-top — 카드뉴스 슬라이드마다 카드 세로 길이가
-     달라져도(칩이 있는 슬라이드가 더 김) 위쪽 라벨/타이틀 위치는 흔들리지 않고, 카드만
-     아래로 늘어나게 한다. (부모 .sl-gate-body의 align-items:center를 이 아이템만 벗어남) */
-  .sl-hero-content {
-    flex: 1 1 480px; max-width: 680px; align-self: flex-start; margin-top: clamp(90px, 20vh, 240px);
-    container-type: inline-size;
-  }
+  .sl-hero-content { flex: none; width: 100%; text-align: center; }
   .sl-hero-eyebrow {
-    font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; color: #D9BC8A;
-    margin-bottom: 16px;
+    font-size: 0.92rem; font-weight: 800; letter-spacing: 0.12em; color: #D9BC8A;
+    margin-bottom: 2px;
   }
   .sl-hero-content h1 {
     font-size: clamp(2.3rem, 4.6vw, 3.4rem); font-weight: 800; line-height: 1.24;
-    letter-spacing: -0.02em; color: #fff; margin: 0 0 40px; word-break: keep-all;
+    letter-spacing: -0.02em; color: #fff; margin: 0 0 8px; word-break: keep-all;
   }
+  /* 흐름 한 줄: 양끝이 사라지는 금색 가는 선 사이에 옅은 글씨(제목 · 로그인 창을 조용히 이어 준다) */
+  .sl-hero-content .sl-hero-flow { box-sizing: border-box; width: 400px; max-width: 100%; margin: 12px auto 0; padding: 9px 0; display: flex; justify-content: center; align-items: center; font-size: 0.8rem; font-weight: 500; line-height: 1.7; letter-spacing: 0.02em; color: rgba(255,255,255,0.72);
+    background: linear-gradient(90deg, transparent, rgba(217,188,138,0.55), transparent) top / 100% 1px no-repeat, linear-gradient(90deg, transparent, rgba(217,188,138,0.55), transparent) bottom / 100% 1px no-repeat; }
+  .sl-hero-flow span { white-space: nowrap; }
+  .sl-hero-flow i { font-style: normal; font-size: 0.7rem; color: #D9BC8A; opacity: 0.9; margin: 0 12px; }
   .sl-hero-content h1 .accent { color: #7FA2FF; }
   .sl-hero-content h1 .en {
     background: linear-gradient(120deg, #D9BC8A 0%, #7FA2FF 100%);
@@ -2614,7 +2612,7 @@
   /* 심심풀이용 드래그 트랙 — "공부 시작"~"입시 끝" 선 위에서 달리는 사람을 좌우로 끌 수 있다.
      실제 진도 데이터와는 무관한 순수 장식/놀이 요소(initHeroFunTrack 참고). */
   .sl-hero-social {
-    display: flex; align-items: center; gap: 8px; margin-top: 18px;
+    display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px;
     font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.78);
   }
   .sl-hero-social::before {
@@ -2729,17 +2727,18 @@
      인스타그램 링크로 처음 들어온 사람이 홀로가 뭔지 먼저 읽고 바로 로그인 · 가입할 수 있게. 화면은 위아래로 스크롤된다. */
   @media (max-width: 767px) {
     /* 한 화면에 소개와 로그인이 같이 보이도록 전체를 촘촘하게: 로고는 가운데, 핵심 가치 3가지는 한 줄씩, 로그인 카드는 작게 */
-    .sl-gate-body { flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 14px; padding: 12px 18px 24px; }
-    .sl-hero-content { display: block; flex: none; max-width: none; width: 100%; align-self: stretch; margin-top: 0; text-align: center; }
-    .sl-hero-eyebrow { margin-bottom: 2px; font-size: 0.64rem; }
-    .sl-hero-content h1 { margin-bottom: 12px; font-size: 1.9rem; line-height: 1.2; text-align: center; }
+    .sl-gate-body { gap: 18px; padding: 16px 18px 24px; }
+    .sl-hero-content .sl-hero-flow { font-size: 0.74rem; letter-spacing: 0; }
+    .sl-hero-flow i { margin: 0 6px; }
+    .sl-hero-eyebrow { margin-bottom: 0; font-size: 0.78rem; }
+    .sl-hero-content h1 { margin-bottom: 6px; font-size: 1.9rem; line-height: 1.2; text-align: center; }
     .sl-slide-title-list { margin-bottom: 10px; text-align: left; }
     .sl-slide-title-list li { padding-left: 24px; white-space: nowrap; font-size: clamp(0.6rem, 3.25cqw, 0.86rem); line-height: 1.5; }
     .sl-slide-title-list li + li { margin-top: 7px; }
     .sl-slide-title-list li::before { width: 17px; height: 17px; top: 1px; font-size: 0.6rem; line-height: 17px; }
     .sl-slide-card { text-align: left; }
     .sl-slide-cta { font-size: 0.78rem; }
-    .sl-hero-social { margin-top: 8px; font-size: 0.74rem; justify-content: flex-start; }
+    .sl-hero-social { margin-top: 8px; font-size: 0.74rem; }
     .sl-fun-track { margin-top: 12px; margin-bottom: 14px; max-width: none; text-align: left; }
     .student-login-box { width: 100%; max-width: 440px; align-self: center; padding: 14px 18px 12px; border-radius: 12px; }
     .student-login-box .sl-header { margin-bottom: 8px; }
@@ -8166,24 +8165,11 @@
 <div id="studentLoginGate">
   <div class="sl-gate-body">
     <div class="sl-hero-content">
-      <div class="sl-hero-eyebrow">로드맵 독서실 학습 관리 시스템</div>
+      <div class="sl-hero-eyebrow">학습 관리 시스템</div>
       <h1><span class="accent">홀로</span> <span class="en">HOLO</span></h1>
-      <div class="sl-slide-card">
-        <ul class="sl-slide-title-list" id="slHeroTitleList"></ul>
-        <button type="button" class="sl-slide-cta" onclick="openHeroSlideLightbox(0)">구체적인 기능 알아보기 →</button>
-      </div>
+      <p class="sl-hero-flow"><span>6일의 학습 기록</span> <i aria-hidden="true">→</i> <span>한 장의 분석지</span> <i aria-hidden="true">→</i> <span>맞춤형 학습상담</span></p>
       <!-- 실제 등록된 학생 수를 세어 보여준다(initHeroSocialProof) — 못 불러오면 그냥 숨김 -->
       <div class="sl-hero-social" id="slHeroSocialProof" style="display:none;"></div>
-      <!-- 그냥 심심할 때 드래그하며 노는 장식용 미니 위젯 — 실제 진도/데이터와는 무관하다. -->
-      <div class="sl-fun-track" id="slFunTrack">
-        <span class="sl-fun-label">공부 시작</span>
-        <div class="sl-fun-line">
-          <div class="sl-fun-fill" id="slFunFill"></div>
-          <div class="sl-fun-runner" id="slFunRunner" role="slider" aria-label="드래그해보세요" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="15">🏃</div>
-          <div class="sl-fun-stage" id="slFunStage"></div>
-        </div>
-        <span class="sl-fun-label">입시 끝</span>
-      </div>
     </div>
     <div class="student-login-box">
     <div class="sl-header">
