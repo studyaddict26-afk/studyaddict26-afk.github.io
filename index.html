@@ -4220,7 +4220,10 @@
   .sa-outs { display: flex; flex-direction: column; gap: 8px; justify-content: center; flex: 1; }
   .sa-outs label { display: flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); }
   .sa-outs label span { width: 44px; }
-  .sa-outs .sp-time { flex: 1; min-width: 122px; box-sizing: border-box; }
+  .sa-outs .sa-t { display: flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); }
+  .sa-outs .sa-t > span:first-child { width: 44px; flex: none; }
+  .sa-outs .time-box { flex: 1; min-width: 0; }
+  .sa-outs .sp-time { flex: 1; width: 0; min-width: 60px; height: 36px; box-sizing: border-box; }
   /* 팝업 안 안내 문구는 낱말 중간에서 끊기지 않고, 줄 길이가 고르게 줄바꿈 */
   #saModal, #sfModal { word-break: keep-all; }
   #saModal p, #saModal small, #saModal .sfw-h2, #saModal .sp-chk span, #saModal .sp-radio span, #sfModal p, #sfModal small, #sfModal .sfw-h2, #sfModal .sp-chk span { text-wrap: pretty; }
@@ -4285,7 +4288,7 @@
   .sfw-box .sp-time { width: auto; min-width: 132px; font-size: 0.8rem; padding: 4px 8px; box-sizing: border-box; } /* "오전 09:00"이 시계 아이콘에 가리지 않게: 글씨에 맞춰 늘어난다 */
   /* 시간 직접 입력: 하루 흐름을 세로 선으로 잇는다 */
   /* 상자 높이는 고정. 외출이 많아지면 상자 안에서 위아래로 스크롤한다(낮은 화면에서는 팝업에 맞게 조금 줄어든다) */
-  .sft { box-sizing: border-box; height: clamp(190px, calc(88vh - 346px), 320px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #CFCBBF transparent; background: #fff; border-radius: 12px; padding: 10px 14px; }
+  .sft { box-sizing: border-box; height: clamp(190px, calc(88vh - 374px), 320px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #CFCBBF transparent; background: #fff; border-radius: 12px; padding: 10px 14px; }
   .sft-n { flex: none; }
   .sft-n { position: relative; display: grid; grid-template-columns: 14px 62px minmax(0, 1fr) 24px; column-gap: 10px; align-items: center; min-height: 48px; }
   .sft-n::before { content: ""; position: absolute; left: 6px; top: 0; bottom: 0; width: 2px; background: #E3E0D6; }
@@ -4296,7 +4299,19 @@
   .sft-k { font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); white-space: nowrap; }
   .sft-main .sft-k { color: var(--ink); font-weight: 800; }
   .sft-v { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
-  .sfw-box .sft .sp-time { width: auto; min-width: 140px; height: 36px; padding: 0 10px; font-size: 0.82rem; font-weight: 700; background: #F8F7F3; border: 1px solid #D9D6CC; border-radius: 9px; }
+  .sfw-box .sft .sp-time { width: 78px; min-width: 0; height: 36px; padding: 0 10px; font-size: 0.82rem; font-weight: 700; background: #F8F7F3; border: 1px solid #D9D6CC; border-radius: 9px; }
+  .time-box { display: inline-flex; align-items: center; gap: 6px; flex: none; }
+  .time-ap { display: inline-flex; flex: none; border: 1px solid #D9D6CC; border-radius: 9px; overflow: hidden; background: #fff; }
+  .time-ap button { height: 34px; padding: 0 9px; border: 0; background: #fff; font-family: inherit; font-size: 0.74rem; font-weight: 700; color: var(--ink-soft); cursor: pointer; }
+  .time-ap button + button { border-left: 1px solid #E6E3DA; }
+  .time-ap button.on { background: #0D2155; color: #fff; }
+  .time-box.need-ap .time-ap { border-color: #C0392B; box-shadow: 0 0 0 1px #C0392B; }
+  .sp-time.sp-typed { font-variant-numeric: tabular-nums; }
+  .sp-time.sp-typed::placeholder { font-weight: 500; color: #A9ACB4; }
+  .sp-time.sp-typed:focus { border-color: #17294F; outline: none; background: #fff; }
+  .sfw-box .sp-time.sp-typed.bad, .sp-time.sp-typed.bad { border-color: #C0392B; background: #FDF3F2; }
+  .time-hint { margin: 0; font-size: 0.7rem; line-height: 1.5; color: var(--ink-soft); }
+  .time-hint b { color: var(--ink); }
   .sft-reason { flex: 1 1 150px; min-width: 0; box-sizing: border-box; height: 36px; padding: 0 11px; font-family: inherit; font-size: 0.78rem; color: var(--ink); background: #fff; border: 1px solid #D9D6CC; border-radius: 9px; }
   .sft-reason:focus { border-color: #17294F; outline: none; }
   .sft-n.sft-add { grid-template-columns: 14px minmax(0, 1fr); min-height: 34px; }
@@ -15133,6 +15148,73 @@
     go("recordhub"); // "내 학습 기록 살펴보기" (분석지 목록 + 내용)
   }
 
+  // ── 직접 입력하는 시각 칸 ──
+  // 숫자만 적어도, "9:30" · "오후 10시" · "10시 반"처럼 적어도 "HH:MM"(24시간)으로 알아듣는다. 알 수 없으면 "".
+  function parseTimeText(text) {
+    let s = String(text || "").replace(/\s+/g, "").toLowerCase().replace(/：/g, ":");
+    if (!s) return "";
+    const pm = /오후|밤|저녁|pm/.test(s), am = /오전|아침|새벽|am/.test(s);
+    s = s.replace(/오전|오후|아침|새벽|저녁|밤|am|pm/g, "").replace(/시반$/, ":30").replace(/분$/, "").replace(/시(?=\d)/, ":").replace(/시$/, "").replace(/\./g, ":");
+    let h, m;
+    let x = s.match(/^(\d{1,2}):(\d{0,2})$/);
+    if (x) { h = Number(x[1]); m = Number(x[2] || 0); }
+    else if (/^\d{1,4}$/.test(s)) { h = Number(s.length <= 2 ? s : s.slice(0, -2)); m = s.length <= 2 ? 0 : Number(s.slice(-2)); }
+    else return "";
+    if (pm && h < 12) h += 12;
+    if (am && h === 12) h = 0;
+    if (h > 23 || m > 59) return "";
+    return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
+  }
+  // 칸 하나 = 오전 · 오후 고르기 + 시각 적기. 미리 골라 두지 않는다(잘못 고른 채 지나가지 않게).
+  // 칸에는 12시간 모양("10:00")이 보이고, 고른 오전 · 오후는 input의 data-ap에 담는다. 저장하는 값은 24시간 "HH:MM".
+  const TIME_WORDS = /오전|오후|아침|새벽|저녁|밤|am|pm/i;
+  const time12 = h24 => (Number(h24.slice(0, 2)) % 12 || 12) + ":" + h24.slice(3);
+  const timeAp12 = h24 => Number(h24.slice(0, 2)) >= 12 ? "pm" : "am";
+  function timeTyped(attrs, value) {
+    const v = parseTimeText(value), ap = v ? timeAp12(v) : "";
+    const btn = (k, label) => '<button type="button" data-k="' + k + '" class="' + (ap === k ? "on" : "") + '" aria-pressed="' + (ap === k) + '" onclick="timeAp(this)">' + label + '</button>';
+    return '<span class="time-box"><span class="time-ap" role="group" aria-label="오전 오후">' + btn("am", "오전") + btn("pm", "오후") + '</span>' +
+      '<input type="text" inputmode="numeric" maxlength="9" autocomplete="off" placeholder="예: 930" ' + attrs + ' data-ap="' + ap + '" class="sp-time sp-typed" value="' + (v ? time12(v) : "") + '" onchange="timeTidy(this)"></span>';
+  }
+  function timeApPaint(el) {
+    el.parentElement.querySelectorAll(".time-ap button").forEach(b => { const on = b.dataset.k === el.dataset.ap; b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
+    el.parentElement.classList.remove("need-ap");
+  }
+  function timeAp(btn) {
+    const el = btn.closest(".time-box").querySelector("input");
+    timeTidy(el); // 적어 둔 글자를 먼저 정리한 뒤, 누른 값이 우선한다
+    el.dataset.ap = btn.dataset.k; timeApPaint(el);
+  }
+  // 칸에서 벗어나면 "9:00" 모양으로 정리한다. "오후 10시"나 "22"처럼 오전 · 오후가 분명하게 적혔으면 그쪽을 골라 준다.
+  function timeTidy(el) {
+    const raw = el.value.trim(), v = parseTimeText(raw);
+    el.classList.toggle("bad", !v && !!raw);
+    if (!v) return;
+    const h = Number(v.slice(0, 2));
+    if (TIME_WORDS.test(raw) || h > 12 || h === 0) el.dataset.ap = timeAp12(v);
+    el.value = time12(v);
+    timeApPaint(el);
+  }
+  // 저장할 값(24시간). 알 수 없는 글자이거나 오전 · 오후를 안 골랐으면 ""
+  function timeValue(el) {
+    if (!el.classList.contains("sp-typed")) return el.value;
+    const v = parseTimeText(el.value);
+    if (!v) return "";
+    const h = Number(v.slice(0, 2));
+    if (TIME_WORDS.test(el.value) || h > 12 || h === 0) return v;
+    if (!el.dataset.ap) return "";
+    return String(h % 12 + (el.dataset.ap === "pm" ? 12 : 0)).padStart(2, "0") + v.slice(2);
+  }
+  // 넘어가기 전 검사: 문제가 있으면 안내 문구, 없으면 ""
+  function timeProblem(root) {
+    const list = Array.from(root.querySelectorAll("input.sp-typed")).filter(el => el.value.trim());
+    if (list.some(el => !parseTimeText(el.value))) return "시각을 다시 확인해 주세요. (예: 9:30 또는 930)";
+    const missing = list.filter(el => !timeValue(el));
+    missing.forEach(el => el.parentElement.classList.add("need-ap"));
+    return missing.length ? "오전 · 오후를 골라 주세요." : "";
+  }
+  const TIME_HINT = '<p class="time-hint"><b>오전 · 오후를 고르고</b> 시각을 적어 주세요. 숫자만 적어도 돼요. (예: 930 → 9:30)</p>';
+
   // ── 공통: 입실 · 외출/재입실 · 퇴실 입력칸 ──
   function schedTimesHtml(key, d, withReason) {
     const t = (f, v, i) => '<input type="time" step="300" class="sp-time" data-k="' + key + '" data-f="' + f + '"' + (i != null ? ' data-i="' + i + '"' : "") + ' value="' + escapeHtml(v || "") + '">';
@@ -15281,9 +15363,8 @@
   const SF_HOW_LABEL = ["정상 학습", "등원 안 함", "시간 직접 입력", "다른 요일과 동일하게"];
   const SF_STEPS = ["요일 선택", "스케줄 작성", "사유", "확인"];
   const sfDayTxt = d => d.mode === "duty" ? "정상 학습" : d.mode === "off" ? "등원 안 함" : schedBlocksText(schedToBlocks(d));
-  // snap: "이전" 모습으로 보여 줄 기준(기본은 지금 스케줄). applyAll: 월~금 모두 똑같이 적용
-  function sfStartEdit(snap) { sfW = { step: 0, wd: null, how: SF_HOWS.indexOf("input"), from: null, edited: {}, reasons: {}, snap: JSON.parse(JSON.stringify(snap || sfS.days)), applyAll: false, evAck: false }; sfRenderEditor(); }
-  const sfWeekday = wd => wd >= 1 && wd <= 5;
+  // snap: "이전" 모습으로 보여 줄 기준(기본은 지금 스케줄).
+  function sfStartEdit(snap) { sfW = { step: 0, wd: null, how: SF_HOWS.indexOf("input"), from: null, edited: {}, reasons: {}, snap: JSON.parse(JSON.stringify(snap || sfS.days)), evAck: false }; sfRenderEditor(); }
   // 사유 문자열: 같은 사유는 묶어서 "월~금: ..." 처럼 한 번만 적는다 / 다시 읽을 때(재수정)는 요일별로 풀어 준다
   function sfReasonStr(w, days) {
     const groups = [];
@@ -15303,7 +15384,7 @@
   }
   function sfWCancel() { sfW = null; schedEvidence.sf = null; document.getElementById("sfMsg").textContent = ""; sfInit(); }
   function sfPick(wd) { sfW.wd = wd; sfRenderEditor(); }
-  function sfHow(i) { sfWRead(); sfW.how = i; if (SF_HOWS[i] !== "copy") sfW.applyAll = false; sfRenderEditor(); } // "월~금 똑같이"는 이 탭에만 있어서, 다른 탭으로 옮기면 체크도 푼다
+  function sfHow(i) { sfWRead(); sfW.how = i; sfRenderEditor(); }
   function sfFrom(k) { sfWRead(); sfW.from = k; sfRenderEditor(); }
   function sfWSay(t) { const m = document.getElementById("sfwMsg"); if (m) m.innerHTML = t ? '<div class="sp-err">' + escapeHtml(t) + '</div>' : ""; }
   // 입력칸 값을 읽는다. 사유 단계에서는 사유 칸만 읽는다(시간 칸이 없으므로 시간이 지워지지 않게)
@@ -15315,9 +15396,9 @@
       const r = document.getElementById("sfwReason"); if (r) sfW.reasons[sfW.wd] = r.value;
     } else if (sfW.step === 1) {
       sfRead();
+      const off = document.getElementById("sfwOffReason"); if (off) sfW.reasons[sfW.wd] = off.value;
       const c = document.getElementById("sfwAck"); if (c) d.ack = c.checked;
       const c2 = document.getElementById("sfwAck2"); if (c2) d.ack2 = c2.checked;
-      const ca = document.getElementById("sfwAll"); if (ca) sfW.applyAll = ca.checked;
     }
   }
   function sfWHeader() {
@@ -15335,7 +15416,7 @@
       const how = SF_HOWS[w.how];
       let body = "";
       if (how === "input") {
-        const inp = (f, v, i) => '<input type="time" step="300" class="sp-time" data-wd="' + w.wd + '" data-f="' + f + '"' + (i != null ? ' data-i="' + i + '"' : "") + ' value="' + escapeHtml(v || "") + '">';
+        const inp = (f, v, i) => timeTyped('data-wd="' + w.wd + '" data-f="' + f + '"' + (i != null ? ' data-i="' + i + '"' : "") + ' aria-label="' + ({ entry: "최초 입실", out: "외출", back: "재입실", exit: "최후 퇴실" })[f] + ' 시각"', v);
         const node = (cls, label, inner, tail) => '<div class="sft-n ' + cls + '"><s></s><span class="sft-k">' + label + '</span><div class="sft-v">' + inner + '</div>' + (tail || "") + '</div>';
         let flow = node("sft-main", "최초 입실", inp("entry", d.entry));
         (d.outs || []).forEach((o, i) => {
@@ -15344,18 +15425,18 @@
             node("sft-sub", "재입실", inp("back", o.back, i));
         });
         flow += '<div class="sft-n sft-add"><s></s><button type="button" class="sft-addbtn" onclick="sfWAddOut()">+ 외출 · 재입실 추가</button></div>' + node("sft-main", "최후 퇴실", inp("exit", d.exit));
-        body = '<div class="sft">' + flow + '</div>' +
+        body = TIME_HINT + '<div class="sft">' + flow + '</div>' +
           ((d.outs || []).length ? '<div class="sft-checks"><label class="sp-chk"><input type="checkbox" id="sfwAck"' + (d.ack ? " checked" : "") + '> <span>외출 · 재입실 시각에 <b>이동 시간과 식사 시간</b>을 고려했어요.</span></label><label class="sp-chk"><input type="checkbox" id="sfwAck2"' + (d.ack2 ? " checked" : "") + '> <span>나가고 들어오는 시각은 최대한 <b>쉬는 시간</b>을 활용했어요.</span></label></div>' : "");
       } else if (how === "copy") {
         body = '<div class="sfw-h2">어느 요일과 똑같이 할까요?</div><div class="sfw-copy sfw-dayrow">' + [1, 2, 3, 4, 5, 6].filter(k => k !== w.wd).map(k =>
           '<button type="button" class="sfw-pickday' + (w.from === k ? " on" : "") + '" onclick="sfFrom(' + k + ')"><b>' + SCHED_WD[k] + '요일</b></button>').join("") + '</div>';
       } else {
-        body = '<div class="sfw-plain">' + (how === "off" ? "이 요일은 독서실에 오지 않아요." : "이 요일은 의무 시간표대로 학습해요.") + '</div>';
+        body = '<div class="sfw-plain">' + (how === "off" ? "이 요일은 독서실에 오지 않아요." : "이 요일은 의무 시간표대로 학습해요.") + '</div>' +
+          (how === "off" ? '<div class="sfw-h2">등원하지 않는 사유</div><textarea id="sfwOffReason" class="sp-ta" rows="2" maxlength="300" placeholder="예: 화요일은 하루 종일 수학 · 영어 학원 수업이 있어요">' + escapeHtml(w.reasons[w.wd] || "") + '</textarea>' : "");
       }
       return sfWHeader() + '<div class="sfw-h">' + SCHED_WD[w.wd] + '요일 스케줄 작성</div><div class="sfw-chips">' +
         SF_HOW_LABEL.map((t, i) => '<button type="button" class="' + (w.how === i ? "on" : "") + '" onclick="sfHow(' + i + ')">' + t + '</button>').join("") + '</div>' +
         '<div class="sfw-box">' + body + '</div>' +
-        (how === "copy" && sfWeekday(w.wd) ? '<label class="sp-chk"><input type="checkbox" id="sfwAll"' + (w.applyAll ? " checked" : "") + ' onchange="sfW.applyAll=this.checked"> <span><b>월~금 모든 요일에 똑같이</b> 적용할게요.</span></label>' : "") +
         '<div class="sfw-actions">' + back + '<button type="button" class="sp-btn" onclick="sfWNext()">다음</button></div>';
     }
     if (w.step === 2) {
@@ -15365,9 +15446,8 @@
         d.outs.forEach((o, i) => { if (String(o.reason || "").trim()) return; body += '<div class="sfw-row"><span class="l2">' + sfmt(o.out) + ' ~ ' + sfmt(o.back) + '</span><input type="text" class="sp-reason" maxlength="40" data-wd="' + w.wd + '" data-f="reason" data-i="' + i + '" placeholder="예: 수학 학원" value="' + escapeHtml(o.reason || "") + '"></div>'; });
       }
       // 사유는 처음 제출할 때도 적는다(증빙 안내는 마지막 확인 단계에서 한 번만)
-      const all = w.applyAll && sfWeekday(w.wd);
       body += '<div class="sfw-h2">최초 입실, 최후 퇴실 사유</div><textarea id="sfwReason" class="sp-ta" rows="2" maxlength="300" placeholder="' + (sfS.isFirst ? "예: 화요일은 학교 일정이 있어서 11시에 입실하고 21시에 퇴실해요" : "예: 화요일에 학원이 새로 생겨서 퇴실 시각이 20시로 바뀌었어요") + '">' + escapeHtml(w.reasons[w.wd] || "") + '</textarea>';
-      return sfWHeader() + '<div class="sfw-h">' + (all ? "월~금" : SCHED_WD[w.wd] + "요일") + ' 사유 작성</div><div class="sfw-box">' + body + '</div><div class="sfw-actions">' + back + '<button type="button" class="sp-btn" onclick="sfWNext()">다음</button></div>';
+      return sfWHeader() + '<div class="sfw-h">' + SCHED_WD[w.wd] + '요일 사유 작성</div><div class="sfw-box">' + body + '</div><div class="sfw-actions">' + back + '<button type="button" class="sp-btn" onclick="sfWNext()">다음</button></div>';
     }
     // 4단계: 보내기 전에 바뀐 요일을 이전 → 이후로 한 번에 확인 + 증빙 안내(한 번만)
     const sortedEdited = Object.keys(w.edited).map(Number).sort((x, y) => x - y);
@@ -15384,31 +15464,48 @@
   function sfEvToggle(el) { sfW.evAck = el.checked; const b = document.getElementById("sfSubmitBtn"); if (b) b.disabled = !el.checked; }
   // 외출을 추가 · 삭제해도 상자 안 스크롤 위치가 맨 위로 튀지 않게 한다. 추가하면 새 외출 칸이 보이도록 아래로 내린다.
   const sfWFlow = () => document.querySelector("#sfModalCard .sft");
+  const sfWTyped = () => Array.from(document.querySelectorAll("#sfModalCard input.sp-typed")).map(el => ({ f: el.dataset.f, i: el.dataset.i === undefined ? null : Number(el.dataset.i), v: el.value, ap: el.dataset.ap }));
+  function sfWTypedBack(list, removed) {
+    list.forEach(s => {
+      let i = s.i;
+      if (removed != null && i != null) { if (i === removed) return; if (i > removed) i--; }
+      const el = document.querySelector('#sfModalCard input.sp-typed[data-f="' + s.f + '"]' + (i != null ? '[data-i="' + i + '"]' : ""));
+      if (el) { el.value = s.v; el.dataset.ap = s.ap; el.classList.toggle("bad", !!s.v.trim() && !parseTimeText(s.v)); timeApPaint(el); }
+    });
+  }
   function sfWAddOut() {
-    sfWRead(); sfS.days[sfW.wd].outs.push({ out: "", back: "", reason: "" }); sfRenderEditor();
+    const typed = sfWTyped();
+    sfWRead(); sfS.days[sfW.wd].outs.push({ out: "", back: "", reason: "" }); sfRenderEditor(); sfWTypedBack(typed, null);
     const box = sfWFlow(); if (box) box.scrollTop = box.scrollHeight;
   }
   function sfWDelOut(i) {
     const before = sfWFlow(), top = before ? before.scrollTop : 0;
-    sfWRead(); sfS.days[sfW.wd].outs.splice(i, 1); sfRenderEditor();
+    const typed = sfWTyped();
+    sfWRead(); sfS.days[sfW.wd].outs.splice(i, 1); sfRenderEditor(); sfWTypedBack(typed, i);
     const box = sfWFlow(); if (box) box.scrollTop = top;
   }
   function sfWBack() {
     sfWSay("");
     if (sfW.step === 0) { sfWCancel(); return; }
     sfWRead();
-    sfW.step = sfW.step - 1;
+    sfW.step = sfW.step === 3 && sfW.wd && sfS.days[sfW.wd].mode === "off" ? 1 : sfW.step - 1;
     sfRenderEditor();
   }
-  function sfWMore() { sfWSay(""); sfW.step = 0; sfW.wd = null; sfW.from = null; sfW.applyAll = false; sfRenderEditor(); }
+  function sfWMore() { sfWSay(""); sfW.step = 0; sfW.wd = null; sfW.from = null; sfRenderEditor(); }
   function sfWNext() {
     const w = sfW; sfWSay("");
     if (w.step === 0) {
       if (!w.wd) return;
       const d0 = sfS.days[w.wd]; w.how = SF_HOWS.indexOf(d0.mode === "off" ? "off" : "input"); w.from = null; w.step = 1;
     } else if (w.step === 1) {
+      if (SF_HOWS[w.how] === "input") { const problem = timeProblem(document.getElementById("sfModalCard")); if (problem) { sfWSay(problem); return; } }
       sfWRead();
       const d = sfS.days[w.wd], how = SF_HOWS[w.how];
+      if (how === "off") {
+        const r = String(w.reasons[w.wd] || "").trim();
+        if (!r) { sfWSay("등원하지 않는 사유를 적어 주세요."); return; }
+        if (schedVague(r)) { sfWSay("사유를 조금 더 구체적으로 적어 주세요. (예: 화요일 수학 학원이 있어요)"); return; }
+      }
       if (how === "copy") {
         if (!w.from) { sfWSay("똑같이 할 요일을 골라 주세요."); return; }
         sfS.days[w.wd] = JSON.parse(JSON.stringify(sfS.days[w.from]));
@@ -15421,9 +15518,8 @@
         if ((d.outs || []).length && !(d.ack && d.ack2)) { sfWSay("외출 · 재입실 시각에 대한 체크 항목 2개를 모두 체크해 주세요."); return; }
       }
       w.edited[w.wd] = true;
-      if (w.applyAll && sfWeekday(w.wd)) for (let k = 1; k <= 5; k++) if (k !== w.wd) { sfS.days[k] = JSON.parse(JSON.stringify(sfS.days[w.wd])); w.edited[k] = true; }
       const nd = sfS.days[w.wd], hasOut = nd.mode === "custom" && (nd.outs || []).length > 0;
-      w.step = 2; // 2단계에서 무엇을 고르든 사유 · 증빙 단계를 거친다
+      w.step = how === "off" ? 3 : 2; // 등원 안 함은 사유를 이미 받았으니 바로 확인 단계로. 나머지는 사유 단계를 거친다
     } else if (w.step === 2) {
       sfWRead();
       const d = sfS.days[w.wd];
@@ -15438,7 +15534,6 @@
         const r = String(w.reasons[w.wd] || "").trim();
         if (!r) { sfWSay(sfS.isFirst ? "사유를 적어 주세요." : "변경 사유를 적어 주세요."); return; }
         if (schedVague(r)) { sfWSay("사유를 조금 더 구체적으로 적어 주세요. (예: 화요일 수학 학원이 있어요)"); return; }
-        if (w.applyAll && sfWeekday(w.wd)) for (let k = 1; k <= 5; k++) w.reasons[k] = w.reasons[w.wd];
       }
       w.step = 3;
     }
@@ -15492,8 +15587,8 @@
       const d = sfS.days[wd], outs = [];
       ins.forEach(el => {
         const f = el.dataset.f, i = Number(el.dataset.i);
-        if (f === "entry") d.entry = el.value; else if (f === "exit") d.exit = el.value;
-        else { outs[i] = outs[i] || { out: "", back: "", reason: "" }; outs[i][f] = el.value; }
+        if (f === "entry") d.entry = timeValue(el); else if (f === "exit") d.exit = timeValue(el);
+        else { outs[i] = outs[i] || { out: "", back: "", reason: "" }; outs[i][f] = timeValue(el); }
       });
       d.outs = sfW ? outs.filter(Boolean) : outs.filter(o => o && (o.out || o.back || o.reason));
     });
@@ -15622,7 +15717,7 @@
     document.getElementById("saPhotoBox").innerHTML = sfPhotoHtml();
     saSideRefresh();
     document.getElementById("saNote").innerHTML = '<div class="vocab-callout sf-callout"><span class="vc-ico">i</span><div><div class="sf-info-t">사용 방법</div><ul>' +
-      '<li>돌발 스케줄은 특정 날짜 하루만 <b>지각 · 조퇴 · 결석 · 외출</b>하는 일정이에요.</li>' +
+      '<li>돌발 스케줄은 특정 날짜 하루만 <b>외출 · 지각 · 조퇴 · 결석 · 기타</b>로 바뀌는 일정이에요.</li>' +
       '<li>오늘 일정을 바꾸는 거라면 <b>1교시 전까지</b> 미리 알려 주세요. 늦게 알리면 어쩔 수 없는 상황이 아닌 한 벌점이 부과될 수 있어요.</li>' +
       '<li>결석 · 조퇴는 <b>학부모님이 먼저 독서실로 연락</b>해 주셔야 해요.</li>' +
       '</ul></div></div>';
@@ -15672,7 +15767,7 @@
     return f && !f.off ? schedFromBlocks(f.blocks, "") : { entry: "", exit: "", outs: [] };
   }
   const saParentType = t => t === "결석" || t === "조퇴"; // 증빙 대신 학부모님이 먼저 연락하는 종류
-  function saKeys(f) { return ["kind", "time", "reason"]; }
+  function saKeys(f) { return f && f.type === "결석" ? ["kind", "reason"] : ["kind", "time", "reason"]; }
   const SA_KEY_LABEL = { kind: "날짜 · 종류", time: "수정 내용", reason: "사유 · 증빙" };
   // 그날의 기본(고정) 스케줄을 입실 · 외출 · 재입실 · 퇴실 줄로
   function saBaseEvents(dateStr) {
@@ -15703,9 +15798,10 @@
     const dt = document.getElementById("saDate"); if (dt) saF.date = dt.value || saF.date;
     const rs = document.getElementById("saReason"); if (rs) saF.reason = rs.value;
     const rq = document.getElementById("saReq"); if (rq) saF.request = rq.value;
-    const ot = document.getElementById("saOutT"); if (ot) saF.outT = ot.value;
-    const bt = document.getElementById("saBackT"); if (bt) saF.backT = bt.value;
-    const xt = document.getElementById("saExitT"); if (xt) saF.exitT = xt.value;
+    const ot = document.getElementById("saOutT"); if (ot) saF.outT = timeValue(ot);
+    const bt = document.getElementById("saBackT"); if (bt) saF.backT = timeValue(bt);
+    const xt = document.getElementById("saExitT"); if (xt) saF.exitT = timeValue(xt);
+    const nt = document.getElementById("saEntryT"); if (nt) saF.entryT = timeValue(nt);
     if (root.querySelector('input[name="saEv"]')) { const ev = root.querySelector('input[name="saEv"]:checked'); saF.ev = ev ? ev.value : ""; }
     const at = document.getElementById("saAckTravel"); if (at) saF.ackT = at.checked;
     const ab = document.getElementById("saAckBreak"); if (ab) saF.ackB = ab.checked;
@@ -15733,7 +15829,7 @@
     let body = "";
     if (key === "kind") {
       const wd = new Date(f.date + "T12:00:00").getDay();
-      const types = ["조퇴", "외출", "기타"];
+      const types = ["외출", "지각", "조퇴", "결석", "기타"];
       let n = "";
       if (saParentType(f.type)) n = note(f.type + " 안내", '<b>학부모님이 먼저 독서실로 연락</b>해 주셔야 해요. 학생이 직접 알려서 ' + f.type + '하는 경우에는 이유와 관계없이 출결 관리 기준에 따라 벌점이 부과돼요.');
       else if (f.type && f.date === today) n = note("오늘 일정이에요", '<b>1교시 전까지</b> 미리 알려야 해요. 늦게 알리면 어쩔 수 없는 상황이 아닌 한 벌점이 부과될 수 있어요.');
@@ -15741,13 +15837,15 @@
         '<div class="sfw-h2">종류</div><div class="sp-seg">' + types.map(t => '<button type="button" class="' + (f.type === t ? "on" : "") + '" onclick="saSetType(\'' + t + '\')">' + t + '</button>').join("") + '</div>' + n + '</div>';
     } else if (key === "time") {
       const ph = { "지각": "예: 병원 진료로 11시 30분에 입실할게요", "조퇴": "예: 학원 일정이 있어서 18시에 퇴실할게요", "기타": "예: 오늘은 13시부터 20시까지만 있을게요" }[f.type] || "";
-      const isToday = f.date === today, isOut = f.type === "외출", isEarly = f.type === "조퇴";
-      const right = isEarly
-        ? '<div class="sa-req"><div class="sfw-h2">몇 시에 퇴실하나요?</div><div class="sa-outs"><label><span>퇴실</span><input type="time" step="300" id="saExitT" class="sp-time" value="' + escapeHtml(f.exitT || "") + '"></label></div></div>'
+      const isToday = f.date === today, isOut = f.type === "외출", isEarly = f.type === "조퇴", isLate = f.type === "지각";
+      const right = isLate
+        ? '<div class="sa-req"><div class="sfw-h2">몇 시에 입실하나요?</div><div class="sa-outs"><div class="sa-t"><span>입실</span>' + timeTyped('id="saEntryT"', f.entryT) + '</div></div></div>'
+        : isEarly
+        ? '<div class="sa-req"><div class="sfw-h2">몇 시에 퇴실하나요?</div><div class="sa-outs"><div class="sa-t"><span>퇴실</span>' + timeTyped('id="saExitT"', f.exitT) + '</div></div></div>'
         : isOut
-        ? '<div class="sa-req"><div class="sfw-h2">언제 나갔다 오나요?</div><div class="sa-outs"><label><span>외출</span><input type="time" step="300" id="saOutT" class="sp-time" value="' + escapeHtml(f.outT || "") + '"></label><label><span>재입실</span><input type="time" step="300" id="saBackT" class="sp-time" value="' + escapeHtml(f.backT || "") + '"></label></div></div>'
+        ? '<div class="sa-req"><div class="sfw-h2">언제 나갔다 오나요?</div><div class="sa-outs"><div class="sa-t"><span>외출</span>' + timeTyped('id="saOutT"', f.outT) + '</div><div class="sa-t"><span>재입실</span>' + timeTyped('id="saBackT"', f.backT) + '</div></div></div>'
         : '<div class="sa-req"><div class="sfw-h2">어떻게 수정하길 원하나요?</div><textarea id="saReq" class="sp-ta" rows="4" maxlength="300" placeholder="' + escapeHtml(ph) + '">' + escapeHtml(f.request || "") + '</textarea></div>';
-      body = '<div class="sfw-box"><div class="sa-two">' +
+      body = '<div class="sfw-box">' + (f.type === "기타" ? "" : TIME_HINT) + '<div class="sa-two">' +
         '<div class="sa-base"><div class="sfw-h2">' + (isToday ? "금일 스케줄" : schedMd(f.date) + " 스케줄") + '</div><ul class="sched-sidebar-events" id="saBaseEvents"></ul></div>' + right + '</div>' +
         '<label class="sp-chk"><input type="checkbox" id="saAckTravel"' + (f.ackT ? " checked" : "") + '> <span>이동 시간과 식사 시간을 고려해서 적었어요.</span></label>' +
         '<label class="sp-chk"><input type="checkbox" id="saAckBreak"' + (f.ackB ? " checked" : "") + '> <span>최대한 <b>쉬는 시간</b>을 활용했어요.</span></label></div>';
@@ -15777,6 +15875,9 @@
       if (!f.outT || !f.backT) { saSay("나가는 시각과 들어오는 시각을 모두 넣어 주세요."); return false; }
       if (f.backT <= f.outT) { saSay("들어오는 시각은 나가는 시각보다 뒤여야 해요."); return false; }
       if (first && (f.outT < first || f.backT > lastEnd)) { saSay("그날 스케줄(" + sfmt(first) + " ~ " + sfmt(lastEnd) + ") 안의 시각을 넣어 주세요."); return false; }
+    } else if (f.type === "지각") {
+      if (!f.entryT) { saSay("입실할 시각을 넣어 주세요."); return false; }
+      if (first && (f.entryT <= first || f.entryT >= lastEnd)) { saSay("그날 스케줄(" + sfmt(first) + " ~ " + sfmt(lastEnd) + ")보다 늦은 입실 시각을 넣어 주세요."); return false; }
     } else if (f.type === "조퇴") {
       if (!f.exitT) { saSay("퇴실할 시각을 넣어 주세요."); return false; }
       if (first && (f.exitT <= first || f.exitT >= lastEnd)) { saSay("그날 스케줄(" + sfmt(first) + " ~ " + sfmt(lastEnd) + ")보다 일찍인 퇴실 시각을 넣어 주세요."); return false; }
@@ -15785,6 +15886,7 @@
     return true;
   }
   function saNext() {
+    { const problem = timeProblem(document.getElementById("saForm")); if (problem) { saSay(problem); return; } }
     saRead(); saSay("");
     const f = saF, key = saKeys(f)[f.step];
     if (key === "kind") {
@@ -15800,7 +15902,7 @@
     if (!f.reason.trim()) { saSay("사유를 적어 주세요."); return; }
     if (schedVague(f.reason)) { saSay("사유를 조금 더 구체적으로 적어 주세요. 무슨 과목 학원 · 과외인지, 어떤 일인지까지요."); return; }
     const blocks = []; // 시간은 글로 받는다(관리 선생님이 확인 후 직접 반영)
-    const request = f.type === "외출" ? saOutText(f) : f.type === "조퇴" ? "퇴실 " + sfmt(f.exitT) : String(f.request || "").trim();
+    const request = f.type === "외출" ? saOutText(f) : f.type === "조퇴" ? "퇴실 " + sfmt(f.exitT) : f.type === "지각" ? "입실 " + sfmt(f.entryT) : f.type === "결석" ? "" : String(f.request || "").trim();
     const adj = f.type === "외출" ? { out: f.outT, back: f.backT } : f.type === "조퇴" ? { exit: f.exitT } : null;
     if (saParentType(f.type)) {
       if (!f.ackP) { saSay("학부모님이 먼저 독서실로 연락해 주셔야 한다는 안내에 체크해 주세요."); return; }
@@ -21736,9 +21838,10 @@
         let after = "";
         if (!p.cancel) {
           if (p.adj && c.base && c.base.length) { const nb = adkApplyAdj(c.base, p.adj); after = nb.length ? "승인하면 " + schedBlocksText(nb) + " 로 자동 반영돼요" : "그날 스케줄 밖의 시각이라 자동 반영이 안 돼요 — 직접 반영해 주세요"; }
+          else if (p.type === "결석") after = "승인하면 그날은 등원 안 함으로 자동 반영돼요";
           else if (p.adj || p.request) after = "그날 시각 정보가 없거나 글로 받은 요청이라, 승인해도 스케줄 표는 안 바뀌어요 — 직접 반영해 주세요";
         }
-        body = (p.cancel ? '<div>승인된 돌발 스케줄을 취소하겠다는 요청이에요.</div>' : p.request ? '<div><b>' + escapeHtml(p.type || "") + '</b> · 요청: ' + escapeHtml(p.request) + '</div>' : '<div><b>' + escapeHtml(p.type || "") + '</b> · ' + escapeHtml(schedBlocksText(p.blocks)) + '</div>') +
+        body = (p.cancel ? '<div>승인된 돌발 스케줄을 취소하겠다는 요청이에요.</div>' : p.request ? '<div><b>' + escapeHtml(p.type || "") + '</b> · 요청: ' + escapeHtml(p.request) + '</div>' : p.type === "결석" ? '<div><b>결석</b> · 하루 결석(등원 안 함)</div>' : '<div><b>' + escapeHtml(p.type || "") + '</b> · ' + escapeHtml(schedBlocksText(p.blocks)) + '</div>') +
           (r.ctx ? '<div class="adk-ctx"><div><span>그날 스케줄</span>' + escapeHtml(baseTxt || "-") + ' <span class="adk-dim">(' + baseNote + ')</span></div>' + (after ? '<div><span>승인 후</span>' + escapeHtml(after) + '</div>' : "") + '<div><span>돌발 횟수</span>승인된 것 기준 이번 달 ' + Number(c.month || 0) + '회 · 누적 ' + Number(c.total || 0) + '회</div></div>' : "");
       }
       const seat = adkSeats[r.student_id], br = adkStuBranch(r.student_id);
